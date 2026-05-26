@@ -1,68 +1,69 @@
 {
   "stream": "PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01",
   "classification": "G1",
-  "baseline_commit": "3cf76de",
+  "date": "2026-05-26",
+  "runtime_anchor": "PR #16",
   "files": [
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CONSTITUTIONAL_DEFINITION.md",
-      "action": "CREATED",
-      "description": "Core constitutional definition: what Software Intelligence IS, PI Core / domain module separation, 10 cognition functions, attachment model, artifact contract, corridor activation criteria, expanded prohibitions"
+      "action": "REWRITE",
+      "detail": "Core constitutional definition — rewritten from speculative prose to runtime-anchored document. References PR #16 files. 10 sections"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md",
-      "action": "CREATED",
-      "description": "Marketplace as domain cognition module ecosystem: not-plugins distinction, module pattern contract, first module precedent, future modules, registration, versioning, governance, strategic alignment"
+      "action": "REWRITE",
+      "detail": "Domain cognition module ecosystem — rewritten with proven execution bridge pattern. 7 sections"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/PERSONA_CONSUMPTION_SPEC.md",
-      "action": "CREATED",
-      "description": "Per-persona SW-Intel consumption: BOARDROOM 7 executive channels, BALANCED vocabulary enrichment, DENSE topology annotation, INVESTIGATION full lineage trace"
+      "action": "REWRITE",
+      "detail": "Per-persona projection consumption — honest current vs target assessment. 5 sections"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/PRESSURE_TOPOLOGY_SPEC.md",
-      "action": "CREATED",
-      "description": "Pressure-topology integration: orphaned artifact gap, target data flow through SW-Intel, zone rendering requirements, topology reactivity model, persona-specific projections"
+      "action": "REWRITE",
+      "detail": "Pressure-topology integration — operational cognition positioning. 6 sections"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/IMPLEMENTATION_SEMANTICS.md",
-      "action": "CREATED",
-      "description": "§5.5 reusable concept definitions: 8 primitives, input/output contracts, calibration assumptions, extension points, module responsibility map"
-    },
-    {
-      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
-      "action": "MODIFIED",
-      "description": "Added Software Intelligence and Domain Cognition Module locked terms. Updated Marketplace definition from 'extension ecosystem' to 'governed ecosystem of domain cognition modules'"
-    },
-    {
-      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
-      "action": "MODIFIED",
-      "description": "Updated product hierarchy and invariants. Added stream to ontology lineage. Added Domain Cognition Module Architecture section with maturity classification"
-    },
-    {
-      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/execution_report.md",
-      "action": "CREATED",
-      "description": "Stream execution report"
-    },
-    {
-      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/validation_log.json",
-      "action": "CREATED",
-      "description": "Validation log — 19/19 PASS"
-    },
-    {
-      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/file_changes.json",
-      "action": "CREATED",
-      "description": "File change manifest"
+      "action": "REWRITE",
+      "detail": "Reusable concepts from proven runtime. 6 sections"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CLOSURE.md",
-      "action": "CREATED",
-      "description": "Stream closure artifact with G1 Architecture Memory Propagation"
+      "action": "REWRITE",
+      "detail": "Stream governance closure with PR #16 anchor"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/execution_report.md",
+      "action": "REWRITE",
+      "detail": "Execution report with vault load verification and 11 steps"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/validation_log.json",
+      "action": "REWRITE",
+      "detail": "19 validation checks — all PASS"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/file_changes.json",
+      "action": "REWRITE",
+      "detail": "This file"
+    },
+    {
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFY",
+      "detail": "Software Intelligence, Domain Cognition Module, Marketplace — updated with PR #16 runtime references"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFY",
+      "detail": "Domain Cognition Module Architecture section rewritten with proven maturity classifications"
     }
   ],
   "summary": {
-    "created": 9,
+    "total": 11,
+    "created_or_rewritten": 9,
     "modified": 2,
-    "deleted": 0,
-    "total": 11
+    "code_files_changed": 0
   }
 }

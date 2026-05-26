@@ -290,9 +290,9 @@
 
 ### Marketplace
 
-**Definition:** The governed ecosystem of domain cognition modules attached to the PI Spine. Each module interprets PI cognition primitives through domain-specific operational semantics. Domain cognition modules permeate all strata — they are not plugins, not optional add-ons, not feature extensions. They are the interpretation layer that gives PI Core structural intelligence domain-specific operational meaning. Software Intelligence is the first module. Marketplace outputs (semantic signal packs, industry overlays, governance templates, integration adapters) are produced BY domain modules, not independent marketplace items.
+**Definition:** The governed ecosystem of domain cognition modules attached to the PI Spine. Each module interprets PI cognition primitives through domain-specific operational semantics. Domain cognition modules permeate all strata — they are not plugins, not optional add-ons, not feature extensions. They are the interpretation layer that gives PI Core structural intelligence domain-specific operational meaning. Software Intelligence is the first module — its execution bridge is verified (PR #16). Marketplace outputs (semantic signal packs, industry overlays, governance templates, integration adapters) are produced BY domain modules, not independent marketplace items.
 
-**Status:** CANONICAL — constitutionally defined (2026-05-26). First module (Software Intelligence) constitutionally defined, implementation pending.
+**Status:** CANONICAL — constitutionally defined (2026-05-26). First module (Software Intelligence) operationally verified via SQO execution bridge (PR #16). Module ecosystem architecture defined.
 
 **What it is NOT:** A plugin marketplace. An app store. An extension registry. Marketplace is domain cognition modules — replaceable interpretation layers that transform PI Core intelligence into domain-specific operational cognition.
 
@@ -708,9 +708,9 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 ### Software Intelligence
 
-**Definition:** A domain cognition module attached to the PI Spine that provides operational software cognition — the interpretation of PI cognition primitives through software-system semantics. Software Intelligence transforms PI Core outputs from structurally correct but operationally abstract intelligence into domain-specific operational meaning. 10 cognition functions (CF-01 through CF-10) transform PI Core primitives into software-domain operational intelligence: pressure interpretation, execution corridor detection, coordination spine detection, validation intelligence, release/deployment cognition, execution governance, topology role abstraction, operational attention routing, pressure-aware topology projection, and engineering qualification cognition.
+**Definition:** A domain cognition module attached to the PI Spine that provides operational software cognition — the interpretation of PI cognition primitives through software-system semantics. Software Intelligence transforms PI Core outputs from structurally correct but operationally abstract intelligence into domain-specific operational meaning. 10 cognition functions (CF-01 through CF-10) defined. Three proven operationally by PR #16: CF-06 Execution Governance (SQOActionEngine — 12-action authority workflow), CF-10 Engineering Qualification Cognition (OperatorWorkflowResolver — posture, guidance, progression), CF-08 Operational Attention Routing (LensSQOOrchestrationAdapter — guided actions with event-log-derived learning context). Remaining functions constitutionally defined with structural evidence in pipeline output but no consumer path.
 
-**Status:** CANONICAL — constitutionally defined (2026-05-26). Implementation pending. SOFTWARE_INTELLIGENCE corridor currently returns ABSENT unconditionally.
+**Status:** CANONICAL — constitutionally defined (2026-05-26). SQO execution bridge VERIFIED (PR #16). SOFTWARE_INTELLIGENCE corridor returns ABSENT (full artifact-based activation pending). Current implementation boundary: GAP-01 through GAP-08 in SQO_GAP_REGISTER.md.
 
 **What it is NOT:** Code metrics. GitHub analytics. Repository visualization. Taxonomy mapping. AI commentary. A separate product. Software Intelligence is a domain cognition module WITHIN Program Intelligence that permeates all strata.
 
@@ -718,13 +718,13 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 ### Domain Cognition Module
 
-**Definition:** A replaceable interpretation layer attached to the PI Spine that provides domain-specific operational meaning to PI Core cognition primitives. Every domain cognition module follows the same architecture: read PI Core corridor outputs, interpret through domain-specific operational semantics, produce domain-specific projection objects consumed by LENS personas. Domain modules permeate all 5 PI strata (evidence, derivation, projection, persona, governance). They are not attachment points — they are semantic embodiment layers that give structural intelligence operational meaning.
+**Definition:** A replaceable interpretation layer attached to the PI Spine that provides domain-specific operational meaning to PI Core cognition primitives. The pattern is proven by PR #16: workspace resolver reads PI Core artifacts → orchestration adapter derives governed actions → authority engine executes mutations → learning derivation reads event log → LENS projects results. Domain modules permeate all 5 PI strata (evidence, derivation, projection, persona, governance). They are not attachment points — they are semantic embodiment layers that give structural intelligence operational meaning.
 
-**Status:** CANONICAL — architectural pattern constitutionally defined (2026-05-26). Software Intelligence is the first module instance.
+**Status:** CANONICAL — architectural pattern constitutionally defined (2026-05-26). Software Intelligence is the first module instance (SQO execution bridge verified by PR #16).
 
 **What it is NOT:** A plugin. An extension. An optional add-on. A separate product. Domain cognition modules are the interpretation layer that makes PI Core intelligence actionable in a specific operational domain.
 
-**Architectural pattern:** Same PI Core (~90%+) + domain-specific interpretation layer (~9%) + module registration infrastructure (~1%). Swapping the domain module changes operational vocabulary without changing PI Core computation.
+**Architectural pattern:** Same PI Core (~90%+) + domain-specific interpretation layer (~9%) + module registration infrastructure (~1%). Swapping the domain module changes operational vocabulary without changing PI Core computation. The execution bridge pattern (LENS → API → engine → persist → event → reload) is proven and reusable.
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
 

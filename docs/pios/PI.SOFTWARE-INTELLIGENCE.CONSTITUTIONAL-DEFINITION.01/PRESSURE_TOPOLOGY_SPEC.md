@@ -3,201 +3,122 @@
 Stream: PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01
 Classification: G1 — Architecture-Mutating
 Date: 2026-05-26
-Depends on: CONSTITUTIONAL_DEFINITION.md (CF-01, CF-09)
+Runtime anchor: Pressure zone artifacts exist (75.x pipeline output). No consumer path to LENS.
 
 ---
 
-## 1. Current Gap
+## 1. Current State — Orphaned Intelligence
 
 Fully computed pressure zone intelligence exists in artifacts that no UI surface touches:
 
 | Artifact | Content | Consumer |
 |---|---|---|
-| `pressure_zone_state.json` (75.x) | PZ-001 COMPOUND_ZONE, 3 conditions, member domains | **NONE** — not declared in manifests, not loaded by resolver |
-| `pressure_zone_projection.json` (41.x) | Projected pressure zone surfaces | **NONE** — not declared in manifests, not loaded by resolver |
+| `pressure_zone_state.json` (75.x) | PZ-001 COMPOUND_ZONE, 3 conditions, member domains | **NONE** |
+| `pressure_zone_projection.json` (41.x) | Projected pressure zone surfaces | **NONE** |
 
 The data exists. The computation is complete. The intelligence is orphaned.
 
-### Why This Matters
-
-Without pressure-topology integration:
-- The SVG topology is a semantic cluster visualization — structurally accurate, operationally inert
-- Pressure zones are invisible — the user cannot see WHERE structural stress concentrates
-- Signal families activate without spatial context — the user sees "PSIG-001 HIGH" but not which topology region is under pressure
-- Zone boundaries, member visibility, and condition decomposition have no rendering path
-
-With pressure-topology integration:
-- The SVG topology becomes an operational software cognition topology
-- Pressure zones are spatially visible — the user sees which domains are under pressure
-- Signal families have spatial attribution — the user sees "PSIG-001 HIGH in Platform Infrastructure cluster"
-- Executives see structural risk geography, not abstract signal values
+This is NOT a visualization problem. This is an operational cognition gap: pressure zone intelligence has no path to operator awareness.
 
 ---
 
-## 2. Data Flow: Current vs Target
+## 2. Why This is Operational Cognition, Not Visualization
 
-### Current Flow (Broken)
+The user's directive: "Pressure-topology integration must be positioned as operational cognition, not visualization."
 
-```
-pressure_zone_state.json (75.x)
-        │
-        ▼
-    (orphaned — no manifest declaration)
-        │
-        ╳  GenericSemanticPayloadResolver never loads it
-        ╳  fullReport never contains it
-        ╳  No persona surface sees it
-```
+**Visualization approach (WRONG):** Take the SVG topology, draw colored regions around pressured areas, add labels. The topology becomes a prettier picture. Operators see colors but receive no operational meaning.
 
-### Target Flow (Through SW-Intel)
+**Operational cognition approach (CORRECT):** Pressure zones flow through the Software Intelligence interpretation layer (CF-01 Pressure Interpretation, CF-09 Pressure-Aware Topology Projection) and emerge as operational intelligence:
 
-```
-pressure_zone_state.json (75.x)
-        │
-        ▼
-software_intelligence_module.json
-  ├── pressure_interpretations (CF-01)
-  │     zone_id → operational_pressure_type
-  │     conditions → operational_consequence
-  │
-  └── pressure_topology_projection (CF-09)
-        zone_boundaries → topology overlay
-        member_domains → visual highlighting
-        condition_decomposition → legend
+- **Zone PZ-001 COMPOUND_ZONE** → "Deployment coordination instability — 3 conditions converge: coupling pressure at Platform Infrastructure, import hub concentration at globals.py, topology asymmetry across backend cluster"
+- **Zone boundary** → "Operational blast radius — changes within this zone propagate through 5 downstream domains"
+- **Condition decomposition** → "Pressure sources: structural coupling (PSIG-001), file-level hub concentration (ISIG-001), topology mass imbalance (DPSIG-032)"
 
-        │
-        ▼
-GenericSemanticPayloadResolver
-  (loads SW-Intel module artifact)
-        │
-        ▼
-fullReport.software_intelligence
-  .pressure_interpretations
-  .pressure_topology_projection
-        │
-        ▼
-LENS Persona Surfaces
-  BOARDROOM: executive risk geography
-  BALANCED: operational narrative with spatial context
-  DENSE: topology overlay with zone boundaries
-  INVESTIGATION: full zone evidence chain
-```
+The topology does not become "prettier." The topology becomes operationally informative — it tells operators WHERE structural stress concentrates, WHY it concentrates there, and WHAT operational consequence it carries.
 
 ---
 
-## 3. Pressure Zone Rendering Requirements
+## 3. Integration Model
 
-### Zone Boundaries
+### Data Flow
 
-Each pressure zone has a spatial boundary defined by its member domains. When pressure-topology integration is active:
+```
+pressure_zone_state.json (75.x computation)
+        │ read by SW-Intel CF-01
+        ▼
+Pressure Interpretation
+        │ produces
+        ├── zone_id → operational_pressure_type
+        ├── zone_id → operational_consequence
+        ├── zone_id → condition_decomposition
+        │
+        │ consumed by SW-Intel CF-09
+        ▼
+Pressure-Aware Topology Projection
+        │ produces
+        ├── zone_boundaries on topology
+        ├── member_visibility (which nodes are in the zone)
+        ├── condition_icons (which signals contribute)
+        ├── operational_type_label (what kind of pressure)
+        │
+        │ rendered by LENS
+        ▼
+Operational Software Cognition Topology
+```
 
-- Zone boundary renders as a translucent overlay on the SVG topology
-- Boundary color derived from zone severity (compound > single condition)
-- Boundary does NOT occlude existing topology edges and labels
-- Boundary is visible at default zoom and collapses gracefully at overview zoom
+### What the Topology Becomes
 
-### Member Visibility
+Currently: semantic cluster visualization — structurally accurate, operationally inert.
 
-Domains within a pressure zone gain visual indicators:
+Target: operational software cognition topology — pressure changes geometry prominence, corridors illuminate under stress, zones carry operational type labels.
 
-- Member domains highlighted with zone-colored border accent
-- Non-member domains remain at default styling
-- Cross-zone members (domains in multiple zones) show the highest-severity zone color
-
-### Condition Decomposition
-
-Each pressure zone's conditions are decomposable:
-
-- Zone tooltip/detail panel shows contributing conditions
-- Each condition traces to its signal family source
-- Compound zones show condition interaction (AND, CORRELATED, INDEPENDENT)
+The distinction is constitutional: the SVG topology in LENS is NOT "visualization infrastructure." It is an operational cognition surface. When pressure intelligence flows through SW-Intel to the topology, the topology becomes an instrument that tells operators where the system is under structural stress and what operational consequence that stress carries.
 
 ---
 
-## 4. Topology Reactivity Model
+## 4. Rendering Requirements
 
-Pressure changes how topology renders. This is NOT animation — it is structural state-driven visual hierarchy.
+### Zone Rendering
 
-### Prominence Modulation
-
-| Topology Element | Without Pressure | With Pressure |
+| Element | Requirement | Source |
 |---|---|---|
-| Domain node | Default size, default color | Pressured domains visually foregrounded (border accent, slight scale increase) |
-| Cluster boundary | Default stroke | Pressured clusters gain zone-colored boundary |
-| Edge | Default rendering | Edges between pressured domains and their propagation targets highlighted |
-| Label | Default rendering | Pressured domain labels gain operational type suffix |
+| Zone boundary | Visual region enclosing member domains on topology SVG | `pressure_zone_state.json` → `members[]` |
+| Zone label | Operational pressure type (not zone ID) | SW-Intel CF-01 interpretation |
+| Member visibility | Domains within the zone are visually distinguished | `members[]` mapped to topology node positions |
+| Condition icons | Which signal families contribute to this zone | `conditions[]` → signal family classification |
+| Severity indicator | Zone severity from condition compound | `zone_type` + condition count |
 
-### Corridor Illumination
+### Topology Reactivity
 
-When execution corridors (CF-02) intersect pressure zones:
-
-- The corridor path through the pressure zone is visually emphasized
-- Direction indicators (ORIGIN → PASS_THROUGH → RECEIVER) gain operational labels
-- The intersection creates the "pressure corridor" executive moment (CF-08)
-
-### Operational Type Labels
-
-SW-Intel pressure types (CF-01) appear on the topology:
-
-| Pressure Type | Visual Treatment |
+| Behavior | Requirement |
 |---|---|
-| Deployment Fragility | Orange zone accent |
-| Orchestration Overload | Red zone accent |
-| Integration Saturation | Yellow zone accent |
-| Test Authority Gap | Muted amber zone accent |
+| Pressure prominence | Pressured domains receive visual foregrounding |
+| Corridor illumination | Execution corridors (propagation paths through pressured zones) highlight |
+| Coupling edge typing | Edges gain operational type labels (structural dependency vs runtime coordination) |
+| Zone focus | Click on zone → expand condition decomposition panel |
+
+### Persona Differentiation
+
+| Persona | Pressure Topology Content |
+|---|---|
+| BOARDROOM | Zone count + highest severity + one-line operational consequence |
+| BALANCED | Zone boundaries + operational type labels + condition summary |
+| DENSE | Full zone rendering + member visibility + condition decomposition |
+| INVESTIGATION | Full rendering + signal family evidence + structural trace per condition |
 
 ---
 
-## 5. Persona-Specific Topology Projection
+## 5. Relationship to PR #16
 
-### BOARDROOM
+Pressure-topology integration is NOT implemented in PR #16. PR #16 implements the SQO execution bridge and learning signal derivation. But the architectural pattern proven by PR #16 — read PI Core artifacts → interpret through SW-Intel → project to LENS — is the same pattern pressure-topology integration follows.
 
-- Topology preview (small, non-interactive) shows pressure zone overlay
-- Zone names use operational vocabulary ("Deployment Risk Zone" not "PZ-001")
-- Executive reads: "Pressure geography shows 1 compound zone affecting Platform Infrastructure"
-
-### BALANCED
-
-- Full topology with pressure overlay active by default
-- Narrative context for pressure zones alongside the topology
-- Zone click reveals operational consequence narrative
-
-### DENSE
-
-- Full topology with pressure overlay, zone boundaries, member highlighting
-- Condition decomposition available via zone interaction
-- Corridor paths visible when intersecting pressure zones
-- Operational type labels on zone boundaries
-
-### INVESTIGATION
-
-- Full topology with all pressure evidence
-- Zone click reveals full condition chain, signal sources, member lists
-- Corridor intersections shown with member-level evidence
-- Abstraction lineage for any pressure interpretation
+The gap is registered as implicit in the overall SW-Intel corridor status (SOFTWARE_INTELLIGENCE returns ABSENT). When pressure-topology integration is implemented, it follows the proven execution bridge pattern: server-side resolution → adapter derivation → component rendering.
 
 ---
 
-## 6. Implementation Boundaries
+## 6. What Does NOT Change
 
-This specification DEFINES the integration model. Implementation requires future streams:
-
-### Required Implementation Steps
-
-1. **Manifest declaration:** Add `pressure_zone_state.json` to specimen manifest declarations
-2. **Resolver loading:** Teach GenericSemanticPayloadResolver to load pressure zone state
-3. **fullReport field:** Add `pressure_zones` to fullReport projection
-4. **SW-Intel module:** Build the module artifact that interprets pressure zones through CF-01
-5. **Topology rendering:** Add zone overlay capability to StructuralTopologyZone SVG rendering
-6. **Persona consumption:** Wire each persona surface to consume pressure-aware topology projections
-
-### What This Spec Does NOT Define
-
-- SVG implementation details (gradients, opacity values, pixel dimensions)
-- Interaction behavior (hover, click, keyboard)
-- Animation or transition effects
-- Mobile/responsive rendering
-- Performance optimization for large topologies
-- Caching strategy for pressure-aware projections
-
-These are implementation concerns for the rendering stream, not constitutional concerns for the architectural definition.
+- **Pressure zone computation stays in 75.x.** SW-Intel reads the computed zones. It does not compute them.
+- **PSIG/DPSIG/ISIG signal families stay in their derivation pipelines.** SW-Intel consumes signals as input to condition decomposition. It does not derive signals.
+- **SVG topology rendering stays in StructuralTopologyZone.** SW-Intel adds zone boundaries and operational labels. It does not replace the topology component.
+- **No new speculative architecture.** This spec defines the integration model for artifacts that already exist, through a pattern that is already proven. Implementation requires a future stream.

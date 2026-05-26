@@ -6,60 +6,55 @@ Per §5.5 — this stream defines reusable concepts consumed by future streams.
 
 ## 1. Primitive Inventory
 
-| Name | Module | Purpose | Reuse Status |
+| Name | Source | Purpose | Reuse Status |
 |---|---|---|---|
-| Domain Cognition Module pattern | CONSTITUTIONAL_DEFINITION.md §2-5 | Architectural pattern for domain-specific interpretation of PI Core | REUSABLE — all future domain modules follow this pattern |
-| Cognition Function taxonomy (CF-01 through CF-10) | CONSTITUTIONAL_DEFINITION.md §4 | Classification of PI Core → domain module interpretation functions | REUSABLE — every domain module defines its own CF set following this taxonomy |
-| Module artifact contract | CONSTITUTIONAL_DEFINITION.md §6 | Output schema for domain module artifacts | REUSABLE — all modules produce `<module_id>_module.json` following this contract pattern |
-| Corridor activation criteria | CONSTITUTIONAL_DEFINITION.md §7 | Conditions for domain corridor ABSENT → VALID transition | REUSABLE — all domain corridors follow same activation pattern |
-| Permeation model | CONSTITUTIONAL_DEFINITION.md §5 | 5-stratum permeation specification | REUSABLE — all domain modules permeate all strata |
-| Module registration contract | MARKETPLACE_ARCHITECTURE.md §5 | Registration schema for domain modules | REUSABLE — all modules register through this contract |
-| Persona consumption specification | PERSONA_CONSUMPTION_SPEC.md | Per-persona projection consumption model | REUSABLE — pattern for how personas consume any domain module |
-| Pressure-topology integration model | PRESSURE_TOPOLOGY_SPEC.md | Pressure zone → topology rendering integration | REUSABLE — pattern for any domain-specific topology rendering |
+| Execution Bridge Pattern | PR #16 (proven) | LENS → API → validator → engine → persist → event → reload | REUSABLE — all future domain modules follow this pattern |
+| Learning Derivation Pattern | PR #16 (proven) | Event log → classify → pattern → signal → enrich → display | REUSABLE — any domain module derives learning from its event history |
+| Authority Boundary Pattern | PR #16 (proven) | LENS projects. SQO executes. Learning advises. Operator decides | REUSABLE — constitutional separation for all domain modules |
+| Gap Register Pattern | PR #16 (proven) | Honest boundary documentation between verified and pending | REUSABLE — all domain modules document their implementation boundary |
+| Domain Cognition Module architecture | CONSTITUTIONAL_DEFINITION.md | PI Core + domain interpretation + LENS projection | REUSABLE — all future domain modules |
+| Cognition Function taxonomy (CF-01 through CF-10) | CONSTITUTIONAL_DEFINITION.md §5 | Classification of PI Core → domain module interpretation | REUSABLE — every domain module defines its CF set |
+| Persona consumption model | PERSONA_CONSUMPTION_SPEC.md | Per-persona projection differentiation | REUSABLE — pattern for any domain module |
+| Pressure-topology integration model | PRESSURE_TOPOLOGY_SPEC.md | Pressure zones → operational topology | REUSABLE — operational cognition topology pattern |
 
 ---
 
 ## 2. Input Contracts
 
-### Domain Cognition Module — Input
+### Execution Bridge — Input
 
-A domain cognition module consumes:
-
-| Input Artifact | Consumed Fields | Purpose |
+| Input | Source | Consumed By |
 |---|---|---|
-| `canonical_topology.json` (40.4) | Full topology structure | Structural topology for role abstraction |
-| `node_inventory.json` (40.2) | Node paths, types, relationships | Structural entity inventory |
-| `code_graph.json` (40.3s) | Resolved imports, definitions | Code-graph structural evidence |
-| `structural_centrality.json` (40.3c) | Centrality metrics, structural roles | Centrality evidence for role classification |
-| `pressure_zone_state.json` (75.x) | Zones, conditions, members | Pressure evidence for interpretation |
-| `enrichment_summary.json` | Enrichment events, corrections | Enrichment evidence for grounding assessment |
-| `binding_envelope.json` | Architectural binding topology | Binding evidence for coupling analysis |
-| Various corridor evaluations | Corridor states (VALID/PARTIAL/ABSENT) | Authority corridor context |
+| `promotion_state.json` | SQO authority artifacts (disk) | `OperatorWorkflowResolver.resolveAuthorityWorkspace()` |
+| `review_obligations.json` | SQO authority artifacts (disk) | `OperatorWorkflowResolver.resolveAuthorityWorkspace()` |
+| `qualification_blockers.json` | SQO authority artifacts (disk) | `OperatorWorkflowResolver.resolveAuthorityWorkspace()` |
+| `promotion_event_log.jsonl` | Append-only event log (disk) | `SQOLearningSignalDerivation.deriveLearningSignals()` |
 
-### Persona Consumption — Input
+### Learning Derivation — Input
 
-Each persona consumes:
-
-| Input | Consumed Fields | Purpose |
+| Input | Source | Consumed Fields |
 |---|---|---|
-| `fullReport.software_intelligence` | All SW-Intel projection fields | Domain-specific operational intelligence |
-| `deriveProjections(fullReport, persona).software_intelligence_labels` | Boolean — corridor gate | Projection availability gate |
+| `promotion_event_log.jsonl` | Append-only event log | `action`, `target`, `semantic_disposition`, `timestamp`, `prior_state`, `resulting_state` |
 
 ---
 
 ## 3. Output Contracts
 
-### Domain Cognition Module — Output
+### Execution Bridge — Output
 
-| Output Artifact | Fields | Consumers |
+| Output | Producer | Consumer |
 |---|---|---|
-| `software_intelligence_module.json` | role_abstractions, pressure_interpretations, execution_corridors, topology_roles, attention_signals, coordination_spines, validation_posture, deployment_risk, qualification_cognition, derivation_lineage | GenericSemanticPayloadResolver → fullReport → persona surfaces |
+| Workspace object | `resolveAuthorityWorkspace()` | `deriveOrchestrationActions()` |
+| Guided action array | `deriveOrchestrationActions()` | `SoftwareIntelligenceField.jsx` |
+| Learning signals | `deriveLearningSignals()` | `enrichActionsWithLearning()` |
+| Learning context on actions | `enrichActionsWithLearning()` | `GuidedActionCard` rendering |
+| Authority event | `executeAuthorityAction()` | `promotion_event_log.jsonl` (append) |
 
-### Corridor Evaluation — Output
+### Learning Derivation — Output
 
-| Output | Shape | Consumers |
+| Output | Content | Consumer |
 |---|---|---|
-| `evaluateSoftwareIntelligenceCorridor()` return | `{ status: VALID|PARTIAL|ABSENT, detail: string }` | `computeAuthorityComposition()` → `authority_composition` |
+| `learning_signals.json` | action_patterns, progression_history, temporal_signals, guidance_signals | `OperatorWorkflowResolver` → workspace → adapter |
 
 ---
 
@@ -67,35 +62,36 @@ Each persona consumes:
 
 | Assumption | Value | Status |
 |---|---|---|
-| Maximum domain modules per specimen | 1 | CONSTITUTIONAL — single module at a time |
-| Module artifact must exist for corridor VALID | Unconditional | CONSTITUTIONAL — no module artifact = ABSENT |
-| Authority ceiling inheritance | Module inherits lowest-authority input | CONSTITUTIONAL — cannot elevate beyond evidence |
-| Orphaned abstraction tolerance | 0 | CONSTITUTIONAL — every abstraction must trace |
-| Corridor model version compatibility | Module must match corridor model major version | CONSTITUTIONAL — version mismatch = ABSENT |
+| Learning signal derivation is non-critical | Failure caught by try/catch, does not block action execution | PROVEN — `try { refreshLearningSignals(...) } catch (_) {}` |
+| Event log is single-writer | Only `PromotionEventWriter` appends to event log | PROVEN — single `fs.appendFileSync` call |
+| Learning never affects authority | Learning context is advisory-only, never changes priority/eligibility | PROVEN — `action.learningContext = null` default, set only by enrichment |
+| Page reload re-derives all state | No stale projection after mutation | PROVEN — `window.location.reload()` after action execution |
 
 ---
 
 ## 5. Extension Points
 
-| Extension Point | Parameterization | Future Consumers |
+| Extension | Current State | Future Direction |
 |---|---|---|
-| Domain module identity | `module_id` field in registration contract | Infrastructure Intelligence, Cyber Intelligence, etc. |
-| Cognition function set | Module-specific CF definitions following CF taxonomy | Each domain module defines its own CF set |
-| Operational vocabulary | Module-specific role abstractions and pressure types | Each domain module provides domain-specific vocabulary |
-| Artifact contract schema | Module-specific fields within the `<module_id>_module.json` pattern | Each module extends the base contract with domain-specific fields |
-| Persona consumption patterns | Module-specific projection fields consumed per persona | Each module specifies its own persona consumption spec |
+| Graph-based progression intelligence | Not implemented (GAP-08) | Action dependency graph, corridor projections |
+| Prescriptive learning | Not implemented (GAP-04) | Requires separate doctrine review — governance-sensitive |
+| Evidence reference enrichment | Empty arrays (GAP-01) | Populate obligation-level evidence refs in LENS fetch payload |
+| Confirmation ceremony | Not implemented (GAP-03) | Preview before/after state for critical actions |
+| Staleness detection | Field exists, no consumer (GAP-07) | Compare `derived_from_events` against actual log length |
 
 ---
 
 ## 6. Module Responsibility Map
 
-| Concern | Responsible Document | Owner |
+| File | Responsibility | Layer |
 |---|---|---|
-| Constitutional definition (what SW-Intel IS) | CONSTITUTIONAL_DEFINITION.md | This stream |
-| Marketplace architecture (module pattern) | MARKETPLACE_ARCHITECTURE.md | This stream |
-| Persona consumption (how personas consume) | PERSONA_CONSUMPTION_SPEC.md | This stream |
-| Pressure-topology integration (rendering model) | PRESSURE_TOPOLOGY_SPEC.md | This stream |
-| Module artifact implementation | Future pipeline stream | Not this stream |
-| Corridor evaluation implementation | Future corridor stream | Not this stream |
-| Topology rendering implementation | Future LENS stream | Not this stream |
-| Pressure zone manifest loading | Future resolver stream | Not this stream |
+| `SQOActionEngine.server.js` | Authority execution — validate, snapshot, apply, persist, replay | Server / Authority |
+| `SQOAuthorityValidator.server.js` | Role-action authorization, non-automatable boundaries | Server / Governance |
+| `PromotionEventWriter.server.js` | Append-only event emission with semantic disposition | Server / Lineage |
+| `SQOLearningSignalDerivation.server.js` | Event log analysis — patterns, progression, temporal, guidance | Server / Learning |
+| `OperatorWorkflowResolver.server.js` | Workspace assembly from SQO artifacts + learning signals | Server / Resolution |
+| `LensSQOOrchestrationAdapter.js` | Action derivation + learning enrichment from workspace | Adapter / Orchestration |
+| `SoftwareIntelligenceField.jsx` | Guided action card rendering + operator interaction | LENS / Projection |
+| `SQO_GAP_REGISTER.md` | Implementation boundary documentation | Governance / Boundary |
+| `SQO_EXECUTION_BRIDGE_STATUS.md` | Bridge verification record | Governance / Status |
+| `SQO_REVERT_SUPERSEDE_DOCTRINE.md` | Mutation governance doctrine | Governance / Doctrine |

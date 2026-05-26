@@ -593,44 +593,46 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.CHRONICLE-SIGNAL-INTEGRATION.01 | G2 | Post-certification chronicle enrichment — signal intelligence integrated into REPLAY_CHRONICLE.html (Chapter 1 Z2 signal cards, Chapter 7 convergence matrix +4 dimensions, post-certification enrichment section "The Signals"). Format v1.0→v1.1. Certification preserved. | COMPLETE |
 | PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 | G2 | First Level 1 signal family operational. ISIG-001 Import Hub Pressure (BlueEdge 35.3 HIGH, NetBox 51.1 HIGH). ISIG-002 Import Fan Asymmetry (BlueEdge 22.3 HIGH, NetBox 8.9 HIGH). PSIG-004 LOST_READ closed. Client-agnostic, code-graph-native. Cross-validated on 2 specimens | COMPLETE |
 | PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01 | G1 | ISIG vault status update — PARTIALLY_IMPLIED→OPERATIONAL across all vault pages. LOST_READ→RESOLVED in delta certification. Signal family classification updated. Ontology lineage current | COMPLETE |
-| PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | G1 | Software Intelligence constitutional definition — formal operational cognition module, 10 cognition functions (CF-01 through CF-10), PI Core / domain module separation, artifact contract, corridor activation criteria, permeation model. Marketplace redefined as domain cognition module ecosystem. Domain Cognition Module pattern constitutionally defined. Persona consumption specification. Pressure-topology integration model | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | G1 | Software Intelligence constitutional definition anchored in proven PR #16 runtime. SQO execution bridge verified. Domain cognition module pattern proven (workspace resolver → orchestration adapter → authority engine → learning derivation → LENS projection). 10 cognition functions (3 operational, 7 constitutional). Event-log-derived learning (read-only, replayable, auditable). Gap register GAP-01–GAP-08. Marketplace redefined as domain cognition module ecosystem. Persona consumption spec. Pressure-topology integration model | COMPLETE |
 
 ## Domain Cognition Module Architecture
 
 **Stream:** PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 (COMPLETE — 2026-05-26)
-**Classification:** G1 — Architecture-Mutating (introduces domain cognition module pattern as constitutional knowledge)
+**Classification:** G1 — Architecture-Mutating
+**Runtime anchor:** PR #16 — PI.SOFTWARE-INTELLIGENCE.AGENTIC-QUALIFICATION-GUIDANCE.01
 
-Program Intelligence operates through domain cognition modules — replaceable interpretation layers attached to the PI Spine that provide domain-specific operational meaning to PI Core cognition primitives.
+Program Intelligence operates through domain cognition modules — replaceable interpretation layers attached to the PI Spine. The pattern is PROVEN by PR #16: `OperatorWorkflowResolver` reads SQO artifacts → `LensSQOOrchestrationAdapter` derives guided actions → `SQOActionEngine` executes governed mutations → `SQOLearningSignalDerivation` reads event log → `SoftwareIntelligenceField` projects results.
 
-**Architectural separation:**
-- **PI Core (~90%+):** Domain-agnostic cognition primitives — topology, centrality, signals, pressure, SQO, governance, replay, enrichment, personas. Same for all domains.
-- **Domain Module (~9%):** Domain-specific operational interpretation — role abstractions, pressure types, execution corridors, operational vocabulary. Swappable per domain.
-- **Module Infrastructure (~1%):** Registration, versioning, governance. Marketplace infrastructure.
+**Architectural separation (proven):**
+- **PI Core (~90%+):** Domain-agnostic cognition primitives — topology, centrality, signals, pressure, SQO authority engine (12 actions), governance lifecycle, replay, enrichment, personas.
+- **Domain Module (~9%):** Domain-specific operational interpretation — workspace resolution, action orchestration, event-log learning, projection to LENS.
+- **Module Infrastructure (~1%):** Registration, versioning, governance (constitutionally defined, not yet implemented).
 
-**Software Intelligence** is the first domain cognition module. It provides operational software cognition: pressure becomes "deployment fragility," centrality becomes "orchestration hub," propagation becomes "delivery corridor." Without it, PI Core intelligence is structurally correct but operationally abstract.
+**Software Intelligence** is the first domain cognition module — SQO execution bridge verified (PR #16). The bridge proves the constitutional pattern: LENS projects, SQO executes, learning derives from event log (read-only), operator decides, no system actor self-authorizes.
 
-**10 Cognition Functions (CF-01 through CF-10):**
-CF-01 Pressure Interpretation, CF-02 Execution Corridor Detection, CF-03 Coordination Spine Detection, CF-04 Validation Intelligence, CF-05 Release/Deployment Cognition, CF-06 Execution Governance, CF-07 Topology Role Abstraction, CF-08 Operational Attention Routing, CF-09 Pressure-Aware Topology Projection, CF-10 Engineering Qualification Cognition.
+**10 Cognition Functions:**
+- **OPERATIONAL (PR #16):** CF-06 Execution Governance, CF-10 Engineering Qualification Cognition, CF-08 Operational Attention Routing (partial)
+- **CONSTITUTIONAL:** CF-01 Pressure Interpretation, CF-02 Execution Corridor Detection, CF-03 Coordination Spine Detection, CF-04 Validation Intelligence, CF-05 Release/Deployment Cognition, CF-07 Topology Role Abstraction, CF-09 Pressure-Aware Topology Projection
 
-**Permeation model:** Domain modules permeate all 5 strata — evidence (role seeds), derivation (pressure types), projection (domain objects), persona (operational language), governance (qualification semantics). A domain module is NOT an attachment point — it is a semantic embodiment layer (PI_RUNTIME_STATE_MODEL.md §9.3.4).
+**Self-learning doctrine (PR #16):** Learning = governed adaptation over replayable operational history. `SQOLearningSignalDerivation` reads `promotion_event_log.jsonl`, classifies events, derives action patterns, progression history, temporal signals, and guidance signals. Learning NEVER mutates SQO state. Learning is advisory context. Operator behavioral modeling explicitly postponed (governance-sensitive).
 
-**Corridor integration:** SOFTWARE_INTELLIGENCE corridor transitions ABSENT → VALID when module artifact exists with complete structural trace and zero orphaned abstractions. Currently ABSENT for all specimens.
-
-**Marketplace:** The governed ecosystem of domain cognition modules. Software Intelligence is the first. Future modules (Infrastructure Intelligence, Cyber Intelligence, Regulatory Intelligence, etc.) follow the same PI Core + domain interpretation architecture.
+**Current implementation boundary:** GAP-01 through GAP-08 (SQO_GAP_REGISTER.md). Graph-based progression intelligence (which action unlocks which corridor) is Phase 3 (GAP-08).
 
 **Maturity classification:**
 
 | Construct | Maturity |
 |---|---|
-| Software Intelligence constitutional definition | CONSTITUTIONALLY_DEFINED — all concepts specified, no implementation |
-| Domain Cognition Module pattern | CONSTITUTIONALLY_DEFINED — architectural pattern locked |
+| SQO execution bridge | VERIFIED — PR #16, end-to-end proven |
+| Event-log-derived learning | OPERATIONAL (v1) — descriptive, read-only |
+| Domain Cognition Module pattern | PROVEN — architecture demonstrated by PR #16 |
 | Marketplace architecture | CONSTITUTIONALLY_DEFINED — module ecosystem defined |
-| SOFTWARE_INTELLIGENCE corridor evaluation | STUB — returns ABSENT unconditionally |
-| software_intelligence_module.json artifact | NOT_IMPLEMENTED — no pipeline produces it |
+| SOFTWARE_INTELLIGENCE corridor evaluation | STUB — returns ABSENT (full artifact activation pending) |
 | Pressure-topology integration | SPECIFIED_NOT_IMPLEMENTED — rendering model defined |
-| Persona consumption of SW-Intel | SPECIFIED_NOT_IMPLEMENTED — consumption spec defined |
+| Persona-specific SW-Intel consumption | SPECIFIED_NOT_IMPLEMENTED — all personas receive same rendering |
+| Prescriptive learning / operator modeling | DEFERRED — governance-sensitive (GAP-04) |
+| Graph-based progression intelligence | FUTURE — Phase 3 (GAP-08) |
 
-**Reference:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/` — 5 deliverable documents + 4 governance artifacts.
+**Reference:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/` — 5 deliverable documents + 4 governance artifacts. Runtime artifacts in `app/execlens-demo/lib/sqo-cockpit/`.
 
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 
