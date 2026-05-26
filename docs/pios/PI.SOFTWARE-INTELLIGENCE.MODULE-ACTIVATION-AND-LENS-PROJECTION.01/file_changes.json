@@ -1,0 +1,51 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "action": "CREATE",
+      "purpose": "Provisional SW-Intel projection derivation from fullReport fields"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "CREATE",
+      "purpose": "SW-Intel zone components for all 4 personas"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFY",
+      "purpose": "SW-Intel toggle state, AuthorityBand integration, prop passing, CSS"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/LensDisclosureShell.jsx",
+      "action": "MODIFY",
+      "purpose": "Accept and pass swIntelActive/swIntelProjection/onSwIntelDeactivate"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFY",
+      "purpose": "Import SW-Intel components, dispatch to SW-Intel views when active"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01/execution_report.md",
+      "action": "CREATE",
+      "purpose": "Stream governance"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01/validation_log.json",
+      "action": "CREATE",
+      "purpose": "Stream governance"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01/file_changes.json",
+      "action": "CREATE",
+      "purpose": "Stream governance"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.MODULE-ACTIVATION-AND-LENS-PROJECTION.01/CLOSURE.md",
+      "action": "CREATE",
+      "purpose": "Stream governance"
+    }
+  ]
+}
