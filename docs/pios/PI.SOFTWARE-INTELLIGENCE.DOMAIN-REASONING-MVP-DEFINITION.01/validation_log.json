@@ -1,0 +1,27 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "checks": [
+    { "name": "operational_questions_complete", "result": "PASS", "detail": "9 operational questions (OQ-1 through OQ-9) defined. Each maps to at least one CF. No CF orphaned." },
+    { "name": "cf_coverage_complete", "result": "PASS", "detail": "All 10 CFs (CF-01 through CF-10) covered. CF-08 cross-cutting. No orphan CFs, no capability without CF grounding." },
+    { "name": "capability_count_justified", "result": "PASS", "detail": "9 capabilities: 8 primitives + 1 composite. Below 6 = CF gaps. Above 9 = candidates need unavailable evidence or prohibited reasoning." },
+    { "name": "tier_classification_consistent", "result": "PASS", "detail": "Tier 1 (3): STP, PI, SQP — system vital signs. Tier 2 (4): DF, CL, CP, IE — condition-dependent. Tier 3 (2): EC, VC — artifact-dependent." },
+    { "name": "composite_primitive_clean", "result": "PASS", "detail": "8 primitives resolve independently. 1 composite (DF) derives from resolved primitives (PI+CP+CL+VC). No circular dependencies." },
+    { "name": "genesis_readiness_honest", "result": "PASS", "detail": "6/9 READY_FOR_REASONING, 3/9 PARTIAL (PI, EC, VC). 0/9 BLOCKED. READY_FOR_REASONING distinguished from READY_FOR_FULL_PRODUCT_PROJECTION." },
+    { "name": "current_contract_migration_mapped", "result": "PASS", "detail": "All 6 current contracts mapped: 4 keep/rename, 1 split (OPERATIONAL_TOPOLOGY → STP+PI), 1 transform (PROPAGATION_RISK → CP). 2 new (EC, VC)." },
+    { "name": "topology_behavior_per_capability", "result": "PASS", "detail": "All 9 capabilities specify topology behavior: what changes on SVG when activated, what dims, what emphasizes." },
+    { "name": "panel_mutation_per_capability", "result": "PASS", "detail": "All 9 capabilities specify left panel mutation (interpretation) and right panel mutation (guided queries + actions)." },
+    { "name": "orchestration_implication_per_capability", "result": "PASS", "detail": "All 9 capabilities specify how findings feed Layer 2 orchestration. No capability owns orchestration actions." },
+    { "name": "stp_boundary_defined", "result": "PASS", "detail": "STP answers 'what does topology shape imply operationally?' — not generic statistics. Failure condition: statistics dashboard = regression." },
+    { "name": "sqp_boundary_defined", "result": "PASS", "detail": "SQP interprets qualification for operational trust — does NOT render governance lifecycle, SQO transitions, or action logs. Failure condition: governance rendering = regression." },
+    { "name": "layer_boundaries_enforced", "result": "PASS", "detail": "All 9 capabilities are Layer 3. None compute truth (L1) or own orchestration (L2). Evidence adapter enforces boundary." },
+    { "name": "failure_conditions_defined", "result": "PASS", "detail": "7 failure conditions defined: 9 stacked cards, topology unchanged, SQP regression, STP regression, capability owns orchestration, raw fullReport access, no cognition state transition." },
+    { "name": "implementation_sequence_defined", "result": "PASS", "detail": "5 phases: A (Model Lock — this stream), B (Evidence Adapter), C (Contract Refactoring), D (Cognition State Projection), E (Orchestration Integration)." },
+    { "name": "no_code_changes", "result": "PASS", "detail": "Stream produces definition artifacts only. No code files modified." },
+    { "name": "no_new_terms", "result": "PASS", "detail": "All terms used (Software Intelligence, Domain Cognition Module, Marketplace, etc.) already locked in TERMINOLOGY_LOCK.md." },
+    { "name": "capability_neq_panel_doctrine", "result": "PASS", "detail": "Foundational doctrine established: capability = runtime cognition state (topology focus + state transition + adaptive panels + query adaptation + evidence drilldown + orchestration implication), NOT rendered panel." }
+  ],
+  "summary": "18/18 PASS",
+  "result": "VALID"
+}

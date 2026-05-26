@@ -1,0 +1,38 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "files": [
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/SW_INTEL_MODULE_DEFINITION.md",
+      "action": "CREATE",
+      "detail": "Canonical SW-Intel MVP capability model: 9 capabilities, 3 tiers, 9 operational questions, CF coverage matrix, GENESIS readiness, current contract migration, implementation sequencing, failure conditions"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/execution_report.md",
+      "action": "CREATE",
+      "detail": "Stream governance — execution report"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/validation_log.json",
+      "action": "CREATE",
+      "detail": "Stream governance — 18/18 validation checks"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/file_changes.json",
+      "action": "CREATE",
+      "detail": "This file — stream governance"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/CLOSURE.md",
+      "action": "CREATE",
+      "detail": "Stream governance — closure document"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "created": 5,
+    "modified": 0,
+    "code_files_changed": 0
+  }
+}
