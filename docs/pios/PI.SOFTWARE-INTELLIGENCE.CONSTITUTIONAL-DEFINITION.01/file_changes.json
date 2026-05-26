@@ -30,9 +30,14 @@
       "detail": "Reusable concepts from proven runtime. 6 sections"
     },
     {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/RUNTIME_REALITY_TABLE.md",
+      "action": "CREATE",
+      "detail": "40-claim cross-check: concept → implementation path → runtime artifact → execution maturity → projection maturity → known gaps → future stream. 55% PROVEN, 10% PARTIAL, 30% NOT IMPLEMENTED, 5% DEFERRED"
+    },
+    {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CLOSURE.md",
       "action": "REWRITE",
-      "detail": "Stream governance closure with PR #16 anchor"
+      "detail": "Stream governance closure with PR #16 anchor and §12 Runtime Reality Cross-Check"
     },
     {
       "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/execution_report.md",
@@ -61,8 +66,8 @@
     }
   ],
   "summary": {
-    "total": 11,
-    "created_or_rewritten": 9,
+    "total": 12,
+    "created_or_rewritten": 10,
     "modified": 2,
     "code_files_changed": 0
   }

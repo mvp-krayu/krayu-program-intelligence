@@ -24,7 +24,7 @@
 - PIOS_CURRENT_CANONICAL_STATE.md: Domain Cognition Module Architecture section rewritten with PR #16 evidence. Maturity classifications updated (VERIFIED, OPERATIONAL, PROVEN)
 
 ## 4. Files impacted
-11 files total (9 CREATED or REWRITTEN, 2 MODIFIED). See file_changes.json.
+12 files total (10 CREATED or REWRITTEN, 2 MODIFIED). See file_changes.json.
 
 ## 5. Validation
 19/19 checks PASS. See validation_log.json.
@@ -57,6 +57,7 @@
 - docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/execution_report.md
 - docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/validation_log.json
 - docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/file_changes.json
+- docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/RUNTIME_REALITY_TABLE.md
 - docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/CLOSURE.md
 
 ## 9. Ready state
@@ -103,3 +104,6 @@
 
 ## 11. Implementation Semantics
 See: IMPLEMENTATION_SEMANTICS.md
+
+## 12. Runtime Reality Cross-Check
+See: RUNTIME_REALITY_TABLE.md — 40 constitutional claims mapped to implementation paths, runtime artifacts, execution maturity, projection maturity, known gaps, and future stream dependencies. 55% PROVEN, 10% PARTIAL, 30% NOT IMPLEMENTED (constitutional target), 5% DEFERRED.
