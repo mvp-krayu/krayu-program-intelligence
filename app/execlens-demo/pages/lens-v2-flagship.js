@@ -8411,6 +8411,287 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .sw-intel-view--dense .sw-intel-panel,
         .sw-intel-view--investigation .sw-intel-panel { margin-bottom: 12px; }
 
+        /* ─── Cognition Surface Rendering ─── */
+
+        .sw-intel-surfaces {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .sw-intel-surface {
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #141720;
+          padding: 14px 16px;
+          border-left: 3px solid #4a5570;
+        }
+        .sw-intel-surface[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .sw-intel-surface[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .sw-intel-surface[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .sw-intel-surface[data-severity="LOW"] { border-left-color: #64ffda; }
+
+        .sw-intel-surface-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+        }
+        .sw-intel-surface-icon {
+          font-size: 15px;
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        .sw-intel-surface-name {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+        .sw-intel-surface-severity {
+          margin-left: auto;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .sw-intel-surface-summary {
+          font-size: 12.5px;
+          color: #9aa0bc;
+          line-height: 1.5;
+          margin-bottom: 6px;
+        }
+        .sw-intel-surface-consequence {
+          font-size: 11.5px;
+          color: #7a8aaa;
+          line-height: 1.45;
+          font-style: italic;
+          margin-bottom: 8px;
+        }
+
+        .sw-intel-surface-domains {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-bottom: 8px;
+        }
+        .sw-intel-surface-domain-tag {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          background: rgba(74,158,255,0.06);
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          padding: 2px 6px;
+          max-width: 180px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .sw-intel-surface-domain-more {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          padding: 2px 4px;
+        }
+
+        .sw-intel-surface-expand {
+          background: none;
+          border: none;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          cursor: pointer;
+          padding: 4px 0;
+          letter-spacing: 0.04em;
+          transition: color 0.15s ease;
+        }
+        .sw-intel-surface-expand:hover { color: #7a8aaa; }
+
+        .sw-intel-surface-footer {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid #12151f;
+        }
+        .sw-intel-surface-density {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+
+        /* ─── Surface Detail (expandable) ─── */
+
+        .sw-intel-surface-detail {
+          border: 1px solid #12151f;
+          border-radius: 3px;
+          background: #12151f;
+          padding: 8px 10px;
+          margin: 6px 0;
+        }
+        .sw-intel-surface-detail-row {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          padding: 3px 0;
+          border-bottom: 1px solid rgba(30,35,48,0.5);
+        }
+        .sw-intel-surface-detail-row:last-child { border-bottom: none; }
+        .sw-intel-surface-detail-row--warn {
+          border-left: 2px solid #ff9e4a;
+          padding-left: 8px;
+        }
+        .sw-intel-surface-detail-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          min-width: 80px;
+          flex-shrink: 0;
+        }
+        .sw-intel-surface-detail-value {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #9aa0bc;
+          word-break: break-word;
+        }
+
+        /* ─── Propagation Chain ─── */
+
+        .sw-intel-surface-propagation-chain {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 4px;
+        }
+        .sw-intel-surface-chain-node {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .sw-intel-surface-chain-arrow {
+          color: #4a5570;
+          font-size: 12px;
+        }
+        .sw-intel-surface-chain-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #ccd6f6;
+          background: rgba(74,158,255,0.06);
+          padding: 2px 6px;
+          border-radius: 2px;
+          border: 1px solid #1e2330;
+        }
+        .sw-intel-surface-chain-node[data-role="ORIGIN"] .sw-intel-surface-chain-domain {
+          border-color: rgba(255,107,107,0.3);
+        }
+        .sw-intel-surface-chain-node[data-role="PASS_THROUGH"] .sw-intel-surface-chain-domain {
+          border-color: rgba(255,158,74,0.3);
+        }
+        .sw-intel-surface-chain-node[data-role="RECEIVER"] .sw-intel-surface-chain-domain {
+          border-color: rgba(255,215,0,0.3);
+        }
+        .sw-intel-surface-chain-role {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+
+        /* ─── Peak Severity Strip ─── */
+
+        .sw-intel-peak-strip {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 12px;
+          background: #12151f;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          margin-bottom: 10px;
+        }
+        .sw-intel-peak-indicator {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+        }
+        .sw-intel-peak-count {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .sw-intel-peak-elevated {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ff9e4a;
+          margin-left: auto;
+        }
+
+        /* ─── Boardroom Surface Cards ─── */
+
+        .sw-intel-boardroom-surface {
+          padding: 8px 10px;
+          border-left: 2px solid #4a5570;
+          margin-bottom: 8px;
+        }
+        .sw-intel-boardroom-surface[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .sw-intel-boardroom-surface[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .sw-intel-boardroom-surface-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .sw-intel-boardroom-surface-name {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+        }
+        .sw-intel-boardroom-surface-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          margin-left: auto;
+        }
+        .sw-intel-boardroom-surface-summary {
+          font-size: 11.5px;
+          color: #9aa0bc;
+          line-height: 1.45;
+        }
+        .sw-intel-boardroom-more {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          padding-top: 4px;
+        }
+
+        /* ─── Balanced Section Severity ─── */
+
+        .sw-intel-balanced-section-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          margin-left: 8px;
+        }
+        .sw-intel-balanced-section-consequence {
+          font-size: 11px;
+          color: #5a6380;
+          font-style: italic;
+          line-height: 1.4;
+          margin-top: 4px;
+        }
+
         .sw-intel-panel {
           border: 1px solid #1e2330;
           border-radius: 4px;
@@ -10140,6 +10421,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .sw-intel-balanced-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .sw-intel-balanced-section-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
           font-size: 10px;
           font-family: 'Courier New', monospace;
           letter-spacing: 0.1em;

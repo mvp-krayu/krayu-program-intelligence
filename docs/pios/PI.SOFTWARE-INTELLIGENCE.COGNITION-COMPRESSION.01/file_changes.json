@@ -1,0 +1,49 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "action": "REWRITE",
+      "detail": "Cognition compression — replaced 10 flat pass-through functions with 6 multi-source cognition surface derivation functions. projection_type changed to COMPRESSED_SW_INTEL_COGNITION. Primary output: surfaces[] array. Preserved execution_corridors + qualification_cognition + qualification_decomposition for orchestration backward compat. 594 → 424 lines"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "REWRITE",
+      "detail": "Replaced 7 flat-list panels (AttentionPanel, PressurePanel, ExecutionCorridorPanel, CoordinationSpinePanel, TopologyRolesPanel, DeploymentRiskPanel, RoleAbstractionsPanel) with CognitionSurfaceCard + CognitionSurfaceDetail + PeakSeverityStrip. All 4 view exports rewritten to consume surfaces[]. 408 → 295 lines"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFY",
+      "detail": "Added sw-intel-surface-* CSS block (180+ rules) for cognition surface rendering: surface cards, severity borders, expandable detail, propagation chain visualization, peak severity strip, boardroom/balanced surface variants. Fixed balanced section title flex layout"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01/execution_report.md",
+      "action": "CREATE",
+      "detail": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01/validation_log.json",
+      "action": "CREATE",
+      "detail": "16/16 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01/file_changes.json",
+      "action": "CREATE",
+      "detail": "This file"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01/CLOSURE.md",
+      "action": "CREATE",
+      "detail": "Stream closure"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "created": 4,
+    "rewritten": 2,
+    "modified": 1,
+    "code_files_changed": 3
+  }
+}

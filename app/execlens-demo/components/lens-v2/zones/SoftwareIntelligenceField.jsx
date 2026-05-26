@@ -19,6 +19,15 @@ const AXIS_LEVEL_COLOR = {
   UNAVAILABLE: '#4a5570',
 }
 
+const SURFACE_ICON = {
+  DELIVERY_FRAGILITY: '⧖',
+  COORDINATION_SATURATION: '⬡',
+  INTEGRATION_EXPOSURE: '⇌',
+  OPERATIONAL_TOPOLOGY: '◉',
+  QUALIFICATION_EXPOSURE: '⊘',
+  PROPAGATION_RISK: '⟿',
+}
+
 function QualificationContextStrip({ decomposition, qualification }) {
   if (!decomposition) return null
   const { structural_richness: sr, governance_depth: gd, reconciliation_authority: ra } = decomposition
@@ -55,220 +64,219 @@ function QualificationContextStrip({ decomposition, qualification }) {
   )
 }
 
-function SoftwareIntelligenceAttentionPanel({ signals }) {
-  if (!signals || signals.length === 0) return null
-  return (
-    <div className="sw-intel-panel sw-intel-panel--attention">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Operational Attention</span>
-        <span className="sw-intel-panel-count">{signals.length} signal{signals.length !== 1 ? 's' : ''}</span>
-      </div>
-      <div className="sw-intel-attention-list">
-        {signals.map(sig => (
-          <div key={sig.signal_id} className="sw-intel-attention-item" data-severity={sig.severity}>
-            <div className="sw-intel-attention-header">
-              <span className="sw-intel-attention-severity" style={{ color: SEVERITY_COLOR[sig.severity] || '#7a8aaa' }}>
-                {sig.severity}
-              </span>
-              <span className="sw-intel-attention-name">{sig.signal_name}</span>
-            </div>
-            <div className="sw-intel-attention-statement">{sig.operational_attention}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+// ─── COGNITION SURFACE CARD ─────────────────────────────────────────
+// Each surface is a compressed operational assessment, not a list panel
 
-function SoftwareIntelligencePressurePanel({ interpretations }) {
-  if (!interpretations || interpretations.length === 0) return null
-  return (
-    <div className="sw-intel-panel sw-intel-panel--pressure">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Execution Pressure</span>
-        <span className="sw-intel-panel-count">{interpretations.length} active</span>
-      </div>
-      <div className="sw-intel-pressure-list">
-        {interpretations.map(p => (
-          <div key={p.signal_id} className="sw-intel-pressure-item" data-severity={p.severity}>
-            <div className="sw-intel-pressure-row">
-              <span className="sw-intel-pressure-type">
-                {p.operational_type}
-              </span>
-              <span className="sw-intel-pressure-severity" style={{ color: SEVERITY_COLOR[p.severity] || '#7a8aaa' }}>
-                {p.severity}
-              </span>
-            </div>
-            {p.operational_statement && (
-              <div className="sw-intel-pressure-statement">{p.operational_statement}</div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SoftwareIntelligenceExecutionCorridorPanel({ corridors }) {
-  if (!corridors || corridors.length === 0) return null
-  const roleOrder = { ORIGIN: 0, PASS_THROUGH: 1, RECEIVER: 2 }
-  const sorted = [...corridors].sort((a, b) => (roleOrder[a.role] ?? 9) - (roleOrder[b.role] ?? 9))
-
-  return (
-    <div className="sw-intel-panel sw-intel-panel--corridors">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Execution Corridors</span>
-      </div>
-      <div className="sw-intel-corridor-flow">
-        {sorted.map((c, i) => (
-          <div key={c.domain} className="sw-intel-corridor-node" data-role={c.role}>
-            {i > 0 && <div className="sw-intel-corridor-arrow">→</div>}
-            <div className="sw-intel-corridor-card">
-              <div className="sw-intel-corridor-role">{c.role.replace(/_/g, ' ')}</div>
-              <div className="sw-intel-corridor-domain">{c.domain}</div>
-              <div className="sw-intel-corridor-desc">{c.operational_description}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SoftwareIntelligenceCoordinationSpinePanel({ spines }) {
-  if (!spines || spines.length === 0) return null
-  return (
-    <div className="sw-intel-panel sw-intel-panel--spines">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Coordination Spine</span>
-        <span className="sw-intel-panel-count">{spines.length} nodes</span>
-      </div>
-      <div className="sw-intel-spine-list">
-        {spines.map(spine => (
-          <div key={spine.path} className="sw-intel-spine-item">
-            <div className="sw-intel-spine-rank">#{spine.centrality_rank}</div>
-            <div className="sw-intel-spine-body">
-              <div className="sw-intel-spine-path" title={spine.path}>
-                {spine.path.split('/').slice(-2).join('/')}
-              </div>
-              <div className="sw-intel-spine-role">
-                <span className="sw-intel-spine-role-tag" data-role={spine.structural_role}>
-                  {spine.operational_role}
-                </span>
-              </div>
-              <div className="sw-intel-spine-metrics">
-                <span>in: {spine.in_degree}</span>
-                <span>out: {spine.out_degree}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SoftwareIntelligenceDeploymentRiskPanel({ risk }) {
-  if (!risk) return null
-  return (
-    <div className="sw-intel-panel sw-intel-panel--risk" data-risk={risk.risk_level}>
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Deployment Risk</span>
-        <span className="sw-intel-risk-level" data-level={risk.risk_level}>{risk.risk_level}</span>
-      </div>
-      <div className="sw-intel-risk-statement">{risk.operational_statement}</div>
-      <div className="sw-intel-risk-detail">
-        <span>{risk.activated_signal_count} pressure signal{risk.activated_signal_count !== 1 ? 's' : ''} active</span>
-        {risk.pressure_zone && <span> · zone: {risk.pressure_zone}</span>}
-      </div>
-    </div>
-  )
-}
-
-function SoftwareIntelligenceTopologyRolesPanel({ roles }) {
-  if (!roles || Object.keys(roles).length === 0) return null
-  const entries = Object.entries(roles).sort((a, b) => b[1].count - a[1].count)
-  const total = entries.reduce((sum, [, v]) => sum + v.count, 0)
-
-  return (
-    <div className="sw-intel-panel sw-intel-panel--topology-roles">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Runtime Topology</span>
-        <span className="sw-intel-panel-count">{total} files</span>
-      </div>
-      <div className="sw-intel-role-grid">
-        {entries.map(([role, data]) => {
-          const pct = total > 0 ? Math.round((data.count / total) * 100) : 0
-          return (
-            <div key={role} className="sw-intel-role-item">
-              <div className="sw-intel-role-bar-row">
-                <span className="sw-intel-role-name">{data.operational_name}</span>
-                <span className="sw-intel-role-count">{data.count}</span>
-              </div>
-              <div className="sw-intel-role-bar">
-                <div className="sw-intel-role-bar-fill" style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-function SoftwareIntelligenceRoleAbstractionsPanel({ abstractions }) {
+function CognitionSurfaceCard({ surface, expandable }) {
   const [expanded, setExpanded] = useState(false)
-  if (!abstractions || abstractions.length === 0) return null
-
-  const zoneAnchors = abstractions.filter(a => a.operational_role.includes('anchor'))
-  const backed = abstractions.filter(a => a.structural_backing === 'BACKED' && !a.operational_role.includes('anchor'))
-  const semanticOnly = abstractions.filter(a => a.structural_backing === 'SEMANTIC_ONLY')
+  const icon = SURFACE_ICON[surface.surface_id] || '◆'
+  const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
 
   return (
-    <div className="sw-intel-panel sw-intel-panel--domains">
-      <div className="sw-intel-panel-header">
-        <span className="sw-intel-panel-title">Domain Roles</span>
-        <span className="sw-intel-panel-count">{abstractions.length} domains</span>
+    <div className="sw-intel-surface" data-severity={surface.severity} data-surface={surface.surface_id}>
+      <div className="sw-intel-surface-header">
+        <span className="sw-intel-surface-icon" style={{ color: sevColor }}>{icon}</span>
+        <span className="sw-intel-surface-name">{surface.surface_name}</span>
+        <span className="sw-intel-surface-severity" style={{ color: sevColor }}>{surface.severity}</span>
       </div>
-      <div className="sw-intel-domain-summary">
-        {zoneAnchors.length > 0 && <span className="sw-intel-domain-chip sw-intel-domain-chip--anchor">{zoneAnchors.length} anchor</span>}
-        <span className="sw-intel-domain-chip sw-intel-domain-chip--backed">{backed.length} backed</span>
-        <span className="sw-intel-domain-chip sw-intel-domain-chip--semantic">{semanticOnly.length} semantic-only</span>
-      </div>
-      {(expanded ? abstractions : abstractions.slice(0, 6)).map(a => (
-        <div key={a.domain_id} className="sw-intel-domain-row" data-backing={a.structural_backing}>
-          <span className="sw-intel-domain-name">{a.domain_name}</span>
-          <span className="sw-intel-domain-role">{a.operational_role}</span>
+      <div className="sw-intel-surface-summary">{surface.operational_summary}</div>
+      <div className="sw-intel-surface-consequence">{surface.consequence}</div>
+      {surface.affected_domains && surface.affected_domains.length > 0 && (
+        <div className="sw-intel-surface-domains">
+          {surface.affected_domains.slice(0, expanded ? undefined : 4).map(d => (
+            <span key={d} className="sw-intel-surface-domain-tag">{d}</span>
+          ))}
+          {!expanded && surface.affected_domains.length > 4 && (
+            <span className="sw-intel-surface-domain-more">+{surface.affected_domains.length - 4}</span>
+          )}
         </div>
-      ))}
-      {abstractions.length > 6 && (
-        <button className="sw-intel-domain-toggle" onClick={() => setExpanded(p => !p)} type="button">
-          {expanded ? '▴ collapse' : `▾ ${abstractions.length - 6} more domains`}
-        </button>
+      )}
+      {expandable && surface.constituents && (
+        <>
+          {expanded && (
+            <CognitionSurfaceDetail surface={surface} />
+          )}
+          <button className="sw-intel-surface-expand" onClick={() => setExpanded(p => !p)} type="button">
+            {expanded ? '▴ collapse' : '▾ structural detail'}
+          </button>
+        </>
+      )}
+      <div className="sw-intel-surface-footer">
+        <span className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</span>
+      </div>
+    </div>
+  )
+}
+
+function CognitionSurfaceDetail({ surface }) {
+  const c = surface.constituents
+  if (!c) return null
+
+  if (surface.surface_id === 'DELIVERY_FRAGILITY' && Array.isArray(c)) {
+    return (
+      <div className="sw-intel-surface-detail">
+        {c.map(item => (
+          <div key={item.domain} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{item.domain}</span>
+            <span className="sw-intel-surface-detail-value">
+              {item.role} · {item.signal_count} signal{item.signal_count !== 1 ? 's' : ''}
+              {item.peak_severity && <span style={{ color: SEVERITY_COLOR[item.peak_severity] }}> · {item.peak_severity}</span>}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'COORDINATION_SATURATION' && Array.isArray(c)) {
+    return (
+      <div className="sw-intel-surface-detail">
+        {c.map(item => (
+          <div key={item.path} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{item.path.split('/').slice(-2).join('/')}</span>
+            <span className="sw-intel-surface-detail-value">
+              {item.role} · in:{item.in_degree} out:{item.out_degree} · #{item.centrality_rank}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'INTEGRATION_EXPOSURE' && c.pass_through_domains) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">bridges</span>
+          <span className="sw-intel-surface-detail-value">{c.bridges}</span>
+        </div>
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">connectors</span>
+          <span className="sw-intel-surface-detail-value">{c.connectors}</span>
+        </div>
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">import signals</span>
+          <span className="sw-intel-surface-detail-value">{c.isig_signals}</span>
+        </div>
+        {c.pass_through_domains.length > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">conducting</span>
+            <span className="sw-intel-surface-detail-value">{c.pass_through_domains.join(', ')}</span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'OPERATIONAL_TOPOLOGY' && c.role_breakdown) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">grounding</span>
+          <span className="sw-intel-surface-detail-value">{c.backed} backed · {c.semantic_only} semantic-only · {c.grounding_pct}%</span>
+        </div>
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">distribution</span>
+          <span className="sw-intel-surface-detail-value">{c.role_distribution}</span>
+        </div>
+        {Object.entries(c.role_breakdown).sort((a, b) => b[1].count - a[1].count).slice(0, 4).map(([role, data]) => (
+          <div key={role} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{role}</span>
+            <span className="sw-intel-surface-detail-value">{data.count} ({data.pct}%)</span>
+          </div>
+        ))}
+        {c.zone_anchors > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">zone anchors</span>
+            <span className="sw-intel-surface-detail-value">{c.zone_anchors}</span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'QUALIFICATION_EXPOSURE') {
+    return (
+      <div className="sw-intel-surface-detail">
+        {c.s_level && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">level</span>
+            <span className="sw-intel-surface-detail-value">{c.s_level}{c.promotion_eligible ? ' · eligible' : ''}{c.authority_ceiling ? ` · ceiling ${c.authority_ceiling}` : ''}</span>
+          </div>
+        )}
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">artifacts</span>
+          <span className="sw-intel-surface-detail-value">{c.artifacts_present}/{c.artifacts_total} present</span>
+        </div>
+        {c.gaps.length > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">gaps</span>
+            <span className="sw-intel-surface-detail-value">{c.gaps.join(', ')}</span>
+          </div>
+        )}
+        {c.blockers.length > 0 && c.blockers.map((b, i) => (
+          <div key={i} className="sw-intel-surface-detail-row sw-intel-surface-detail-row--warn">
+            <span className="sw-intel-surface-detail-label">blocker</span>
+            <span className="sw-intel-surface-detail-value">{b}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'PROPAGATION_RISK' && c.chain) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-propagation-chain">
+          {c.chain.map((node, i) => (
+            <div key={node.domain + i} className="sw-intel-surface-chain-node" data-role={node.role}>
+              {i > 0 && <span className="sw-intel-surface-chain-arrow">→</span>}
+              <span className="sw-intel-surface-chain-domain">{node.domain}</span>
+              <span className="sw-intel-surface-chain-role">{node.role.replace(/_/g, ' ')}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return null
+}
+
+// ─── PEAK SEVERITY STRIP ────────────────────────────────────────────
+
+function PeakSeverityStrip({ surfaces }) {
+  if (!surfaces || surfaces.length === 0) return null
+  const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+  const peakSeverity = surfaces[0].severity
+
+  return (
+    <div className="sw-intel-peak-strip" data-severity={peakSeverity}>
+      <span className="sw-intel-peak-indicator" style={{ color: SEVERITY_COLOR[peakSeverity] }}>{peakSeverity}</span>
+      <span className="sw-intel-peak-count">{surfaces.length} cognition surface{surfaces.length !== 1 ? 's' : ''}</span>
+      {elevated.length > 0 && (
+        <span className="sw-intel-peak-elevated">{elevated.length} requiring attention</span>
       )}
     </div>
   )
 }
 
-function SoftwareIntelligenceEvidenceTrace({ projection }) {
-  const totalTraces = [
-    projection.role_abstractions.length,
-    projection.pressure_interpretations.length,
-    projection.execution_corridors.length,
-    Object.keys(projection.topology_roles).length,
-    projection.attention_signals.length,
-    projection.coordination_spines.length,
-    projection.deployment_risk ? 1 : 0,
-  ].reduce((a, b) => a + b, 0)
+// ─── EVIDENCE FOOTER ────────────────────────────────────────────────
+
+function CognitionEvidenceFooter({ surfaces }) {
+  const totalEvidence = surfaces.reduce((sum, s) => sum + (s.evidence_density || 0), 0)
+  const totalSources = new Set(surfaces.flatMap(s => s.trace_sources || []))
 
   return (
     <div className="sw-intel-evidence-footer">
-      <span className="sw-intel-evidence-count">{totalTraces} derivations</span>
+      <span className="sw-intel-evidence-count">{totalEvidence} evidence items across {surfaces.length} surfaces</span>
       <span className="sw-intel-evidence-sep">·</span>
       <span className="sw-intel-evidence-note">structurally derived — no inference</span>
     </div>
   )
 }
+
+// ─── FALLBACK + TOGGLE (preserved) ──────────────────────────────────
 
 function SoftwareIntelligenceRawPICoreFallback({ onDeactivate }) {
   return (
@@ -294,46 +302,52 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
   )
 }
 
+// ─── VIEW EXPORTS ───────────────────────────────────────────────────
+
 export function SoftwareIntelligenceDenseView({ projection, onDeactivate }) {
+  const surfaces = projection.surfaces || []
+
   return (
     <div className="sw-intel-view sw-intel-view--dense">
       <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       <SoftwareIntelligenceRawPICoreFallback onDeactivate={onDeactivate} />
+      <PeakSeverityStrip surfaces={surfaces} />
 
-      <SoftwareIntelligenceDeploymentRiskPanel risk={projection.deployment_risk} />
-      <SoftwareIntelligenceAttentionPanel signals={projection.attention_signals} />
-      <SoftwareIntelligencePressurePanel interpretations={projection.pressure_interpretations} />
-      <SoftwareIntelligenceExecutionCorridorPanel corridors={projection.execution_corridors} />
-      <SoftwareIntelligenceCoordinationSpinePanel spines={projection.coordination_spines} />
-      <SoftwareIntelligenceTopologyRolesPanel roles={projection.topology_roles} />
+      <div className="sw-intel-surfaces">
+        {surfaces.map(s => (
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} />
+        ))}
+      </div>
 
-      <SoftwareIntelligenceEvidenceTrace projection={projection} />
+      <CognitionEvidenceFooter surfaces={surfaces} />
     </div>
   )
 }
 
 export function SoftwareIntelligenceInvestigationView({ projection, onDeactivate }) {
+  const surfaces = projection.surfaces || []
+
   return (
     <div className="sw-intel-view sw-intel-view--investigation">
       <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       <SoftwareIntelligenceRawPICoreFallback onDeactivate={onDeactivate} />
+      <PeakSeverityStrip surfaces={surfaces} />
 
-      <SoftwareIntelligenceDeploymentRiskPanel risk={projection.deployment_risk} />
-      <SoftwareIntelligenceAttentionPanel signals={projection.attention_signals} />
-      <SoftwareIntelligencePressurePanel interpretations={projection.pressure_interpretations} />
-      <SoftwareIntelligenceExecutionCorridorPanel corridors={projection.execution_corridors} />
-      <SoftwareIntelligenceCoordinationSpinePanel spines={projection.coordination_spines} />
-      <SoftwareIntelligenceTopologyRolesPanel roles={projection.topology_roles} />
-      <SoftwareIntelligenceRoleAbstractionsPanel abstractions={projection.role_abstractions} />
+      <div className="sw-intel-surfaces">
+        {surfaces.map(s => (
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} />
+        ))}
+      </div>
 
-      <SoftwareIntelligenceEvidenceTrace projection={projection} />
+      <CognitionEvidenceFooter surfaces={surfaces} />
     </div>
   )
 }
 
 export function SoftwareIntelligenceBoardroomSummary({ projection }) {
-  const risk = projection.deployment_risk
-  const attn = projection.attention_signals
+  const surfaces = projection.surfaces || []
+  const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+  const toShow = elevated.length > 0 ? elevated.slice(0, 3) : surfaces.slice(0, 2)
 
   return (
     <div className="sw-intel-boardroom-summary">
@@ -341,31 +355,24 @@ export function SoftwareIntelligenceBoardroomSummary({ projection }) {
         <span className="sw-intel-boardroom-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       </div>
-      {risk && (
-        <div className="sw-intel-boardroom-risk" data-level={risk.risk_level}>
-          <span className="sw-intel-boardroom-risk-label">Deployment Risk</span>
-          <span className="sw-intel-boardroom-risk-level">{risk.risk_level}</span>
-          <div className="sw-intel-boardroom-risk-desc">{risk.operational_statement}</div>
+      {toShow.map(s => (
+        <div key={s.surface_id} className="sw-intel-boardroom-surface" data-severity={s.severity}>
+          <div className="sw-intel-boardroom-surface-header">
+            <span className="sw-intel-boardroom-surface-name">{s.surface_name}</span>
+            <span className="sw-intel-boardroom-surface-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
+          </div>
+          <div className="sw-intel-boardroom-surface-summary">{s.operational_summary}</div>
         </div>
-      )}
-      {attn && attn.length > 0 && (
-        <div className="sw-intel-boardroom-attention">
-          {attn.slice(0, 3).map(sig => (
-            <div key={sig.signal_id} className="sw-intel-boardroom-attention-item" data-severity={sig.severity}>
-              <span className="sw-intel-boardroom-attention-sev">{sig.severity}</span>
-              <span className="sw-intel-boardroom-attention-desc">{sig.operational_attention}</span>
-            </div>
-          ))}
-        </div>
+      ))}
+      {surfaces.length > toShow.length && (
+        <div className="sw-intel-boardroom-more">+{surfaces.length - toShow.length} surface{surfaces.length - toShow.length !== 1 ? 's' : ''}</div>
       )}
     </div>
   )
 }
 
 export function SoftwareIntelligenceBalancedNarrative({ projection }) {
-  const risk = projection.deployment_risk
-  const attn = projection.attention_signals
-  const corridors = projection.execution_corridors
+  const surfaces = projection.surfaces || []
 
   return (
     <div className="sw-intel-balanced-narrative">
@@ -373,33 +380,18 @@ export function SoftwareIntelligenceBalancedNarrative({ projection }) {
         <span className="sw-intel-balanced-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       </div>
-      {risk && (
-        <div className="sw-intel-balanced-section">
-          <div className="sw-intel-balanced-section-title">Deployment Risk</div>
-          <div className="sw-intel-balanced-section-body">{risk.operational_statement}</div>
+      {surfaces.slice(0, 4).map(s => (
+        <div key={s.surface_id} className="sw-intel-balanced-section">
+          <div className="sw-intel-balanced-section-title">
+            <span>{s.surface_name}</span>
+            <span className="sw-intel-balanced-section-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
+          </div>
+          <div className="sw-intel-balanced-section-body">{s.operational_summary}</div>
+          {s.consequence && (
+            <div className="sw-intel-balanced-section-consequence">{s.consequence}</div>
+          )}
         </div>
-      )}
-      {corridors && corridors.length > 0 && (
-        <div className="sw-intel-balanced-section">
-          <div className="sw-intel-balanced-section-title">Execution Corridors</div>
-          {corridors.map(c => (
-            <div key={c.domain} className="sw-intel-balanced-corridor">
-              <span className="sw-intel-balanced-corridor-role">{c.role.replace(/_/g, ' ')}</span>
-              <span className="sw-intel-balanced-corridor-desc">{c.operational_description}</span>
-            </div>
-          ))}
-        </div>
-      )}
-      {attn && attn.length > 0 && (
-        <div className="sw-intel-balanced-section">
-          <div className="sw-intel-balanced-section-title">Operational Attention</div>
-          {attn.slice(0, 3).map(sig => (
-            <div key={sig.signal_id} className="sw-intel-balanced-attention" data-severity={sig.severity}>
-              {sig.operational_attention}
-            </div>
-          ))}
-        </div>
-      )}
+      ))}
     </div>
   )
 }
