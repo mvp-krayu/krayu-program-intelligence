@@ -9329,6 +9329,406 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           opacity: 0.5;
         }
 
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        /* Layer 2 — Orchestration Guidance Runtime           */
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .orch-guidance-runtime {
+          margin-top: 14px;
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          background: #12151f;
+          overflow: hidden;
+        }
+        .orch-guidance-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 14px;
+          border-bottom: 1px solid #1e2330;
+          background: rgba(20,23,31,0.5);
+        }
+        .orch-guidance-title {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .orch-guidance-count {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+        .orch-guidance-critical { color: #ff6b6b; font-weight: 600; }
+        .orch-guidance-high { color: #ff6b6b; font-weight: 600; }
+        .orch-guidance-governed { color: #4a9eff; }
+        .orch-guidance-list {
+          display: flex;
+          flex-direction: column;
+        }
+        .orch-guidance-staged-summary {
+          padding: 8px 14px;
+          border-top: 1px solid #1e2330;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ffd700;
+          letter-spacing: 0.04em;
+          background: rgba(255,215,0,0.03);
+        }
+        .orch-guidance-posture {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 12px 6px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+        }
+        .orch-guidance-posture-level { color: #4a9eff; font-weight: 600; }
+        .orch-guidance-posture-sep { color: #2a2f40; }
+        .orch-guidance-posture-label { color: #7a8aaa; }
+        .orch-guided-action {
+          border-bottom: 1px solid #1e2330;
+        }
+        .orch-guided-action:last-child { border-bottom: none; }
+        .orch-guided-action-header {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          width: 100%;
+          padding: 10px 14px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.12s;
+        }
+        .orch-guided-action-header:hover { background: rgba(74,158,255,0.03); }
+        .orch-guided-action-dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin-top: 4px;
+          flex-shrink: 0;
+          background: #4a5570;
+        }
+        .orch-guided-action-dot[data-priority="CRITICAL"] { background: #ff6b6b; }
+        .orch-guided-action-dot[data-priority="HIGH"] { background: #ff6b6b; }
+        .orch-guided-action-dot[data-priority="MEDIUM"] { background: #ffd700; }
+        .orch-guided-action-dot[data-priority="LOW"] { background: #64ffda; }
+        .orch-guided-action-titles {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .orch-guided-action-title {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
+        .orch-guided-action-target {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+        }
+        .orch-guided-action-mode {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          flex-shrink: 0;
+          padding: 2px 6px;
+          border: 1px solid rgba(74,158,255,0.2);
+          border-radius: 2px;
+          background: rgba(74,158,255,0.04);
+        }
+        .orch-guided-action-status {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+          flex-shrink: 0;
+        }
+        .orch-guided-action-status[data-status="staged"] { color: #ffd700; }
+        .orch-guided-action-status[data-status="completed"] { color: #64ffda; }
+        .orch-guided-action-caret {
+          font-size: 10px;
+          color: #4a5570;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .orch-guided-action-body {
+          padding: 0 14px 14px 28px;
+        }
+        .orch-guided-action-meaning {
+          font-family: -apple-system, "system-ui", sans-serif;
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.5;
+          margin-bottom: 12px;
+        }
+        .orch-guided-action-section-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .orch-guided-action-evidence { margin-bottom: 12px; }
+        .orch-guided-action-evidence-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .orch-guided-action-evidence-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          padding: 2px 0;
+        }
+        .orch-guided-action-evidence-key {
+          color: #4a5570;
+          min-width: 100px;
+          flex-shrink: 0;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .orch-guided-action-evidence-val { color: #ccd6f6; }
+        .orch-guided-action-evidence-row[data-type="ok"] .orch-guided-action-evidence-val { color: #64ffda; }
+        .orch-guided-action-evidence-row[data-type="warn"] .orch-guided-action-evidence-val { color: #ff6b6b; }
+        .orch-guided-action-evidence-row[data-type="dim"] .orch-guided-action-evidence-val { color: #7a8aaa; }
+        .orch-guided-action-evidence-detail {
+          color: #4a5570;
+          font-size: 10px;
+        }
+        .orch-guided-action-workflow { margin-bottom: 12px; }
+        .orch-guided-action-steps {
+          margin: 0;
+          padding-left: 18px;
+          font-family: -apple-system, "system-ui", sans-serif;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.7;
+          list-style: decimal;
+        }
+        .orch-guided-action-steps li:last-child { color: #4a9eff; }
+        .orch-guided-action-decisions { margin-bottom: 12px; }
+        .orch-guided-action-decision-row {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .orch-guided-action-decision-btn {
+          padding: 5px 12px;
+          background: rgba(74,158,255,0.06);
+          border: 1px solid rgba(74,158,255,0.2);
+          border-radius: 3px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .orch-guided-action-decision-btn:hover {
+          background: rgba(74,158,255,0.12);
+          border-color: #4a9eff;
+        }
+        .orch-guided-action-staged-notice {
+          padding: 8px 12px;
+          margin-bottom: 10px;
+          background: rgba(255,215,0,0.04);
+          border: 1px solid rgba(255,215,0,0.15);
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ffd700;
+          letter-spacing: 0.03em;
+        }
+        .orch-guided-action-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+        }
+        .orch-guided-action-stage-btn {
+          padding: 5px 14px;
+          background: rgba(74,158,255,0.08);
+          border: 1px solid rgba(74,158,255,0.3);
+          border-radius: 3px;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .orch-guided-action-stage-btn:hover {
+          background: rgba(74,158,255,0.15);
+          border-color: #4a9eff;
+        }
+        .orch-guided-action-exec-path {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+        .orch-guided-action-sqo-exec {
+          padding: 8px 0 4px;
+          border-top: 1px solid #1e2330;
+        }
+        .orch-sqo-targets {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .orch-sqo-target {
+          border: 1px solid #1e2330;
+          border-radius: 4px;
+          overflow: hidden;
+          transition: border-color 0.12s;
+        }
+        .orch-sqo-target--selected { border-color: #4a9eff; }
+        .orch-sqo-target-select {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 6px 10px;
+          background: transparent;
+          border: none;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          cursor: pointer;
+          text-align: left;
+        }
+        .orch-sqo-target-select:hover { background: rgba(74,158,255,0.06); }
+        .orch-sqo-target-label { color: #ccd6f6; }
+        .orch-sqo-target-status { color: #7a8aaa; font-size: 10px; }
+        .orch-sqo-target-actions {
+          display: flex;
+          gap: 6px;
+          padding: 4px 10px 8px;
+          flex-wrap: wrap;
+        }
+        .orch-sqo-target-props {
+          padding: 0 10px 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .orch-sqo-prop {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          font-size: 10px;
+        }
+        .orch-sqo-prop-text { color: #7a8aaa; flex: 1; }
+        .orch-sqo-prop-conf {
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+        }
+        .orch-sqo-exec-btn {
+          padding: 4px 10px;
+          background: rgba(74,158,255,0.08);
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .orch-sqo-exec-btn:hover:not(:disabled) {
+          background: rgba(74,158,255,0.15);
+          border-color: #4a9eff;
+        }
+        .orch-sqo-exec-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .orch-sqo-exec-btn--primary {
+          background: rgba(74,158,255,0.12);
+          border-color: #4a9eff;
+        }
+        .orch-sqo-exec-btn[data-action="review_accept"] { color: #64ffda; border-color: rgba(100,255,218,0.2); }
+        .orch-sqo-exec-btn[data-action="review_reject"] { color: #ff6b6b; border-color: rgba(255,107,107,0.2); }
+        .orch-sqo-exec-btn[data-action="review_contest"] { color: #ffd700; border-color: rgba(255,215,0,0.2); }
+        .orch-sqo-exec-btn[data-action="promotion_approve"] { color: #64ffda; border-color: rgba(100,255,218,0.3); }
+        .orch-sqo-exec-btn[data-action="promotion_deny"] { color: #ff6b6b; border-color: rgba(255,107,107,0.2); }
+        .orch-sqo-confirm {
+          display: flex;
+          gap: 8px;
+          padding: 4px 0;
+        }
+        .orch-sqo-justification { padding: 6px 0; }
+        .orch-sqo-justification-input {
+          width: 100%;
+          padding: 6px 8px;
+          background: #12151f;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #ccd6f6;
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          resize: vertical;
+          margin-top: 4px;
+        }
+        .orch-sqo-justification-input:focus { outline: none; border-color: #4a9eff; }
+        .orch-sqo-result {
+          padding: 6px 10px;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          margin-top: 6px;
+        }
+        .orch-sqo-result--ok {
+          background: rgba(100,255,218,0.08);
+          border: 1px solid rgba(100,255,218,0.2);
+          color: #64ffda;
+        }
+        .orch-sqo-result--error {
+          background: rgba(255,107,107,0.08);
+          border: 1px solid rgba(255,107,107,0.2);
+          color: #ff6b6b;
+        }
+        .orch-guided-action-learning {
+          padding: 8px 12px;
+          margin: 0 0 4px;
+          border-left: 2px solid rgba(74,158,255,0.25);
+          background: rgba(74,158,255,0.04);
+        }
+        .orch-guided-action-learning-summary {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.4;
+        }
+        .orch-guided-action-learning-detail {
+          display: flex;
+          gap: 12px;
+          margin-top: 4px;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+        }
+        .orch-guided-action-learning-detail span[data-type="ok"] { color: #64ffda; }
+        .orch-guided-action-learning-detail span[data-type="warn"] { color: #ffd700; }
+        .orch-guided-action-learning-detail span[data-type="dim"] { color: #4a5570; }
+        .orch-guided-action[data-status="completed"] { opacity: 0.5; }
+
         /* Legacy decomposition — removed from component tree */
         .sw-intel-panel--decomposition {
           border-left-color: #4a9eff;

@@ -1,0 +1,24 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "checks": [
+    { "name": "layer_2_extracted", "result": "PASS", "detail": "OrchestrationGuidanceRuntime.jsx created — 550 lines, contains all guided action derivation, rendering, and SQO execution" },
+    { "name": "layer_3_purified", "result": "PASS", "detail": "SoftwareIntelligenceField.jsx reduced from 958 to 408 lines — zero orchestration imports, zero sqoBinding references, zero GuidedAction references" },
+    { "name": "no_orchestration_in_sw_intel", "result": "PASS", "detail": "grep for GuidedAction, deriveGuidedActions, ACTION_MODE, useRouter, LensSQOOrchestration, sqoBinding, sqoAuthorityWorkspace, handleSqoExecute, fullReport — all return empty in SoftwareIntelligenceField.jsx" },
+    { "name": "orchestration_renders_all_views", "result": "PASS", "detail": "OrchestrationGuidanceRuntime rendered in all 6 RepresentationField code paths: boardroom, investigation+swIntel, investigation, balanced, dense+swIntel, dense" },
+    { "name": "orchestration_independent_of_sw_intel", "result": "PASS", "detail": "Guided actions render when SW-Intel toggle is OFF — confirmed via browser screenshot" },
+    { "name": "sqo_execution_bridge_preserved", "result": "PASS", "detail": "handleSqoExecute in GuidedActionCard sends POST to /api/sqo/authority-action with client, runId, actor_id, action, target_item, justification — unchanged" },
+    { "name": "learning_enrichment_preserved", "result": "PASS", "detail": "deriveOrchestrationActions calls enrichActionsWithLearning when learningSignals available — unchanged in LensSQOOrchestrationAdapter" },
+    { "name": "build_passes", "result": "PASS", "detail": "npx next build — clean, no errors" },
+    { "name": "boardroom_renders", "result": "PASS", "detail": "Boardroom persona renders correctly — three-panel narrative + orchestration" },
+    { "name": "dense_renders", "result": "PASS", "detail": "Dense persona renders correctly — evidence blocks + orchestration" },
+    { "name": "sw_intel_dense_renders", "result": "PASS", "detail": "SW-Intel dense view renders — domain cognition panels + orchestration below" },
+    { "name": "no_console_errors", "result": "PASS", "detail": "No runtime errors in browser console (only stale HMR WebSocket from prior port attempt)" },
+    { "name": "css_separation", "result": "PASS", "detail": "orch-* CSS prefix for orchestration, sw-intel-* for domain cognition — no prefix collision" },
+    { "name": "total_lines_preserved", "result": "PASS", "detail": "408 (SW-Intel) + 550 (Orchestration) = 958 total — exact line count match with pre-separation SoftwareIntelligenceField.jsx" },
+    { "name": "no_code_loss", "result": "PASS", "detail": "All functions, components, constants, and logic preserved — only moved and renamed CSS prefixes" }
+  ],
+  "summary": "15/15 PASS",
+  "result": "VALID"
+}
