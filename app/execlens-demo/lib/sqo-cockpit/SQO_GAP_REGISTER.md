@@ -29,13 +29,13 @@
 **Impact:** Low-friction execution is operationally efficient but lacks ceremony for irreversible or high-consequence actions (promotion_approve, insufficiency_acknowledge).  
 **Resolution path:** Add confirmation ceremony for actions where `requiresJustification` is true or where the action is classified CRITICAL priority. Show prior_state, proposed resulting_state, and affected artifacts before confirming.
 
-### GAP-04: self-learning not started
+### GAP-04: self-learning is v1 descriptive, not prescriptive
 
-**Severity:** Expected — Phase 2  
-**Location:** N/A  
-**Description:** No adaptive learning, pattern detection, or operator decision modeling exists. This is correct and intentional. Self-learning sits on top of SQO doctrine and must not bypass it.  
-**Impact:** None — doctrine fidelity is prerequisite. Phase 1 is verified.  
-**Resolution path:** Phase 2 design: adaptive learning design on top of SQO doctrine. Inputs: replay logs, action outcomes, posture deltas, operator decisions, repeated blocker/action patterns. All learning must be explicit, replayable, versioned, auditable, doctrine-bound.
+**Severity:** Expected — Phase 2 delivered as v1  
+**Location:** SQOLearningSignalDerivation.server.js  
+**Description:** Learning signals are derived and displayed (action patterns, progression history, temporal signals). Learning is descriptive observation over event history — it does not prescribe actions, predict outcomes, or model operator behavior. Operator behavioral modeling is explicitly postponed (governance-sensitive).  
+**Impact:** Adaptive guidance is informational context. No prescriptive intelligence yet.  
+**Resolution path:** Phase 3: graph-based progression intelligence — which action unlocks which future action corridor. Requires dependency graph over action space, not flat priority sort.
 
 ### GAP-05: before/after state not displayed to operator
 
@@ -44,3 +44,27 @@
 **Description:** After action execution, LENS shows a result message ("Action executed — review_accept") and updated counts. It does not show a diff of prior_state vs resulting_state, or the full event record.  
 **Impact:** Operator sees the outcome (count changed, status updated) but not the governance record of what changed.  
 **Resolution path:** Display the returned event object (prior_state, resulting_state, semantic_disposition) in the result area before page reload.
+
+### GAP-06: no tests for SQO learning derivation
+
+**Severity:** Non-blocking  
+**Location:** SQOLearningSignalDerivation.server.js  
+**Description:** No unit tests exist for the learning signal derivation engine. Build compiles clean but derivation logic (event classification, pattern computation, temporal signal extraction) is untested.  
+**Impact:** Regressions in learning derivation would be silent until observed in LENS.  
+**Resolution path:** Add test coverage for `deriveLearningSignals()` with fixture event logs covering all event schema types (legacy pipeline events, LENS-initiated authority actions).
+
+### GAP-07: stale learning signals not explicitly detected
+
+**Severity:** Non-blocking  
+**Location:** SQOLearningSignalDerivation.server.js / LensSQOOrchestrationAdapter.js  
+**Description:** Learning signals include `derived_at` and `derived_from_events` fields for staleness detection, but no consumer checks these values. If the event log grows between page loads without an action execution (which triggers refresh), signals may be stale.  
+**Impact:** Learning context could show outdated pattern data. Low risk since signals are re-derived on every workspace resolution (server-side page load).  
+**Resolution path:** Add `derived_from_events` comparison against actual event log length in the adapter. Flag stale signals with a visual indicator.
+
+### GAP-08: graph-based progression intelligence (Phase 3)
+
+**Severity:** Future phase  
+**Location:** LensSQOOrchestrationAdapter.js  
+**Description:** Current action derivation produces a flat priority-sorted list. The next evolution is graph-based progression intelligence: which action unlocks which future action corridor. Example: resolving review obligations → unblocks promotion request → enables governance approval.  
+**Impact:** Operators see prioritized actions but not action dependency chains or unlockable corridors.  
+**Resolution path:** Model action dependencies as a directed graph. Derive corridor projections showing how current actions unlock future advancement paths.
