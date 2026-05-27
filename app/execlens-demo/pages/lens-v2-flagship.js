@@ -2820,6 +2820,19 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font: 400 10px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           color: #8a96b2;
         }
+        .interp-block--module-teaser {
+          border-top: 1px solid rgba(42, 47, 64, 0.4);
+        }
+        .interp-module-teaser-text {
+          font: 500 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b0;
+          margin-bottom: 4px;
+        }
+        .interp-module-teaser-cta {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.04em;
+        }
         .intel-interp--condition-active {
           border-left: 2px solid #4a9eff;
         }
@@ -3462,6 +3475,64 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor--synthesized-conditions {
           margin: 0;
           padding: 10px 14px;
+        }
+        .actor--module-teaser {
+          border: 1px solid rgba(42, 47, 64, 0.4);
+          background: rgba(13, 15, 20, 0.4);
+        }
+        .module-teaser-body {
+          padding: 12px 0 4px;
+        }
+        .module-teaser-headline {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .module-teaser-count {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          margin-bottom: 4px;
+        }
+        .module-teaser-prompt {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #5e6d8a;
+          margin-bottom: 8px;
+        }
+        .module-teaser-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .module-teaser-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 4px 8px;
+          background: rgba(26, 30, 43, 0.5);
+          border-left: 2px solid #2a2f40;
+        }
+        .module-teaser-item[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
+        .module-teaser-item[data-severity="HIGH"] { border-left-color: #ff9e4a; }
+        .module-teaser-item[data-severity="ELEVATED"] { border-left-color: #ffd700; }
+        .module-teaser-item-severity {
+          font: 600 9px/1 'Courier New', monospace;
+          color: #5e6d8a;
+          letter-spacing: 0.06em;
+          min-width: 56px;
+        }
+        .module-teaser-item[data-severity="CRITICAL"] .module-teaser-item-severity { color: #ff6b6b; }
+        .module-teaser-item[data-severity="HIGH"] .module-teaser-item-severity { color: #ff9e4a; }
+        .module-teaser-item[data-severity="ELEVATED"] .module-teaser-item-severity { color: #ffd700; }
+        .module-teaser-item-title {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b0;
+        }
+        .module-teaser-overflow {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #4a5570;
+          padding: 2px 8px;
         }
         .condition-primary-banner {
           display: flex;

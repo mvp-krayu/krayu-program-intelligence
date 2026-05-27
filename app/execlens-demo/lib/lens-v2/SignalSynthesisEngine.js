@@ -902,4 +902,43 @@ function synthesize(fullReport) {
   }
 }
 
-module.exports = { synthesize, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }
+function synthesizeTeaser(fullReport) {
+  if (!fullReport) return null
+
+  const signals = fullReport.signal_interpretations || []
+  const pressureZoneState = fullReport.pressure_zone_state || {}
+  const structuralEnrichment = fullReport.structural_enrichment || {}
+  const registry = fullReport.semantic_domain_registry || []
+
+  const taggedSignals = signals.map(signal => ({
+    signal,
+    features: extractFeatures(signal, pressureZoneState, structuralEnrichment),
+  }))
+
+  const primitives = [
+    ...ruleDeliveryPressureConcentration(taggedSignals, pressureZoneState, registry),
+    ...ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, []),
+    ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState),
+    ...ruleStructuralMassConcentration(taggedSignals, registry, null, pressureZoneState),
+    ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
+    ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
+  ]
+
+  const composites = ruleCompoundConvergence(primitives, registry)
+  const allConditions = [...primitives, ...composites]
+  const active = allConditions.filter(c => c.severity !== 'NOMINAL')
+  const sorted = [...active].sort((a, b) => (SEVERITY_RANK[a.severity] ?? 5) - (SEVERITY_RANK[b.severity] ?? 5))
+
+  return {
+    active_count: active.length,
+    total_count: allConditions.length,
+    top_conditions: sorted.slice(0, 3).map(c => ({
+      condition_id: c.condition_id,
+      title: c.operator_cognition_title,
+      severity: c.severity,
+    })),
+    overflow: Math.max(0, sorted.length - 3),
+  }
+}
+
+module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }
