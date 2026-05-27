@@ -1103,6 +1103,7 @@ function deriveConditionCognitionState(condition, fullReport) {
 
   const corridors = overlay.corridor_paths || []
   const evidenceCorridors = corridors.filter(c => c.evidence === 'semantic_topology_edge')
+  const centralityCorridors = corridors.filter(c => c.evidence === 'structural_centrality' || c.evidence === 'signal_metric')
   if (evidenceCorridors.length > 0) {
     const resolveName = (id) => {
       const d = registry.find(r => r.domain_id === id)
@@ -1110,6 +1111,7 @@ function deriveConditionCognitionState(condition, fullReport) {
     }
     const inbound = evidenceCorridors.filter(c => c.type === 'import_consumer')
     const outbound = evidenceCorridors.filter(c => c.type === 'import_hub_outbound')
+    const propagationOut = evidenceCorridors.filter(c => c.type === 'propagation_outbound')
     for (const c of inbound) {
       legendEntries.push({
         color: '#ff9e4a',
@@ -1121,6 +1123,23 @@ function deriveConditionCognitionState(condition, fullReport) {
       legendEntries.push({
         color: '#4a9eff',
         label: '→ ' + resolveName(c.to),
+        style: 'solid',
+      })
+    }
+    for (const c of propagationOut) {
+      legendEntries.push({
+        color: '#64ffda',
+        label: '⤑ ' + resolveName(c.to),
+        style: 'solid',
+      })
+    }
+  }
+  if (centralityCorridors.length > 0 && evidenceCorridors.length === 0) {
+    const metrics = overlay.propagation_metrics
+    if (metrics && metrics.import_out_degree > 0) {
+      legendEntries.push({
+        color: '#64ffda',
+        label: metrics.import_out_degree + ' outbound · ' + (metrics.fan_out_ratio > 0 ? metrics.fan_out_ratio.toFixed(1) + ':1' : 'asymmetric'),
         style: 'solid',
       })
     }

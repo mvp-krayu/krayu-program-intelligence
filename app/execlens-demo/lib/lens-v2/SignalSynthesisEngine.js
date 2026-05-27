@@ -486,22 +486,77 @@ function ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, to
   })
 }
 
-function rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState) {
+function rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState, topologyEdges, structuralEnrichment) {
   const signals = taggedSignals.filter(ts => ts.features.includes('propagation_asymmetry'))
   if (signals.length === 0) return []
 
   const domainIdSet = new Set((registry || []).map(d => d.domain_id))
   const vocab = CONDITION_VOCABULARY.PROPAGATION_ASYMMETRY
+  const edges = topologyEdges || []
 
   return signals.map(ts => {
     const primaryEntity = extractPrimaryEntity(ts.signal)
     const empDomains = []
+    let sourceDomainId = null
     if (primaryEntity) {
-      const domId = resolveFileToRegistryDomain(primaryEntity, registry, pressureZoneState)
-      if (domId) empDomains.push(domId)
+      sourceDomainId = resolveFileToRegistryDomain(primaryEntity, registry, pressureZoneState)
+      if (sourceDomainId) empDomains.push(sourceDomainId)
     }
 
-    const dimIds = Array.from(domainIdSet).filter(id => !empDomains.includes(id))
+    const corridorPaths = []
+    const corridorDomains = new Set(empDomains)
+
+    if (sourceDomainId) {
+      const outbound = edges.filter(e => e.source_domain === sourceDomainId && e.target_domain !== sourceDomainId)
+      for (const e of outbound) {
+        corridorPaths.push({
+          from: sourceDomainId,
+          to: e.target_domain,
+          type: 'propagation_outbound',
+          relationship: e.relationship_type,
+          evidence: 'semantic_topology_edge',
+        })
+        corridorDomains.add(e.target_domain)
+      }
+    }
+
+    const fanOutRatio = ts.signal.signal_value != null ? ts.signal.signal_value : 0
+    const cent = structuralEnrichment && structuralEnrichment.centrality
+    const spines = (cent && cent.top_structural_spines) || []
+    let entityCentrality = null
+    if (primaryEntity) {
+      entityCentrality = spines.find(n => n.path === primaryEntity)
+    }
+    const importOutDegree = entityCentrality ? (entityCentrality.import_out_degree || entityCentrality.out_degree || 0) : 0
+    const importInDegree = entityCentrality ? (entityCentrality.import_in_degree || entityCentrality.in_degree || 0) : 0
+    const structuralRole = entityCentrality ? entityCentrality.structural_role : null
+
+    if (corridorPaths.length === 0 && (fanOutRatio > 0 || importOutDegree > 0)) {
+      corridorPaths.push({
+        from: sourceDomainId,
+        to: null,
+        type: 'propagation_fanout',
+        fan_out_ratio: fanOutRatio,
+        import_out_degree: importOutDegree,
+        import_in_degree: importInDegree,
+        evidence: entityCentrality ? 'structural_centrality' : 'signal_metric',
+      })
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !corridorDomains.has(id))
+
+    const sourceDomainEntry = sourceDomainId && registry ? registry.find(d => d.domain_id === sourceDomainId) : null
+    const sourceDomainLabel = sourceDomainEntry ? (sourceDomainEntry.business_label || sourceDomainEntry.domain_name) : null
+
+    const effectiveOutDegree = importOutDegree > 0 ? importOutDegree : (fanOutRatio > 1 ? Math.round(fanOutRatio) : 0)
+
+    const consequenceText = sourceDomainLabel && (importOutDegree > 0 || fanOutRatio > 1)
+      ? 'Changes originating from ' + sourceDomainLabel + ' propagate across ' + (effectiveOutDegree > 0 ? effectiveOutDegree + ' downstream entities' : 'downstream entities') + ' — fan-out ratio ' + fanOutRatio.toFixed(1) + ':1.'
+      : primaryEntity
+        ? vocab.consequence.replace('changes here', 'changes at ' + primaryEntity)
+        : vocab.consequence
+
+    const hasTopologyEdges = corridorPaths.some(p => p.evidence === 'semantic_topology_edge')
 
     return {
       condition_id: 'pa-' + ts.signal.signal_id.toLowerCase(),
@@ -509,9 +564,7 @@ function rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState) {
       internal_condition_id: vocab.internal,
       technical_semantic_label: vocab.l2,
       operator_cognition_title: vocab.l3,
-      operational_consequence: primaryEntity
-        ? vocab.consequence.replace('changes here', 'changes at ' + primaryEntity)
-        : vocab.consequence,
+      operational_consequence: consequenceText,
       governance_boundary: 'STRUCTURAL_ONLY',
       topology_effect: vocab.topology_effect,
       severity: ts.signal.severity || 'HIGH',
@@ -521,16 +574,25 @@ function rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState) {
       evidence_mode: 'SIGNAL_DRIVEN',
       topology_overlay: {
         overlay_mode: 'PROPAGATION_CORRIDOR',
-        emphasis_domains: empDomains,
+        emphasis_domains: Array.from(corridorDomains),
         dim_domains: dimIds,
         advisory_zones: [],
         signal_overlays: [{ signal_id: ts.signal.signal_id, signal_name: ts.signal.signal_name, severity: ts.signal.severity, type: 'fan_asymmetry' }],
-        corridor_paths: [],
+        corridor_paths: corridorPaths,
+        corridor_evidence: hasTopologyEdges ? 'EVIDENCE_DERIVED' : corridorPaths.length > 0 ? 'STRUCTURAL_CENTRALITY_DERIVED' : 'NO_EVIDENCE',
+        propagation_metrics: {
+          fan_out_ratio: fanOutRatio,
+          import_out_degree: effectiveOutDegree,
+          import_in_degree: importInDegree,
+          source_entity: primaryEntity,
+          source_role: structuralRole,
+          source_domain: sourceDomainLabel,
+        },
       },
       guided_interventions: CONDITION_INTERVENTIONS.PROPAGATION_ASYMMETRY.map(i => ({ ...i, condition_id: 'pa-' + ts.signal.signal_id.toLowerCase() })),
       orchestration_hooks: ['propagation_review'],
       contributing_features: ['propagation_asymmetry'],
-      derivation_trace: ts.signal.signal_id + ' (value=' + (ts.signal.signal_value != null ? ts.signal.signal_value.toFixed(2) : '?') + ') → PROPAGATION_ASYMMETRY',
+      derivation_trace: ts.signal.signal_id + ' (value=' + (fanOutRatio > 0 ? fanOutRatio.toFixed(2) : '?') + ') → PROPAGATION_ASYMMETRY' + (corridorPaths.length > 0 ? ' → ' + corridorPaths.length + ' ' + (hasTopologyEdges ? 'evidence-derived' : 'centrality-derived') + ' corridor' + (corridorPaths.length !== 1 ? 's' : '') : ''),
     }
   })
 }
@@ -856,7 +918,7 @@ function synthesize(fullReport) {
   const primitives = [
     ...ruleDeliveryPressureConcentration(taggedSignals, pressureZoneState, registry),
     ...ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, topologyEdges),
-    ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState),
+    ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState, topologyEdges, structuralEnrichment),
     ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),

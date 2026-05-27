@@ -3470,10 +3470,55 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
           {c.topology_overlay && c.topology_overlay.corridor_paths && c.topology_overlay.corridor_paths.length > 0 && (() => {
             const paths = c.topology_overlay.corridor_paths
-            const evidencePaths = paths.filter(p => p.evidence === 'semantic_topology_edge')
-            if (evidencePaths.length === 0) return null
             const reg = (fullReport && fullReport.semantic_domain_registry) || []
             const resolveName = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+            const isPropagation = c.topology_overlay.overlay_mode === 'PROPAGATION_CORRIDOR'
+
+            if (isPropagation) {
+              const metrics = c.topology_overlay.propagation_metrics || {}
+              const topologyDerived = paths.filter(p => p.evidence === 'semantic_topology_edge')
+              const centralityDerived = paths.filter(p => p.evidence === 'structural_centrality' || p.evidence === 'signal_metric')
+              const sourceDomain = targets.length > 0 ? targets[0].display_name : (metrics.source_domain || 'source domain')
+
+              return (
+                <div className="interp-condition-field">
+                  <div className="interp-section-label">PROPAGATION CORRIDORS</div>
+                  <div className="interp-condition-field-value" style={{ marginBottom: 6 }}>
+                    Changes originating from {sourceDomain} propagate across {metrics.import_out_degree || '?'} downstream entities — fan-out ratio {metrics.fan_out_ratio > 0 ? metrics.fan_out_ratio.toFixed(1) + ':1' : 'asymmetric'}.
+                  </div>
+                  {metrics.source_entity && (
+                    <div className="interp-condition-corridor-group propagation-corridor-group">
+                      <span className="interp-condition-corridor-label" style={{ color: '#64ffda' }}>SOURCE</span>
+                      <span className="interp-condition-corridor-domain">{metrics.source_entity}</span>
+                      {metrics.source_role && <span className="interp-condition-corridor-role">{STRUCTURAL_ROLE_LABELS[metrics.source_role] || metrics.source_role}</span>}
+                    </div>
+                  )}
+                  {metrics.import_out_degree > 0 && (
+                    <div className="interp-condition-corridor-group propagation-corridor-group">
+                      <span className="interp-condition-corridor-label" style={{ color: '#64ffda' }}>BLAST RADIUS</span>
+                      <span className="interp-condition-corridor-domain">{metrics.import_out_degree} outbound dependencies · {metrics.import_in_degree || 0} inbound</span>
+                    </div>
+                  )}
+                  {topologyDerived.length > 0 && (
+                    <div className="interp-condition-corridor-group propagation-corridor-group">
+                      <span className="interp-condition-corridor-label" style={{ color: '#64ffda' }}>DOWNSTREAM DOMAINS</span>
+                      {topologyDerived.map((p, i) => <span key={i} className="interp-condition-corridor-domain">{resolveName(p.to)}</span>)}
+                    </div>
+                  )}
+                  <div className="interp-condition-corridor-evidence">
+                    {topologyDerived.length > 0
+                      ? topologyDerived.length + ' corridor' + (topologyDerived.length !== 1 ? 's' : '') + ' from semantic topology edges'
+                      : centralityDerived.length > 0
+                        ? 'structural centrality · code graph derived'
+                        : 'signal metric derived'
+                    } · {c.topology_overlay.corridor_evidence || 'unclassified'}
+                  </div>
+                </div>
+              )
+            }
+
+            const evidencePaths = paths.filter(p => p.evidence === 'semantic_topology_edge')
+            if (evidencePaths.length === 0) return null
             const hubDomain = targets.length > 0 ? targets[0].display_name : 'hub domain'
             const inbound = evidencePaths.filter(p => p.type === 'import_consumer')
             const outbound = evidencePaths.filter(p => p.type === 'import_hub_outbound')

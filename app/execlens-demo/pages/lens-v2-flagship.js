@@ -2940,6 +2940,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #5e6d8a;
           margin-top: 6px;
         }
+        .interp-condition-corridor-role {
+          font: 400 9px/1.4 'Courier New', monospace;
+          color: #64ffda;
+          opacity: 0.7;
+          margin-left: 4px;
+        }
+        .propagation-corridor-group .interp-condition-corridor-label {
+          color: #64ffda;
+        }
 
         .interp-synthesis {
           font-size: 12px;
