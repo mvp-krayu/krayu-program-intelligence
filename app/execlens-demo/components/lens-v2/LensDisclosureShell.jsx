@@ -102,6 +102,11 @@ export default function LensDisclosureShell({
   pendingTransitionZone,
   onTransitionZoneConsumed,
   authorityTier = 'INVESTIGATIVE',
+  swIntelActive,
+  swIntelProjection,
+  onSwIntelDeactivate,
+  sqoAuthorityWorkspace,
+  sqoBinding,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -202,6 +207,11 @@ export default function LensDisclosureShell({
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={onTransitionZoneConsumed}
             onAuthorityChange={handleAuthorityChange}
+            swIntelActive={swIntelActive}
+            swIntelProjection={swIntelProjection}
+            onSwIntelDeactivate={onSwIntelDeactivate}
+            sqoAuthorityWorkspace={sqoAuthorityWorkspace}
+            sqoBinding={sqoBinding}
           />
         )
       case 'SQOIntelligenceZone':

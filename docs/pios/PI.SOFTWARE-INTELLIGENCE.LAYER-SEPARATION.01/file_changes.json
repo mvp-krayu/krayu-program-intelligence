@@ -1,0 +1,54 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "files": [
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/OrchestrationGuidanceRuntime.jsx",
+      "action": "CREATE",
+      "detail": "Layer 2 orchestration runtime — deriveConditionActions, GuidedActionCard, OrchestrationGuidanceRuntime. 550 lines. Extracted from SoftwareIntelligenceField.jsx"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "REWRITE",
+      "detail": "Layer 3 domain cognition only — removed all orchestration (deriveGuidedActions, GuidedActionCard, GuidedActionFlow, ACTION_MODE constants, SQO execution). 958 → 408 lines. Removed sqoBinding/sqoAuthorityWorkspace/fullReport from all view exports"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFY",
+      "detail": "Added import of OrchestrationGuidanceRuntime. Updated RepresentationField to render orchestration alongside all 6 view paths. SW-Intel views no longer receive orchestration props"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFY",
+      "detail": "Added orch-* CSS block (280+ rules) for orchestration runtime. Preserved existing sw-intel-guided-* rules"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01/execution_report.md",
+      "action": "CREATE",
+      "detail": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01/validation_log.json",
+      "action": "CREATE",
+      "detail": "15/15 validation checks PASS"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01/file_changes.json",
+      "action": "CREATE",
+      "detail": "This file"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.LAYER-SEPARATION.01/CLOSURE.md",
+      "action": "CREATE",
+      "detail": "Stream closure"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "created": 5,
+    "rewritten": 1,
+    "modified": 2,
+    "code_files_changed": 4
+  }
+}

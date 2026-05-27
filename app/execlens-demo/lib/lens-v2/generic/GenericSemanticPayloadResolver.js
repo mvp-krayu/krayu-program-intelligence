@@ -814,7 +814,9 @@ function resolveSemanticPayload(manifest) {
       }
     : {
         executive_summary:
-          `Decision Surface (Score ${derived.score}, ${derived.band} band, ${derived.posture} posture) confirms a qualified-ready operating posture. ` +
+          (derived.score != null
+            ? `Decision Surface (Score ${derived.score}, ${derived.band} band, ${derived.posture} posture) confirms a qualified-ready operating posture. `
+            : `Decision Surface under ${derived.qualifier_label || derived.qualifier_class} confirms governed operational posture. `) +
           `${derived.backed_count} of ${derived.total_domains} semantic domains are structurally backed; ${derived.semantic_only_count} remain semantic-only. ` +
           `The active pressure zone anchors on "${zoneAnchorBusinessLabel}". ` +
           `Under qualifier ${derived.qualifier_class} (partial grounding with validated semantic continuity), advisory confirmation is mandatory before executive commitment.`,
@@ -869,7 +871,7 @@ function resolveSemanticPayload(manifest) {
 
   const traceBlock = {
     propagation_path: evidenceBlocks.map((b) => b.domain_alias).filter(Boolean),
-    propagation_summary: `${derived.score}/${derived.band}/${derived.posture}. Active zone "${zoneAnchorBusinessLabel}". ${derived.backed_count}/${derived.total_domains} backed.`,
+    propagation_summary: `${derived.score != null ? derived.score : '—'}/${derived.band || '—'}/${derived.posture || '—'}. Active zone "${zoneAnchorBusinessLabel}". ${derived.backed_count}/${derived.total_domains} backed.`,
     derivation_lineage_ref: (dpsigSummary.provenance_chain || {}).stream || 'unknown',
     baseline_ref: baselineTag,
   };
@@ -1170,6 +1172,10 @@ function resolveSemanticPayload(manifest) {
     constitutional_anchor: projectConstitutionalAnchor(sources),
     convergence_intelligence: projectConvergenceIntelligence(sources),
     chronicle_certification: projectChronicleCertification(sources),
+
+    pressure_zone_state: sources.pressure_zone_state && sources.pressure_zone_state.ok
+      ? sources.pressure_zone_state.data
+      : null,
   };
 }
 

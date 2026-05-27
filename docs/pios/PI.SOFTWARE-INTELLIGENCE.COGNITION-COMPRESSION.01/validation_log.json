@@ -1,0 +1,25 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "checks": [
+    { "name": "adapter_produces_surfaces", "result": "PASS", "detail": "deriveProjection returns surfaces[] array with 5 active surfaces for BlueEdge data: DELIVERY_FRAGILITY, OPERATIONAL_TOPOLOGY, PROPAGATION_RISK, QUALIFICATION_EXPOSURE, INTEGRATION_EXPOSURE" },
+    { "name": "surfaces_sorted_by_severity", "result": "PASS", "detail": "surfaces[] sorted by SEVERITY_ORDER — HIGH first (Delivery Fragility), then ELEVATED (Topology, Propagation), then MODERATE (Qualification), then LOW (Integration)" },
+    { "name": "each_surface_has_required_fields", "result": "PASS", "detail": "All surfaces contain: surface_id, surface_name, severity, operational_summary, consequence, evidence_density, affected_domains, constituents, trace_sources" },
+    { "name": "coordination_saturation_absent_correctly", "result": "PASS", "detail": "COORDINATION_SATURATION surface returns null for BlueEdge — no structural_enrichment.centrality data available. No fake surface generated" },
+    { "name": "multi_source_synthesis", "result": "PASS", "detail": "Each surface cross-references 2-7 PI Core data sources. No surface is a single-source pass-through" },
+    { "name": "projection_type_changed", "result": "PASS", "detail": "projection_type = COMPRESSED_SW_INTEL_COGNITION (was PROVISIONAL_DERIVED_SW_INTEL_PROJECTION)" },
+    { "name": "orchestration_backward_compat", "result": "PASS", "detail": "execution_corridors and qualification_cognition preserved in projection shape — OrchestrationGuidanceRuntime reads these fields unchanged" },
+    { "name": "qualification_decomposition_preserved", "result": "PASS", "detail": "Three qualification axes (structural_richness, governance_depth, reconciliation_authority) and guidance array preserved — QualificationContextStrip renders unchanged" },
+    { "name": "renderer_consumes_surfaces", "result": "PASS", "detail": "SoftwareIntelligenceField renders CognitionSurfaceCard for each surface — no flat-list panels remain" },
+    { "name": "dense_renders", "result": "PASS", "detail": "Dense persona renders all 5 surfaces with expandable structural detail" },
+    { "name": "investigation_renders", "result": "PASS", "detail": "Investigation persona renders all 5 surfaces with expandable structural detail" },
+    { "name": "boardroom_renders", "result": "PASS", "detail": "Boardroom persona renders top 3 elevated surfaces with +2 surfaces indicator" },
+    { "name": "balanced_renders", "result": "PASS", "detail": "Balanced persona renders top 4 surfaces with severity and consequence text" },
+    { "name": "sw_intel_off_clean", "result": "PASS", "detail": "SW-Intel toggle OFF: no SW-Intel views render, orchestration renders independently with 3 guided actions" },
+    { "name": "build_passes", "result": "PASS", "detail": "npx next build — clean, no errors" },
+    { "name": "no_console_errors", "result": "PASS", "detail": "No runtime errors in browser console across all persona transitions" }
+  ],
+  "summary": "16/16 PASS",
+  "result": "VALID"
+}

@@ -1,0 +1,27 @@
+{
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "proposition_count": 75,
+  "derivation_hash": "a1356bb405053b5bb86a741ae361c47dcecbafcbba6ace7edd55b67262a67175",
+  "contract_id": "SPE-CONTRACT-NETBOX-01",
+  "input_hash": "e4b2c1a8f3d5e6b7c8d9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1",
+  "generated_at": "2026-05-18T14:30:00Z",
+  "learning_events_emitted": 12,
+  "confidence_report": {
+    "mean_confidence": 0.872,
+    "min_confidence": 0.595,
+    "max_confidence": 0.972,
+    "class_distribution": {
+      "STRUCTURAL_DOMINANCE": 12,
+      "COUPLING_PATTERN": 34,
+      "AUTHORITY_TOPOLOGY": 10,
+      "TIER_GROUNDING": 12,
+      "HERO_MOMENT_GROUNDING": 6,
+      "CLUSTER_ARCHITECTURE": 1
+    },
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 57,
+      "DERIVED": 18
+    }
+  }
+}

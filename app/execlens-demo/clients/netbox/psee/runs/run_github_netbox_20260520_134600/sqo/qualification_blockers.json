@@ -1,0 +1,74 @@
+{
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "total_blockers": 7,
+  "promotion_eligible": false,
+  "qualification_path": "SPE",
+  "blockers": [
+    {
+      "blocker_id": "BLK-001",
+      "lane": "semantic_candidate",
+      "gap": "NO_SEMANTIC_DERIVATION",
+      "authority_domain": "SEMANTIC",
+      "resolution": "SPE delivered 75 propositions",
+      "resolved": true,
+      "resolved_at": "2026-05-22",
+      "resolution_path": "SPE",
+      "resolution_note": "Phase 9 SPE derivation produced 75 governed propositions across 6 classes"
+    },
+    {
+      "blocker_id": "BLK-002",
+      "lane": "review_queue",
+      "gap": "PROPOSITION_REVIEW_PENDING",
+      "authority_domain": "OPERATOR",
+      "resolution": "AWAITING_OPERATOR_REVIEW"
+    },
+    {
+      "blocker_id": "BLK-003",
+      "lane": "crosswalk",
+      "gap": "NO_CROSSWALK",
+      "authority_domain": "SEMANTIC",
+      "resolution": "Crosswalk inapplicable — CEU-anchored propositions",
+      "resolved": true,
+      "resolved_at": "2026-05-22",
+      "resolution_path": "SPE",
+      "resolution_note": "SPE propositions are CEU-anchored; no DOM-to-CSR translation needed"
+    },
+    {
+      "blocker_id": "BLK-004",
+      "lane": "reconciliation",
+      "gap": "NO_RECONCILIATION",
+      "authority_domain": "SEMANTIC",
+      "resolution": "CEU reconciliation OPERATOR_VALIDATED",
+      "resolved": true,
+      "resolved_at": "2026-05-22",
+      "resolution_path": "SPE",
+      "resolution_note": "CEU reconciliation completed in Phase 7"
+    },
+    {
+      "blocker_id": "BLK-005",
+      "lane": "qualification_debt",
+      "gap": "PROPOSITION_DEBT_PENDING",
+      "authority_domain": "QUALIFICATION",
+      "resolution": "AWAITING_DEBT_MODEL"
+    },
+    {
+      "blocker_id": "BLK-006",
+      "lane": "semantic_candidate",
+      "gap": "SEMANTIC_ABSENT",
+      "authority_domain": "SEMANTIC",
+      "resolution": "75 semantic propositions exist in spine",
+      "resolved": true,
+      "resolved_at": "2026-05-22",
+      "resolution_path": "SPE",
+      "resolution_note": "Semantic propositions operational via SPE"
+    },
+    {
+      "blocker_id": "BLK-007",
+      "lane": "runtime_projection",
+      "gap": "NO_SEMANTIC_AUTHORITY",
+      "authority_domain": "RUNTIME",
+      "resolution": "AWAITING_CONSUMER_PATHWAY"
+    }
+  ]
+}

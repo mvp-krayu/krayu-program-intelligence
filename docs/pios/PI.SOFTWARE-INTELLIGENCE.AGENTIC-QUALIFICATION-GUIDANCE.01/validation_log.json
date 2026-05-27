@@ -1,0 +1,117 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.AGENTIC-QUALIFICATION-GUIDANCE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-26T09:10:00Z",
+  "checks": [
+    {
+      "check": "Build compilation",
+      "result": "PASS",
+      "detail": "npx next build succeeds with zero errors"
+    },
+    {
+      "check": "Qualification context strip — genesis",
+      "result": "PASS",
+      "detail": "RICHNESS FULL · GOVERNANCE FULL · RECONCILIATION UNRECONCILED · Q-03 · S2"
+    },
+    {
+      "check": "Qualification context strip — productized",
+      "result": "PASS",
+      "detail": "RICHNESS PARTIAL · GOVERNANCE NONE · RECONCILIATION PARTIAL · Q-02"
+    },
+    {
+      "check": "Guided action flow — genesis",
+      "result": "PASS",
+      "detail": "4 actions (3 HIGH): receiver classification, 17-domain reconciliation, 14 flagged propositions, S2 assessment"
+    },
+    {
+      "check": "Guided action flow — productized",
+      "result": "PASS",
+      "detail": "3 actions (1 HIGH): 13-domain reconciliation, 2 substrates unavailable, no governance lifecycle"
+    },
+    {
+      "check": "Action classification — INLINE_REVIEW",
+      "result": "PASS",
+      "detail": "Receiver classification and proposition review render as INLINE_REVIEW with operator decisions"
+    },
+    {
+      "check": "Action classification — STAGED_ACTION",
+      "result": "PASS",
+      "detail": "Domain reconciliation and enrichment render as STAGED_ACTION with stage button"
+    },
+    {
+      "check": "Action classification — INLINE_EXPLAIN",
+      "result": "PASS",
+      "detail": "Governance lifecycle gap and qualification assessment render as INLINE_EXPLAIN"
+    },
+    {
+      "check": "Guided action card — expand/collapse",
+      "result": "PASS",
+      "detail": "Cards expand to show meaning, evidence grid, workflow steps, decisions/staging"
+    },
+    {
+      "check": "Guided action card — operator decision staging",
+      "result": "PASS",
+      "detail": "Decision button click → status 'staged', decisions removed, staged notice shown, flow summary updated"
+    },
+    {
+      "check": "Guided action card — evidence inline",
+      "result": "PASS",
+      "detail": "Each card shows evidence items with key/value/type coloring inline — no SQO handoff"
+    },
+    {
+      "check": "Guided action card — workflow steps",
+      "result": "PASS",
+      "detail": "Each card shows numbered workflow steps with return-to-LENS as final step"
+    },
+    {
+      "check": "No SQO navigation links",
+      "result": "PASS",
+      "detail": "No <a href> to SQO Cockpit pages — all actions are inline orchestration"
+    },
+    {
+      "check": "DENSE view — full orchestration",
+      "result": "PASS",
+      "detail": "Context strip + 6 operational panels + guided action flow + evidence footer"
+    },
+    {
+      "check": "INVESTIGATION view — full orchestration",
+      "result": "PASS",
+      "detail": "Context strip + operational panels + role abstractions + guided action flow"
+    },
+    {
+      "check": "BOARDROOM view — guided action flow",
+      "result": "PASS",
+      "detail": "Boardroom summary with risk, attention, and guided action flow embedded"
+    },
+    {
+      "check": "BALANCED view — guided action flow",
+      "result": "PASS",
+      "detail": "Balanced narrative with corridors, attention, and guided action flow embedded"
+    },
+    {
+      "check": "PI Core fallback — toggle deactivation",
+      "result": "PASS",
+      "detail": "Toggle off removes SW-Intel view, restores PI Core IntelligenceField zone"
+    },
+    {
+      "check": "No PI Core mutation",
+      "result": "PASS",
+      "detail": "No changes to GenericSemanticPayloadResolver, no corridor implementation, no manifest changes"
+    },
+    {
+      "check": "Inference prohibition enforced",
+      "result": "PASS",
+      "detail": "All action derivation structurally derived from fullReport fields — no AI commentary"
+    },
+    {
+      "check": "fullReport prop chain",
+      "result": "PASS",
+      "detail": "fullReport flows: flagship → LensDisclosureShell → IntelligenceField → RepresentationField → SW-Intel views"
+    }
+  ],
+  "summary": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0
+  }
+}

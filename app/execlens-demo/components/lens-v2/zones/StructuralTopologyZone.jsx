@@ -199,7 +199,32 @@ function tooltipOffsetY(cy) {
   return cy > 68 ? 60 : -30
 }
 
-export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, focusedDomain, onNodeSelect, isS1 }) {
+const COGNITION_OVERLAY_COLORS = {
+  IMPORT_PRESSURE: '#ff9e4a',
+  INTEGRATION_CORRIDOR: '#4a9eff',
+  INTEGRATION_MIXED: '#4a9eff',
+  DELIVERY_FRAGILITY: '#ff6b6b',
+  COORDINATION_LOAD: '#4a9eff',
+  PROPAGATION_RISK: '#ff9e4a',
+  PROPAGATION_CORRIDOR: '#ff9e4a',
+  CLUSTER_PRESSURE: '#ffd700',
+  COUPLING_CORRIDOR: '#4a9eff',
+  COMPOUND_CONVERGENCE: '#ff6b6b',
+  COVERAGE_GAP: '#ff9e4a',
+  COVERAGE_COMPLETE: '#64ffda',
+  TOPOLOGY_POSTURE: '#64ffda',
+  QUALIFICATION_POSTURE: '#64ffda',
+  PRESSURE_ZONE: '#ff6b6b',
+  EVIDENCE_GAP: '#5e6d8a',
+}
+
+const ROLE_COLORS = {
+  ORIGIN: '#ff6b6b',
+  PASS_THROUGH: '#ffd700',
+  RECEIVER: '#ff9e4a',
+}
+
+export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pressureZoneState, focusedDomain, onNodeSelect, onPressureZoneClick, activePressureZone, isS1, cognitionOverlay }) {
   const [hoveredNode, setHoveredNode] = useState(null)
   const [selectedAnchor, setSelectedAnchor] = useState(null)
   const svgRef = useRef(null)
@@ -260,6 +285,21 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
     if (conn) conn.forEach(id => set.add(id))
     return set
   }, [selectedAnchor, focusedDomain, connectedTo])
+
+  const cognitionEmphasis = useMemo(() => {
+    if (!cognitionOverlay) return null
+    return new Set(cognitionOverlay.emphasis_domains || [])
+  }, [cognitionOverlay])
+
+  const cognitionDim = useMemo(() => {
+    if (!cognitionOverlay) return null
+    return new Set(cognitionOverlay.dim_domains || [])
+  }, [cognitionOverlay])
+
+  const cognitionAdvisory = useMemo(() => {
+    if (!cognitionOverlay) return null
+    return new Set(cognitionOverlay.advisory_zones || [])
+  }, [cognitionOverlay])
 
   const visibleIds = Object.keys(clusterMap).filter(id => clusterMap[id].domains.length > 0).sort()
   if (visibleIds.length === 0) return null
@@ -349,6 +389,49 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
           )
         })}
 
+        {pressureZoneState && pressureZoneState.zones && pressureZoneState.zones.map(zone => {
+          const resolveEntityPos = (entityId) => {
+            if (allPos[entityId]) return allPos[entityId]
+            if (/^DOM-\d+$/.test(entityId)) {
+              const byDom = domains.find(d => d.dominant_dom_id === entityId)
+              if (byDom && allPos[byDom.domain_id]) return allPos[byDom.domain_id]
+            }
+            return null
+          }
+          const members = (zone.member_entities || []).filter(m => resolveEntityPos(m.entity_id))
+          if (members.length === 0) return null
+          const positions = members.map(m => resolveEntityPos(m.entity_id))
+          const minX = Math.min(...positions.map(p => p.cx)) - 30
+          const minY = Math.min(...positions.map(p => p.cy)) - 30
+          const maxX = Math.max(...positions.map(p => p.cx)) + 30
+          const maxY = Math.max(...positions.map(p => p.cy)) + 30
+          const isActive = activePressureZone === zone.zone_id
+          const isCognitionTarget = cognitionOverlay && cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' && cognitionOverlay.pressure_zone_emphasis === zone.zone_id
+          const zoneColor = zone.zone_class === 'COMPOUND_ZONE' ? '#ff6b6b' : '#ff9e4a'
+          return (
+            <g key={zone.zone_id}
+              onClick={(e) => { e.stopPropagation(); onPressureZoneClick && onPressureZoneClick(zone.zone_id) }}
+              style={{ cursor: onPressureZoneClick ? 'pointer' : 'default' }}
+            >
+              <rect x={minX} y={minY} width={maxX - minX} height={maxY - minY} rx={12}
+                fill={zoneColor} fillOpacity={isCognitionTarget ? 0.12 : isActive ? 0.08 : 0.03}
+                stroke={zoneColor} strokeWidth={isCognitionTarget ? 2 : isActive ? 1.5 : 1} strokeOpacity={isCognitionTarget ? 0.8 : isActive ? 0.6 : 0.25}
+                strokeDasharray={isCognitionTarget || isActive ? undefined : '6,3'}
+                style={{ transition: 'fill-opacity 0.2s, stroke-opacity 0.2s, stroke-width 0.2s' }}
+              >
+                {isCognitionTarget && (
+                  <animate attributeName="stroke-opacity" values="0.8;0.4;0.8" dur="3s" repeatCount="indefinite" />
+                )}
+              </rect>
+              <text x={minX + 6} y={minY + 10} fontSize={isCognitionTarget ? 5.5 : 5} fontWeight={600}
+                fill={zoneColor} fillOpacity={isCognitionTarget ? 0.95 : isActive ? 0.8 : 0.45}
+                fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" letterSpacing="0.08em">
+                {zone.zone_id} · {zone.zone_class.replace(/_/g, ' ')}{isCognitionTarget ? ` · ${(zone.aggregated_conditions || []).length} CONDITIONS` : ` · ${(zone.aggregated_conditions || []).length} condition${(zone.aggregated_conditions || []).length !== 1 ? 's' : ''}`}
+              </text>
+            </g>
+          )
+        })}
+
         {(edges || []).map((e, i) => {
           const from = allPos[e.source_domain]
           const to = allPos[e.target_domain]
@@ -380,6 +463,39 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
           )
         })}
 
+        {cognitionOverlay && cognitionOverlay.corridor_paths && cognitionOverlay.corridor_paths.length > 0 && (
+          <g className="cognition-corridors">
+            {cognitionOverlay.corridor_paths.map((cp, ci) => {
+              const from = allPos[cp.from]
+              const to = allPos[cp.to]
+              if (!from || !to) return null
+              const evidenceDerived = cp.evidence === 'semantic_topology_edge'
+              const color = cp.type === 'pressure_propagation' ? '#ff6b6b'
+                : cp.type === 'import_consumer' ? '#ff9e4a'
+                : cp.type === 'import_hub_outbound' ? '#4a9eff'
+                : cp.type === 'propagation' ? '#ff9e4a'
+                : '#ff9e4a'
+              const dx = to.cx - from.cx, dy = to.cy - from.cy
+              const len = Math.sqrt(dx * dx + dy * dy)
+              if (len === 0) return null
+              const ux = dx / len, uy = dy / len
+              const x1 = from.cx + ux * 20, y1 = from.cy + uy * 20
+              const x2 = to.cx - ux * 20, y2 = to.cy - uy * 20
+              return (
+                <line key={`cc-${ci}`}
+                  x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke={color}
+                  strokeWidth={evidenceDerived ? 2.5 : 3}
+                  strokeOpacity={evidenceDerived ? 0.55 : 0.35}
+                  strokeDasharray={evidenceDerived ? undefined : '8,4'}
+                  markerEnd={evidenceDerived ? `url(#arr-${color === '#ff9e4a' ? 'amber' : color === '#4a9eff' ? 'blue' : 'gray'})` : undefined}
+                  style={{ transition: 'stroke-opacity 0.3s' }}
+                />
+              )
+            })}
+          </g>
+        )}
+
         {(() => {
           const incomingAbove = {}
           ;(edges || []).forEach(e => {
@@ -389,6 +505,7 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
               incomingAbove[e.target_domain] = (incomingAbove[e.target_domain] || 0) + 1
             }
           })
+          const overlayColor = cognitionOverlay ? (COGNITION_OVERLAY_COLORS[cognitionOverlay.overlay_mode] || '#4a9eff') : null
           return (domains || []).map(d => {
           const pos = allPos[d.domain_id]
           if (!pos) return null
@@ -400,29 +517,71 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
           const lines = splitLabel(d.business_label || d.domain_name, 15)
           const crowdedAbove = (incomingAbove[d.domain_id] || 0) > 1
 
-          const dimmed = highlightSet && !highlightSet.has(d.domain_id)
-          const nodeOpacity = dimmed ? 0.25 : 1
+          const isEmphasized = cognitionEmphasis && cognitionEmphasis.has(d.domain_id)
+          const isCognitionDimmed = cognitionDim && cognitionDim.has(d.domain_id)
+          const isAdvisory = cognitionAdvisory && cognitionAdvisory.has(d.domain_id)
+
+          const dimmed = cognitionOverlay
+            ? isCognitionDimmed
+            : (highlightSet && !highlightSet.has(d.domain_id))
+          const nodeOpacity = dimmed ? 0.18 : 1
           const isSelected = selectedAnchor === d.domain_id
+
+          const block = (fullReport => null)
+          const evidBlock = cognitionOverlay && cognitionOverlay.overlay_mode === 'DELIVERY_FRAGILITY'
+            ? (() => {
+                const blocks = (cognitionOverlay._blocks || [])
+                return blocks.find(b => {
+                  const match = (domains || []).find(dd => dd.domain_name === b.domain_alias || dd.business_label === b.domain_alias)
+                  return match && match.domain_id === d.domain_id
+                })
+              })()
+            : null
+          const roleColor = evidBlock ? (ROLE_COLORS[evidBlock.propagation_role] || null) : null
 
           return (
             <g key={d.domain_id}
                opacity={nodeOpacity}
-               style={{ transition: 'opacity 0.2s', cursor: isPZ ? 'pointer' : 'default' }}
+               style={{ transition: 'opacity 0.3s', cursor: isPZ || onNodeSelect ? 'pointer' : 'default' }}
                onMouseEnter={() => handleNodeEnter(d.domain_id)}
                onMouseLeave={handleNodeLeave}
                onClick={(e) => { e.stopPropagation(); handleNodeClick(d) }}
             >
-              {isPZ && (
+              {isEmphasized && cognitionOverlay && (
+                <circle cx={pos.cx} cy={pos.cy} r={innerR + 8}
+                  fill="none" stroke={overlayColor} strokeWidth={cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' ? 2 : 1.5} strokeOpacity={0.5}
+                  strokeDasharray={isAdvisory ? '3,3' : undefined}
+                  style={{ transition: 'stroke-opacity 0.3s' }}
+                >
+                  {(cognitionOverlay.overlay_mode === 'IMPORT_PRESSURE' || cognitionOverlay.overlay_mode === 'PRESSURE_ZONE') && (
+                    <animate attributeName="stroke-opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite" />
+                  )}
+                </circle>
+              )}
+              {!isEmphasized && !isCognitionDimmed && isAdvisory && cognitionOverlay && cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' && (
+                <circle cx={pos.cx} cy={pos.cy} r={innerR + 6}
+                  fill="none" stroke="#5e6d8a" strokeWidth={1} strokeOpacity={0.4}
+                  strokeDasharray="3,3"
+                  style={{ transition: 'stroke-opacity 0.3s' }}
+                />
+              )}
+              {isPZ && !cognitionOverlay && (
                 <circle cx={pos.cx} cy={pos.cy} r={24}
                   fill="none" stroke={isSelected ? '#ffd700' : '#ff7b72'} strokeWidth={isSelected ? 2 : 1.3} strokeDasharray={isSelected ? undefined : '3,2'} opacity={isSelected ? 1 : 0.7}
                   style={{ transition: 'stroke 0.2s, stroke-width 0.2s' }} />
               )}
+              {isPZ && cognitionOverlay && (
+                <circle cx={pos.cx} cy={pos.cy} r={24}
+                  fill="none" stroke={isEmphasized ? overlayColor : '#ff7b72'} strokeWidth={isEmphasized ? 2 : 1} strokeDasharray={isEmphasized ? undefined : '3,2'} opacity={isEmphasized ? 0.8 : 0.3}
+                  style={{ transition: 'stroke 0.2s, stroke-width 0.2s, opacity 0.3s' }} />
+              )}
               <circle cx={pos.cx} cy={pos.cy} r={glowR}
-                fill={st.glow} fillOpacity={st.glowOp} />
+                fill={isEmphasized && cognitionOverlay ? overlayColor : st.glow} fillOpacity={isEmphasized ? 0.22 : st.glowOp} />
               <circle cx={pos.cx} cy={pos.cy} r={innerR}
-                fill={st.fill} stroke={st.stroke} strokeWidth={st.sw}
-                strokeDasharray={st.dashed ? '4,3' : undefined} />
-              {backed && d.confidence > 0 && (
+                fill={st.fill} stroke={isEmphasized && cognitionOverlay ? overlayColor : st.stroke} strokeWidth={isEmphasized ? 2.2 : st.sw}
+                strokeDasharray={(st.dashed && !isEmphasized) ? '4,3' : (isAdvisory && isEmphasized) ? '4,3' : undefined}
+                style={{ transition: 'stroke 0.3s, stroke-width 0.3s' }} />
+              {backed && d.confidence > 0 && !cognitionOverlay && (
                 crowdedAbove
                   ? <text x={pos.cx + innerR + 4} y={pos.cy - innerR + 2} textAnchor="start"
                       fontSize={5.75} fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={confColor(d)}>
@@ -435,7 +594,9 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
               )}
               {lines.map((line, li) => (
                 <text key={li} x={pos.cx} y={pos.cy - 3 + li * 8} textAnchor="middle"
-                  fontSize={5.5} fill="#9aa4c0" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace">{line}</text>
+                  fontSize={5.5} fill={isEmphasized ? '#e0e6f0' : isCognitionDimmed ? '#4a5570' : '#9aa4c0'}
+                  fontFamily="ui-monospace, 'SF Mono', Menlo, monospace"
+                  style={{ transition: 'fill 0.3s' }}>{line}</text>
               ))}
             </g>
           )
@@ -473,6 +634,37 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, foc
 
         {(() => {
           const ly = svgH - legendH + 8
+          if (cognitionOverlay && cognitionOverlay.legend_entries && cognitionOverlay.legend_entries.length > 0) {
+            let cx = 14
+            return (
+              <g>
+                <text x={cx} y={ly - 2} fontSize={5} fontWeight={700} letterSpacing="0.1em"
+                  fill={COGNITION_OVERLAY_COLORS[cognitionOverlay.overlay_mode] || '#4a9eff'} fillOpacity={0.7}
+                  fontFamily="ui-monospace, 'SF Mono', Menlo, monospace">
+                  {cognitionOverlay.topology_label || cognitionOverlay.overlay_mode}
+                </text>
+                {cognitionOverlay.legend_entries.map((entry, i) => {
+                  const x = 14 + i * 120
+                  return (
+                    <g key={i}>
+                      <circle cx={x} cy={ly + 10} r={3}
+                        fill={entry.style === 'dashed' || entry.style === 'dotted' ? 'none' : entry.color}
+                        stroke={entry.color} strokeWidth={1.2}
+                        strokeDasharray={entry.style === 'dashed' ? '2,2' : entry.style === 'dotted' ? '1,2' : undefined} />
+                      <text x={x + 8} y={ly + 13} fontSize={5} fill="#7a8aaa"
+                        fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">{entry.label}</text>
+                    </g>
+                  )
+                })}
+                {cognitionOverlay.evidence_gaps && cognitionOverlay.evidence_gaps.length > 0 && (
+                  <text x={14} y={ly + 26} fontSize={4.5} fill="#5e6d8a" fontStyle="italic"
+                    fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                    {cognitionOverlay.evidence_gaps[0].label}
+                  </text>
+                )}
+              </g>
+            )
+          }
           return isS1 ? (
             <g>
               <circle cx={14} cy={ly} r={3} fill="#58a6ff" />

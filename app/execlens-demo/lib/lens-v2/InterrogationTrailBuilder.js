@@ -150,7 +150,7 @@ function buildStyles() {
     }
     .mono { font-family: 'Courier New', Courier, monospace; }
     .dim { color: #7a8aaa; }
-    .muted { color: #4a5570; }
+    .muted { color: #7a8aaa; }
     .accent { color: #4a9eff; }
     .section { margin-bottom: 32px; }
     .section-title {
@@ -158,7 +158,7 @@ function buildStyles() {
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #4a5570;
+      color: #7a8aaa;
       border-bottom: 1px solid #1e2330;
       padding-bottom: 6px;
       margin-bottom: 16px;
@@ -253,7 +253,7 @@ function buildStyles() {
       top: -4px;
       font-family: 'Courier New', Courier, monospace;
       font-size: 10px;
-      color: #4a5570;
+      color: #7a8aaa;
     }
     .meta-grid {
       display: grid;
@@ -266,7 +266,7 @@ function buildStyles() {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: #4a5570;
+      color: #7a8aaa;
     }
     .meta-val {
       font-family: 'Courier New', Courier, monospace;
@@ -284,7 +284,7 @@ function buildStyles() {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: #4a5570;
+      color: #7a8aaa;
       margin-bottom: 4px;
     }
     .chain-item-value {
@@ -317,7 +317,7 @@ function buildStyles() {
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #4a5570;
+      color: #7a8aaa;
       margin-bottom: 2px;
     }
     .boundary-text {
@@ -359,7 +359,7 @@ function buildStyles() {
     }
     .finding-context {
       font-size: 11px;
-      color: #4a5570;
+      color: #7a8aaa;
       font-style: italic;
       margin-top: 6px;
     }
@@ -367,7 +367,7 @@ function buildStyles() {
       font-family: 'Courier New', Courier, monospace;
       font-size: 9px;
       letter-spacing: 0.08em;
-      color: #4a5570;
+      color: #7a8aaa;
       text-transform: uppercase;
       margin-bottom: 4px;
     }
@@ -377,7 +377,7 @@ function buildStyles() {
     details summary {
       font-family: 'Courier New', Courier, monospace;
       font-size: 10px;
-      color: #4a5570;
+      color: #7a8aaa;
       cursor: pointer;
       letter-spacing: 0.04em;
       padding: 4px 0;
@@ -400,7 +400,7 @@ function buildStyles() {
       background: #12151f;
       margin-bottom: 4px;
       font-size: 12px;
-      color: #4a5570;
+      color: #7a8aaa;
     }
     .topology-container {
       background: #0a0c10;
@@ -430,7 +430,7 @@ function buildStyles() {
       align-items: center;
       font-family: 'Courier New', Courier, monospace;
       font-size: 9px;
-      color: #4a5570;
+      color: #7a8aaa;
       letter-spacing: 0.04em;
     }
     .topology-dot {
@@ -454,7 +454,7 @@ function buildStyles() {
     .footer-text {
       font-family: 'Courier New', Courier, monospace;
       font-size: 10px;
-      color: #4a5570;
+      color: #7a8aaa;
       line-height: 1.6;
     }
     @media print {

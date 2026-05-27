@@ -1,0 +1,15 @@
+{
+  "source_id": "source_01",
+  "client_id": "stackstorm",
+  "archive_type": "GITHUB_CLONE",
+  "archive_filename": "st2-7d20478.tar",
+  "archive_path": "clients/stackstorm/archives/st2-7d20478.tar",
+  "sha256": "c8765fd8d84cb7ea7c868b9b50365415acf04018f12b1bc268e021da1ab983e6",
+  "intake_contract": "PI.LENS.SOURCE-INTAKE.GENERIC.01",
+  "extracted_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/intake/canonical_repo",
+  "structure_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure",
+  "ceu_grounding_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu",
+  "dom_layer_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/dom/dom_layer.json",
+  "grounding_state_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/ceu/grounding_state_v3.json",
+  "integration_validation_path": "clients/stackstorm/psee/runs/run_github_st2_20260520_131000/integration/integration_validation.json"
+}

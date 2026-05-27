@@ -40,6 +40,14 @@ const ACTION_AUTHORITY = {
 const REVIEW_ACTIONABLE_STATES = ['UNRESOLVED', 'CONTESTED', 'DISPUTED'];
 const REVIEW_CONTESTABLE_STATES = ['UNRESOLVED', 'RESOLVED'];
 
+function findObligation(obligations, targetItem) {
+  return obligations.find(o => (o.id || o.proposition_id) === targetItem);
+}
+
+function oblStatus(obl) {
+  return obl.status || 'UNRESOLVED';
+}
+
 function extractRole(actorId) {
   if (!actorId || typeof actorId !== 'string') return null;
   const colonIdx = actorId.indexOf(':');
@@ -103,29 +111,29 @@ function validateStatePrerequisites(action, targetItem, promotionState, reviewOb
     case 'review_accept':
     case 'review_reject': {
       if (!targetItem) return { valid: false, reason: 'MISSING_TARGET', detail: 'target_item is required for review actions' };
-      const obl = obligations.find(o => o.id === targetItem);
+      const obl = findObligation(obligations, targetItem);
       if (!obl) return { valid: false, reason: 'TARGET_NOT_FOUND', detail: `Obligation "${targetItem}" not found` };
-      if (!REVIEW_ACTIONABLE_STATES.includes(obl.status)) {
-        return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" is in state "${obl.status}" — must be one of: ${REVIEW_ACTIONABLE_STATES.join(', ')}` };
+      if (!REVIEW_ACTIONABLE_STATES.includes(oblStatus(obl))) {
+        return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" is in state "${oblStatus(obl)}" — must be one of: ${REVIEW_ACTIONABLE_STATES.join(', ')}` };
       }
       return { valid: true };
     }
 
     case 'review_contest': {
       if (!targetItem) return { valid: false, reason: 'MISSING_TARGET', detail: 'target_item is required for contest' };
-      const obl = obligations.find(o => o.id === targetItem);
+      const obl = findObligation(obligations, targetItem);
       if (!obl) return { valid: false, reason: 'TARGET_NOT_FOUND', detail: `Obligation "${targetItem}" not found` };
-      if (!REVIEW_CONTESTABLE_STATES.includes(obl.status)) {
-        return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" is in state "${obl.status}" — must be one of: ${REVIEW_CONTESTABLE_STATES.join(', ')}` };
+      if (!REVIEW_CONTESTABLE_STATES.includes(oblStatus(obl))) {
+        return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" is in state "${oblStatus(obl)}" — must be one of: ${REVIEW_CONTESTABLE_STATES.join(', ')}` };
       }
       return { valid: true };
     }
 
     case 'review_partial_accept': {
       if (!targetItem) return { valid: false, reason: 'MISSING_TARGET', detail: 'target_item is required for partial accept' };
-      const obl = obligations.find(o => o.id === targetItem);
+      const obl = findObligation(obligations, targetItem);
       if (!obl) return { valid: false, reason: 'TARGET_NOT_FOUND', detail: `Obligation "${targetItem}" not found` };
-      if (obl.status !== 'UNRESOLVED') {
+      if (oblStatus(obl) !== 'UNRESOLVED') {
         return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" must be UNRESOLVED for partial accept` };
       }
       return { valid: true };
@@ -133,9 +141,9 @@ function validateStatePrerequisites(action, targetItem, promotionState, reviewOb
 
     case 'escalate_arbitration': {
       if (!targetItem) return { valid: false, reason: 'MISSING_TARGET', detail: 'target_item is required for arbitration escalation' };
-      const obl = obligations.find(o => o.id === targetItem);
+      const obl = findObligation(obligations, targetItem);
       if (!obl) return { valid: false, reason: 'TARGET_NOT_FOUND', detail: `Obligation "${targetItem}" not found` };
-      if (obl.status !== 'CONTESTED') {
+      if (oblStatus(obl) !== 'CONTESTED') {
         return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" must be CONTESTED for arbitration escalation` };
       }
       return { valid: true };
@@ -143,9 +151,9 @@ function validateStatePrerequisites(action, targetItem, promotionState, reviewOb
 
     case 'resolve_arbitration': {
       if (!targetItem) return { valid: false, reason: 'MISSING_TARGET', detail: 'target_item is required for arbitration resolution' };
-      const obl = obligations.find(o => o.id === targetItem);
+      const obl = findObligation(obligations, targetItem);
       if (!obl) return { valid: false, reason: 'TARGET_NOT_FOUND', detail: `Obligation "${targetItem}" not found` };
-      if (obl.status !== 'ARBITRATION_REQUIRED') {
+      if (oblStatus(obl) !== 'ARBITRATION_REQUIRED') {
         return { valid: false, reason: 'INVALID_STATE', detail: `Obligation "${targetItem}" must be ARBITRATION_REQUIRED for resolution` };
       }
       return { valid: true };

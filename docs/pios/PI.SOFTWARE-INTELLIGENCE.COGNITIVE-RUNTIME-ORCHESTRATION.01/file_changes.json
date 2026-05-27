@@ -1,0 +1,68 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01",
+  "classification": "G2",
+  "date": "2026-05-26",
+  "files": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/manifests/blueedge.run_blueedge_genesis_e2e_03.json",
+      "action": "MODIFY",
+      "detail": "Added pressure_zone_state entry to optional artifacts section — wires pressure_zone_state.json into GENESIS payload pipeline"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "action": "MODIFY",
+      "detail": "Added pressure_zone_state extraction to resolved payload return object — standard optional source pattern"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFY",
+      "detail": "Fixed topology replacement inversion (SW-Intel enhances, not replaces). Added cognitionState object with surface/domain/zone focus tracking. Relocated OrchestrationGuidanceRuntime from RepresentationField to IntelligenceField main render. Added pressureZoneState prop to all 5 TopologyGraph instances. Replaced SW_INTEL_SURFACE_INTERPRETATIONS + SW_INTEL_SURFACE_PATHS (~190 lines) with SW_INTEL_DOMAIN_REASONING_CONTRACTS (~450 lines, 6 contracts each with resolve() returning 12 answers). Added resolvedCognitionContract useMemo and cognition query handlers (handleCognitionQuerySelect, handleCognitionQueryDismiss). Wired contract to ExecutiveInterpretation and SupportRail with full rendering branches for cognition state interpretation and query answer display"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "MODIFY",
+      "detail": "Made CognitionSurfaceCard clickable (active/onSelect props). Replaced fallback button with view header (module tag + qualification strip + close button). Updated Dense/Investigation view exports to accept activeSurface/onSurfaceSelect"
+    },
+    {
+      "path": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "action": "MODIFY",
+      "detail": "Extended TopologyGraph with pressureZoneState/onPressureZoneClick/activePressureZone props. Added pressure zone boundary rendering (bounding rect + label). Added DOM-XX → DOMAIN-XX ID resolution for zone member entity matching"
+    },
+    {
+      "path": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFY",
+      "detail": "Added CSS for sw-intel-view-header, sw-intel-view-module-tag, sw-intel-deactivate-btn, sw-intel-surface--active states, sw-intel-surface hover transition. Added CSS for domain cognition state rendering: intel-interp--cognition-state (severity variants), cognition-operational-meaning, cognition-implications/implication-item (priority variants), cognition-qualification, cognition-gaps/gap-item, cognition-progression/progression-item, intel-interp--cognition-query, support-block--cognition-queries, cognition-actions-summary/action-item (priority variants)"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01/DOMAIN_REASONING_CONTRACT.md",
+      "action": "CREATE",
+      "detail": "Governance document defining all 6 domain reasoning contracts with 12 constitutional questions each. Documents data source paths, activation conditions, runtime choreography model"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01/execution_report.md",
+      "action": "MODIFY",
+      "detail": "Updated with Phase 7 (Domain Reasoning Contracts) and Phase 8 (Cognition State Rendering)"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01/validation_log.json",
+      "action": "MODIFY",
+      "detail": "Updated from 17/17 to 25/25 — 8 new checks for domain reasoning contracts, cognition state rendering, query flow, toggle behavior"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01/file_changes.json",
+      "action": "MODIFY",
+      "detail": "This file — updated with contract additions"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.COGNITIVE-RUNTIME-ORCHESTRATION.01/CLOSURE.md",
+      "action": "MODIFY",
+      "detail": "Updated scope, change log, validation count, governance, regression status, artifacts, added Section 10 Domain Reasoning Contract Architecture"
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "created": 5,
+    "modified": 6,
+    "code_files_changed": 6
+  }
+}
