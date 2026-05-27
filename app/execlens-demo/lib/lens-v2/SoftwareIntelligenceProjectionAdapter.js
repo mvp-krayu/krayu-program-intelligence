@@ -15,6 +15,15 @@ const PROJECTION_STATUS = {
   INVALID: 'INVALID',
 }
 
+const SURFACE_CONDITION_MAP = {
+  DELIVERY_FRAGILITY: ['DELIVERY_PRESSURE_CONCENTRATION', 'COMPOUND_CONVERGENCE'],
+  COORDINATION_SATURATION: ['DEPENDENCY_CHOKE_POINT', 'CROSS_DOMAIN_COUPLING_PRESSURE'],
+  INTEGRATION_EXPOSURE: ['CROSS_DOMAIN_COUPLING_PRESSURE'],
+  OPERATIONAL_TOPOLOGY: ['STRUCTURAL_MASS_CONCENTRATION'],
+  QUALIFICATION_EXPOSURE: ['GOVERNANCE_COVERAGE_GAP', 'GOVERNANCE_COVERAGE_COMPLETE'],
+  PROPAGATION_RISK: ['PROPAGATION_ASYMMETRY'],
+}
+
 // ─── SIGNAL TRANSLATION DOCTRINE ──────────────────────────────────
 // L1 = raw derivation (internal), L2 = structural semantic, L3 = operational cognition
 
@@ -488,7 +497,9 @@ function derivePropagationRisk(fullReport) {
     surface_id: 'PROPAGATION_RISK',
     surface_name: 'Propagation Risk',
     severity,
-    operational_summary: `Pressure propagates from ${origins.length} origin${origins.length !== 1 ? 's' : ''} through ${passThroughs.length} corridor${passThroughs.length !== 1 ? 's' : ''} to ${receivers.length} receiver${receivers.length !== 1 ? 's' : ''} — signal concentration ${concentrationPattern}`,
+    operational_summary: passThroughs.length > 0
+      ? `Pressure propagates from ${origins.length} origin${origins.length !== 1 ? 's' : ''} through ${passThroughs.length} corridor${passThroughs.length !== 1 ? 's' : ''} to ${receivers.length} receiver${receivers.length !== 1 ? 's' : ''} — signal concentration ${concentrationPattern}`
+      : `Pressure propagates directly from ${origins.length} origin${origins.length !== 1 ? 's' : ''} to ${receivers.length} receiver${receivers.length !== 1 ? 's' : ''} — no intermediate corridors detected, signal concentration ${concentrationPattern}`,
     consequence: severity === 'HIGH' || severity === 'ELEVATED'
       ? 'Multi-domain pressure propagation active — changes at origins amplify through corridors to receivers'
       : 'Pressure propagation paths present but not under elevated structural load',
@@ -948,8 +959,10 @@ function derivePressureZoneCognitionState(zoneId, fullReport) {
 
   function resolveToRegistryId(entityId) {
     if (domainIdSet.has(entityId)) return entityId
-    const num = entityId.replace(/^DOM-/, '')
-    if (domainIdSet.has(`DOMAIN-${num}`)) return `DOMAIN-${num}`
+    if (/^DOM-\d+$/.test(entityId)) {
+      const byDomDom = registry.find(d => d.dominant_dom_id === entityId)
+      if (byDomDom) return byDomDom.domain_id
+    }
     return null
   }
 
@@ -1020,4 +1033,125 @@ function derivePressureZoneCognitionState(zoneId, fullReport) {
   }
 }
 
-module.exports = { deriveProjection, deriveModuleState, deriveTopologyCognitionState, derivePressureZoneCognitionState, translateSignal, SIGNAL_COGNITION_MAP, PROJECTION_STATUS }
+// ─── CONDITION COGNITION STATE ────────────────────────────────────
+// Promotes a synthesized condition's topology_overlay into the full
+// overlay shape TopologyGraph consumes. This is the topology-first
+// cognition behavior loop: condition activation → topology mutation.
+
+const CONDITION_OVERLAY_SEVERITY_COLORS = {
+  CRITICAL: '#ff6b6b',
+  HIGH: '#ff6b6b',
+  ELEVATED: '#ff9e4a',
+  MODERATE: '#ffd700',
+  LOW: '#7a8aaa',
+  NOMINAL: '#64ffda',
+}
+
+const CONDITION_TYPE_LABELS = {
+  DELIVERY_PRESSURE_CONCENTRATION: 'DELIVERY PRESSURE',
+  DEPENDENCY_CHOKE_POINT: 'DEPENDENCY CHOKE POINT',
+  PROPAGATION_ASYMMETRY: 'PROPAGATION ASYMMETRY',
+  STRUCTURAL_MASS_CONCENTRATION: 'STRUCTURAL MASS',
+  CROSS_DOMAIN_COUPLING_PRESSURE: 'COUPLING PRESSURE',
+  GOVERNANCE_COVERAGE_STATUS: 'GOVERNANCE COVERAGE',
+  COMPOUND_CONVERGENCE: 'COMPOUND CONVERGENCE',
+}
+
+function deriveConditionCognitionState(condition, fullReport) {
+  if (!condition || !condition.topology_overlay) return null
+
+  const overlay = condition.topology_overlay
+  const registry = (fullReport && fullReport.semantic_domain_registry) || []
+  const sevColor = CONDITION_OVERLAY_SEVERITY_COLORS[condition.severity] || '#ff9e4a'
+
+  const targetDomains = (condition.shared_topology_targets && condition.shared_topology_targets.domains) || []
+  const targetLabels = targetDomains.map(id => {
+    const d = registry.find(r => r.domain_id === id)
+    return d ? (d.business_label || d.domain_name || id) : id
+  })
+
+  const typeLabel = CONDITION_TYPE_LABELS[condition.condition_type] || condition.condition_type.replace(/_/g, ' ')
+  const domainSuffix = targetLabels.length > 0 ? ' · ' + targetLabels[0] : ''
+
+  const legendEntries = []
+
+  if (targetLabels.length > 0) {
+    legendEntries.push({
+      color: sevColor,
+      label: targetLabels[0],
+      style: 'solid',
+    })
+  }
+
+  if (condition.condition_type === 'COMPOUND_CONVERGENCE' && condition.contributing_condition_ids) {
+    legendEntries.push({
+      color: '#ffd700',
+      label: condition.contributing_condition_ids.length + ' converging conditions',
+      style: 'solid',
+    })
+  }
+
+  const signalOverlays = overlay.signal_overlays || []
+  if (signalOverlays.length > 0 && condition.condition_type !== 'COMPOUND_CONVERGENCE') {
+    const translated = translateSignal(signalOverlays[0].signal_id)
+    legendEntries.push({
+      color: '#ffd700',
+      label: translated ? translated.l2 : signalOverlays[0].signal_name || signalOverlays[0].signal_id,
+      style: 'solid',
+    })
+  }
+
+  const corridors = overlay.corridor_paths || []
+  const evidenceCorridors = corridors.filter(c => c.evidence === 'semantic_topology_edge')
+  if (evidenceCorridors.length > 0) {
+    const resolveName = (id) => {
+      const d = registry.find(r => r.domain_id === id)
+      return d ? (d.business_label || d.domain_name || id) : id
+    }
+    const inbound = evidenceCorridors.filter(c => c.type === 'import_consumer')
+    const outbound = evidenceCorridors.filter(c => c.type === 'import_hub_outbound')
+    for (const c of inbound) {
+      legendEntries.push({
+        color: '#ff9e4a',
+        label: resolveName(c.from) + ' →',
+        style: 'solid',
+      })
+    }
+    for (const c of outbound) {
+      legendEntries.push({
+        color: '#4a9eff',
+        label: '→ ' + resolveName(c.to),
+        style: 'solid',
+      })
+    }
+  }
+
+  if ((overlay.advisory_zones || []).length > 0) {
+    legendEntries.push({
+      color: '#5e6d8a',
+      label: 'Advisory (' + overlay.advisory_zones.length + ')',
+      style: 'dashed',
+    })
+  }
+
+  const pzIds = condition.pressure_zone_ids || []
+
+  return {
+    active_surface: null,
+    active_pressure_zone: pzIds[0] || null,
+    active_condition_id: condition.condition_id,
+    overlay_mode: overlay.overlay_mode,
+    emphasis_domains: overlay.emphasis_domains || [],
+    dim_domains: overlay.dim_domains || [],
+    signal_overlays: overlay.signal_overlays || [],
+    pressure_zone_emphasis: pzIds[0] || null,
+    corridor_paths: overlay.corridor_paths || [],
+    advisory_zones: overlay.advisory_zones || [],
+    grounding_gradient: null,
+    evidence_gaps: [],
+    topology_label: typeLabel + domainSuffix,
+    legend_entries: legendEntries,
+  }
+}
+
+module.exports = { deriveProjection, deriveModuleState, deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SIGNAL_COGNITION_MAP, PROJECTION_STATUS, SURFACE_CONDITION_MAP }

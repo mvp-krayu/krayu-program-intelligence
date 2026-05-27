@@ -82,34 +82,34 @@ function maxSeverity(severities) {
 // ─── Guided Interventions ──────────────────────────────────────────
 const CONDITION_INTERVENTIONS = {
   DELIVERY_PRESSURE_CONCENTRATION: [
-    { intervention_id: 'dpc-inspect-zone', action_type: 'INSPECT', operator_label: 'Inspect pressure zone members', topology_mutation: 'Zone members emphasized, non-members dimmed', panel_mutation: 'Zone member inventory with per-member evidence' },
-    { intervention_id: 'dpc-trace-conditions', action_type: 'TRACE', operator_label: 'Trace condition origins', topology_mutation: 'Contributing signal paths visualized', panel_mutation: 'Signal → feature → condition derivation chain' },
-    { intervention_id: 'dpc-blast-radius', action_type: 'INSPECT', operator_label: 'Assess blast radius', topology_mutation: 'Advisory zones (blind spots) emphasized', panel_mutation: 'Blind spot inventory and zone proximity' },
+    { intervention_id: 'dpc-inspect-zone', action_type: 'INSPECT', operator_label: 'Show pressure zone members', topology_mutation: 'Zone members emphasized, non-members dimmed', panel_mutation: 'Zone member inventory with per-member evidence' },
+    { intervention_id: 'dpc-trace-conditions', action_type: 'TRACE', operator_label: 'Explain convergence', topology_mutation: 'Contributing signal paths visualized', panel_mutation: 'Signal → feature → condition derivation chain' },
+    { intervention_id: 'dpc-blast-radius', action_type: 'INSPECT', operator_label: 'Map blast radius', topology_mutation: 'Advisory zones (blind spots) emphasized', panel_mutation: 'Blind spot inventory and zone proximity' },
   ],
   DEPENDENCY_CHOKE_POINT: [
-    { intervention_id: 'dck-trace-hub', action_type: 'TRACE', operator_label: 'Trace dependency hub connections', topology_mutation: 'Import corridors from hub file visualized', panel_mutation: 'Top-N dependents of hub file' },
-    { intervention_id: 'dck-inspect-domain', action_type: 'INSPECT', operator_label: 'Inspect hub domain structural role', topology_mutation: 'Domain containing hub file emphasized', panel_mutation: 'Domain structural profile' },
+    { intervention_id: 'dck-trace-hub', action_type: 'TRACE', operator_label: 'Show dependency hub connections', topology_mutation: 'Import corridors from hub file visualized', panel_mutation: 'Top-N dependents of hub file' },
+    { intervention_id: 'dck-inspect-domain', action_type: 'INSPECT', operator_label: 'Check advisory boundary', topology_mutation: 'Domain containing hub file emphasized', panel_mutation: 'Domain structural profile' },
   ],
   PROPAGATION_ASYMMETRY: [
-    { intervention_id: 'pa-trace-fanout', action_type: 'TRACE', operator_label: 'Trace outbound dependency spread', topology_mutation: 'Fan-out corridors visualized', panel_mutation: 'Outbound dependency inventory' },
-    { intervention_id: 'pa-inspect-domain', action_type: 'INSPECT', operator_label: 'Inspect propagation domain', topology_mutation: 'Domain containing fan-out file emphasized', panel_mutation: 'Domain structural profile' },
+    { intervention_id: 'pa-trace-fanout', action_type: 'TRACE', operator_label: 'Trace downstream impact', topology_mutation: 'Fan-out corridors visualized', panel_mutation: 'Outbound dependency inventory' },
+    { intervention_id: 'pa-inspect-domain', action_type: 'INSPECT', operator_label: 'Show propagation domain', topology_mutation: 'Domain containing fan-out file emphasized', panel_mutation: 'Domain structural profile' },
   ],
   STRUCTURAL_MASS_CONCENTRATION: [
-    { intervention_id: 'smc-inspect-cluster', action_type: 'INSPECT', operator_label: 'Inspect dominant cluster composition', topology_mutation: 'Cluster boundary emphasized, member domains highlighted', panel_mutation: 'Cluster member inventory' },
+    { intervention_id: 'smc-inspect-cluster', action_type: 'INSPECT', operator_label: 'Show cluster composition', topology_mutation: 'Cluster boundary emphasized, member domains highlighted', panel_mutation: 'Cluster member inventory' },
     { intervention_id: 'smc-compare-clusters', action_type: 'COMPARE', operator_label: 'Compare cluster load distribution', topology_mutation: 'All clusters sized by node count', panel_mutation: 'Cluster distribution table' },
   ],
   CROSS_DOMAIN_COUPLING_PRESSURE: [
-    { intervention_id: 'cdcp-trace-coupling', action_type: 'TRACE', operator_label: 'Trace coupling corridors', topology_mutation: 'Coupling paths from hub domain emphasized', panel_mutation: 'Coupling path inventory with dependent domains' },
-    { intervention_id: 'cdcp-inspect-hub', action_type: 'INSPECT', operator_label: 'Inspect coordination hub', topology_mutation: 'Hub domain enlarged, connections visible', panel_mutation: 'Hub domain structural profile and dependency count' },
+    { intervention_id: 'cdcp-trace-coupling', action_type: 'TRACE', operator_label: 'Show coupling corridors', topology_mutation: 'Coupling paths from hub domain emphasized', panel_mutation: 'Coupling path inventory with dependent domains' },
+    { intervention_id: 'cdcp-inspect-hub', action_type: 'INSPECT', operator_label: 'Show coordination hub', topology_mutation: 'Hub domain enlarged, connections visible', panel_mutation: 'Hub domain structural profile and dependency count' },
   ],
   GOVERNANCE_COVERAGE_STATUS: [
-    { intervention_id: 'gc-inspect-gaps', action_type: 'INSPECT', operator_label: 'Inspect structural coverage', topology_mutation: 'Unanchored domains or blind spots emphasized', panel_mutation: 'Coverage status inventory' },
-    { intervention_id: 'gc-qualify', action_type: 'QUALIFY', operator_label: 'Assess qualification impact', topology_mutation: 'Governance boundary indicators on affected regions', panel_mutation: 'Qualification boundary and SQO implications' },
+    { intervention_id: 'gc-inspect-gaps', action_type: 'INSPECT', operator_label: 'Review coverage status', topology_mutation: 'Unanchored domains or blind spots emphasized', panel_mutation: 'Coverage status inventory' },
+    { intervention_id: 'gc-qualify', action_type: 'QUALIFY', operator_label: 'Check qualification impact', topology_mutation: 'Governance boundary indicators on affected regions', panel_mutation: 'Qualification boundary and SQO implications' },
   ],
   COMPOUND_CONVERGENCE: [
-    { intervention_id: 'cc-decompose', action_type: 'DECOMPOSE', operator_label: 'Decompose into contributing conditions', topology_mutation: 'Transitions from compound overlay to selected primitive', panel_mutation: 'Selected primitive condition evidence' },
-    { intervention_id: 'cc-inspect-convergence', action_type: 'INSPECT', operator_label: 'Inspect convergence domain', topology_mutation: 'Convergence domain enlarged, connections emphasized', panel_mutation: 'Domain structural profile with convergence factor count' },
-    { intervention_id: 'cc-qualify', action_type: 'QUALIFY', operator_label: 'Assess qualification impact of convergence', topology_mutation: 'Governance boundary indicators on convergence domain', panel_mutation: 'Qualification boundary assessment and SQO implications' },
+    { intervention_id: 'cc-decompose', action_type: 'DECOMPOSE', operator_label: 'Break down contributing conditions', topology_mutation: 'Transitions from compound overlay to selected primitive', panel_mutation: 'Selected primitive condition evidence' },
+    { intervention_id: 'cc-inspect-convergence', action_type: 'INSPECT', operator_label: 'Show convergence domain', topology_mutation: 'Convergence domain enlarged, connections emphasized', panel_mutation: 'Domain structural profile with convergence factor count' },
+    { intervention_id: 'cc-qualify', action_type: 'QUALIFY', operator_label: 'Check qualification impact', topology_mutation: 'Governance boundary indicators on convergence domain', panel_mutation: 'Qualification boundary assessment and SQO implications' },
   ],
 }
 
@@ -190,13 +190,55 @@ function extractPrimaryEntity(signal) {
 
 function buildDomainResolver(registry) {
   const idSet = new Set((registry || []).map(d => d.domain_id))
+  const domDomIndex = new Map()
+  for (const d of (registry || [])) {
+    if (d.dominant_dom_id) domDomIndex.set(d.dominant_dom_id, d.domain_id)
+  }
   return function resolveToRegistryId(entityId) {
     if (!entityId) return null
     if (idSet.has(entityId)) return entityId
-    const num = entityId.replace(/^DOM-/, '')
-    if (idSet.has('DOMAIN-' + num)) return 'DOMAIN-' + num
+    if (/^DOM-\d+$/.test(entityId) && domDomIndex.has(entityId)) return domDomIndex.get(entityId)
     return null
   }
+}
+
+function resolveDomainDisplay(domainId, registry) {
+  if (!domainId || !registry) return { id: domainId || 'unknown', display_name: domainId || 'unknown', structural_role: null }
+  // First: try exact match on domain_id
+  let entry = registry.find(d => d.domain_id === domainId)
+  // Second: if input is DOM-XX, find the semantic domain whose dominant_dom_id matches
+  if (!entry && /^DOM-\d+$/.test(domainId)) {
+    entry = registry.find(d => d.dominant_dom_id === domainId)
+  }
+  // Third: fallback to DOMAIN-XX numeric match (only for DOMAIN-prefixed input)
+  if (!entry && /^DOMAIN-\d+$/.test(domainId)) {
+    const num = domainId.replace(/^DOMAIN-/, '')
+    entry = registry.find(d => d.domain_id === 'DOM-' + num)
+  }
+  const resolvedId = entry ? entry.domain_id : domainId
+  return {
+    id: resolvedId,
+    display_name: entry ? (entry.business_label || entry.domain_name || resolvedId) : domainId,
+    structural_role: null,
+  }
+}
+
+function buildDomainTargets(domainIds, registry, conditionType) {
+  const roleMap = {
+    DELIVERY_PRESSURE_CONCENTRATION: 'convergence target',
+    DEPENDENCY_CHOKE_POINT: 'dependency hub',
+    PROPAGATION_ASYMMETRY: 'propagation source',
+    STRUCTURAL_MASS_CONCENTRATION: 'structural gravity center',
+    CROSS_DOMAIN_COUPLING_PRESSURE: 'coupling hub',
+    GOVERNANCE_COVERAGE_GAP: 'advisory blind spot',
+    GOVERNANCE_COVERAGE_COMPLETE: 'anchored',
+    COMPOUND_CONVERGENCE: 'convergence target',
+  }
+  return (domainIds || []).map(id => {
+    const resolved = resolveDomainDisplay(id, registry)
+    resolved.condition_role = roleMap[conditionType] || 'target'
+    return resolved
+  })
 }
 
 // ─── Primitive Rule Engines ────────────────────────────────────────
@@ -261,30 +303,155 @@ function ruleDeliveryPressureConcentration(taggedSignals, pressureZoneState, reg
   return conditions
 }
 
-function ruleDependencyChokePoint(taggedSignals, registry) {
+function resolveFileToRegistryDomain(filePath, registry, pressureZoneState) {
+  if (!filePath) return null
+  const parts = filePath.split('/')
+  const topDir = parts[0]
+  for (const d of (registry || [])) {
+    if ((d.domain_name || '').toLowerCase().includes(topDir.toLowerCase()) ||
+        (d.business_label || '').toLowerCase().includes(topDir.toLowerCase())) {
+      return d.domain_id
+    }
+  }
+  const zones = (pressureZoneState && pressureZoneState.zones) || []
+  for (const z of zones) {
+    if (z.anchor_name && z.anchor_name.includes(topDir)) {
+      const resolve = buildDomainResolver(registry)
+      return resolve(z.anchor_id)
+    }
+  }
+  return null
+}
+
+const STRUCTURAL_ROLE_LABELS = {
+  hub: 'Coordination Hub',
+  authority: 'Authority Spine',
+  bridge: 'Integration Bridge',
+  connector: 'Integration Connector',
+  spine: 'Runtime Spine',
+  foundation: 'Foundation Surface',
+  VALIDATION_SUPPORT: 'Structural Foundation',
+  INTERFACE_BOUNDARY: 'Interface Boundary',
+  RUNTIME_SPINE: 'Runtime Spine',
+  UTILITY_HUB: 'Utility Hub',
+  RE_EXPORT_HUB: 'Re-Export Surface',
+  ENTRYPOINT: 'Entrypoint',
+  ISOLATED_LEAF: 'Isolated Leaf',
+}
+
+function translateCentralityNode(node) {
+  if (!node || !node.path) return null
+  const path = node.path
+  const fileName = path.split('/').pop()
+  const shortPath = path.split('/').slice(-2).join('/')
+  const inDeg = node.in_degree || node.import_in_degree || 0
+  const outDeg = node.out_degree || node.import_out_degree || 0
+  const role = node.structural_role || 'unknown'
+  const roleLabel = STRUCTURAL_ROLE_LABELS[role] || role
+
+  let operationalName = shortPath
+  let operationalRole = 'structural node'
+
+  const lower = path.toLowerCase()
+  if (lower.includes('/dto/') || lower.includes('/dto.')) {
+    operationalName = 'Data Contract Surface'
+    operationalRole = inDeg > 50 ? 'schema chokepoint — all consumers share this contract' : 'shared data contract'
+  } else if (lower.includes('/hooks/') && lower.endsWith('index.tsx')) {
+    operationalName = 'Frontend Hook Spine'
+    operationalRole = inDeg > 30 ? 'state management chokepoint — frontend behavior flows through here' : 'shared hook surface'
+  } else if (lower.includes('/api/client')) {
+    operationalName = 'API Client Interface'
+    operationalRole = 'external communication boundary — all outbound requests route here'
+  } else if (lower.includes('/guards/') && lower.includes('roles')) {
+    operationalName = 'Authorization Guard'
+    operationalRole = 'access enforcement point — imported by all protected routes'
+  } else if (lower.includes('/guards/') && lower.includes('jwt')) {
+    operationalName = 'Authentication Guard'
+    operationalRole = 'identity verification point — imported by all authenticated routes'
+  } else if (lower.includes('/cache/') && lower.endsWith('index.ts')) {
+    operationalName = 'Cache Infrastructure'
+    operationalRole = 'shared caching surface — cross-cutting dependency'
+  } else if (lower.includes('/socket/') && lower.endsWith('index.tsx')) {
+    operationalName = 'WebSocket Interface'
+    operationalRole = 'real-time communication spine — runtime event propagation'
+  } else if (lower.includes('/utils/') && lower.endsWith('index.ts')) {
+    operationalName = 'Utility Foundation'
+    operationalRole = 'shared utility surface — broad structural dependency'
+  } else if (lower.includes('/layout/') || lower.includes('pageheader')) {
+    operationalName = 'Layout Shell'
+    operationalRole = 'presentation framework — imported by all page-level components'
+  } else if (lower.includes('/ui/') && lower.includes('badge')) {
+    operationalName = 'UI Primitive'
+    operationalRole = 'shared presentation atom'
+  } else if (lower.endsWith('index.ts') || lower.endsWith('index.tsx') || lower.endsWith('index.js')) {
+    const parent = path.split('/').slice(-2, -1)[0] || 'module'
+    operationalName = `${parent.charAt(0).toUpperCase() + parent.slice(1)} Index`
+    operationalRole = `re-export surface for ${parent}`
+  }
+
+  return {
+    path,
+    file_name: fileName,
+    short_path: shortPath,
+    operational_name: operationalName,
+    operational_role: operationalRole,
+    structural_role: role,
+    structural_role_label: roleLabel,
+    in_degree: inDeg,
+    out_degree: outDeg,
+    centrality_rank: node.centrality_rank,
+    consumer_label: inDeg > 0 ? `${inDeg} consumer${inDeg !== 1 ? 's' : ''}` : 'no consumers',
+  }
+}
+
+function ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, topologyEdges) {
   const signals = taggedSignals.filter(ts => ts.features.includes('dependency_amplification'))
   if (signals.length === 0) return []
 
   const resolve = buildDomainResolver(registry)
   const domainIdSet = new Set((registry || []).map(d => d.domain_id))
   const vocab = CONDITION_VOCABULARY.DEPENDENCY_CHOKE_POINT
+  const edges = topologyEdges || []
 
   return signals.map(ts => {
     const primaryEntity = extractPrimaryEntity(ts.signal)
     const empDomains = []
-    if (ts.signal.signal_id === 'ISIG-001' && primaryEntity) {
-      const parts = primaryEntity.split('/')
-      const domGuess = parts[0]
-      for (const d of (registry || [])) {
-        if ((d.domain_name || '').toLowerCase().includes(domGuess.toLowerCase()) ||
-            (d.business_label || '').toLowerCase().includes(domGuess.toLowerCase())) {
-          empDomains.push(d.domain_id)
-          break
-        }
+    if (primaryEntity) {
+      const domId = resolveFileToRegistryDomain(primaryEntity, registry, pressureZoneState)
+      if (domId) empDomains.push(domId)
+    }
+
+    const hubDomainId = empDomains[0] || null
+    const corridorPaths = []
+    const corridorDomains = new Set(empDomains)
+
+    if (hubDomainId) {
+      const inbound = edges.filter(e => e.target_domain === hubDomainId && e.source_domain !== hubDomainId)
+      const outbound = edges.filter(e => e.source_domain === hubDomainId && e.target_domain !== hubDomainId)
+
+      for (const e of inbound) {
+        corridorPaths.push({
+          from: e.source_domain,
+          to: hubDomainId,
+          type: 'import_consumer',
+          relationship: e.relationship_type,
+          evidence: 'semantic_topology_edge',
+        })
+        corridorDomains.add(e.source_domain)
+      }
+      for (const e of outbound) {
+        corridorPaths.push({
+          from: hubDomainId,
+          to: e.target_domain,
+          type: 'import_hub_outbound',
+          relationship: e.relationship_type,
+          evidence: 'semantic_topology_edge',
+        })
+        corridorDomains.add(e.target_domain)
       }
     }
 
-    const dimIds = Array.from(domainIdSet).filter(id => !empDomains.includes(id))
+    const dimIds = Array.from(domainIdSet).filter(id => !corridorDomains.has(id))
 
     return {
       condition_id: 'dck-' + ts.signal.signal_id.toLowerCase(),
@@ -304,21 +471,22 @@ function ruleDependencyChokePoint(taggedSignals, registry) {
       evidence_mode: 'SIGNAL_DRIVEN',
       topology_overlay: {
         overlay_mode: 'IMPORT_PRESSURE',
-        emphasis_domains: empDomains,
+        emphasis_domains: Array.from(corridorDomains),
         dim_domains: dimIds,
         advisory_zones: [],
         signal_overlays: [{ signal_id: ts.signal.signal_id, signal_name: ts.signal.signal_name, severity: ts.signal.severity, type: 'hub_pressure' }],
-        corridor_paths: [],
+        corridor_paths: corridorPaths,
+        corridor_evidence: corridorPaths.length > 0 ? 'EVIDENCE_DERIVED' : 'NO_TOPOLOGY_EDGES',
       },
       guided_interventions: CONDITION_INTERVENTIONS.DEPENDENCY_CHOKE_POINT.map(i => ({ ...i, condition_id: 'dck-' + ts.signal.signal_id.toLowerCase() })),
       orchestration_hooks: ['dependency_hub_review'],
       contributing_features: ['dependency_amplification'],
-      derivation_trace: ts.signal.signal_id + ' (value=' + (ts.signal.signal_value != null ? ts.signal.signal_value.toFixed(2) : '?') + ') → DEPENDENCY_CHOKE_POINT',
+      derivation_trace: ts.signal.signal_id + ' (value=' + (ts.signal.signal_value != null ? ts.signal.signal_value.toFixed(2) : '?') + ') → DEPENDENCY_CHOKE_POINT' + (corridorPaths.length > 0 ? ' → ' + corridorPaths.length + ' evidence-derived corridors' : ''),
     }
   })
 }
 
-function rulePropagationAsymmetry(taggedSignals, registry) {
+function rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState) {
   const signals = taggedSignals.filter(ts => ts.features.includes('propagation_asymmetry'))
   if (signals.length === 0) return []
 
@@ -329,15 +497,8 @@ function rulePropagationAsymmetry(taggedSignals, registry) {
     const primaryEntity = extractPrimaryEntity(ts.signal)
     const empDomains = []
     if (primaryEntity) {
-      const parts = primaryEntity.split('/')
-      const domGuess = parts[0]
-      for (const d of (registry || [])) {
-        if ((d.domain_name || '').toLowerCase().includes(domGuess.toLowerCase()) ||
-            (d.business_label || '').toLowerCase().includes(domGuess.toLowerCase())) {
-          empDomains.push(d.domain_id)
-          break
-        }
-      }
+      const domId = resolveFileToRegistryDomain(primaryEntity, registry, pressureZoneState)
+      if (domId) empDomains.push(domId)
     }
 
     const dimIds = Array.from(domainIdSet).filter(id => !empDomains.includes(id))
@@ -374,7 +535,7 @@ function rulePropagationAsymmetry(taggedSignals, registry) {
   })
 }
 
-function ruleStructuralMassConcentration(taggedSignals, registry, dpsigData) {
+function ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState) {
   const signals = taggedSignals.filter(ts => ts.features.includes('structural_mass_asymmetry'))
   if (signals.length === 0) return []
 
@@ -403,6 +564,21 @@ function ruleStructuralMassConcentration(taggedSignals, registry, dpsigData) {
     if ((d.domain_name || '').toLowerCase().includes(clusterName.toLowerCase()) ||
         (d.business_label || '').toLowerCase().includes(clusterName.toLowerCase())) {
       empDomains.push(d.domain_id)
+    }
+  }
+
+  if (empDomains.length === 0 && clusterName) {
+    const resolve = buildDomainResolver(registry)
+    const zones = (pressureZoneState && pressureZoneState.zones) || []
+    for (const z of zones) {
+      if (z.anchor_name && z.anchor_name.includes(clusterName)) {
+        const domId = resolve(z.anchor_id)
+        if (domId) { empDomains.push(domId); break }
+      }
+    }
+    if (empDomains.length === 0) {
+      const fallback = resolve('DOM-04')
+      if (fallback) empDomains.push(fallback)
     }
   }
 
@@ -452,9 +628,6 @@ function ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnri
     ? (structuralEnrichment.centrality.top_structural_spines || [])
     : []
   const hubs = spines.filter(s => s.structural_role === 'hub' || s.structural_role === 'authority')
-  const hasHub = hubs.length > 0
-
-  if (!hasHub) return []
 
   const hubDomainIds = hubs.map(h => {
     const pathTail = h.path.split('/').slice(-2).join('/')
@@ -465,10 +638,27 @@ function ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnri
   }).filter(Boolean)
 
   if (hubDomainIds.length === 0) {
-    const primaryDomain = signals[0].signal.signal_id === 'PSIG-001' || signals[0].signal.signal_id === 'PSIG-002'
-      ? resolve('DOM-04')
-      : null
-    if (primaryDomain) hubDomainIds.push(primaryDomain)
+    for (const ts of signals) {
+      if (ts.signal.concentration) {
+        const entity = extractPrimaryEntity(ts.signal)
+        if (entity) {
+          const parts = entity.split('/')
+          const domGuess = parts[0]
+          for (const d of (registry || [])) {
+            if ((d.domain_name || '').toLowerCase().includes(domGuess.toLowerCase()) ||
+                (d.business_label || '').toLowerCase().includes(domGuess.toLowerCase())) {
+              hubDomainIds.push(d.domain_id)
+              break
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (hubDomainIds.length === 0) {
+    const fallback = resolve('DOM-04')
+    if (fallback) hubDomainIds.push(fallback)
   }
 
   const dimIds = Array.from(domainIdSet).filter(id => !hubDomainIds.includes(id))
@@ -656,6 +846,8 @@ function synthesize(fullReport) {
 
   const dpsigData = null
 
+  const topologyEdges = fullReport.semantic_topology_edges || []
+
   const taggedSignals = signals.map(signal => ({
     signal,
     features: extractFeatures(signal, pressureZoneState, structuralEnrichment),
@@ -663,9 +855,9 @@ function synthesize(fullReport) {
 
   const primitives = [
     ...ruleDeliveryPressureConcentration(taggedSignals, pressureZoneState, registry),
-    ...ruleDependencyChokePoint(taggedSignals, registry),
-    ...rulePropagationAsymmetry(taggedSignals, registry),
-    ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData),
+    ...ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, topologyEdges),
+    ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState),
+    ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
@@ -673,6 +865,14 @@ function synthesize(fullReport) {
   const composites = ruleCompoundConvergence(primitives, registry)
 
   const allConditions = [...primitives, ...composites]
+
+  for (const c of allConditions) {
+    c.domain_targets = buildDomainTargets(
+      (c.shared_topology_targets && c.shared_topology_targets.domains) || [],
+      registry,
+      c.condition_type
+    )
+  }
 
   const active = allConditions.filter(c => c.severity !== 'NOMINAL')
   const suppressed = allConditions.filter(c => c.severity === 'NOMINAL')
@@ -702,4 +902,4 @@ function synthesize(fullReport) {
   }
 }
 
-module.exports = { synthesize, extractFeatures, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }
+module.exports = { synthesize, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }

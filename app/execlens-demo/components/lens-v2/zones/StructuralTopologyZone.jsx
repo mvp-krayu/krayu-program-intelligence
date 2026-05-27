@@ -206,6 +206,12 @@ const COGNITION_OVERLAY_COLORS = {
   DELIVERY_FRAGILITY: '#ff6b6b',
   COORDINATION_LOAD: '#4a9eff',
   PROPAGATION_RISK: '#ff9e4a',
+  PROPAGATION_CORRIDOR: '#ff9e4a',
+  CLUSTER_PRESSURE: '#ffd700',
+  COUPLING_CORRIDOR: '#4a9eff',
+  COMPOUND_CONVERGENCE: '#ff6b6b',
+  COVERAGE_GAP: '#ff9e4a',
+  COVERAGE_COMPLETE: '#64ffda',
   TOPOLOGY_POSTURE: '#64ffda',
   QUALIFICATION_POSTURE: '#64ffda',
   PRESSURE_ZONE: '#ff6b6b',
@@ -386,8 +392,11 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pre
         {pressureZoneState && pressureZoneState.zones && pressureZoneState.zones.map(zone => {
           const resolveEntityPos = (entityId) => {
             if (allPos[entityId]) return allPos[entityId]
-            const num = entityId.replace(/^DOM-/, '')
-            return allPos[`DOMAIN-${num}`] || allPos[`DOM-${num}`] || null
+            if (/^DOM-\d+$/.test(entityId)) {
+              const byDom = domains.find(d => d.dominant_dom_id === entityId)
+              if (byDom && allPos[byDom.domain_id]) return allPos[byDom.domain_id]
+            }
+            return null
           }
           const members = (zone.member_entities || []).filter(m => resolveEntityPos(m.entity_id))
           if (members.length === 0) return null
@@ -460,13 +469,26 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pre
               const from = allPos[cp.from]
               const to = allPos[cp.to]
               if (!from || !to) return null
-              const color = cp.type === 'pressure_propagation' ? '#ff6b6b' : '#ff9e4a'
+              const evidenceDerived = cp.evidence === 'semantic_topology_edge'
+              const color = cp.type === 'pressure_propagation' ? '#ff6b6b'
+                : cp.type === 'import_consumer' ? '#ff9e4a'
+                : cp.type === 'import_hub_outbound' ? '#4a9eff'
+                : cp.type === 'propagation' ? '#ff9e4a'
+                : '#ff9e4a'
+              const dx = to.cx - from.cx, dy = to.cy - from.cy
+              const len = Math.sqrt(dx * dx + dy * dy)
+              if (len === 0) return null
+              const ux = dx / len, uy = dy / len
+              const x1 = from.cx + ux * 20, y1 = from.cy + uy * 20
+              const x2 = to.cx - ux * 20, y2 = to.cy - uy * 20
               return (
                 <line key={`cc-${ci}`}
-                  x1={from.cx} y1={from.cy}
-                  x2={to.cx} y2={to.cy}
-                  stroke={color} strokeWidth={3} strokeOpacity={0.35}
-                  strokeDasharray="8,4"
+                  x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke={color}
+                  strokeWidth={evidenceDerived ? 2.5 : 3}
+                  strokeOpacity={evidenceDerived ? 0.55 : 0.35}
+                  strokeDasharray={evidenceDerived ? undefined : '8,4'}
+                  markerEnd={evidenceDerived ? `url(#arr-${color === '#ff9e4a' ? 'amber' : color === '#4a9eff' ? 'blue' : 'gray'})` : undefined}
                   style={{ transition: 'stroke-opacity 0.3s' }}
                 />
               )

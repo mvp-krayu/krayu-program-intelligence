@@ -6,8 +6,8 @@ import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
-import { deriveTopologyCognitionState, derivePressureZoneCognitionState, translateSignal } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
-import { synthesize, SEVERITY_RANK } from '../../../lib/lens-v2/SignalSynthesisEngine'
+import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { synthesize, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -618,7 +618,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -670,6 +670,50 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           <div className="support-qualifier-note">advisory bound</div>
         </div>
       )}
+
+      {resolvedCondition ? (
+        <div className="support-block support-block--conditions support-block--condition-focus">
+          <div className="support-label">FOCUSED CONDITION</div>
+          <div className="support-condition-focus-title" data-severity={resolvedCondition.severity}>
+            {resolvedCondition.operator_cognition_title}
+          </div>
+          {resolvedCondition.guided_interventions && resolvedCondition.guided_interventions.length > 0 && (
+            <>
+              <div className="support-label" style={{ marginTop: 10 }}>INTERVENTIONS</div>
+              {resolvedCondition.guided_interventions.map(gi => (
+                <div key={gi.intervention_id} className="support-condition-intervention" data-type={gi.action_type}>
+                  <span className="support-condition-intervention-label">{gi.operator_label}</span>
+                  <span className="support-condition-intervention-effect">{gi.panel_mutation}</span>
+                </div>
+              ))}
+            </>
+          )}
+          {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).length > 0 && (
+            <>
+              <div className="support-label" style={{ marginTop: 10 }}>LINKED CAPABILITIES</div>
+              {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).map(sid => (
+                <div key={sid} className="support-condition-surface">{SURFACE_DISPLAY_NAME[sid] || sid}</div>
+              ))}
+            </>
+          )}
+        </div>
+      ) : activeConditions && activeConditions.length > 0 ? (
+        <div className="support-block support-block--conditions">
+          <div className="support-label">ACTIVE CONDITIONS</div>
+          {activeConditions.slice(0, 4).map(c => (
+            <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
+              <span className="support-condition-title">{c.operator_cognition_title}</span>
+              <span className="support-condition-severity">{c.severity}</span>
+              {c.domain_targets && c.domain_targets[0] && (
+                <span className="support-condition-domain">{c.domain_targets[0].display_name}</span>
+              )}
+            </div>
+          ))}
+          {activeConditions.length > 4 && (
+            <div className="support-condition-overflow">+{activeConditions.length - 4} more</div>
+          )}
+        </div>
+      ) : null}
 
       {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (
         <div className="support-block support-block--emergence">
@@ -1150,7 +1194,9 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
         interpretation: {
           heading: 'Delivery Fragility — Active Cognition State',
           operationalMeaning: originNames.length > 0
-            ? `${originNames.length} domain${originNames.length !== 1 ? 's' : ''} generate structural pressure that flows through delivery corridors. Changes touching ${originNames.join(', ')} propagate risk — deployment decisions require structural awareness of the ${passThroughs.length > 0 ? passThroughs.length + ' corridor' + (passThroughs.length !== 1 ? 's' : '') + ' and ' : ''}${receivers.length} downstream receiver${receivers.length !== 1 ? 's' : ''}.`
+            ? passThroughs.length > 0
+              ? `${originNames.length} domain${originNames.length !== 1 ? 's' : ''} generate structural pressure that flows through ${passThroughs.length} corridor${passThroughs.length !== 1 ? 's' : ''} to ${receivers.length} downstream receiver${receivers.length !== 1 ? 's' : ''}. Changes touching ${originNames.join(', ')} propagate risk — deployment decisions require structural awareness.`
+              : `${originNames.length} domain${originNames.length !== 1 ? 's' : ''} originate structural pressure that reaches ${receivers.length} downstream receiver${receivers.length !== 1 ? 's' : ''} directly. Changes touching ${originNames.join(', ')} propagate risk — deployment decisions require structural awareness.`
             : `${highSigs.length} elevated signal${highSigs.length !== 1 ? 's' : ''} indicate structural stress on delivery infrastructure.`,
           structuralEvidence: [
             ...origins.map(b => ({ label: b.domain_alias, value: `ORIGIN · ${b.grounding_status}`, severity: 'critical' })),
@@ -1197,7 +1243,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
               const b = fr.evidence_blocks || []
               const chain = [...b.filter(x => x.propagation_role === 'ORIGIN').map(x => `${x.domain_alias} (ORIGIN)`), ...b.filter(x => x.propagation_role === 'PASS_THROUGH').map(x => `${x.domain_alias} (CORRIDOR)`), ...b.filter(x => x.propagation_role === 'RECEIVER').map(x => `${x.domain_alias} (RECEIVER)`)]
               return {
-                summary: chain.length > 0 ? `Pressure flows: ${chain.join(' → ')}. ${b.filter(x => x.propagation_role === 'PASS_THROUGH').length} corridor${b.filter(x => x.propagation_role === 'PASS_THROUGH').length !== 1 ? 's' : ''} conduct pressure from origins to receivers.` : 'No complete propagation chain in current evidence.',
+                summary: chain.length > 0 ? (() => { const ptCount = b.filter(x => x.propagation_role === 'PASS_THROUGH').length; return `Pressure flows: ${chain.join(' → ')}.${ptCount > 0 ? ` ${ptCount} corridor${ptCount !== 1 ? 's' : ''} conduct pressure from origins to receivers.` : ' Direct propagation — no intermediate corridors.'}`; })() : 'No complete propagation chain in current evidence.',
                 evidence: b.map(x => ({ label: x.domain_alias, value: x.propagation_role, severity: x.propagation_role === 'ORIGIN' ? 'critical' : x.propagation_role === 'PASS_THROUGH' ? 'elevated' : 'nominal' })),
                 structuralContext: 'Propagation roles derive from evidence block analysis — origin, pass-through, and receiver classifications.',
               }
@@ -1271,7 +1317,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
             ? `${hubs.length} coordination hub${hubs.length !== 1 ? 's' : ''} absorb disproportionate structural load. Peak inbound dependency: ${Math.max(...hubs.map(h => h.in_degree || 0))}. Changes to these files amplify across the dependency graph — every downstream consumer is affected.${concentrationSigs.length > 0 ? ` ${concentrationSigs.length} concentration signal${concentrationSigs.length !== 1 ? 's' : ''} confirm structural bottleneck.` : ''}`
             : 'Coordination saturation detected but no hub nodes identified in structural enrichment.',
           structuralEvidence: [
-            ...hubs.slice(0, 4).map(h => ({ label: h.path.split('/').slice(-2).join('/'), value: `${h.structural_role} · in:${h.in_degree || 0} out:${h.out_degree || 0}`, severity: (h.in_degree || 0) > 10 ? 'critical' : 'elevated' })),
+            ...hubs.slice(0, 4).map(h => { const t = translateCentralityNode(h); return { label: t.operational_name, value: `${t.structural_role_label} · ${t.consumer_label}`, severity: t.in_degree > 10 ? 'critical' : 'elevated' } }),
             ...concentrationSigs.slice(0, 2).map(s => ({ label: s.signal_name || s.signal_id, value: s.severity, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
           ],
           suppressionMask: ['QUALIFICATION_EXPOSURE'],
@@ -1287,25 +1333,27 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
         },
 
         guidedCognition: [
-          ...hubs.slice(0, 2).map(hub => ({
-            question: `What depends on "${hub.path.split('/').pop()}"? (${hub.in_degree || 0} inbound)`,
+          ...hubs.slice(0, 2).map(hub => { const th = translateCentralityNode(hub); return {
+            question: `What depends on ${th.operational_name}? (${th.consumer_label})`,
             tone: 'forensic', archetype: 'TRACE', depth: 'standard',
             boundary: 'From structural_centrality in-degree — deterministic.',
             answer_derive: (fr) => {
               const allSpines = ((fr.structural_enrichment || {}).centrality || {}).top_structural_spines || []
               const node = allSpines.find(s => s.path === hub.path) || hub
+              const t = translateCentralityNode(node)
               return {
-                summary: `"${hub.path.split('/').pop()}" is a ${node.structural_role} with ${node.in_degree || 0} inbound and ${node.out_degree || 0} outbound dependencies. Centrality rank: ${node.centrality_rank || '?'}. Any change to this file propagates to all ${node.in_degree || 0} consumers.`,
+                summary: `${t.operational_name} (${t.short_path}) is a ${t.structural_role_label} with ${t.consumer_label} and ${t.out_degree} outbound dependencies. ${t.operational_role}. Centrality rank: ${t.centrality_rank || '?'}. Any change propagates to all consumers.`,
                 evidence: [
-                  { label: 'In-degree', value: String(node.in_degree || 0), severity: (node.in_degree || 0) > 10 ? 'critical' : 'elevated' },
-                  { label: 'Out-degree', value: String(node.out_degree || 0), severity: 'nominal' },
-                  { label: 'Structural role', value: node.structural_role, severity: 'nominal' },
-                  { label: 'Centrality rank', value: String(node.centrality_rank || '—'), severity: 'nominal' },
+                  { label: 'Operational role', value: t.operational_role, severity: 'nominal' },
+                  { label: 'Consumers', value: String(t.in_degree), severity: t.in_degree > 10 ? 'critical' : 'elevated' },
+                  { label: 'Dependencies', value: String(t.out_degree), severity: 'nominal' },
+                  { label: 'Structural role', value: t.structural_role_label, severity: 'nominal' },
+                  { label: 'Centrality rank', value: String(t.centrality_rank || '—'), severity: 'nominal' },
                 ],
                 structuralContext: 'Centrality derives from 40.3c structural centrality artifact — normalized degree centrality with role classification.',
               }
             },
-          })),
+          } }),
           {
             question: 'Is coordination load distributed or concentrated?',
             tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
@@ -1316,8 +1364,8 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
               const hubCount = (rs.hub || 0) + (rs.authority || 0)
               const hubPct = total > 0 ? Math.round(hubCount / total * 100) : 0
               return {
-                summary: `Role distribution: ${Object.entries(rs).map(([r, c]) => `${r}: ${c}`).join(', ')}. Hub+authority concentration: ${hubPct}% (${hubCount}/${total} files).${hubPct > 20 ? ' Concentration above 20% — coordination bottleneck risk.' : hubPct > 10 ? ' Moderate concentration.' : ' Well distributed.'}`,
-                evidence: Object.entries(rs).map(([role, count]) => ({ label: role, value: `${count} (${total > 0 ? Math.round(count / total * 100) : 0}%)`, severity: (role === 'hub' || role === 'authority') && count / Math.max(1, total) > 0.15 ? 'elevated' : 'nominal' })),
+                summary: `Role distribution: ${Object.entries(rs).map(([r, c]) => `${STRUCTURAL_ROLE_LABELS[r] || r}: ${c}`).join(', ')}. Hub+authority concentration: ${hubPct}% (${hubCount}/${total} files).${hubPct > 20 ? ' Concentration above 20% — coordination bottleneck risk.' : hubPct > 10 ? ' Moderate concentration.' : ' Well distributed.'}`,
+                evidence: Object.entries(rs).map(([role, count]) => ({ label: STRUCTURAL_ROLE_LABELS[role] || role, value: `${count} (${total > 0 ? Math.round(count / total * 100) : 0}%)`, severity: (role === 'hub' || role === 'authority') && count / Math.max(1, total) > 0.15 ? 'elevated' : 'nominal' })),
                 structuralContext: '7 structural roles classified by first-match-wins from import graph metrics.',
               }
             },
@@ -1334,7 +1382,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
                 summary: topHubs.length > 0
                   ? `Top ${topHubs.length} coordination nodes handle ${topHubs.reduce((s, h) => s + (h.in_degree || 0), 0)} total inbound dependencies.${activeSigs.length > 0 ? ` ${activeSigs.length} active signal${activeSigs.length !== 1 ? 's' : ''} indicate structural stress at or near these coordination points.` : ' No active signals co-located with coordination hubs.'}`
                   : 'No hub/authority nodes found in structural enrichment.',
-                evidence: topHubs.map(h => ({ label: h.path.split('/').slice(-2).join('/'), value: `in:${h.in_degree || 0}`, severity: (h.in_degree || 0) > 10 ? 'critical' : 'elevated' })),
+                evidence: topHubs.map(h => { const t = translateCentralityNode(h); return { label: t.operational_name, value: t.consumer_label, severity: t.in_degree > 10 ? 'critical' : 'elevated' } }),
                 structuralContext: 'Bottleneck assessment combines centrality metrics with active signal co-presence.',
               }
             },
@@ -1399,7 +1447,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
             : 'Integration Exposure — Active Cognition State',
           operationalMeaning,
           structuralEvidence: [
-            ...bridges.slice(0, 3).map(b => ({ label: b.path.split('/').slice(-2).join('/'), value: `${b.structural_role} · in:${b.in_degree || 0} out:${b.out_degree || 0}`, severity: 'elevated' })),
+            ...bridges.slice(0, 3).map(b => { const t = translateCentralityNode(b); return { label: t.operational_name, value: `${t.structural_role_label} · ${t.consumer_label}`, severity: 'elevated' } }),
             ...isigSigs.map(s => ({ label: s.signal_name || 'ISIG', value: `${s.severity}${s.concentration ? ' · ' + s.concentration : ''}`, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
             ...passThroughs.slice(0, 2).map(p => ({ label: p.domain_alias, value: `PASS_THROUGH · ${p.grounding_status}`, severity: 'elevated' })),
             ...(mode === 'IMPORT_SIGNAL_DRIVEN' ? [{ label: 'Integration Topology', value: 'NOT RESOLVED — no bridge/connector roles detected', severity: 'nominal' }] : []),
@@ -1448,9 +1496,9 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
               const bNodes = allBridges.filter(s => s.structural_role === 'bridge' || s.structural_role === 'connector')
               return {
                 summary: bNodes.length > 0
-                  ? `${bNodes.length} integration node${bNodes.length !== 1 ? 's' : ''}: ${bNodes.slice(0, 3).map(n => n.path.split('/').pop()).join(', ')}${bNodes.length > 3 ? ` +${bNodes.length - 3} more` : ''}. These files bridge dependency boundaries between domains.`
+                  ? `${bNodes.length} integration node${bNodes.length !== 1 ? 's' : ''}: ${bNodes.slice(0, 3).map(n => translateCentralityNode(n).operational_name).join(', ')}${bNodes.length > 3 ? ` +${bNodes.length - 3} more` : ''}. These structural surfaces bridge dependency boundaries between domains.`
                   : 'No bridge/connector nodes identified in structural enrichment. Integration corridor topology is not yet resolved for this specimen.',
-                evidence: bNodes.slice(0, 5).map(n => ({ label: n.path.split('/').slice(-2).join('/'), value: `${n.structural_role} · rank ${n.centrality_rank || '?'}`, severity: 'elevated' })),
+                evidence: bNodes.slice(0, 5).map(n => { const t = translateCentralityNode(n); return { label: t.operational_name, value: `${t.structural_role_label} · rank ${t.centrality_rank || '?'}`, severity: 'elevated' } }),
                 structuralContext: 'Bridge nodes connect otherwise separate graph components. Connector nodes link clusters with moderate edge weight.',
               }
             },
@@ -1568,8 +1616,8 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
               const rs2 = ((fr.structural_enrichment || {}).centrality || {}).role_summary || {}
               const total = Object.values(rs2).reduce((a, b) => a + b, 0)
               return {
-                summary: total > 0 ? `${total} files classified across ${Object.keys(rs2).length} structural roles. ${Object.entries(rs2).map(([r, ct]) => `${r}: ${ct} (${Math.round(ct / total * 100)}%)`).join(', ')}.` : 'No structural role data available.',
-                evidence: Object.entries(rs2).map(([role, ct]) => ({ label: role, value: `${ct} (${total > 0 ? Math.round(ct / total * 100) : 0}%)`, severity: 'nominal' })),
+                summary: total > 0 ? `${total} files classified across ${Object.keys(rs2).length} structural roles. ${Object.entries(rs2).map(([r, ct]) => `${STRUCTURAL_ROLE_LABELS[r] || r}: ${ct} (${Math.round(ct / total * 100)}%)`).join(', ')}.` : 'No structural role data available.',
+                evidence: Object.entries(rs2).map(([role, ct]) => ({ label: STRUCTURAL_ROLE_LABELS[role] || role, value: `${ct} (${total > 0 ? Math.round(ct / total * 100) : 0}%)`, severity: 'nominal' })),
                 structuralContext: '7-role taxonomy from 40.3c structural centrality. First-match-wins classification from import graph metrics.',
               }
             },
@@ -3247,7 +3295,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -3377,6 +3425,106 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
               ))}
             </div>
           )}
+        </div>
+      </aside>
+    )
+  }
+
+  // ─── CONDITION DETAIL RENDERING ──────────────────────────────────
+  if (resolvedCondition) {
+    const c = resolvedCondition
+    const targets = c.domain_targets || []
+    const linkedSurfaces = CONDITION_TO_SURFACES[c.condition_type] || []
+    return (
+      <aside className="intel-interp intel-interp--condition-active" data-tone="structural" data-severity={c.severity} aria-label="Active condition detail">
+        <div className="interp-tag">
+          <span className="interp-tag-label">CONDITION DETAIL</span>
+          <button className="interp-condition-dismiss" onClick={onConditionDismiss} type="button" aria-label="Dismiss condition detail">✕</button>
+        </div>
+
+        <div className="interp-condition-detail">
+          <div className="interp-condition-title" data-severity={c.severity}>
+            {c.operator_cognition_title}
+            <span className="interp-condition-sev">{c.severity}</span>
+          </div>
+
+          <div className="interp-condition-consequence">{c.operational_consequence}</div>
+
+          {targets.length > 0 && (
+            <div className="interp-condition-targets">
+              <div className="interp-section-label">AFFECTED DOMAINS</div>
+              {targets.map(t => (
+                <div key={t.id} className="interp-condition-target">
+                  <span className="interp-condition-target-name">{t.display_name}</span>
+                  <span className="interp-condition-target-id">{t.id}</span>
+                  <span className="interp-condition-target-role">{t.condition_role}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="interp-condition-field">
+            <div className="interp-section-label">TOPOLOGY EFFECT</div>
+            <div className="interp-condition-field-value">{c.topology_effect}</div>
+          </div>
+
+          {c.topology_overlay && c.topology_overlay.corridor_paths && c.topology_overlay.corridor_paths.length > 0 && (() => {
+            const paths = c.topology_overlay.corridor_paths
+            const evidencePaths = paths.filter(p => p.evidence === 'semantic_topology_edge')
+            if (evidencePaths.length === 0) return null
+            const reg = (fullReport && fullReport.semantic_domain_registry) || []
+            const resolveName = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+            const hubDomain = targets.length > 0 ? targets[0].display_name : 'hub domain'
+            const inbound = evidencePaths.filter(p => p.type === 'import_consumer')
+            const outbound = evidencePaths.filter(p => p.type === 'import_hub_outbound')
+            return (
+              <div className="interp-condition-field">
+                <div className="interp-section-label">TOPOLOGY CORRIDORS</div>
+                <div className="interp-condition-field-value" style={{ marginBottom: 6 }}>
+                  {hubDomain} acts as a dependency hub{inbound.length > 0 ? ': ' + inbound.length + ' upstream domain' + (inbound.length !== 1 ? 's' : '') + ' feed into it' : ''}{outbound.length > 0 ? (inbound.length > 0 ? ' and ' : ': ') + outbound.length + ' downstream domain' + (outbound.length !== 1 ? 's are' : ' is') + ' called from it' : ''}.
+                </div>
+                {inbound.length > 0 && (
+                  <div className="interp-condition-corridor-group">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ff9e4a' }}>UPSTREAM</span>
+                    {inbound.map((p, i) => <span key={i} className="interp-condition-corridor-domain">{resolveName(p.from)}</span>)}
+                  </div>
+                )}
+                {outbound.length > 0 && (
+                  <div className="interp-condition-corridor-group">
+                    <span className="interp-condition-corridor-label" style={{ color: '#4a9eff' }}>DOWNSTREAM</span>
+                    {outbound.map((p, i) => <span key={i} className="interp-condition-corridor-domain">{resolveName(p.to)}</span>)}
+                  </div>
+                )}
+                <div className="interp-condition-corridor-evidence">
+                  {evidencePaths.length} corridor{evidencePaths.length !== 1 ? 's' : ''} from semantic topology edges · domain-level
+                </div>
+              </div>
+            )
+          })()}
+
+          <div className="interp-condition-field">
+            <div className="interp-section-label">GOVERNANCE</div>
+            <div className="interp-condition-field-value">
+              {c.governance_boundary === 'GOVERNED' ? 'Governed — structurally confirmed' : c.governance_boundary === 'ADVISORY_BOUND' ? 'Advisory — structural confirmation needed' : c.governance_boundary === 'STRUCTURAL_ONLY' ? 'Structural only — advisory-bound' : c.governance_boundary}
+            </div>
+          </div>
+
+          {linkedSurfaces.length > 0 && (
+            <div className="interp-condition-field">
+              <div className="interp-section-label">DRIVES CAPABILITIES</div>
+              <div className="interp-condition-surfaces">
+                {linkedSurfaces.map(sid => (
+                  <span key={sid} className="condition-surface-tag">{SURFACE_DISPLAY_NAME[sid] || sid}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="interp-condition-field">
+            <div className="interp-section-label">DERIVATION</div>
+            <div className="interp-condition-trace-text">{c.technical_semantic_label}</div>
+            <div className="interp-condition-trace-text">{c.supporting_signal_ids.join(', ')}</div>
+          </div>
         </div>
       </aside>
     )
@@ -3831,6 +3979,21 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             </div>
           )}
         </details>
+        {activeConditions && activeConditions.length > 0 && (
+          <div className="interp-block interp-block--conditions">
+            <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
+            <div className="interp-conditions-strip">
+              {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
+                <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
+                  <span className="interp-condition-name">{c.operator_cognition_title}</span>
+                  {c.domain_targets && c.domain_targets[0] && (
+                    <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </aside>
     )
   }
@@ -3857,6 +4020,21 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
         <div className="interp-block">
           <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
+        </div>
+      )}
+      {activeConditions && activeConditions.length > 0 && densityClass === 'EXECUTIVE_DENSE' && (
+        <div className="interp-block interp-block--conditions">
+          <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
+          <div className="interp-conditions-strip">
+            {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
+              <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
+                <span className="interp-condition-name">{c.operator_cognition_title}</span>
+                {c.domain_targets && c.domain_targets[0] && (
+                  <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </aside>
@@ -4314,100 +4492,127 @@ function DenseSignalSection({ fullReport }) {
   )
 }
 
-function SynthesizedConditionEntry({ condition, isComposite }) {
+const CONDITION_TO_SURFACES = (() => {
+  const map = {}
+  for (const [surfaceId, condTypes] of Object.entries(SURFACE_CONDITION_MAP)) {
+    for (const ct of condTypes) {
+      if (!map[ct]) map[ct] = []
+      map[ct].push(surfaceId)
+    }
+  }
+  return map
+})()
+
+const SURFACE_DISPLAY_NAME = {
+  DELIVERY_FRAGILITY: 'Delivery Fragility',
+  COORDINATION_SATURATION: 'Coordination Saturation',
+  INTEGRATION_EXPOSURE: 'Integration Exposure',
+  OPERATIONAL_TOPOLOGY: 'Operational Topology',
+  QUALIFICATION_EXPOSURE: 'Qualification Exposure',
+  PROPAGATION_RISK: 'Propagation Risk',
+}
+
+function SynthesizedConditionEntry({ condition, isComposite, isActive, isCollapsed, onSelect, onIntervention }) {
   const [showTrace, setShowTrace] = useState(false)
-  const [showInterventions, setShowInterventions] = useState(false)
-  const domains = (condition.shared_topology_targets && condition.shared_topology_targets.domains) || []
+  const targets = condition.domain_targets || []
+  const linkedSurfaces = CONDITION_TO_SURFACES[condition.condition_type] || []
 
   return (
     <div
-      className={`condition-entry${isComposite ? ' condition-entry--composite' : ''}`}
+      className={`condition-entry${isComposite ? ' condition-entry--composite' : ''}${isActive ? ' condition-entry--active' : ''}${isCollapsed ? ' condition-entry--collapsed' : ''}`}
       data-severity={condition.severity}
       data-condition-type={condition.condition_type}
+      onClick={onSelect ? () => onSelect(condition.condition_id) : undefined}
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(condition.condition_id) } } : undefined}
     >
       <div className="condition-header">
         <span className="condition-title">{condition.operator_cognition_title}</span>
         <span className="condition-severity" data-severity={condition.severity}>{condition.severity}</span>
+        {isCollapsed && targets.length > 0 && <span className="condition-collapsed-domain">{targets[0].display_name}</span>}
       </div>
 
-      <div className="condition-consequence">{condition.operational_consequence}</div>
-
-      {domains.length > 0 && (
-        <div className="condition-targets">
-          <span className="condition-targets-label">Topology targets</span>
-          <span className="condition-targets-value">{domains.join(', ')}</span>
-        </div>
-      )}
-
-      <div className="condition-topology-effect">
-        <span className="condition-field-label">Topology effect</span>
-        <span className="condition-field-value">{condition.topology_effect}</span>
-      </div>
-      <div className="condition-governance">
-        <span className="condition-field-label">Governance</span>
-        <span className="condition-field-value">{condition.governance_boundary}</span>
-      </div>
-
-      <div className="condition-l2">
-        <span className="condition-l2-label">{condition.technical_semantic_label}</span>
-      </div>
-
-      {condition.guided_interventions && condition.guided_interventions.length > 0 && (
+      {!isCollapsed && (
         <>
-          <button
-            className="condition-interventions-toggle"
-            onClick={(e) => { e.stopPropagation(); setShowInterventions(p => !p) }}
-            aria-expanded={showInterventions}
-          >
-            {showInterventions ? '▾' : '▸'} {condition.guided_interventions.length} guided intervention{condition.guided_interventions.length !== 1 ? 's' : ''}
-          </button>
-          {showInterventions && (
-            <div className="condition-interventions">
-              {condition.guided_interventions.map(gi => (
-                <div key={gi.intervention_id} className="condition-intervention-item">
-                  <span className="condition-intervention-action" data-type={gi.action_type}>{gi.action_type}</span>
-                  <span className="condition-intervention-label">{gi.operator_label}</span>
+          <div className="condition-consequence">{condition.operational_consequence}</div>
+
+          {targets.length > 0 && (
+            <div className="condition-targets">
+              {targets.map(t => (
+                <div key={t.id} className="condition-target-item">
+                  <span className="condition-target-name">{t.display_name}</span>
+                  <span className="condition-target-id">{t.id}</span>
+                  <span className="condition-target-role">{t.condition_role}</span>
                 </div>
               ))}
             </div>
           )}
-        </>
-      )}
 
-      <button
-        className="condition-trace-toggle"
-        onClick={(e) => { e.stopPropagation(); setShowTrace(p => !p) }}
-        aria-expanded={showTrace}
-      >
-        {showTrace ? '▾' : '▸'} {condition.supporting_signal_ids.length} contributing signal{condition.supporting_signal_ids.length !== 1 ? 's' : ''}
-      </button>
-      {showTrace && (
-        <div className="condition-trace">
-          <div className="condition-trace-row">
-            <span className="condition-trace-key">L1 internal</span>
-            <span className="condition-trace-val">{condition.internal_condition_id}</span>
+          <div className="condition-topology-effect">
+            <span className="condition-field-label">Topology effect</span>
+            <span className="condition-field-value">{condition.topology_effect}</span>
           </div>
-          <div className="condition-trace-row">
-            <span className="condition-trace-key">Signals</span>
-            <span className="condition-trace-val">{condition.supporting_signal_ids.join(', ')}</span>
+          <div className="condition-governance">
+            <span className="condition-field-label">Governance</span>
+            <span className="condition-field-value">{condition.governance_boundary === 'GOVERNED' ? 'Governed — structurally confirmed' : condition.governance_boundary === 'ADVISORY_BOUND' ? 'Advisory — structural confirmation needed' : condition.governance_boundary === 'STRUCTURAL_ONLY' ? 'Structural only — advisory-bound' : condition.governance_boundary}</span>
           </div>
-          <div className="condition-trace-row">
-            <span className="condition-trace-key">Derivation</span>
-            <span className="condition-trace-val">{condition.derivation_trace}</span>
-          </div>
-          {isComposite && condition.contributing_conditions && (
-            <div className="condition-trace-row">
-              <span className="condition-trace-key">Contributing</span>
-              <span className="condition-trace-val">{condition.contributing_conditions.map(c => c.operator_cognition_title).join(' · ')}</span>
+
+          {linkedSurfaces.length > 0 && (
+            <div className="condition-surface-link">
+              <span className="condition-field-label">Drives</span>
+              {linkedSurfaces.map(sid => (
+                <span key={sid} className="condition-surface-tag">{SURFACE_DISPLAY_NAME[sid] || sid}</span>
+              ))}
             </div>
           )}
-        </div>
+
+          {condition.guided_interventions && condition.guided_interventions.length > 0 && (
+            <div className="condition-interventions-inline">
+              {condition.guided_interventions.map(gi => (
+                <button key={gi.intervention_id} className="condition-intervention-btn" data-type={gi.action_type} onClick={(e) => { e.stopPropagation(); if (onIntervention) onIntervention(gi, condition) }}>
+                  {gi.operator_label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <button
+            className="condition-trace-toggle"
+            onClick={(e) => { e.stopPropagation(); setShowTrace(p => !p) }}
+            aria-expanded={showTrace}
+          >
+            {showTrace ? '▾' : '▸'} {condition.supporting_signal_ids.length} contributing signal{condition.supporting_signal_ids.length !== 1 ? 's' : ''}
+          </button>
+          {showTrace && (
+            <div className="condition-trace">
+              <div className="condition-trace-row">
+                <span className="condition-trace-key">L1 internal</span>
+                <span className="condition-trace-val">{condition.internal_condition_id}</span>
+              </div>
+              <div className="condition-trace-row">
+                <span className="condition-trace-key">Signals</span>
+                <span className="condition-trace-val">{condition.supporting_signal_ids.join(', ')}</span>
+              </div>
+              <div className="condition-trace-row">
+                <span className="condition-trace-key">Derivation</span>
+                <span className="condition-trace-val">{condition.derivation_trace}</span>
+              </div>
+              {isComposite && condition.contributing_condition_ids && (
+                <div className="condition-trace-row">
+                  <span className="condition-trace-key">Contributing</span>
+                  <span className="condition-trace-val">{condition.contributing_condition_ids.join(' · ')}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
 }
 
-function SynthesizedConditionSection({ fullReport }) {
+function SynthesizedConditionSection({ fullReport, activeConditionId, onConditionSelect, onConditionIntervention }) {
   const result = useMemo(() => synthesize(fullReport), [fullReport])
   if (!result || !result.conditions.length) return null
 
@@ -4417,6 +4622,9 @@ function SynthesizedConditionSection({ fullReport }) {
   const activeComposites = sortedActive.filter(c => compositeIds.has(c.condition_id))
   const activePrimitives = sortedActive.filter(c => !compositeIds.has(c.condition_id))
 
+  const hasActiveSelection = !!activeConditionId
+  const effectiveActiveId = activeConditionId || (result.primary && result.primary.condition_id)
+
   return (
     <div className="actor actor--synthesized-conditions" data-zone-key="signalAssessment">
       <div className="actor-tag">
@@ -4424,31 +4632,23 @@ function SynthesizedConditionSection({ fullReport }) {
         <span className="actor-name">Structural Signal Cognition · {summary.active_count} condition{summary.active_count !== 1 ? 's' : ''} active{summary.suppressed_count > 0 ? ` · ${summary.suppressed_count} suppressed` : ''}</span>
       </div>
 
-      {summary.primary_condition && (
-        <div className="condition-primary-banner" data-severity={summary.primary_severity}>
-          <span className="condition-primary-label">Primary</span>
-          <span className="condition-primary-title">{summary.primary_condition}</span>
-          <span className="condition-primary-severity" data-severity={summary.primary_severity}>{summary.primary_severity}</span>
-        </div>
-      )}
-
       {activeComposites.length > 0 && (
         <div className="condition-group" data-group="composite">
-          <div className="condition-group-head">
+          {!hasActiveSelection && <div className="condition-group-head">
             <span className="condition-group-label">Convergence Conditions</span>
             <span className="condition-group-count">{activeComposites.length}</span>
-          </div>
-          {activeComposites.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={true} />)}
+          </div>}
+          {activeComposites.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={true} isActive={effectiveActiveId === c.condition_id} isCollapsed={hasActiveSelection && effectiveActiveId !== c.condition_id} onSelect={onConditionSelect} onIntervention={onConditionIntervention} />)}
         </div>
       )}
 
       {activePrimitives.length > 0 && (
         <div className="condition-group" data-group="primitive">
-          <div className="condition-group-head">
+          {!hasActiveSelection && <div className="condition-group-head">
             <span className="condition-group-label">Structural Conditions</span>
             <span className="condition-group-count">{activePrimitives.length}</span>
-          </div>
-          {activePrimitives.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} />)}
+          </div>}
+          {activePrimitives.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} isActive={effectiveActiveId === c.condition_id} isCollapsed={hasActiveSelection && effectiveActiveId !== c.condition_id} onSelect={onConditionSelect} onIntervention={onConditionIntervention} />)}
         </div>
       )}
 
@@ -4458,7 +4658,7 @@ function SynthesizedConditionSection({ fullReport }) {
             <span className="condition-group-label">Nominal</span>
             <span className="condition-group-count">{suppressed.length}</span>
           </div>
-          {suppressed.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} />)}
+          {suppressed.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} isActive={false} isCollapsed={hasActiveSelection} onSelect={onConditionSelect} onIntervention={onConditionIntervention} />)}
         </div>
       )}
     </div>
@@ -4546,7 +4746,7 @@ function DenseGovernanceZone({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone }) {
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone, activeConditionId, onConditionSelect, onConditionIntervention }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -4705,7 +4905,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <SynthesizedConditionSection fullReport={fullReport} />
+      <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} />
 
       {!isS1 && (origin || passthrough || receiver) && (
         <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
@@ -7129,7 +7329,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention }) {
   if (boardroomMode) {
     return (
       <>
@@ -7162,9 +7362,9 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   return (
     <>
-      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} />
+      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} />
       )}
     </>
   )
@@ -7185,6 +7385,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     activePressureZone: null,
     activeSignals: [],
     activeQueryIndex: null,
+    activeConditionId: null,
   })
   const handleSurfaceSelect = useCallback((surfaceId) => {
     setCognitionState(prev => ({
@@ -7192,6 +7393,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       activeSurface: prev.activeSurface === surfaceId ? null : surfaceId,
       activePressureZone: null,
       activeQueryIndex: null,
+      activeConditionId: null,
     }))
   }, [])
   const handleDomainFocus = useCallback((domainId) => {
@@ -7208,6 +7410,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activePressureZone: nextZone,
         activeSurface: nextZone ? null : prev.activeSurface,
         activeQueryIndex: null,
+        activeConditionId: null,
       }
     })
   }, [])
@@ -7220,6 +7423,42 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const handleCognitionQueryDismiss = useCallback(() => {
     setCognitionState(prev => ({ ...prev, activeQueryIndex: null }))
   }, [])
+  const handleConditionSelect = useCallback((conditionId) => {
+    setCognitionState(prev => ({
+      ...prev,
+      activeConditionId: prev.activeConditionId === conditionId ? null : conditionId,
+      activeSurface: null,
+      activePressureZone: null,
+      activeQueryIndex: null,
+    }))
+  }, [])
+  const handleConditionDismiss = useCallback(() => {
+    setCognitionState(prev => ({ ...prev, activeConditionId: null }))
+  }, [])
+  const handleConditionIntervention = useCallback((intervention, condition) => {
+    if (intervention.action_type === 'DECOMPOSE' && condition.contributing_condition_ids) {
+      return
+    }
+    const linkedSurfaces = CONDITION_TO_SURFACES[condition.condition_type] || []
+    if (linkedSurfaces.length > 0) {
+      if (!swIntelActive) return
+      setCognitionState(prev => ({
+        ...prev,
+        activeSurface: linkedSurfaces[0],
+        activeConditionId: null,
+        activePressureZone: null,
+        activeQueryIndex: null,
+      }))
+    }
+  }, [swIntelActive])
+
+  const synthesisResult = useMemo(() => synthesize(fullReport), [fullReport])
+  const activeConditions = synthesisResult ? synthesisResult.active : []
+
+  const resolvedCondition = useMemo(() => {
+    if (!cognitionState.activeConditionId || !synthesisResult) return null
+    return synthesisResult.conditions.find(c => c.condition_id === cognitionState.activeConditionId) || null
+  }, [cognitionState.activeConditionId, synthesisResult])
 
   const resolvedCognitionContract = useMemo(() => {
     if (!cognitionState.activeSurface || !fullReport || !swIntelProjection) return null
@@ -7231,6 +7470,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [cognitionState.activeSurface, fullReport, swIntelProjection])
 
   const topologyCognitionOverlay = useMemo(() => {
+    if (resolvedCondition && fullReport) {
+      return deriveConditionCognitionState(resolvedCondition, fullReport)
+    }
     if (cognitionState.activePressureZone && fullReport) {
       return derivePressureZoneCognitionState(cognitionState.activePressureZone, fullReport)
     }
@@ -7238,7 +7480,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
     if (!surface) return null
     return deriveTopologyCognitionState(cognitionState.activeSurface, fullReport, surface)
-  }, [cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
+  }, [resolvedCondition, cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
 
   const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
   const [selectedNarrativeArc, setSelectedNarrativeArc] = useState(null)
@@ -7341,6 +7583,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [exploredQueries, interrogationTrail, fullReport, qualifierClass, piRuntimeActive, emergenceState, densityClass, boardroomMode])
 
   useEffect(() => {
+    setCognitionState(prev => ({ ...prev, activeConditionId: null }))
+  }, [swIntelActive])
+
+  useEffect(() => {
     if (!isBalanced && onAuthorityChange) onAuthorityChange(null)
     if (!isBalanced) setEmergenceState(null)
     setPiRuntimeActive(false)
@@ -7412,6 +7658,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         resolvedCognitionContract={resolvedCognitionContract}
         cognitionQueryIndex={cognitionState.activeQueryIndex}
         onCognitionQueryDismiss={handleCognitionQueryDismiss}
+        activeConditions={activeConditions}
+        resolvedCondition={resolvedCondition}
+        onConditionDismiss={handleConditionDismiss}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -7447,6 +7696,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onDomainFocus={handleDomainFocus}
           onPressureZoneFocus={handlePressureZoneFocus}
           topologyCognitionOverlay={topologyCognitionOverlay}
+          activeConditions={activeConditions}
+          activeConditionId={cognitionState.activeConditionId}
+          onConditionSelect={handleConditionSelect}
+          onConditionIntervention={handleConditionIntervention}
         />
 
         <OrchestrationGuidanceRuntime
@@ -7483,6 +7736,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         resolvedCognitionContract={resolvedCognitionContract}
         cognitionQueryIndex={cognitionState.activeQueryIndex}
         onCognitionQuerySelect={handleCognitionQuerySelect}
+        activeConditions={activeConditions}
+        resolvedCondition={resolvedCondition}
       />
     </div>
   )

@@ -2796,6 +2796,138 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.55;
           padding-left: 16px;
         }
+        .interp-block--conditions {
+          border-top: 1px solid rgba(42, 47, 64, 0.4);
+        }
+        .interp-conditions-strip {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .interp-condition-row {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 3px 0;
+        }
+        .interp-condition-name {
+          font: 500 11px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .interp-condition-row[data-severity="HIGH"] .interp-condition-name { color: #ff8a8a; }
+        .interp-condition-row[data-severity="ELEVATED"] .interp-condition-name { color: #ffb57a; }
+        .interp-condition-domain {
+          font: 400 10px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+        }
+        .intel-interp--condition-active {
+          border-left: 2px solid #4a9eff;
+        }
+        .interp-condition-dismiss {
+          background: none;
+          border: none;
+          color: #7a8aaa;
+          font-size: 14px;
+          cursor: pointer;
+          margin-left: auto;
+          padding: 2px 6px;
+        }
+        .interp-condition-dismiss:hover { color: #ccd6f6; }
+        .interp-condition-detail {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .interp-condition-title {
+          font: 600 14px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .interp-condition-title[data-severity="HIGH"] { color: #ff8a8a; }
+        .interp-condition-title[data-severity="ELEVATED"] { color: #ffb57a; }
+        .interp-condition-sev {
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-left: auto;
+        }
+        .interp-condition-consequence {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #a0adc6;
+        }
+        .interp-condition-targets {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .interp-condition-target {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 3px 0;
+        }
+        .interp-condition-target-name {
+          font: 600 12px/1 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .interp-condition-target-id {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .interp-condition-target-role {
+          font: 400 10px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+        .interp-condition-field {
+          padding-top: 4px;
+        }
+        .interp-condition-field-value {
+          font: 400 11px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #a0adc6;
+          margin-top: 2px;
+        }
+        .interp-condition-surfaces {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-top: 4px;
+        }
+        .interp-condition-trace-text {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 2px;
+        }
+        .interp-condition-corridor-group {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 4px 8px;
+          margin-top: 4px;
+        }
+        .interp-condition-corridor-label {
+          font: 600 9px/1 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          flex-shrink: 0;
+        }
+        .interp-condition-corridor-domain {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+        }
+        .interp-condition-corridor-domain + .interp-condition-corridor-domain::before {
+          content: '· ';
+          color: #4a5570;
+        }
+        .interp-condition-corridor-evidence {
+          font: 400 9px/1.4 'Courier New', monospace;
+          color: #5e6d8a;
+          margin-top: 6px;
+        }
+
         .interp-synthesis {
           font-size: 12px;
           color: #ccd6f6;
@@ -3343,6 +3475,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .condition-primary-banner[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
         .condition-primary-banner[data-severity="HIGH"] { border-left-color: #ff9e4a; }
+        .condition-primary-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 4px;
+        }
         .condition-primary-label {
           font: 600 8px/1 'Courier New', monospace;
           color: #7a8aaa;
@@ -3350,9 +3488,25 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.12em;
         }
         .condition-primary-title {
-          font: 600 12px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font: 600 13px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           color: #ccd6f6;
-          flex: 1;
+          margin-bottom: 4px;
+        }
+        .condition-primary-domain {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 2px;
+        }
+        .condition-primary-domain-name {
+          font: 600 11px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #4a9eff;
+        }
+        .condition-primary-domain-role {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
         }
         .condition-primary-severity {
           font: 700 9px/1 'Courier New', monospace;
@@ -3388,14 +3542,39 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .condition-entry {
           padding: 10px 0;
           border-bottom: 1px solid rgba(42, 47, 64, 0.4);
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+        .condition-entry:hover {
+          background: rgba(74, 158, 255, 0.03);
         }
         .condition-entry:last-of-type { border-bottom: none; }
+        .condition-entry--active {
+          background: rgba(74, 158, 255, 0.06);
+          border-left: 2px solid #4a9eff;
+          padding-left: 10px;
+        }
         .condition-entry--composite {
           padding: 10px;
           margin-bottom: 4px;
           background: rgba(255, 158, 74, 0.03);
           border: 1px solid rgba(255, 158, 74, 0.12);
           border-left: 2px solid rgba(255, 158, 74, 0.4);
+        }
+        .condition-entry--collapsed {
+          padding: 5px 0;
+          opacity: 0.7;
+        }
+        .condition-entry--collapsed:hover {
+          opacity: 1;
+        }
+        .condition-entry--collapsed .condition-header {
+          margin-bottom: 0;
+        }
+        .condition-collapsed-domain {
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-left: auto;
         }
 
         .condition-header {
@@ -3427,22 +3606,30 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-bottom: 8px;
         }
         .condition-targets {
+          padding: 6px 0 4px;
+        }
+        .condition-target-item {
           display: flex;
-          align-items: baseline;
+          align-items: center;
           gap: 8px;
           padding: 3px 0;
         }
-        .condition-targets-label {
-          font: 500 9px/1 'Courier New', monospace;
-          color: #7a8aaa;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          min-width: 100px;
-          flex-shrink: 0;
-        }
-        .condition-targets-value {
-          font: 600 11px/1.3 'Courier New', monospace;
+        .condition-target-name {
+          font: 600 11.5px/1.2 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           color: #4a9eff;
+        }
+        .condition-target-id {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .condition-target-role {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #8a96b2;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          padding: 1px 5px;
+          background: rgba(42, 47, 64, 0.3);
+          border-radius: 2px;
         }
         .condition-topology-effect,
         .condition-governance {
@@ -3474,11 +3661,59 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.04em;
         }
 
-        .condition-interventions-toggle,
+        .condition-surface-link {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-top: 6px;
+        }
+        .condition-surface-link .condition-field-label {
+          margin-right: 2px;
+        }
+        .condition-surface-tag {
+          font: 600 10px/1 'Courier New', monospace;
+          color: #8ab4f8;
+          background: rgba(74, 158, 255, 0.06);
+          border: 1px solid rgba(74, 158, 255, 0.12);
+          border-radius: 2px;
+          padding: 2px 6px;
+          letter-spacing: 0.03em;
+        }
+
+        .condition-interventions-inline {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 8px;
+          margin-bottom: 4px;
+        }
+        .condition-intervention-btn {
+          font: 500 10.5px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #a0adc6;
+          background: rgba(42, 47, 64, 0.3);
+          border: 1px solid rgba(74, 158, 255, 0.15);
+          border-radius: 3px;
+          padding: 5px 10px;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .condition-intervention-btn:hover {
+          color: #ccd6f6;
+          background: rgba(74, 158, 255, 0.1);
+          border-color: rgba(74, 158, 255, 0.3);
+        }
+        .condition-intervention-btn[data-type="QUALIFY"] {
+          border-color: rgba(100, 255, 218, 0.15);
+        }
+        .condition-intervention-btn[data-type="QUALIFY"]:hover {
+          background: rgba(100, 255, 218, 0.08);
+          border-color: rgba(100, 255, 218, 0.3);
+        }
+
         .condition-trace-toggle {
           display: inline-block;
           margin-top: 6px;
-          margin-right: 12px;
           padding: 0;
           border: none;
           background: none;
@@ -3488,37 +3723,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.02em;
           transition: color 0.15s ease;
         }
-        .condition-interventions-toggle:hover,
         .condition-trace-toggle:hover {
           color: #a0adc6;
-        }
-        .condition-interventions {
-          margin-top: 4px;
-          padding: 6px 8px;
-          background: rgba(13, 15, 20, 0.4);
-          border-left: 2px solid rgba(74, 158, 255, 0.25);
-        }
-        .condition-intervention-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 4px 0;
-        }
-        .condition-intervention-action {
-          font: 700 8px/1 'Courier New', monospace;
-          color: #7a8aaa;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          padding: 2px 5px;
-          background: rgba(42, 47, 64, 0.3);
-          border-radius: 2px;
-        }
-        .condition-intervention-action[data-type="INSPECT"] { color: #4a9eff; }
-        .condition-intervention-action[data-type="TRACE"] { color: #64ffda; }
-        .condition-intervention-action[data-type="COMPARE"] { color: #ffd700; }
-        .condition-intervention-label {
-          font: 400 11px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          color: #8a96b2;
         }
 
         .condition-trace {
@@ -4599,6 +4805,77 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
+        }
+        .support-block--conditions {
+          padding-top: 14px;
+          border-top: 1px solid #1a2030;
+          gap: 6px;
+        }
+        .support-condition-item {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 4px;
+          padding: 4px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .support-condition-item:last-child { border-bottom: none; }
+        .support-condition-title {
+          font: 500 11px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+          flex: 1;
+          min-width: 0;
+        }
+        .support-condition-severity {
+          font: 600 9px/1 'Courier New', monospace;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          flex-shrink: 0;
+        }
+        .support-condition-item[data-severity="HIGH"] .support-condition-severity { color: #ff6b6b; }
+        .support-condition-item[data-severity="ELEVATED"] .support-condition-severity { color: #ff9e4a; }
+        .support-condition-item[data-severity="MODERATE"] .support-condition-severity { color: #ffd700; }
+        .support-condition-item[data-severity="LOW"] .support-condition-severity { color: #64ffda; }
+        .support-condition-domain {
+          font: 400 10px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+          width: 100%;
+        }
+        .support-condition-overflow {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          padding-top: 4px;
+        }
+        .support-block--condition-focus {
+          border-left: 2px solid #4a9eff;
+          padding-left: 12px;
+        }
+        .support-condition-focus-title {
+          font: 600 12px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .support-condition-focus-title[data-severity="HIGH"] { color: #ff8a8a; }
+        .support-condition-focus-title[data-severity="ELEVATED"] { color: #ffb57a; }
+        .support-condition-intervention {
+          padding: 4px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .support-condition-intervention:last-child { border-bottom: none; }
+        .support-condition-intervention-label {
+          font: 500 11px/1.3 'Courier New', monospace;
+          color: #a0adc6;
+          display: block;
+        }
+        .support-condition-intervention-effect {
+          font: 400 10px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+          display: block;
+          margin-top: 2px;
+        }
+        .support-condition-surface {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #8ab4f8;
+          padding: 2px 0;
         }
         .support-block--reports {
           margin-top: auto;
@@ -8792,6 +9069,41 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .sw-intel-surface--active[data-severity="ELEVATED"] { border-color: rgba(255, 158, 74, 0.25); border-left-color: #ff9e4a; }
         .sw-intel-surface--active[data-severity="MODERATE"] { border-color: rgba(255, 215, 0, 0.2); border-left-color: #ffd700; }
         .sw-intel-surface--active[data-severity="LOW"] { border-color: rgba(100, 255, 218, 0.2); border-left-color: #64ffda; }
+
+        .sw-intel-surface-condition-link {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-bottom: 6px;
+          padding-bottom: 6px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .sw-intel-condition-tag {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          padding: 2px 6px;
+          border-radius: 2px;
+          background: rgba(74, 158, 255, 0.08);
+          color: #8ab4f8;
+          border: 1px solid rgba(74, 158, 255, 0.15);
+        }
+        .sw-intel-condition-tag[data-severity="HIGH"] {
+          background: rgba(255, 107, 107, 0.08);
+          color: #ff8a8a;
+          border-color: rgba(255, 107, 107, 0.15);
+        }
+        .sw-intel-condition-tag[data-severity="ELEVATED"] {
+          background: rgba(255, 158, 74, 0.08);
+          color: #ffb57a;
+          border-color: rgba(255, 158, 74, 0.15);
+        }
+        .sw-intel-condition-tag[data-severity="MODERATE"] {
+          background: rgba(255, 215, 0, 0.08);
+          color: #ffe066;
+          border-color: rgba(255, 215, 0, 0.15);
+        }
 
         .sw-intel-surface-header {
           display: flex;

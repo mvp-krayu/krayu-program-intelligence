@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 
 const SEVERITY_COLOR = {
   HIGH: '#ff6b6b',
   ELEVATED: '#ff9e4a',
   MODERATE: '#ffd700',
   LOW: '#64ffda',
-  NOMINAL: '#4a5570',
+  NOMINAL: '#7a8aaa',
 }
 
 const AXIS_LEVEL_COLOR = {
@@ -67,10 +68,16 @@ function QualificationContextStrip({ decomposition, qualification }) {
 // ─── COGNITION SURFACE CARD ─────────────────────────────────────────
 // Each surface is a compressed operational assessment, not a list panel
 
-function CognitionSurfaceCard({ surface, expandable, active, onSelect }) {
+function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
+
+  const relatedConditions = useMemo(() => {
+    if (!activeConditions || !activeConditions.length) return []
+    const condTypes = SURFACE_CONDITION_MAP[surface.surface_id] || []
+    return activeConditions.filter(c => condTypes.includes(c.condition_type))
+  }, [surface.surface_id, activeConditions])
 
   return (
     <div
@@ -82,6 +89,15 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect }) {
       tabIndex={onSelect ? 0 : undefined}
       onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(surface.surface_id) } } : undefined}
     >
+      {relatedConditions.length > 0 && (
+        <div className="sw-intel-surface-condition-link">
+          {relatedConditions.map(c => (
+            <span key={c.condition_id} className="sw-intel-condition-tag" data-severity={c.severity}>
+              {c.operator_cognition_title}
+            </span>
+          ))}
+        </div>
+      )}
       <div className="sw-intel-surface-header">
         <span className="sw-intel-surface-icon" style={{ color: sevColor }}>{icon}</span>
         <span className="sw-intel-surface-name">{surface.surface_name}</span>
@@ -312,7 +328,7 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions }) {
   const surfaces = projection.surfaces || []
 
   return (
@@ -326,7 +342,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} />
         ))}
       </div>
 
