@@ -710,7 +710,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Definition:** A domain cognition module attached to the PI Spine that provides operational software cognition — the interpretation of PI cognition primitives through software-system semantics. Software Intelligence transforms PI Core outputs from structurally correct but operationally abstract intelligence into domain-specific operational meaning. 10 cognition functions (CF-01 through CF-10) defined. Three proven operationally by PR #16: CF-06 Execution Governance (SQOActionEngine — 12-action authority workflow), CF-10 Engineering Qualification Cognition (OperatorWorkflowResolver — posture, guidance, progression), CF-08 Operational Attention Routing (LensSQOOrchestrationAdapter — guided actions with event-log-derived learning context). Remaining functions constitutionally defined with structural evidence in pipeline output but no consumer path.
 
-**Status:** CANONICAL — constitutionally defined (2026-05-26). SQO execution bridge VERIFIED (PR #16). SOFTWARE_INTELLIGENCE corridor returns ABSENT (full artifact-based activation pending). Current implementation boundary: GAP-01 through GAP-08 in SQO_GAP_REGISTER.md.
+**Status:** CANONICAL — constitutionally defined (2026-05-26), **OPERATIONAL** (2026-05-27). SQO execution bridge VERIFIED (PR #16). SignalSynthesisEngine produces 6 condition types from PSIG/DPSIG/ISIG signal families. 4-slice topology cognition language operational with evidence-bound overlays. Commercial module gating active (teaser when OFF, full cognition when ON). Current implementation boundary: GAP-01 through GAP-08 in SQO_GAP_REGISTER.md.
 
 **What it is NOT:** Code metrics. GitHub analytics. Repository visualization. Taxonomy mapping. AI commentary. A separate product. Software Intelligence is a domain cognition module WITHIN Program Intelligence that permeates all strata.
 
@@ -727,6 +727,87 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 **Architectural pattern:** Same PI Core (~90%+) + domain-specific interpretation layer (~9%) + module registration infrastructure (~1%). Swapping the domain module changes operational vocabulary without changing PI Core computation. The execution bridge pattern (LENS → API → engine → persist → event → reload) is proven and reusable.
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
+
+### SignalSynthesisEngine
+
+**Definition:** The deterministic cognition compiler that transforms signal families (PSIG, DPSIG, ISIG) into operational conditions with topology overlays. Contains 6 primitive rules and 1 composite rule. Each rule maps specific signal severity patterns to a condition type with operator-facing cognition title, severity, topology overlay, evidence classification, and supporting signal IDs. The engine is deterministic — same signals produce same conditions.
+
+**Primitive rules:**
+- `ruleDeliveryPressureConcentration` → DELIVERY_PRESSURE_CONCENTRATION (from PSIG/pressure_zone_state)
+- `ruleDependencyChokePoint` → DEPENDENCY_CHOKE_POINT (from ISIG import graph)
+- `rulePropagationAsymmetry` → PROPAGATION_ASYMMETRY (from ISIG fan asymmetry)
+- `ruleImportPressureConcentration` → IMPORT_PRESSURE_CONCENTRATION (from ISIG import hub)
+- `ruleStructuralMassConcentration` → STRUCTURAL_MASS_CONCENTRATION (from DPSIG cluster metrics)
+- `ruleEntrypointStabilityRisk` → ENTRYPOINT_STABILITY_RISK (from ISIG entrypoint centrality)
+
+**Composite rule:**
+- `ruleCompoundConvergence` → COMPOUND_CONVERGENCE (fires when ≥3 non-nominal primitives target same domain, escalates severity to CRITICAL)
+
+**Status:** CANONICAL — OPERATIONAL (2026-05-27). Deterministic against GENESIS specimen (run_blueedge_genesis_e2e_03).
+
+**What it is NOT:** An AI model. A recommendation engine. A scoring system. SignalSynthesisEngine is a deterministic compiler — signals in, conditions out, no inference.
+
+**Source:** `app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js`
+
+### Topology Cognition Language
+
+**Definition:** The 4-slice MVP visual and semantic language through which LENS projects operational conditions onto the structural topology. The language has two distinct cognition categories — mixing them is a category violation.
+
+**Cognition categories:**
+
+| Category | Slices | Semantics | Visual Language |
+|----------|--------|-----------|-----------------|
+| **CORRIDOR COGNITION** | Slice 1 (Dependency Choke Point), Slice 2 (Propagation Asymmetry) | Directional — paths, flows, corridors between domains | Arrows, upstream/downstream, source/target, blast radius |
+| **FIELD / STATE COGNITION** | Slice 3 (Pressure Zone), Slice 4 (Structural Mass) | Spatial — zones, mass, gravity, concentration within regions | Boundaries, emphasis, weight, composition, no corridors |
+
+**Load-bearing distinction:** Corridor cognition answers "what connects to what and how does impact flow?" Field cognition answers "where does structural weight or pressure concentrate?" Drawing corridors for cluster gravity or zone boundaries for propagation asymmetry is a category violation.
+
+**Status:** CANONICAL — OPERATIONAL (2026-05-27). All 4 slices rendering with evidence-bound overlays.
+
+**What it is NOT:** Decorative visualization. Dashboard charts. The topology cognition language projects structural conditions onto the topology with evidence classification — every overlay carries proof of its derivation origin.
+
+### Evidence Classification
+
+**Definition:** The taxonomy classifying the evidence origin of each topology cognition overlay. Every overlay rendered in LENS must carry an explicit evidence classification. The classification enables the operator to assess the provenance and reliability of each projection.
+
+**Classifications:**
+- **EVIDENCE_DERIVED** — derived from semantic topology edges (e.g., IMPORTS_ACROSS relationships)
+- **STRUCTURAL_CENTRALITY_DERIVED** — derived from code graph centrality metrics (40.3c)
+- **PRESSURE_ZONE_DERIVED** — derived from `pressure_zone_state` artifact (compound zone analysis)
+- **TOPOLOGY_METRIC_DERIVED** — derived from DPSIG topology distribution metrics (cluster node count ratios, fan asymmetry percentages)
+- **MIXED** — composite conditions with contributing primitives from heterogeneous evidence origins
+
+**Status:** CANONICAL — OPERATIONAL (2026-05-27).
+
+**Governance rule:** No visualization without evidence classification. If evidence is insufficient to support a topology behavior, the runtime downgrades or suppresses the projection — never fabricates. This is the evidence-bound cognition doctrine applied to topology projection.
+
+### Three-Layer Architecture (Software Intelligence)
+
+**Definition:** The architectural separation of Software Intelligence into three distinct layers with clear boundaries:
+
+1. **PI Core (~90%+):** Domain-agnostic cognition primitives — topology, centrality, signals, pressure, SQO authority engine, governance lifecycle, replay, enrichment, personas. Truth layer.
+2. **Orchestration-Agentic Runtime (~9%):** Guided actions, SQO workflow orchestration, event-log-derived learning, action routing. The layer between truth and domain cognition.
+3. **Domain Cognition (~1%):** Domain-specific operational interpretation — SignalSynthesisEngine condition synthesis, topology cognition projection, module-specific legend and rendering. The interpretation layer.
+
+**Status:** CANONICAL — architectural vocabulary (2026-05-27).
+
+**Load-bearing rule:** Guided Actions belong to Orchestration-Agentic Runtime (Layer 2), NOT to Software Intelligence (Layer 3). Domain cognition modules consume PI Core truth and project through LENS — they do not orchestrate workflows or execute mutations.
+
+### Signal Synthesis Rulebook
+
+**Definition:** The governance document defining the deterministic rules by which SignalSynthesisEngine transforms signal families into operational conditions. Contains rule specifications, condition vocabulary, severity escalation rules, topology overlay contracts, and evidence classification requirements. The rulebook is the governance authority for condition synthesis — SignalSynthesisEngine is the implementation.
+
+**Status:** CANONICAL — governance doctrine (2026-05-27).
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/SIGNAL_SYNTHESIS_RULEBOOK.md`
+
+### Module Gating
+
+**Definition:** The commercial activation pattern for domain cognition modules. When a module is OFF, LENS renders a teaser (condition count, severity preview, top conditions) via `synthesizeTeaser()`. When ON, LENS renders full domain cognition via `synthesize()`. The toggle gates computation, not visibility — the teaser is a genuine preview of what the module would produce, not a placeholder.
+
+**Status:** CANONICAL — OPERATIONAL (2026-05-27). Software Intelligence is the first gated module.
+
+**What it is NOT:** A feature flag. A debug toggle. An A/B test. Module gating is the commercial activation boundary between teaser and full domain cognition.
 
 ## Term Usage Rules
 

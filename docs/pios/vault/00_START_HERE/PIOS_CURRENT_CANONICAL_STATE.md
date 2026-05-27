@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-23.**
+> **This page reflects the system's canonical state as of 2026-05-27.**
 
 ---
 
@@ -37,7 +37,7 @@ Program Intelligence (category/discipline)
         │     ├── CEU Reconciliation Workflow (10 actions, review_mode governance, bidirectional obligation lineage)
         │     └── Reconciliation Loop
         ├── Marketplace (domain cognition module ecosystem)
-        │     ├── Software Intelligence (first module — constitutionally defined, implementation pending)
+        │     ├── Software Intelligence (first module — OPERATIONAL: SignalSynthesisEngine + 4-slice topology cognition + commercial module gating)
         │     └── Module Registration (constitutionally specified, not yet implemented)
         └── Domain Cognition Modules (interpretation layers attached to PI Spine)
 ```
@@ -68,7 +68,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 | S3 | [[../03_PATH_SPLIT_EVOLUTION/PATH_A_EMERGENCE\|Path Split]] | 2026-05-07 → 2026-05-08 | OPERATIONAL — PATH A/B terminology active. **PATH A.5 participation architecture recovered 2026-05-17:** grounding-aware semantic participation compression (945→35→13 chain). See [[../03_PATH_SPLIT_EVOLUTION/PATH_A5_PARTICIPATION_ARCHITECTURE]]. Raw replay-safe substrate (48 domains) operational; grounded executive compression layer (13 domains) requires canonicalization. |
 | S4 | [[../04_SQO_AND_QUALIFICATION/SQO_EVOLUTION\|SQO Qualification]] | 2026-05-10 → present | OPERATIONAL — unified semantic operations substrate, 8 ownership domains, 23 artifacts, operational reconciliation loop, operator authority workflow (12 actions, 5 RBAC roles, governed mutation surface), qualification posture model (8 states), client-scoped section resolution with runtime isolation, dual-layer section architecture (Layer A/B), V2 cockpit (workflow-driven, resolveOperatorWorkflow, 3-tier navigation, session-level RBAC role projection) |
 | S5 | [[../05_RUNTIME_AND_CORRIDOR/CURRENT_RUNTIME_BOUNDARIES\|Runtime Corridor]] | 2026-05-11 → present | OPERATIONAL — evidence/runtime corridors |
-| S6 | [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model), evidence record export (governed structural evidence record with topology capture) |
+| S6 | [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_HIERARCHY\|Operational Cognition]] | 2026-05-13 → present | OPERATIONAL — cognitive operational intelligence surface, 4-persona projection, interactive topology, guided structural investigation, zone-aware cognitive orchestration, guided query layer (5B.1 — interactive question-answer cognition), guided interrogation evolution (5B.1+ — 36-query lattice with tonal diversity, archetypes, depth hierarchy), selective interpretive emergence (5B.2 — governed narrative synthesis via BALANCED), PI Runtime Layer (5B.3 — transversal governed interrogation across all four cognitive modes, two-axis cognitive model), evidence record export (governed structural evidence record with topology capture), **Software Intelligence module operational** (SignalSynthesisEngine — deterministic cognition compiler, 6 primitive rules + 1 composite, 4-slice MVP topology cognition language with corridor cognition [Slices 1-2] and field/state cognition [Slices 3-4], evidence-bound overlays with classification taxonomy, commercial module gating [teaser/full activation toggle]) |
 
 ## LENS v2 Operational Identity Transition
 
@@ -96,6 +96,11 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - Query archetypes: SCAN, TRACE, INTERPRET, BOUNDARY, ESCALATION (5B.1+)
 - Response depth hierarchy: MICRO, STANDARD, DEEP (5B.1+)
 - Governed evidence record export with structural topology capture, posture stability assessment, confidence envelope, and deterministic snapshot identity (Evidence Record Export)
+- Software Intelligence module with commercial gating (teaser when OFF, full cognition when ON) (SW-Intel)
+- SignalSynthesisEngine — deterministic cognition compiler producing 6 condition types from signal families (SW-Intel)
+- 4-slice MVP topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) with COMPOUND_CONVERGENCE composite (SW-Intel)
+- Evidence-bound topology overlays with classification taxonomy (EVIDENCE_DERIVED, STRUCTURAL_CENTRALITY_DERIVED, PRESSURE_ZONE_DERIVED, TOPOLOGY_METRIC_DERIVED, MIXED) (SW-Intel)
+- Three-layer architecture separation: PI Core / Orchestration-Agentic Runtime / Domain Cognition (SW-Intel)
 
 **Commits registering this transition:**
 - 7841f42: boardroom executive cockpit and dense propagation flow
@@ -106,6 +111,11 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - 605b157: 5A.7 mode separation with signal field and cognitive descent
 - 069ce78: 5A.8 guided cognitive traversal and operational orchestration
 - f18cc9e: 5B.1 guided query layer with interactive question-answer cognition
+- 21f7d01: SignalSynthesisEngine — deterministic cognition compiler
+- d08ced5: evidence-derived topology cognition corridors
+- e8ea654: propagation exposure corridor cognition slice
+- 7c04d84: Software Intelligence module commercial gating
+- 14d1faa: 4-slice MVP topology cognition language completion
 
 ## Persona-Based Projection Doctrine
 
@@ -594,6 +604,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 | G2 | First Level 1 signal family operational. ISIG-001 Import Hub Pressure (BlueEdge 35.3 HIGH, NetBox 51.1 HIGH). ISIG-002 Import Fan Asymmetry (BlueEdge 22.3 HIGH, NetBox 8.9 HIGH). PSIG-004 LOST_READ closed. Client-agnostic, code-graph-native. Cross-validated on 2 specimens | COMPLETE |
 | PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01 | G1 | ISIG vault status update — PARTIALLY_IMPLIED→OPERATIONAL across all vault pages. LOST_READ→RESOLVED in delta certification. Signal family classification updated. Ontology lineage current | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | G1 | Software Intelligence constitutional definition anchored in proven PR #16 runtime. SQO execution bridge verified. Domain cognition module pattern proven (workspace resolver → orchestration adapter → authority engine → learning derivation → LENS projection). 10 cognition functions (3 operational, 7 constitutional). Event-log-derived learning (read-only, replayable, auditable). Gap register GAP-01–GAP-08. Marketplace redefined as domain cognition module ecosystem. Persona consumption spec. Pressure-topology integration model | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01 | G1 | Signal Synthesis Rulebook governance + SignalSynthesisEngine implementation. 6 primitive rules (DPC, DCP, PA, IPC, SMC, ESR) + 1 composite (CC). Three-layer architecture vocabulary (PI Core / Orchestration-Agentic Runtime / Domain Cognition). Evidence-bound topology cognition overlays. SW-Intel commercial module gating (teaser/full). Topology cognition Slices 1-2 (corridor cognition) | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.TOPOLOGY-COGNITION-COMPLETION.01 | G2 | Topology cognition Slices 3-4 (field/state cognition). Pressure zone rendering from pressure_zone_state artifact. Compound convergence decomposition with severity escalation. Cluster gravity with dpsigData wiring and spatial mass semantics. Evidence classification taxonomy (PRESSURE_ZONE_DERIVED, TOPOLOGY_METRIC_DERIVED, MIXED). No topology invention doctrine enforced | COMPLETE |
 
 ## Domain Cognition Module Architecture
 
@@ -626,8 +638,10 @@ Program Intelligence operates through domain cognition modules — replaceable i
 | Event-log-derived learning | OPERATIONAL (v1) — descriptive, read-only |
 | Domain Cognition Module pattern | PROVEN — architecture demonstrated by PR #16 |
 | Marketplace architecture | CONSTITUTIONALLY_DEFINED — module ecosystem defined |
-| SOFTWARE_INTELLIGENCE corridor evaluation | STUB — returns ABSENT (full artifact activation pending) |
-| Pressure-topology integration | SPECIFIED_NOT_IMPLEMENTED — rendering model defined |
+| SignalSynthesisEngine | **OPERATIONAL** — deterministic cognition compiler, 6 primitive rules + 1 composite. Produces conditions from PSIG/DPSIG/ISIG signal families against GENESIS specimen |
+| Software Intelligence module gating | **OPERATIONAL** — commercial toggle (teaser when OFF, full domain cognition when ON). `synthesizeTeaser()` / `synthesize()` separation |
+| 4-slice topology cognition language | **OPERATIONAL** — corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) + COMPOUND_CONVERGENCE composite. All evidence-bound with classification taxonomy |
+| Pressure-topology integration | **OPERATIONAL** — topology cognition overlays rendered in StructuralTopologyZone with condition-specific animation, evidence-bound corridor/zone/cluster visualization in IntelligenceField |
 | Persona-specific SW-Intel consumption | SPECIFIED_NOT_IMPLEMENTED — all personas receive same rendering |
 | Prescriptive learning / operator modeling | DEFERRED — governance-sensitive (GAP-04) |
 | Graph-based progression intelligence | FUTURE — Phase 3 (GAP-08) |
@@ -818,3 +832,8 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - V2 posture-first overview: OperationalOverviewShell with guidance strip, remediation workflow, blocker summary, action grid, progression path, evidence state, drilldown links
 - V2 remediation workflow: generic S2-with-debt projection — remediation stages (continuity restoration, grounding expansion, S3 eligibility), source requirements, eligibility gates
 - Portable GitHub substrate onboarding: arbitrary GitHub repo → governed S1 qualification via parameterized pipeline orchestrator (PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01)
+- SignalSynthesisEngine: deterministic cognition compiler — 6 primitive rules (ruleDeliveryPressureConcentration, ruleDependencyChokePoint, rulePropagationAsymmetry, ruleImportPressureConcentration, ruleStructuralMassConcentration, ruleEntrypointStabilityRisk) + 1 composite (ruleCompoundConvergence). Transforms PSIG/DPSIG/ISIG signal families into operational conditions with topology overlays
+- Software Intelligence commercial module gating: SW-Intel toggle gates computation (synthesizeTeaser vs synthesize). Teaser shows condition count + severity preview. Full activation renders evidence-bound topology cognition
+- 4-slice MVP topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT — upstream choke corridor, PROPAGATION_ASYMMETRY — downstream exposure corridor) + field/state cognition (PRESSURE_ZONE — compound zone from pressure_zone_state artifact, STRUCTURAL_MASS_CONCENTRATION — cluster gravity from DPSIG topology metrics) + COMPOUND_CONVERGENCE composite (multi-condition convergence with severity escalation)
+- Evidence classification taxonomy: EVIDENCE_DERIVED (semantic topology edges), STRUCTURAL_CENTRALITY_DERIVED (code graph centrality), PRESSURE_ZONE_DERIVED (pressure_zone_state artifact), TOPOLOGY_METRIC_DERIVED (DPSIG distribution metrics), MIXED (composite conditions with heterogeneous evidence origins)
+- Three-layer architecture: PI Core (truth — signal families, topology, governance) / Orchestration-Agentic Runtime (guided actions, SQO workflow) / Domain Cognition (SW-Intel module — condition synthesis, topology cognition projection)

@@ -41,6 +41,15 @@
 | QualifierMandate | app/execlens-demo/components/lens-v2/zones/ | Qualifier governance display |
 | InvestigationReadingGuide | app/execlens-demo/components/lens-v2/zones/ | Investigation flow guidance |
 
+### Software Intelligence Modules
+
+| Module | Path | Role |
+|---|---|---|
+| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 6 primitive rules + 1 composite. Transforms signal families into operational conditions with topology overlays |
+| SoftwareIntelligenceProjectionAdapter | app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js | Condition → LENS cognition state derivation (legend, overlay, teaser/full). `translateSignal()` for L3 signal titles. `deriveConditionCognitionState()` for topology overlay semantics. `synthesize()` / `synthesizeTeaser()` for module gating |
+| SoftwareIntelligenceField | app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx | SW-Intel condition rendering zone (full activation mode) |
+| OrchestrationGuidanceRuntime | app/execlens-demo/components/lens-v2/zones/OrchestrationGuidanceRuntime.jsx | Guided action orchestration (Layer 2 — Orchestration-Agentic Runtime) |
+
 ### Export Primitives
 
 | Module | Path | Role |
@@ -197,6 +206,8 @@
 | GITHUB_FIRST_OPERATIONALIZATION_CORRECTION.md | docs/governance/ | GitHub-first implementation sequencing correction (Phase 0A/0B) |
 | PROGRAM_INTELLIGENCE_EVOLUTION_MODEL.md | docs/governance/ | Permanent operational meta-model — spine object contracts, accumulation model, governance boundaries |
 | CANONICAL_OPERATIONAL_ROADMAP.md | docs/governance/ | Spine-native operational roadmap — activation state, accumulation, continuity architecture, remaining phases |
+| SIGNAL_SYNTHESIS_RULEBOOK.md | docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/ | Deterministic condition synthesis rules — rule specifications, condition vocabulary, severity escalation, topology overlay contracts |
+| SW_INTEL_MODULE_DEFINITION.md | docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/ | SW-Intel module definition — 9 capabilities, 3 tiers, 10 CFs covered, three-layer architecture vocabulary |
 
 ## Governance Streams (Active)
 
@@ -217,6 +228,9 @@
 | PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01 | docs/pios/PI.PATHA.STRUCTURAL-CENTRALITY-DERIVATION.01/ | G1 | COMPLETE |
 | PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01 | docs/pios/PI.PATHA.LIVE-S2-CANDIDATE-SELECTION.01/ | G1 | COMPLETE |
 | PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01 | docs/pios/PI.NETBOX.CANONICAL-ONBOARDING-AND-DEMO-FOUNDATION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.TOPOLOGY-COGNITION-COMPLETION.01 | (runtime branch — no stream directory) | G2 | COMPLETE |
 
 ## Cross-References
 
