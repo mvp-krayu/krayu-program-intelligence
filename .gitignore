@@ -32,3 +32,9 @@ clients/*/psee/intake/
 clients/*/archives/
 # Brain (until governed)
 docs/brain/
+# Playwright MCP session artifacts
+.playwright-mcp/
+# Loose verification screenshots (repo root)
+/*.png
+/*.jpeg
+/*.jpg
