@@ -3509,7 +3509,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -4130,6 +4130,17 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-synthesis">{bpGl.confidence_narrative}</div>
           </div>
 
+          {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
+            <div className="interp-block interp-block--module-teaser">
+              <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
+              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+              {consequenceTeaser && consequenceTeaser.consequence_teaser && (
+                <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — {consequenceTeaser.consequence_teaser.top_consequence_severity} severity</div>
+              )}
+              <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
+            </div>
+          )}
+
           <div className="interp-block">
             <div className="interp-section-label interp-section-label--descent">DEPTH</div>
             <div className="interp-synthesis interp-synthesis--descent">
@@ -4523,7 +4534,10 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-block interp-block--module-teaser">
             <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
             <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
-            <div className="interp-module-teaser-cta">Activate Software Intelligence to inspect</div>
+            {consequenceTeaser && consequenceTeaser.consequence_teaser && (
+              <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — {consequenceTeaser.consequence_teaser.top_consequence_severity} severity</div>
+            )}
+            <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
           </div>
         ) : null
       )}
@@ -5102,7 +5116,7 @@ function SynthesizedConditionEntry({ condition, isComposite, isActive, isCollaps
   )
 }
 
-function SynthesizedConditionSection({ fullReport, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser }) {
+function SynthesizedConditionSection({ fullReport, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser, consequenceTeaser }) {
   const result = useMemo(() => swIntelActive ? synthesize(fullReport) : null, [fullReport, swIntelActive])
 
   if (!swIntelActive) {
@@ -5128,6 +5142,9 @@ function SynthesizedConditionSection({ fullReport, activeConditionId, onConditio
               <div className="module-teaser-overflow">+{swIntelTeaser.overflow} more condition{swIntelTeaser.overflow !== 1 ? 's' : ''}</div>
             )}
           </div>
+          {consequenceTeaser && consequenceTeaser.consequence_teaser && (
+            <div className="module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — activate for operational posture</div>
+          )}
         </div>
       </div>
     )
@@ -5264,7 +5281,7 @@ function DenseGovernanceZone({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser }) {
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser, consequenceTeaser }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -5423,7 +5440,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} />
+      <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
 
       {!isS1 && (origin || passthrough || receiver) && (
         <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
@@ -7955,7 +7972,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -7983,7 +8000,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   return (
     <>
-      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} />
+      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} />
       )}
@@ -8294,6 +8311,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         onConditionDismiss={handleConditionDismiss}
         swIntelActive={swIntelActive}
         swIntelTeaser={swIntelTeaser}
+        consequenceTeaser={consequenceTeaser}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -8335,6 +8353,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onConditionIntervention={handleConditionIntervention}
           swIntelTeaser={swIntelTeaser}
           consequencePosture={consequencePosture}
+          consequenceTeaser={consequenceTeaser}
         />
 
         {!boardroomMode && (

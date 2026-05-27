@@ -2909,6 +2909,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b0;
           margin-bottom: 4px;
         }
+        .interp-module-teaser-consequence {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff9e4a;
+          margin-bottom: 4px;
+          letter-spacing: 0.02em;
+        }
         .interp-module-teaser-cta {
           font: 400 10px/1.4 'Courier New', monospace;
           color: #4a9eff;
@@ -3765,6 +3771,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font: 400 10px/1.4 'Courier New', monospace;
           color: #4a5570;
           padding: 2px 8px;
+        }
+        .module-teaser-consequence {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff9e4a;
+          padding: 6px 8px 0;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+          margin-top: 4px;
         }
         .condition-primary-banner {
           display: flex;

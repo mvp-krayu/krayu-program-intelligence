@@ -1,0 +1,154 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-COMPILER-IMPLEMENTATION.01",
+  "classification": "G2",
+  "baseline": "5fc603f",
+  "timestamp": "2026-05-27",
+  "checks": [
+    {
+      "name": "consequence_compiler_pure_deterministic",
+      "description": "ConsequenceCompiler.js contains only pure functions with no side effects, no state, no external calls",
+      "result": "PASS"
+    },
+    {
+      "name": "genesis_consequence_count",
+      "description": "7 GENESIS conditions produce exactly 4 top-level consequence objects",
+      "result": "PASS",
+      "detail": "SYSTEMIC_OP_FRAG(CRITICAL), AMPLIFIED_DEP_FRAG(HIGH), STRUCT_GRAVITY_WELL(HIGH), PROP_EXP(HIGH)"
+    },
+    {
+      "name": "genesis_systemic_op_frag",
+      "description": "SYSTEMIC_OP_FRAG detected from 3+ consequences across 3+ distinct primitive conditions on DOMAIN-10",
+      "result": "PASS",
+      "detail": "severity escalated to CRITICAL (one above MAX HIGH), scope SYSTEMIC, confidence ADVISORY_BOUND"
+    },
+    {
+      "name": "genesis_amplified_dep_frag",
+      "description": "AMPLIFIED_DEP_FRAG detected from DPC→COORD_FRAG + DCkP→DEP_AMP on same locus",
+      "result": "PASS",
+      "detail": "severity HIGH, scope REGIONAL, confidence ADVISORY_BOUND"
+    },
+    {
+      "name": "genesis_struct_gravity_well",
+      "description": "STRUCT_GRAVITY_WELL detected from DPC→DEL_EXP + SMC→RESIL_DEF on same locus",
+      "result": "PASS",
+      "detail": "severity HIGH, scope REGIONAL, confidence GOVERNED"
+    },
+    {
+      "name": "genesis_prop_exp",
+      "description": "PROP_EXP from PA condition on frontend locus — defining consequence, always activated",
+      "result": "PASS",
+      "detail": "severity HIGH, scope LOCAL, confidence STRUCTURAL_ONLY"
+    },
+    {
+      "name": "dckp_op_bottleneck_not_activated",
+      "description": "DCkP→OP_BOTTLENECK correctly NOT activated — hub in-degree 17 ≤ 20 threshold",
+      "result": "PASS"
+    },
+    {
+      "name": "smc_stab_risk_not_activated",
+      "description": "SMC→STAB_RISK conditional check — cluster fan asymmetry threshold not met",
+      "result": "PASS"
+    },
+    {
+      "name": "boardroom_posture_composition",
+      "description": "forBoardroom() returns composed posture with cognition slices, not isolated consequence objects",
+      "result": "PASS",
+      "detail": "posture_label='Systemic Fragility Posture', posture_severity=CRITICAL, posture_scope=SYSTEMIC, 5 cognition slices"
+    },
+    {
+      "name": "convergence_web_renders",
+      "description": "ConvergenceWeb SVG renders 5 dynamics as radial pentagon with convergence lines and gravity core",
+      "result": "PASS"
+    },
+    {
+      "name": "operational_confidence_strip",
+      "description": "Governance prose compressed to single Operational Confidence strip when SW-Intel active",
+      "result": "PASS"
+    },
+    {
+      "name": "executive_posture_left_panel",
+      "description": "ExecutiveInterpretation switches to EXECUTIVE POSTURE when SW-Intel active in BOARDROOM",
+      "result": "PASS",
+      "detail": "6 sections: concentration, primary dynamic, propagation risk, confidence, implication, descent"
+    },
+    {
+      "name": "headline_evolution",
+      "description": "BOARDROOM headline evolves from 'STRUCTURAL TENSIONS' to 'OPERATIONAL TENSION' when SW-Intel active",
+      "result": "PASS"
+    },
+    {
+      "name": "topology_cognition_inheritance_boardroom",
+      "description": "BOARDROOM topology overlay uses pressure_zone_emphasis only — no dim_domains, no corridor_paths",
+      "result": "PASS",
+      "detail": "Subtle emphasis preserving whole-system readability"
+    },
+    {
+      "name": "sw_intel_off_teaser_boardroom",
+      "description": "BOARDROOM left panel shows SW-Intel teaser with condition count, consequence dynamics, and CTA when toggle is OFF",
+      "result": "PASS",
+      "detail": "6 conditions detected, 4 structural dynamics identified — CRITICAL severity"
+    },
+    {
+      "name": "sw_intel_off_teaser_dense",
+      "description": "DENSE SynthesizedConditionSection shows consequence dynamics line in teaser when SW-Intel OFF",
+      "result": "PASS",
+      "detail": "4 structural dynamics identified — activate for operational posture"
+    },
+    {
+      "name": "sw_intel_on_teaser_disappears",
+      "description": "Activating SW-Intel removes teaser and shows full cognition layer",
+      "result": "PASS"
+    },
+    {
+      "name": "dense_untouched",
+      "description": "DENSE persona SW-Intel ON rendering has no consequence-related modifications",
+      "result": "PASS"
+    },
+    {
+      "name": "balanced_untouched",
+      "description": "BALANCED persona has no consequence-related rendering or modifications",
+      "result": "PASS"
+    },
+    {
+      "name": "build_passes",
+      "description": "npx next build completes without errors",
+      "result": "PASS"
+    },
+    {
+      "name": "no_console_errors",
+      "description": "Browser dev console shows no errors across all tested states",
+      "result": "PASS"
+    },
+    {
+      "name": "consequence_vocabulary_complete",
+      "description": "CONSEQUENCE_VOCABULARY has 11 entries: 8 atomic + 3 combinations",
+      "result": "PASS"
+    },
+    {
+      "name": "confidence_inheritance",
+      "description": "Heterogeneous source confidence correctly resolves to ADVISORY_BOUND",
+      "result": "PASS"
+    },
+    {
+      "name": "severity_escalation",
+      "description": "SYSTEMIC_OP_FRAG escalates one level above MAX, ceiling at CRITICAL",
+      "result": "PASS"
+    },
+    {
+      "name": "scope_classification",
+      "description": "Scope classification: LOCAL (single domain), REGIONAL (same domain, multiple consequences), SYSTEMIC (3+ conditions)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_compiler_logic_in_react",
+      "description": "All compilation logic contained in ConsequenceCompiler.js — React components only consume results",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 26,
+    "pass": 26,
+    "fail": 0,
+    "result": "VALID"
+  }
+}
