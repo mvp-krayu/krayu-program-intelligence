@@ -1,0 +1,10 @@
+client_id: stackstorm
+uuid: cec9a6a9-0d6c-4b30-9734-1283d41fcabf
+display_name: StackStorm/st2
+source_type: github_clone
+pipeline_mode: generic
+ceu_model: static
+ceu_count: 0
+dom_group_count: 0
+structural_node_count: 0
+default_source: source_01
