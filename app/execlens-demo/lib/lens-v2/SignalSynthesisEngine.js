@@ -906,7 +906,7 @@ function synthesize(fullReport) {
   const structuralEnrichment = fullReport.structural_enrichment || {}
   const registry = fullReport.semantic_domain_registry || []
 
-  const dpsigData = null
+  const dpsigData = fullReport.dpsig_signal_summary || null
 
   const topologyEdges = fullReport.semantic_topology_edges || []
 
