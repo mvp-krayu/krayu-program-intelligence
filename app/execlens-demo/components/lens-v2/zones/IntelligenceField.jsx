@@ -7,6 +7,7 @@ import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, translateSignal } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { synthesize, SEVERITY_RANK } from '../../../lib/lens-v2/SignalSynthesisEngine'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -4313,6 +4314,157 @@ function DenseSignalSection({ fullReport }) {
   )
 }
 
+function SynthesizedConditionEntry({ condition, isComposite }) {
+  const [showTrace, setShowTrace] = useState(false)
+  const [showInterventions, setShowInterventions] = useState(false)
+  const domains = (condition.shared_topology_targets && condition.shared_topology_targets.domains) || []
+
+  return (
+    <div
+      className={`condition-entry${isComposite ? ' condition-entry--composite' : ''}`}
+      data-severity={condition.severity}
+      data-condition-type={condition.condition_type}
+    >
+      <div className="condition-header">
+        <span className="condition-title">{condition.operator_cognition_title}</span>
+        <span className="condition-severity" data-severity={condition.severity}>{condition.severity}</span>
+      </div>
+
+      <div className="condition-consequence">{condition.operational_consequence}</div>
+
+      {domains.length > 0 && (
+        <div className="condition-targets">
+          <span className="condition-targets-label">Topology targets</span>
+          <span className="condition-targets-value">{domains.join(', ')}</span>
+        </div>
+      )}
+
+      <div className="condition-topology-effect">
+        <span className="condition-field-label">Topology effect</span>
+        <span className="condition-field-value">{condition.topology_effect}</span>
+      </div>
+      <div className="condition-governance">
+        <span className="condition-field-label">Governance</span>
+        <span className="condition-field-value">{condition.governance_boundary}</span>
+      </div>
+
+      <div className="condition-l2">
+        <span className="condition-l2-label">{condition.technical_semantic_label}</span>
+      </div>
+
+      {condition.guided_interventions && condition.guided_interventions.length > 0 && (
+        <>
+          <button
+            className="condition-interventions-toggle"
+            onClick={(e) => { e.stopPropagation(); setShowInterventions(p => !p) }}
+            aria-expanded={showInterventions}
+          >
+            {showInterventions ? '▾' : '▸'} {condition.guided_interventions.length} guided intervention{condition.guided_interventions.length !== 1 ? 's' : ''}
+          </button>
+          {showInterventions && (
+            <div className="condition-interventions">
+              {condition.guided_interventions.map(gi => (
+                <div key={gi.intervention_id} className="condition-intervention-item">
+                  <span className="condition-intervention-action" data-type={gi.action_type}>{gi.action_type}</span>
+                  <span className="condition-intervention-label">{gi.operator_label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      <button
+        className="condition-trace-toggle"
+        onClick={(e) => { e.stopPropagation(); setShowTrace(p => !p) }}
+        aria-expanded={showTrace}
+      >
+        {showTrace ? '▾' : '▸'} {condition.supporting_signal_ids.length} contributing signal{condition.supporting_signal_ids.length !== 1 ? 's' : ''}
+      </button>
+      {showTrace && (
+        <div className="condition-trace">
+          <div className="condition-trace-row">
+            <span className="condition-trace-key">L1 internal</span>
+            <span className="condition-trace-val">{condition.internal_condition_id}</span>
+          </div>
+          <div className="condition-trace-row">
+            <span className="condition-trace-key">Signals</span>
+            <span className="condition-trace-val">{condition.supporting_signal_ids.join(', ')}</span>
+          </div>
+          <div className="condition-trace-row">
+            <span className="condition-trace-key">Derivation</span>
+            <span className="condition-trace-val">{condition.derivation_trace}</span>
+          </div>
+          {isComposite && condition.contributing_conditions && (
+            <div className="condition-trace-row">
+              <span className="condition-trace-key">Contributing</span>
+              <span className="condition-trace-val">{condition.contributing_conditions.map(c => c.operator_cognition_title).join(' · ')}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SynthesizedConditionSection({ fullReport }) {
+  const result = useMemo(() => synthesize(fullReport), [fullReport])
+  if (!result || !result.conditions.length) return null
+
+  const { active, suppressed, composites, summary } = result
+  const sortedActive = [...active].sort((a, b) => (SEVERITY_RANK[a.severity] ?? 5) - (SEVERITY_RANK[b.severity] ?? 5))
+  const compositeIds = new Set(composites.map(c => c.condition_id))
+  const activeComposites = sortedActive.filter(c => compositeIds.has(c.condition_id))
+  const activePrimitives = sortedActive.filter(c => !compositeIds.has(c.condition_id))
+
+  return (
+    <div className="actor actor--synthesized-conditions" data-zone-key="signalAssessment">
+      <div className="actor-tag">
+        <span className="actor-code">SC</span>
+        <span className="actor-name">Structural Signal Cognition · {summary.active_count} condition{summary.active_count !== 1 ? 's' : ''} active{summary.suppressed_count > 0 ? ` · ${summary.suppressed_count} suppressed` : ''}</span>
+      </div>
+
+      {summary.primary_condition && (
+        <div className="condition-primary-banner" data-severity={summary.primary_severity}>
+          <span className="condition-primary-label">Primary</span>
+          <span className="condition-primary-title">{summary.primary_condition}</span>
+          <span className="condition-primary-severity" data-severity={summary.primary_severity}>{summary.primary_severity}</span>
+        </div>
+      )}
+
+      {activeComposites.length > 0 && (
+        <div className="condition-group" data-group="composite">
+          <div className="condition-group-head">
+            <span className="condition-group-label">Convergence Conditions</span>
+            <span className="condition-group-count">{activeComposites.length}</span>
+          </div>
+          {activeComposites.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={true} />)}
+        </div>
+      )}
+
+      {activePrimitives.length > 0 && (
+        <div className="condition-group" data-group="primitive">
+          <div className="condition-group-head">
+            <span className="condition-group-label">Structural Conditions</span>
+            <span className="condition-group-count">{activePrimitives.length}</span>
+          </div>
+          {activePrimitives.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} />)}
+        </div>
+      )}
+
+      {suppressed.length > 0 && (
+        <div className="condition-group condition-group--suppressed" data-group="suppressed">
+          <div className="condition-group-head">
+            <span className="condition-group-label">Nominal</span>
+            <span className="condition-group-count">{suppressed.length}</span>
+          </div>
+          {suppressed.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} />)}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function DenseGovernanceZone({ fullReport }) {
   const gl = fullReport && fullReport.governance_lifecycle
   const pc = fullReport && fullReport.proposition_corpus
@@ -4553,7 +4705,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <DenseSignalSection fullReport={fullReport} />
+      <SynthesizedConditionSection fullReport={fullReport} />
 
       {!isS1 && (origin || passthrough || receiver) && (
         <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">

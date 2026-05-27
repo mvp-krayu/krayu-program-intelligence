@@ -8611,7 +8611,7 @@ a.topo-chip:hover {
 
 .sqo-v2-role-gate__card-scope {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -8629,7 +8629,7 @@ a.topo-chip:hover {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #4a5570;
+  color: #7a8aaa;
   margin-bottom: 8px;
 }
 
@@ -8655,7 +8655,7 @@ a.topo-chip:hover {
   display: block;
   margin-top: 8px;
   font-size: 11px;
-  color: #4a5570;
+  color: #7a8aaa;
 }
 
 .sqo-v2-role-gate__proceed {
@@ -8680,7 +8680,7 @@ a.topo-chip:hover {
 
 .sqo-v2-role-gate__governance {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
@@ -8768,7 +8768,7 @@ a.topo-chip:hover {
 
 .sqo-v2-nav-rail__role-change {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   background: none;
   border: 1px solid #2a2f40;
   border-radius: 2px;
@@ -8796,7 +8796,7 @@ a.topo-chip:hover {
   display: block;
   padding: 0 16px 8px;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -8806,7 +8806,7 @@ a.topo-chip:hover {
   width: 100%;
   padding: 4px 16px 8px;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background: none;
@@ -8850,7 +8850,7 @@ a.topo-chip:hover {
 
 .sqo-v2-nav-rail__item--tier3 {
   font-size: 12px;
-  color: #4a5570;
+  color: #7a8aaa;
   padding-left: 24px;
 }
 
@@ -8862,7 +8862,7 @@ a.topo-chip:hover {
   margin-top: auto;
   padding: 16px;
   font-size: 9px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border-top: 1px solid #1e2330;
@@ -9016,7 +9016,7 @@ a.topo-chip:hover {
 }
 
 .sqo-v2-overview-shell__remediation-stage--pending .sqo-v2-overview-shell__remediation-stage-indicator {
-  color: #4a5570;
+  color: #7a8aaa;
 }
 
 .sqo-v2-overview-shell__remediation-stage--future .sqo-v2-overview-shell__remediation-stage-indicator {
@@ -9061,7 +9061,7 @@ a.topo-chip:hover {
   display: block;
   font-family: 'Courier New', monospace;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   padding-left: 22px;
   margin-top: 3px;
   letter-spacing: 0.02em;
@@ -9091,7 +9091,7 @@ a.topo-chip:hover {
 
 .sqo-v2-overview-shell__remediation-gate-indicator {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   width: 14px;
   text-align: center;
 }
@@ -9252,7 +9252,7 @@ a.topo-chip:hover {
 .sqo-v2-action-grid__category-label {
   display: block;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 6px;
@@ -9304,7 +9304,7 @@ a.topo-chip:hover {
 
 .sqo-v2-action-grid__item-level {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
 }
 
 .sqo-v2-action-grid__item-count {
@@ -9390,7 +9390,7 @@ a.topo-chip:hover {
 
 .sqo-v2-progression-path__step--complete .sqo-v2-progression-path__step-dot { color: #64ffda; }
 .sqo-v2-progression-path__step--current .sqo-v2-progression-path__step-dot { color: #4a9eff; }
-.sqo-v2-progression-path__step--future .sqo-v2-progression-path__step-dot { color: #4a5570; }
+.sqo-v2-progression-path__step--future .sqo-v2-progression-path__step-dot { color: #7a8aaa; }
 .sqo-v2-progression-path__step--blocked .sqo-v2-progression-path__step-dot { color: #ffd700; }
 .sqo-v2-progression-path__step--terminal .sqo-v2-progression-path__step-dot { color: #ff6b6b; }
 
@@ -9407,7 +9407,7 @@ a.topo-chip:hover {
 .sqo-v2-progression-path__step-detail {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   max-width: 120px;
 }
 
@@ -9574,7 +9574,7 @@ a.topo-chip:hover {
 }
 
 .sqo-v2-overview-shell__evidence-item--available .sqo-v2-overview-shell__evidence-indicator { color: #64ffda; }
-.sqo-v2-overview-shell__evidence-item--absent .sqo-v2-overview-shell__evidence-indicator { color: #4a5570; }
+.sqo-v2-overview-shell__evidence-item--absent .sqo-v2-overview-shell__evidence-indicator { color: #7a8aaa; }
 
 .sqo-v2-overview-shell__evidence-label {
   font-size: 11px;
@@ -9590,7 +9590,7 @@ a.topo-chip:hover {
 .sqo-v2-overview-shell__drilldown-group-label {
   display: block;
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 8px;
@@ -9626,7 +9626,7 @@ a.topo-chip:hover {
 
 .sqo-v2-overview-shell__governance {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
@@ -9654,7 +9654,7 @@ a.topo-chip:hover {
 
 .ceu-reconciliation-panel__disclaimer {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
@@ -9733,7 +9733,7 @@ a.topo-chip:hover {
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #4a5570;
+  color: #7a8aaa;
   font-family: 'Courier New', monospace;
 }
 
@@ -9759,7 +9759,7 @@ a.topo-chip:hover {
 
 .ceu-gate-banner__reason {
   font-size: 11px;
-  color: #4a5570;
+  color: #7a8aaa;
   margin-top: 6px;
   font-family: 'Courier New', monospace;
 }
@@ -9908,7 +9908,7 @@ a.topo-chip:hover {
 }
 
 .ceu-candidate-row__expand {
-  color: #4a5570;
+  color: #7a8aaa;
   width: 12px;
   flex-shrink: 0;
 }
@@ -9934,7 +9934,7 @@ a.topo-chip:hover {
 
 .ceu-candidate-row__files,
 .ceu-candidate-row__evidence {
-  color: #4a5570;
+  color: #7a8aaa;
   min-width: 80px;
   font-size: 11px;
 }
@@ -10003,7 +10003,7 @@ a.topo-chip:hover {
 }
 
 .ceu-candidate-row__label {
-  color: #4a5570;
+  color: #7a8aaa;
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 0.04em;
@@ -10018,7 +10018,7 @@ a.topo-chip:hover {
 
 .ceu-candidate-row__history {
   font-size: 10px;
-  color: #4a5570;
+  color: #7a8aaa;
   margin-top: 4px;
   font-family: 'Courier New', monospace;
 }
@@ -10189,7 +10189,7 @@ a.topo-chip:hover {
 }
 
 .ceu-candidate-row__obl-resolution {
-  color: #4a5570;
+  color: #7a8aaa;
   font-style: italic;
   margin-top: 3px;
 }
@@ -10209,7 +10209,7 @@ a.topo-chip:hover {
 /* Evidence Detail */
 .ceu-evidence-detail--empty {
   font-size: 11px;
-  color: #4a5570;
+  color: #7a8aaa;
   font-style: italic;
 }
 
@@ -10242,7 +10242,7 @@ a.topo-chip:hover {
 }
 
 .ceu-evidence-detail__summary {
-  color: #4a5570;
+  color: #7a8aaa;
   font-size: 10px;
   margin-top: 2px;
   line-height: 1.4;
@@ -10370,7 +10370,7 @@ a.topo-chip:hover {
 }
 
 .ceu-timeline__id {
-  color: #4a5570;
+  color: #7a8aaa;
   min-width: 80px;
 }
 
@@ -10395,7 +10395,7 @@ a.topo-chip:hover {
 }
 
 .ceu-timeline__time {
-  color: #4a5570;
+  color: #7a8aaa;
   margin-left: auto;
   font-size: 10px;
 }
