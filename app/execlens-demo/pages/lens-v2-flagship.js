@@ -2950,6 +2950,148 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #64ffda;
         }
 
+        /* ─── Pressure Zone Cognition ─── */
+        .interp-condition-zone-section { }
+        .interp-condition-zone-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .interp-condition-zone-classification {
+          font: 600 9px/1 'Courier New', monospace;
+          color: #ff6b6b;
+          padding: 2px 6px;
+          border: 1px solid rgba(255, 107, 107, 0.3);
+          border-radius: 2px;
+          letter-spacing: 0.5px;
+        }
+        .interp-condition-zone-id {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #5e6d8a;
+        }
+        .interp-condition-zone-signals {
+          margin-top: 4px;
+        }
+        .interp-condition-zone-signal {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 2px 0;
+        }
+        .interp-condition-zone-signal-id {
+          font: 400 9px/1.2 'Courier New', monospace;
+          color: #5e6d8a;
+          min-width: 52px;
+        }
+        .interp-condition-zone-signal-name {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #9aa8c7;
+        }
+        .interp-condition-zone-advisories {
+          margin-top: 4px;
+        }
+        .interp-condition-zone-advisory {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 2px 0 2px 8px;
+          border-left: 2px dashed #5e6d8a;
+        }
+        .interp-condition-zone-advisory-name {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .interp-condition-zone-advisory-id {
+          font: 400 9px/1.2 'Courier New', monospace;
+          color: #4a5570;
+        }
+
+        /* ─── Compound Convergence Cognition ─── */
+        .interp-condition-convergence-section { }
+        .interp-condition-convergence-header {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          margin-bottom: 4px;
+        }
+        .interp-condition-convergence-factor {
+          font: 600 10px/1.2 'Courier New', monospace;
+          color: #ff6b6b;
+          padding: 1px 5px;
+          border: 1px solid rgba(255, 107, 107, 0.3);
+          border-radius: 2px;
+        }
+        .interp-condition-escalation {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff9e4a;
+          margin-bottom: 6px;
+        }
+        .interp-condition-contributing-list {
+          margin-top: 4px;
+        }
+        .interp-condition-contributing-entry {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 3px 0 3px 8px;
+          border-left: 2px solid #4a5570;
+        }
+        .interp-condition-contributing-entry[data-overlay="PRESSURE_ZONE"] {
+          border-left-color: #ff6b6b;
+        }
+        .interp-condition-contributing-entry[data-overlay="IMPORT_PRESSURE"] {
+          border-left-color: #ff9e4a;
+        }
+        .interp-condition-contributing-entry[data-overlay="PROPAGATION_CORRIDOR"] {
+          border-left-color: #64ffda;
+        }
+        .interp-condition-contributing-entry[data-overlay="CLUSTER_PRESSURE"] {
+          border-left-color: #ffd700;
+        }
+        .interp-condition-contributing-entry[data-overlay="COUPLING_CORRIDOR"] {
+          border-left-color: #4a9eff;
+        }
+        .interp-condition-contributing-title {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+          flex: 1;
+        }
+        .interp-condition-contributing-type {
+          font: 400 8px/1 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.3px;
+        }
+
+        /* ─── Cluster Gravity Cognition ─── */
+        .interp-condition-cluster-section { }
+        .interp-condition-cluster-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .interp-condition-cluster-identity {
+          font: 600 10px/1.2 'Courier New', monospace;
+          color: #ffd700;
+          padding: 2px 6px;
+          border: 1px solid rgba(255, 215, 0, 0.3);
+          border-radius: 2px;
+          letter-spacing: 0.5px;
+        }
+        .interp-condition-cluster-metrics {
+          margin-top: 4px;
+        }
+        .interp-condition-cluster-metric {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 2px 0;
+        }
+        .interp-condition-cluster-composition {
+          margin-top: 4px;
+        }
+
         .interp-synthesis {
           font-size: 12px;
           color: #ccd6f6;

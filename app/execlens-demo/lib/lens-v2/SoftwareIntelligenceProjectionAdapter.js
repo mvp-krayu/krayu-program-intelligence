@@ -1093,12 +1093,25 @@ function deriveConditionCognitionState(condition, fullReport) {
 
   const signalOverlays = overlay.signal_overlays || []
   if (signalOverlays.length > 0 && condition.condition_type !== 'COMPOUND_CONVERGENCE') {
-    const translated = translateSignal(signalOverlays[0].signal_id)
-    legendEntries.push({
-      color: '#ffd700',
-      label: translated ? translated.l2 : signalOverlays[0].signal_name || signalOverlays[0].signal_id,
-      style: 'solid',
-    })
+    if (overlay.overlay_mode === 'CLUSTER_PRESSURE') {
+      const dpsigSummary = (fullReport && fullReport.dpsig_signal_summary) || {}
+      const nb = dpsigSummary.normalization_basis || {}
+      const clusterName = nb.max_cluster_name || 'dominant cluster'
+      const nodeCount = nb.max_cluster_node_count || 0
+      const totalNodes = (dpsigSummary.derivation_context && dpsigSummary.derivation_context.total_structural_nodes) || 0
+      legendEntries.push({
+        color: '#ffd700',
+        label: clusterName + (nodeCount > 0 && totalNodes > 0 ? ' · ' + (nodeCount / totalNodes * 100).toFixed(0) + '% mass' : ''),
+        style: 'solid',
+      })
+    } else {
+      const translated = translateSignal(signalOverlays[0].signal_id)
+      legendEntries.push({
+        color: '#ffd700',
+        label: translated ? translated.l2 : signalOverlays[0].signal_name || signalOverlays[0].signal_id,
+        style: 'solid',
+      })
+    }
   }
 
   const corridors = overlay.corridor_paths || []

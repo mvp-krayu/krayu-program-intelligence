@@ -3547,6 +3547,173 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             )
           })()}
 
+          {c.topology_overlay && c.topology_overlay.overlay_mode === 'PRESSURE_ZONE' && (() => {
+            const reg = (fullReport && fullReport.semantic_domain_registry) || []
+            const resolveName = (id) => { const d = reg.find(r => r.domain_id === id) || reg.find(r => r.dominant_dom_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+            const pzState = (fullReport && fullReport.pressure_zone_state) || {}
+            const zone = (pzState.zones || []).find(z => (c.pressure_zone_ids || []).includes(z.zone_id))
+            const signalOverlays = c.topology_overlay.signal_overlays || []
+            const advisoryZones = (c.topology_overlay.advisory_zones || []).map(id => ({ id, display_name: resolveName(id) }))
+
+            return (
+              <div className="interp-condition-field interp-condition-zone-section">
+                <div className="interp-section-label">PRESSURE ZONE</div>
+                {zone && (
+                  <div className="interp-condition-zone-header">
+                    <span className="interp-condition-zone-classification">{zone.zone_class}</span>
+                    <span className="interp-condition-zone-id">{zone.zone_id}</span>
+                  </div>
+                )}
+                {targets.length > 0 && (
+                  <div className="interp-condition-corridor-group">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ff6b6b' }}>ANCHOR</span>
+                    <span className="interp-condition-corridor-domain">{targets[0].display_name}</span>
+                  </div>
+                )}
+                {signalOverlays.length > 0 && (
+                  <div className="interp-condition-zone-signals">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ff9e4a' }}>CONTRIBUTING SIGNALS</span>
+                    {signalOverlays.map((s, i) => {
+                      const trans = translateSignal(s.signal_id)
+                      return (
+                        <div key={i} className="interp-condition-zone-signal">
+                          <span className="interp-condition-zone-signal-id">{s.signal_id}</span>
+                          <span className="interp-condition-zone-signal-name">{trans ? trans.l3_title : (s.signal_name || s.signal_id)}</span>
+                          <span className={'interp-condition-sev interp-condition-sev--' + (s.severity || '').toLowerCase()}>{s.severity}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+                {advisoryZones.length > 0 && (
+                  <div className="interp-condition-zone-advisories">
+                    <span className="interp-condition-corridor-label" style={{ color: '#5e6d8a' }}>STRUCTURAL BLIND SPOTS</span>
+                    {advisoryZones.map((az, i) => (
+                      <div key={i} className="interp-condition-zone-advisory">
+                        <span className="interp-condition-zone-advisory-name">{az.display_name}</span>
+                        <span className="interp-condition-zone-advisory-id">{az.id}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="interp-condition-corridor-evidence">
+                  PRESSURE_ZONE_DERIVED · from pressure_zone_state artifact{zone ? ' · ' + (zone.condition_count || 0) + ' conditions active' : ''}
+                </div>
+              </div>
+            )
+          })()}
+
+          {c.topology_overlay && c.topology_overlay.overlay_mode === 'COMPOUND_CONVERGENCE' && (() => {
+            const reg = (fullReport && fullReport.semantic_domain_registry) || []
+            const resolveName = (id) => { const d = reg.find(r => r.domain_id === id) || reg.find(r => r.dominant_dom_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+            const contributingIds = c.contributing_condition_ids || []
+            const contributingConditions = contributingIds.map(cid => (activeConditions || []).find(ac => ac.condition_id === cid)).filter(Boolean)
+            const corridors = c.topology_overlay.corridor_paths || []
+            const advisoryZones = (c.topology_overlay.advisory_zones || []).map(id => ({ id, display_name: resolveName(id) }))
+
+            return (
+              <div className="interp-condition-field interp-condition-convergence-section">
+                <div className="interp-section-label">COMPOUND CONVERGENCE</div>
+                <div className="interp-condition-convergence-header">
+                  <span className="interp-condition-convergence-factor">{contributingIds.length} conditions</span>
+                  <span className="interp-condition-field-value"> converge on {targets.length > 0 ? targets[0].display_name : 'target domain'}</span>
+                </div>
+                <div className="interp-condition-escalation">
+                  Escalated to {c.severity} — {contributingIds.length} conditions from different operational dimensions converge on the same structural region.
+                </div>
+                {contributingConditions.length > 0 && (
+                  <div className="interp-condition-contributing-list">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ff9e4a' }}>CONTRIBUTING CONDITIONS</span>
+                    {contributingConditions.map((cc, i) => (
+                      <div key={i} className="interp-condition-contributing-entry" data-overlay={cc.topology_overlay ? cc.topology_overlay.overlay_mode : ''}>
+                        <span className="interp-condition-contributing-title">{cc.operator_cognition_title}</span>
+                        <span className={'interp-condition-sev interp-condition-sev--' + (cc.severity || '').toLowerCase()}>{cc.severity}</span>
+                        <span className="interp-condition-contributing-type">{cc.condition_type}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {corridors.length > 0 && (
+                  <div className="interp-condition-zone-signals">
+                    <span className="interp-condition-corridor-label" style={{ color: '#64ffda' }}>MERGED CORRIDORS</span>
+                    <span className="interp-condition-field-value">{corridors.length} corridor{corridors.length !== 1 ? 's' : ''} inherited from contributing conditions</span>
+                  </div>
+                )}
+                {advisoryZones.length > 0 && (
+                  <div className="interp-condition-zone-advisories">
+                    <span className="interp-condition-corridor-label" style={{ color: '#5e6d8a' }}>ADVISORY ZONES</span>
+                    {advisoryZones.map((az, i) => (
+                      <div key={i} className="interp-condition-zone-advisory">
+                        <span className="interp-condition-zone-advisory-name">{az.display_name}</span>
+                        <span className="interp-condition-zone-advisory-id">{az.id}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="interp-condition-corridor-evidence">
+                  MIXED · {contributingConditions.map(cc => cc.evidence_mode || 'unknown').filter((v, i, a) => a.indexOf(v) === i).join(' + ')} · composite convergence
+                </div>
+              </div>
+            )
+          })()}
+
+          {c.topology_overlay && c.topology_overlay.overlay_mode === 'CLUSTER_PRESSURE' && (() => {
+            const reg = (fullReport && fullReport.semantic_domain_registry) || []
+            const resolveName = (id) => { const d = reg.find(r => r.domain_id === id) || reg.find(r => r.dominant_dom_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+            const signalOverlays = c.topology_overlay.signal_overlays || []
+            const clusterIds = (c.shared_topology_targets && c.shared_topology_targets.clusters) || []
+            const emphasisDomains = (c.topology_overlay.emphasis_domains || []).map(id => ({ id, display_name: resolveName(id) }))
+            const dpsigSummary = (fullReport && fullReport.dpsig_signal_summary) || {}
+            const nb = dpsigSummary.normalization_basis || {}
+            const clusterName = nb.max_cluster_name || (clusterIds[0] || 'dominant cluster')
+            const clusterNodeCount = nb.max_cluster_node_count || 0
+            const totalNodes = (dpsigSummary.derivation_context && dpsigSummary.derivation_context.total_structural_nodes) || 0
+
+            return (
+              <div className="interp-condition-field interp-condition-cluster-section">
+                <div className="interp-section-label">CLUSTER GRAVITY</div>
+                <div className="interp-condition-cluster-header">
+                  <span className="interp-condition-cluster-identity">{clusterName}</span>
+                  {clusterIds[0] && <span className="interp-condition-zone-id">{clusterIds[0]}</span>}
+                </div>
+                {signalOverlays.length > 0 && (
+                  <div className="interp-condition-cluster-metrics">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ffd700' }}>STRUCTURAL MASS</span>
+                    {signalOverlays.map((s, i) => {
+                      const trans = translateSignal(s.signal_id)
+                      return (
+                        <div key={i} className="interp-condition-cluster-metric">
+                          <span className="interp-condition-zone-signal-id">{s.signal_id}</span>
+                          <span className="interp-condition-zone-signal-name">{trans ? trans.l3_title : (s.signal_name || s.signal_id)}</span>
+                          <span className={'interp-condition-sev interp-condition-sev--' + (s.severity || '').toLowerCase()}>{s.severity}</span>
+                        </div>
+                      )
+                    })}
+                    {clusterNodeCount > 0 && totalNodes > 0 && (
+                      <div className="interp-condition-cluster-metric">
+                        <span className="interp-condition-zone-signal-name">{clusterNodeCount} of {totalNodes} structural nodes ({(clusterNodeCount / totalNodes * 100).toFixed(1)}%)</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {emphasisDomains.length > 0 && (
+                  <div className="interp-condition-cluster-composition">
+                    <span className="interp-condition-corridor-label" style={{ color: '#ffd700' }}>CLUSTER COMPOSITION</span>
+                    {emphasisDomains.map((d, i) => (
+                      <div key={i} className="interp-condition-corridor-group">
+                        <span className="interp-condition-corridor-domain">{d.display_name}</span>
+                        <span className="interp-condition-zone-advisory-id">{d.id}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="interp-condition-corridor-evidence">
+                  TOPOLOGY_METRIC_DERIVED · from DPSIG topology distribution metrics · spatial
+                </div>
+              </div>
+            )
+          })()}
+
           <div className="interp-condition-field">
             <div className="interp-section-label">GOVERNANCE</div>
             <div className="interp-condition-field-value">

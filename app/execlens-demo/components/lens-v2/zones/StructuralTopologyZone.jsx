@@ -553,8 +553,11 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pre
                   strokeDasharray={isAdvisory ? '3,3' : undefined}
                   style={{ transition: 'stroke-opacity 0.3s' }}
                 >
-                  {(cognitionOverlay.overlay_mode === 'IMPORT_PRESSURE' || cognitionOverlay.overlay_mode === 'PRESSURE_ZONE') && (
+                  {(cognitionOverlay.overlay_mode === 'IMPORT_PRESSURE' || cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' || cognitionOverlay.overlay_mode === 'COMPOUND_CONVERGENCE') && (
                     <animate attributeName="stroke-opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite" />
+                  )}
+                  {cognitionOverlay.overlay_mode === 'CLUSTER_PRESSURE' && (
+                    <animate attributeName="stroke-opacity" values="0.5;0.2;0.5" dur="4s" repeatCount="indefinite" />
                   )}
                 </circle>
               )}
