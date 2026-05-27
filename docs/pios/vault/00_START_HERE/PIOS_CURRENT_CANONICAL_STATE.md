@@ -594,6 +594,7 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.BLUEEDGE.ISIG-LEVEL1-SIGNAL-DERIVATION.01 | G2 | First Level 1 signal family operational. ISIG-001 Import Hub Pressure (BlueEdge 35.3 HIGH, NetBox 51.1 HIGH). ISIG-002 Import Fan Asymmetry (BlueEdge 22.3 HIGH, NetBox 8.9 HIGH). PSIG-004 LOST_READ closed. Client-agnostic, code-graph-native. Cross-validated on 2 specimens | COMPLETE |
 | PI.GENESIS.ISIG-VAULT-STATUS-UPDATE.01 | G1 | ISIG vault status update — PARTIALLY_IMPLIED→OPERATIONAL across all vault pages. LOST_READ→RESOLVED in delta certification. Signal family classification updated. Ontology lineage current | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01 | G1 | Software Intelligence constitutional definition anchored in proven PR #16 runtime. SQO execution bridge verified. Domain cognition module pattern proven (workspace resolver → orchestration adapter → authority engine → learning derivation → LENS projection). 10 cognition functions (3 operational, 7 constitutional). Event-log-derived learning (read-only, replayable, auditable). Gap register GAP-01–GAP-08. Marketplace redefined as domain cognition module ecosystem. Persona consumption spec. Pressure-topology integration model | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01 | G1 | Executive consequence semantics constitutional definition. 8 atomic consequence classes (COORD_FRAG, DEP_AMP, DEL_EXP, OP_BOTTLENECK, RESIL_DEF, GOV_GAP, PROP_EXP, STAB_RISK). 3 named combination patterns (AMPLIFIED_DEP_FRAG, STRUCT_GRAVITY_WELL, SYSTEMIC_OP_FRAG). Consequence scope classification (LOCAL/REGIONAL/SYSTEMIC). Primitive-to-consequence mapping for all 7 SignalSynthesisEngine conditions. Confidence inheritance, escalation semantics, persona consumption contracts, module gating. GENESIS proof: 7 conditions → 4 consequence objects. Cross-persona semantic objects, not executive-only | COMPLETE |
 
 ## Domain Cognition Module Architecture
 
@@ -629,6 +630,7 @@ Program Intelligence operates through domain cognition modules — replaceable i
 | SOFTWARE_INTELLIGENCE corridor evaluation | STUB — returns ABSENT (full artifact activation pending) |
 | Pressure-topology integration | SPECIFIED_NOT_IMPLEMENTED — rendering model defined |
 | Persona-specific SW-Intel consumption | SPECIFIED_NOT_IMPLEMENTED — all personas receive same rendering |
+| Executive Consequence Semantics | SPECIFIED_NOT_IMPLEMENTED — 8 consequence classes, 3 combination patterns, consequence scope, persona consumption contracts. Semantic model locked. No runtime compiler. |
 | Prescriptive learning / operator modeling | DEFERRED — governance-sensitive (GAP-04) |
 | Graph-based progression intelligence | FUTURE — Phase 3 (GAP-08) |
 

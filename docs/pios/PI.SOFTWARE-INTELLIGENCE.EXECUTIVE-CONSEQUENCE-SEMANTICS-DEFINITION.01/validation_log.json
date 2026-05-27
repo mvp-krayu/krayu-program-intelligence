@@ -1,0 +1,80 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01",
+  "classification": "G1",
+  "date": "2026-05-27",
+  "checks": [
+    {
+      "name": "taxonomy_completeness",
+      "description": "All 7 SignalSynthesisEngine conditions have consequence mappings in §4",
+      "status": "PASS",
+      "details": "DPC (§4.2), DCkP (§4.3), PA (§4.4), SMC (§4.5), CDCP (§4.6), GCS-GAP (§4.7), GCS-COMPLETE (§4.7), CC (§4.8) — all mapped"
+    },
+    {
+      "name": "genesis_proof_validity",
+      "description": "GENESIS proof (§11) compiles correctly from actual BlueEdge condition data",
+      "status": "PASS",
+      "details": "7 conditions → 4 compiled consequence objects. Scope escalation: LOCAL→REGIONAL→SYSTEMIC. Confidence inheritance: mixed evidence → ADVISORY_BOUND. Worked example complete."
+    },
+    {
+      "name": "vocabulary_governance",
+      "description": "Three-layer vocabulary (L1/L2/L3) present for every consequence class",
+      "status": "PASS",
+      "details": "8 atomic classes (§12.1) + 3 combination classes (§12.2) = 11 vocabulary entries, all with L1/L2/L3"
+    },
+    {
+      "name": "persona_boundary_compliance",
+      "description": "Persona consumption contracts respect crystallized persona roles",
+      "status": "PASS",
+      "details": "BOARDROOM=compressed, BALANCED=narrative, DENSE=not direct consumer, INVESTIGATION=full derivation chain. SW-Intel augments, never owns."
+    },
+    {
+      "name": "prohibition_coverage",
+      "description": "All 13 LENS 75.x absolute prohibitions preserved",
+      "status": "PASS",
+      "details": "§8.2 contains 14 prohibition rules. Rule #14 explicitly inherits all 13 LENS 75.x absolute prohibitions."
+    },
+    {
+      "name": "doctrine_compliance",
+      "description": "Doctrine compliance checklist (§14) complete with 16 requirements",
+      "status": "PASS",
+      "details": "16/16 doctrine requirements satisfied: deterministic, traceable, evidence-bound, client-agnostic, compilation-not-summarization, persona-respecting, module-gated, 3-layer-vocabulary, combination-aware, no-hidden-AI, no-prescription, 75x-compliant, confidence-aware, scope-aware, cross-persona, no-topology-invention"
+    },
+    {
+      "name": "scope_separation",
+      "description": "Systemic consequences carry primary_locus distinct from consequence_scope",
+      "status": "PASS",
+      "details": "§3.2 defines scope classification. §13 schema separates consequence_scope from primary_locus. §11.5 GENESIS proof demonstrates SYSTEMIC scope with DOMAIN-10 primary_locus."
+    },
+    {
+      "name": "cross_persona_language",
+      "description": "L3 vocabulary uses operator cognition (cross-persona), not exclusively executive",
+      "status": "PASS",
+      "details": "§12 field name: operator_consequence_title. §13 schema: operator_consequence_title (cross-persona). §10 defines per-persona compression."
+    },
+    {
+      "name": "compilation_language",
+      "description": "Document uses compilation/compilation language, not projection/rendering/UI language",
+      "status": "PASS",
+      "details": "§2 explicitly excludes rendering specification. No 'operator sees' language. Uses 'the runtime compiles' in §11.5."
+    },
+    {
+      "name": "module_gating",
+      "description": "SW-Intel module gating preserved (OFF=no consequences, ON=full compilation)",
+      "status": "PASS",
+      "details": "§9 defines gating model. §9.2 defines teaser extension. §9.3 defines compilation trigger."
+    },
+    {
+      "name": "no_runtime_files",
+      "description": "No runtime files created or modified",
+      "status": "PASS",
+      "details": "All artifacts in docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/"
+    },
+    {
+      "name": "implementation_semantics",
+      "description": "IMPLEMENTATION_SEMANTICS.md produced per §5.5",
+      "status": "PASS",
+      "details": "6 sections: primitive inventory, input contracts, output contracts, calibration assumptions, extension points, module responsibility map"
+    }
+  ],
+  "result": "ALL PASS — 12/12 checks"
+}
