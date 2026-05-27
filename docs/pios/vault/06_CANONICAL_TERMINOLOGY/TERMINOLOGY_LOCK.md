@@ -809,6 +809,46 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **What it is NOT:** A feature flag. A debug toggle. An A/B test. Module gating is the commercial activation boundary between teaser and full domain cognition.
 
+### Consequence Class
+
+**Definition:** An atomic operational implication dimension produced by the executive consequence compilation layer. Each consequence class represents a distinct operational meaning derived from topology cognition conditions: coordination fragility, dependency amplification, delivery exposure, operational bottleneck, resilience deficit, governance coverage gap, propagation exposure, structural stability risk. Consequence classes are cross-persona semantic objects — all four personas consume them at different compression depths.
+
+**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED — semantic model locked, no runtime compiler.
+
+**What it is NOT:** A condition summary. A shorter version of a topology cognition condition. A persona-specific object. Consequence classes are a different semantic class entirely — operational implications derived from structural evidence through deterministic mapping rules.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+
+### Consequence Compilation
+
+**Definition:** The deterministic mapping of topology cognition primitives (SignalSynthesisEngine conditions) into operational consequence objects. Consequence compilation pattern-matches over condition structures, evidence classification, and combination state to produce consequence classes with severity, confidence, scope, and three-layer vocabulary. Compilation is distinct from synthesis (which produces conditions from signals), summarization (which compresses existing content), and projection (which renders for personas).
+
+**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+
+**What it is NOT:** Summarization. Interpretation. AI-generated commentary. 75.x interpretive authority. Consequence compilation operates at deterministic authority level.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+
+### Combination Pattern
+
+**Definition:** A named emergent consequence produced when multiple primitive consequence objects share a primary locus. Three patterns defined: AMPLIFIED_DEPENDENCY_FRAGILITY (pressure + choke point co-location), STRUCTURAL_GRAVITY_WELL (mass + pressure co-location), SYSTEMIC_OPERATIONAL_FRAGILITY (3+ independent conditions converging). Combination consequences are emergent — they produce operational meaning that no individual primitive can produce alone.
+
+**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+
+**What it is NOT:** A sum of individual consequences. A filtered view. Combination patterns produce NEW consequence objects that require convergence of independent evidence paths as a precondition.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+
+### Consequence Scope
+
+**Definition:** The structural extent of a consequence's claim. Three levels: LOCAL (single domain or file-level entity), REGIONAL (cluster or pressure zone), SYSTEMIC (cross-domain, system-level implication). Scope is orthogonal to severity — a LOCAL consequence can be CRITICAL, a SYSTEMIC consequence can be ELEVATED. SYSTEMIC consequences carry `primary_locus` (where evidence concentrates) distinct from `consequence_scope` (what the consequence claims about).
+
+**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+
+**What it is NOT:** Severity. Importance. Priority. Scope describes how far the structural claim extends, not how operationally consequential it is.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

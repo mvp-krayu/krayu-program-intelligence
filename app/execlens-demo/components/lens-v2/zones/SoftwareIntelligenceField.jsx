@@ -374,7 +374,44 @@ export function SoftwareIntelligenceInvestigationView({ projection, onDeactivate
   )
 }
 
-export function SoftwareIntelligenceBoardroomSummary({ projection }) {
+const CONFIDENCE_LABEL = { GOVERNED: 'Governed', ADVISORY_BOUND: 'Advisory', STRUCTURAL_ONLY: 'Structural' }
+const SCOPE_LABEL = { LOCAL: 'Local', REGIONAL: 'Regional', SYSTEMIC: 'Systemic' }
+
+function ConsequencePostureStrip({ posture }) {
+  if (!posture) return null
+
+  return (
+    <div className="sw-intel-consequence-posture">
+      <div className="sw-intel-consequence-posture-header">
+        <span className="sw-intel-consequence-posture-label">{posture.posture_label}</span>
+        <span className="sw-intel-consequence-posture-severity" style={{ color: SEVERITY_COLOR[posture.posture_severity] || '#7a8aaa' }}>{posture.posture_severity}</span>
+        <span className="sw-intel-consequence-posture-scope" data-scope={posture.posture_scope}>{SCOPE_LABEL[posture.posture_scope] || posture.posture_scope}</span>
+      </div>
+      <div className="sw-intel-consequence-posture-primary">
+        <span className="sw-intel-consequence-chip" data-severity={posture.primary.severity}>
+          <span className="sw-intel-consequence-chip-title">{posture.primary.title}</span>
+          <span className="sw-intel-consequence-chip-meta">
+            <span style={{ color: SEVERITY_COLOR[posture.primary.severity] || '#7a8aaa' }}>{posture.primary.severity}</span>
+            <span className="sw-intel-consequence-chip-confidence">{CONFIDENCE_LABEL[posture.primary.confidence] || posture.primary.confidence}</span>
+            <span className="sw-intel-consequence-chip-locus">{posture.primary.locus}</span>
+          </span>
+        </span>
+      </div>
+      {posture.secondary.length > 0 && (
+        <div className="sw-intel-consequence-posture-secondary">
+          {posture.secondary.map((c, i) => (
+            <span key={i} className="sw-intel-consequence-chip-compact" data-severity={c.severity}>
+              <span className="sw-intel-consequence-chip-title">{c.title}</span>
+              <span style={{ color: SEVERITY_COLOR[c.severity] || '#7a8aaa' }}>{c.severity}</span>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function SoftwareIntelligenceBoardroomSummary({ projection, consequencePosture }) {
   const surfaces = projection.surfaces || []
   const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
   const toShow = elevated.length > 0 ? elevated.slice(0, 3) : surfaces.slice(0, 2)
@@ -385,6 +422,7 @@ export function SoftwareIntelligenceBoardroomSummary({ projection }) {
         <span className="sw-intel-boardroom-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       </div>
+      <ConsequencePostureStrip posture={consequencePosture} />
       {toShow.map(s => (
         <div key={s.surface_id} className="sw-intel-boardroom-surface" data-severity={s.severity}>
           <div className="sw-intel-boardroom-surface-header">

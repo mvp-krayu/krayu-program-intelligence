@@ -1,0 +1,54 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01",
+  "classification": "G1",
+  "date": "2026-05-27",
+  "changes": [
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "Primary deliverable — 14-section constitutional definition of executive consequence semantics"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "CREATED",
+      "description": "Implementation semantics per §5.5 — input/output contracts, calibration, extension points, module responsibility"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/execution_report.md",
+      "action": "CREATED",
+      "description": "Execution report with pre-flight, execution log, post-flight, mutation delta"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/validation_log.json",
+      "action": "CREATED",
+      "description": "12-check validation log — all PASS"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/file_changes.json",
+      "action": "CREATED",
+      "description": "This file — change inventory"
+    },
+    {
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/CLOSURE.md",
+      "action": "CREATED",
+      "description": "Stream closure with G1 architecture memory propagation"
+    }
+  ],
+  "vault_changes_pending": [
+    {
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "UPDATE",
+      "description": "New locked terms: Consequence Class, Consequence Compilation, Combination Pattern, Consequence Scope"
+    },
+    {
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "UPDATE",
+      "description": "Domain Cognition maturity table update — Executive Consequence Semantics: SPECIFIED_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "action": "UPDATE",
+      "description": "New governance stream entry"
+    }
+  ]
+}

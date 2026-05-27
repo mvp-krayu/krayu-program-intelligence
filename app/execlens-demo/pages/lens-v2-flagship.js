@@ -1042,8 +1042,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           gap: 4px;
         }
         .cockpit-gauge-svg {
-          width: 160px;
-          height: 96px;
+          width: 120px;
+          height: 72px;
         }
         .cockpit-gauge-meta {
           display: flex;
@@ -1118,6 +1118,84 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
         }
 
+        /* ─── Structural Pressure Profile ─── */
+
+        .cockpit-pressure-panel {
+          min-width: 0;
+        }
+        .cockpit-pressure-label {
+          font-size: 9px;
+          color: #8a96b2;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        .cockpit-pressure-dim {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+        .cockpit-pressure-dim-visual {
+          flex-shrink: 0;
+          margin-top: 1px;
+        }
+        .cockpit-pressure-dim-content {
+          min-width: 0;
+          flex: 1;
+        }
+        .cockpit-pressure-dim-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2px;
+        }
+        .cockpit-pressure-dim-name {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+        .cockpit-pressure-dim[data-active="false"] .cockpit-pressure-dim-name {
+          color: #7a8aaa;
+          font-weight: 400;
+        }
+        .cockpit-pressure-dim-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+        .cockpit-pressure-dim-severity[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .cockpit-pressure-dim-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .cockpit-pressure-dim-severity[data-severity="ELEVATED"] { color: #ffd700; }
+        .cockpit-pressure-dim-severity[data-severity="MODERATE"] { color: #7a8aaa; }
+        .cockpit-pressure-dim-severity[data-severity="NOMINAL"] { color: #4a5570; }
+        .cockpit-pressure-dim-locale {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #7a8aaa;
+          line-height: 1.35;
+        }
+        .cockpit-pressure-dim[data-active="false"] .cockpit-pressure-dim-locale {
+          color: #4a5570;
+        }
+        .cockpit-pressure-synthesis {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.4;
+          padding-top: 6px;
+          border-top: 1px solid #1e2330;
+          margin-top: 4px;
+          margin-bottom: 6px;
+        }
+        .structural-glyph {
+          display: block;
+        }
+
         .cockpit-coverage-panel {
           display: flex;
           flex-direction: column;
@@ -1156,15 +1234,18 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         /* Cockpit Topology Preview (compact, clickable) */
         .cockpit-topology-preview {
-          padding: 12px 0;
-          border-top: 1px solid #1e2330;
-          border-bottom: 1px solid #1e2330;
+          padding: 14px 10px;
+          margin: 8px 0;
+          border: 1px solid #1e2330;
+          border-left: 2px solid rgba(74, 158, 255, 0.25);
+          background: rgba(18, 21, 31, 0.4);
           cursor: pointer;
           position: relative;
-          transition: background 0.2s;
+          transition: background 0.2s, border-color 0.2s;
         }
         .cockpit-topology-preview:hover {
-          background: rgba(74, 158, 255, 0.03);
+          background: rgba(74, 158, 255, 0.04);
+          border-left-color: rgba(74, 158, 255, 0.5);
         }
         .cockpit-topology-preview .topo-graph-wrap {
           margin-bottom: 0;
@@ -2828,6 +2909,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b0;
           margin-bottom: 4px;
         }
+        .interp-module-teaser-consequence {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff9e4a;
+          margin-bottom: 4px;
+          letter-spacing: 0.02em;
+        }
         .interp-module-teaser-cta {
           font: 400 10px/1.4 'Courier New', monospace;
           color: #4a9eff;
@@ -3684,6 +3771,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font: 400 10px/1.4 'Courier New', monospace;
           color: #4a5570;
           padding: 2px 8px;
+        }
+        .module-teaser-consequence {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff9e4a;
+          padding: 6px 8px 0;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+          margin-top: 4px;
         }
         .condition-primary-banner {
           display: flex;
@@ -4721,6 +4815,17 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 12px !important;
           opacity: 0.7;
         }
+        .interp-synthesis--implication {
+          font-style: italic;
+          color: #8a96b2 !important;
+        }
+        .interp-block--implication {
+          padding-top: 6px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .interp-synthesis[data-confidence="ADVISORY_BOUND"] { color: #ffd700 !important; }
+        .interp-synthesis[data-confidence="GOVERNED"] { color: #64ffda !important; }
+        .interp-synthesis[data-confidence="STRUCTURAL_ONLY"] { color: #ff9e4a !important; }
 
         /* BALANCED Narrative Emergence (5B.2 — interpretive surfaces) */
         .balanced-narrative {
@@ -5161,6 +5266,86 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: #6a7593;
           opacity: 0.55;
           flex-shrink: 0;
+        }
+
+        /* ── SW-Intel Executive Guide (SupportRail, BOARDROOM + SW-Intel) ─── */
+        .support-block--executive-posture {
+          border-top: 1px solid #1e2330;
+        }
+        .support-posture-kv {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 4px;
+        }
+        .support-posture-row {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .support-posture-key {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          color: #5a6580;
+          text-transform: uppercase;
+        }
+        .support-posture-val {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #ccd6f6;
+          line-height: 1.35;
+        }
+        .support-posture-val[data-confidence="ADVISORY_BOUND"] { color: #ffd700; }
+        .support-posture-val[data-confidence="GOVERNED"] { color: #64ffda; }
+        .support-posture-row--implication {
+          padding-top: 4px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .support-posture-row--implication .support-posture-val {
+          color: #8a96b2;
+          font-style: italic;
+        }
+        .support-sw-intel-descent {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .support-sw-intel-descent-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 3px 0;
+        }
+        .support-sw-intel-descent-target {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          color: #4a9eff;
+          letter-spacing: 0.04em;
+          min-width: 90px;
+        }
+        .support-sw-intel-descent-purpose {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #7a8aaa;
+        }
+        .support-sw-intel-confidence {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .support-sw-intel-confidence-class {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ffd700;
+        }
+        .support-sw-intel-confidence-note {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #7a8aaa;
+          line-height: 1.4;
         }
 
         /* ── Available Executive Paths (SupportRail, BOARDROOM) ───────── */
@@ -9570,6 +9755,165 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a8aaa;
           padding-top: 4px;
         }
+
+        /* ─── SW-Intel Cognition Spine (BOARDROOM augmentation) ─── */
+
+        .cockpit-sw-intel-spine {
+          margin: 14px 0;
+          padding: 16px 18px;
+          background: rgba(18, 21, 31, 0.7);
+          border: 1px solid #1e2330;
+          border-left: 2px solid #4a9eff;
+        }
+        .cockpit-sw-intel-spine-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 14px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.4);
+        }
+        .cockpit-sw-intel-spine-badge {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: #4a9eff;
+          background: rgba(74, 158, 255, 0.08);
+          padding: 2px 6px;
+          border: 1px solid rgba(74, 158, 255, 0.2);
+        }
+        .cockpit-sw-intel-spine-count {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #9aa0bc;
+        }
+        .cockpit-sw-intel-spine-posture {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          margin-left: auto;
+        }
+        .cockpit-sw-intel-spine-posture[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .cockpit-sw-intel-spine-posture[data-severity="HIGH"] { color: #ff9e4a; }
+        .cockpit-sw-intel-spine-posture[data-severity="ELEVATED"] { color: #ffd700; }
+        .cockpit-sw-intel-spine-posture[data-severity="MODERATE"] { color: #ccd6f6; }
+
+        .cockpit-convergence-web {
+          margin: 6px 0 12px 0;
+        }
+        .cockpit-convergence-web svg {
+          display: block;
+          width: 100%;
+        }
+
+        .cockpit-sw-intel-slices {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+        .cockpit-sw-intel-slice {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 8px 10px;
+          background: rgba(26, 30, 43, 0.5);
+          border-left: 2px solid #2a2f40;
+          transition: border-color 0.15s ease;
+        }
+        .cockpit-sw-intel-slice[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
+        .cockpit-sw-intel-slice[data-severity="HIGH"] { border-left-color: #ff9e4a; }
+        .cockpit-sw-intel-slice[data-severity="ELEVATED"] { border-left-color: #ffd700; }
+
+        .cockpit-sw-intel-slice-glyph {
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .cockpit-sw-intel-slice-body {
+          min-width: 0;
+          flex: 1;
+        }
+        .cockpit-sw-intel-slice-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .cockpit-sw-intel-slice-name {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .cockpit-sw-intel-slice-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-left: auto;
+        }
+        .cockpit-sw-intel-slice-confidence {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.04em;
+          padding: 1px 5px;
+          background: rgba(42, 47, 64, 0.4);
+        }
+        .cockpit-sw-intel-slice-confidence[data-confidence="GOVERNED"] { color: #64ffda; }
+        .cockpit-sw-intel-slice-confidence[data-confidence="ADVISORY_BOUND"] { color: #ffd700; }
+        .cockpit-sw-intel-slice-confidence[data-confidence="STRUCTURAL_ONLY"] { color: #ff9e4a; }
+
+        .cockpit-sw-intel-slice-meaning {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #8a94b0;
+          line-height: 1.45;
+        }
+
+        .cockpit-sw-intel-synthesis {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #bcc6e0;
+          line-height: 1.5;
+          padding: 8px 10px;
+          background: rgba(26, 30, 43, 0.3);
+          border-top: 1px solid rgba(42, 47, 64, 0.4);
+        }
+
+        /* ─── Operational Confidence ─── */
+
+        .cockpit-operational-confidence {
+          margin: 8px 0;
+          padding: 8px 12px;
+          background: rgba(18, 21, 31, 0.5);
+          border: 1px solid #1e2330;
+        }
+        .cockpit-operational-confidence-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+          margin-bottom: 6px;
+        }
+        .cockpit-operational-confidence-items {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #9aa0bc;
+          line-height: 1.4;
+        }
+        .cockpit-operational-confidence-sep {
+          color: #2a2f40;
+        }
+        .cockpit-operational-confidence-item[data-level="ADVISORY_BOUND"] { color: #ffd700; }
+        .cockpit-operational-confidence-item[data-level="GOVERNED"] { color: #64ffda; }
+        .cockpit-operational-confidence-item[data-level="STRUCTURAL_ONLY"] { color: #ff9e4a; }
 
         /* ─── Balanced Section Severity ─── */
 
