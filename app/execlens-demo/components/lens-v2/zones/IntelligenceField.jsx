@@ -6,6 +6,7 @@ import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
+import { deriveTopologyCognitionState, derivePressureZoneCognitionState, translateSignal } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -36,7 +37,7 @@ const DENSE_ZONE_REGISTRY = {
   semanticTopology:    { key: 'semanticTopology',    code: 'ST', label: 'Semantic Topology' },
   clusterConcentration:{ key: 'clusterConcentration', code: 'CC', label: 'Cluster Concentration' },
   absorptionLoad:      { key: 'absorptionLoad',       code: 'AL', label: 'Absorption Load' },
-  signalAssessment:    { key: 'signalAssessment',      code: 'SA', label: 'Signal Assessment' },
+  signalAssessment:    { key: 'signalAssessment',      code: 'SC', label: 'Structural Signal Cognition' },
   propagationFlow:     { key: 'propagationFlow',       code: 'PF', label: 'Propagation Flow' },
   pressureZoneFocus:   { key: 'pressureZoneFocus',     code: 'PZ', label: 'Pressure Zone Focus' },
   governanceLifecycle: { key: 'governanceLifecycle',   code: 'GL', label: 'Governance Lifecycle' },
@@ -616,7 +617,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -753,6 +754,50 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           </>
         )
       })()}
+
+      {resolvedCognitionContract && resolvedCognitionContract.guidedCognition && resolvedCognitionContract.guidedCognition.length > 0 && (
+        <div className="support-block support-block--cognition-queries" data-surface={resolvedCognitionContract.surface.surface_id}>
+          <div className="support-zone-header">
+            <span className="support-zone-badge">{resolvedCognitionContract.meta.code}</span>
+            <span className="support-label">DOMAIN COGNITION</span>
+          </div>
+          <div className="support-paths-list">
+            {resolvedCognitionContract.guidedCognition.map((q, i) => {
+              const isActive = cognitionQueryIndex === i
+              const tonePalette = q.tone && TONE_PALETTE[q.tone]
+              const glyph = tonePalette ? tonePalette.glyph : resolvedCognitionContract.meta.icon
+              return (
+                <div
+                  key={i}
+                  className="support-path-item support-path-item--zone"
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isActive}
+                  data-tone={q.tone || undefined}
+                  data-depth={q.depth || undefined}
+                  onClick={() => onCognitionQuerySelect && onCognitionQuerySelect(i)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onCognitionQuerySelect && onCognitionQuerySelect(i) } }}
+                >
+                  <span className="support-path-icon">{glyph}</span>
+                  <span className="support-path-text">{q.question}</span>
+                </div>
+              )
+            })}
+          </div>
+
+          {resolvedCognitionContract.actions && resolvedCognitionContract.actions.length > 0 && (
+            <div className="cognition-actions-summary">
+              <div className="support-label" style={{ marginTop: '12px' }}>AVAILABLE ACTIONS</div>
+              {resolvedCognitionContract.actions.map((a, i) => (
+                <div key={i} className="cognition-action-item" data-priority={a.priority}>
+                  <span className="cognition-action-priority">{a.priority}</span>
+                  <span className="cognition-action-text">{a.action}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {isDense && zonePaths && zoneReg && (
         <div className="support-block support-block--zone-paths" data-zone={activeZoneKey}>
@@ -1059,6 +1104,760 @@ const DENSE_ZONE_INTERPRETATIONS = {
           + (rv && rv.available ? `Deterministic revalidation: ${rv.passed}/${rv.total_checks} PASS. ` : '')
           + (cc && cc.available ? `Chronicle certification: ${cc.passed}/${cc.total_checks} checks across ${cc.phase_count} phases.` : ''),
         structuralNote: `Provenance: ${gl.qualification_provenance || 'unknown'} · Ceiling: ${gl.authority_ceiling || 'unknown'} · Transitions: ${gl.transition_count || 0}`,
+      }
+    },
+  },
+}
+
+// ─── SW-INTEL DOMAIN REASONING CONTRACTS ──────────────────────────
+// Each cognition surface is a DOMAIN COGNITION STATE, not a content panel.
+// When activated, the contract orchestrates: LEFT interpretation, RIGHT queries,
+// topology focus, action reprioritization, unrelated cognition suppression.
+// All answers are DATA-DERIVED from fullReport, not static strings.
+
+const SW_INTEL_SURFACE_REGISTRY = {
+  DELIVERY_FRAGILITY:      { code: 'DF', label: 'Delivery Fragility',          icon: '⧖' },
+  COORDINATION_SATURATION: { code: 'CS', label: 'Coordination Saturation',     icon: '⬡' },
+  INTEGRATION_EXPOSURE:    { code: 'IE', label: 'Integration Exposure',        icon: '⇌' },
+  OPERATIONAL_TOPOLOGY:    { code: 'OT', label: 'Operational Topology Posture', icon: '◉' },
+  QUALIFICATION_EXPOSURE:  { code: 'QE', label: 'Qualification Exposure',      icon: '⊘' },
+  PROPAGATION_RISK:        { code: 'PR', label: 'Propagation Risk',            icon: '⟿' },
+}
+
+function findDomainGrounding(domainName, registry) {
+  const reg = (registry || []).find(r => r.domain_name === domainName || r.domain_alias === domainName)
+  return reg ? reg.grounding_status || 'unknown' : 'unknown'
+}
+
+const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
+
+  // ── DELIVERY FRAGILITY ─────────────────────────────────────────────
+  DELIVERY_FRAGILITY: {
+    meta: { code: 'DF', label: 'Delivery Fragility', icon: '⧖' },
+    resolve: (fullReport, surface) => {
+      const blocks = fullReport.evidence_blocks || []
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
+      const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+      const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER')
+      const highSigs = sigs.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+      const pz = fullReport.pressure_zone_state
+      const registry = fullReport.semantic_domain_registry || []
+      const originNames = surface.affected_domains || []
+
+      return {
+        interpretation: {
+          heading: 'Delivery Fragility — Active Cognition State',
+          operationalMeaning: originNames.length > 0
+            ? `${originNames.length} domain${originNames.length !== 1 ? 's' : ''} generate structural pressure that flows through delivery corridors. Changes touching ${originNames.join(', ')} propagate risk — deployment decisions require structural awareness of the ${passThroughs.length > 0 ? passThroughs.length + ' corridor' + (passThroughs.length !== 1 ? 's' : '') + ' and ' : ''}${receivers.length} downstream receiver${receivers.length !== 1 ? 's' : ''}.`
+            : `${highSigs.length} elevated signal${highSigs.length !== 1 ? 's' : ''} indicate structural stress on delivery infrastructure.`,
+          structuralEvidence: [
+            ...origins.map(b => ({ label: b.domain_alias, value: `ORIGIN · ${b.grounding_status}`, severity: 'critical' })),
+            ...highSigs.slice(0, 4).map(s => ({ label: s.signal_name || s.signal_id, value: `${s.severity}${s.concentration ? ' · ' + s.concentration : ''}`, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
+          ],
+          suppressionMask: ['OPERATIONAL_TOPOLOGY', 'QUALIFICATION_EXPOSURE'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Review origin domain changes before merge', priority: 'HIGH' },
+            { action: 'Assess propagation chain before deployment', priority: 'HIGH' },
+            ...(surface.severity === 'HIGH' ? [{ action: 'Structural awareness mandatory for delivery decisions', priority: 'CRITICAL' }] : []),
+          ],
+          qualification: {
+            effect: originNames.some(d => findDomainGrounding(d, registry) === 'semantic_only')
+              ? 'Pressure origins include ungrounded domains — qualification confidence reduced'
+              : 'Pressure origins are structurally grounded — assessment stable',
+          },
+        },
+
+        guidedCognition: [
+          ...originNames.slice(0, 2).map(domain => ({
+            question: `Why does "${domain}" originate delivery pressure?`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From evidence_blocks + signal cross-reference — deterministic.',
+            answer_derive: (fr) => {
+              const dBlocks = (fr.evidence_blocks || []).filter(b => b.domain_alias === domain)
+              const dSigs = (fr.signal_interpretations || []).filter(s => s.concentration && s.concentration.toLowerCase().includes(domain.toLowerCase()))
+              return {
+                summary: dBlocks.length > 0
+                  ? `"${domain}" carries ${dBlocks[0].propagation_role} role with ${dBlocks[0].grounding_status} grounding. ${dSigs.length} co-located signal${dSigs.length !== 1 ? 's' : ''} amplify structural pressure at this origin.`
+                  : `"${domain}" identified as pressure origin with ${dSigs.length} associated signal${dSigs.length !== 1 ? 's' : ''}.`,
+                evidence: [...dBlocks.map(b => ({ label: b.domain_alias, value: `${b.propagation_role} · ${b.grounding_status}`, severity: 'critical' })), ...dSigs.map(s => ({ label: s.signal_name || s.signal_id, value: s.severity, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' }))],
+                structuralContext: `Evidence from ${(surface.trace_sources || []).join(', ')}`,
+              }
+            },
+          })),
+          {
+            question: 'How does pressure propagate from delivery origins?',
+            tone: 'architectural', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From evidence_blocks propagation roles — deterministic.',
+            answer_derive: (fr) => {
+              const b = fr.evidence_blocks || []
+              const chain = [...b.filter(x => x.propagation_role === 'ORIGIN').map(x => `${x.domain_alias} (ORIGIN)`), ...b.filter(x => x.propagation_role === 'PASS_THROUGH').map(x => `${x.domain_alias} (CORRIDOR)`), ...b.filter(x => x.propagation_role === 'RECEIVER').map(x => `${x.domain_alias} (RECEIVER)`)]
+              return {
+                summary: chain.length > 0 ? `Pressure flows: ${chain.join(' → ')}. ${b.filter(x => x.propagation_role === 'PASS_THROUGH').length} corridor${b.filter(x => x.propagation_role === 'PASS_THROUGH').length !== 1 ? 's' : ''} conduct pressure from origins to receivers.` : 'No complete propagation chain in current evidence.',
+                evidence: b.map(x => ({ label: x.domain_alias, value: x.propagation_role, severity: x.propagation_role === 'ORIGIN' ? 'critical' : x.propagation_role === 'PASS_THROUGH' ? 'elevated' : 'nominal' })),
+                structuralContext: 'Propagation roles derive from evidence block analysis — origin, pass-through, and receiver classifications.',
+              }
+            },
+          },
+          {
+            question: 'What is the deployment blast radius of changes here?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From domain connectivity + signal concentration — deterministic.',
+            answer_derive: (fr) => {
+              const b = fr.evidence_blocks || []
+              const rcvrs = b.filter(x => x.propagation_role === 'RECEIVER')
+              const allDomains = new Set(b.map(x => x.domain_alias))
+              return {
+                summary: `Changes at delivery origins can affect ${allDomains.size} domain${allDomains.size !== 1 ? 's' : ''} in the propagation chain. ${rcvrs.length} receiver domain${rcvrs.length !== 1 ? 's' : ''} absorb downstream pressure — the blast radius boundary.`,
+                evidence: rcvrs.map(r => ({ label: r.domain_alias, value: `RECEIVER · ${r.grounding_status}`, severity: 'elevated' })),
+                structuralContext: 'Blast radius bounded by propagation chain. Domains outside the chain are structurally isolated from these pressure origins.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const allAffected = new Set([...originNames, ...passThroughs.map(p => p.domain_alias), ...receivers.map(r => r.domain_alias)])
+          return {
+            highlightDomains: originNames,
+            accentDomains: passThroughs.map(p => p.domain_alias),
+            dimDomains: registry.filter(d => !allAffected.has(d.domain_name) && !allAffected.has(d.domain_alias)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Review structural pressure at origin domains', priority: 'HIGH', type: 'investigation' },
+          { action: 'Trace propagation chain before deployment', priority: 'HIGH', type: 'assessment' },
+          { action: 'Assess receiver exposure to downstream pressure', priority: 'MEDIUM', type: 'investigation' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(!pz ? [{ gap: 'Pressure zone state not loaded', impact: 'Zone boundaries unavailable on topology' }] : []),
+            ...(!(fullReport.propagation_summary || {}).primary_zone_business_label ? [{ gap: 'No propagation summary label', impact: 'Propagation narrative incomplete' }] : []),
+            ...originNames.filter(d => findDomainGrounding(d, registry) === 'semantic_only').map(d => ({ gap: `"${d}" ungrounded`, impact: 'Pressure assessment rests on semantic assertion' })),
+          ],
+          progressionPath: [
+            { step: 'Reduce pressure concentration at origin domains', effect: 'Lower PSIG-001/PSIG-002 severity' },
+            { step: 'Ground ungrounded origin domains', effect: 'Improve Q-class toward Q-01' },
+            { step: 'Stabilize delivery corridors', effect: 'Reduce propagation amplification' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── COORDINATION SATURATION ────────────────────────────────────────
+  COORDINATION_SATURATION: {
+    meta: { code: 'CS', label: 'Coordination Saturation', icon: '⬡' },
+    resolve: (fullReport, surface) => {
+      const se = fullReport.structural_enrichment || {}
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const spines = (se.available && se.centrality) ? (se.centrality.top_structural_spines || []) : []
+      const hubs = spines.filter(s => s.structural_role === 'hub' || s.structural_role === 'authority')
+      const hubPaths = hubs.slice(0, 5).map(h => h.path)
+      const registry = fullReport.semantic_domain_registry || []
+      const concentrationSigs = sigs.filter(s => (s.signal_name && (s.signal_name.includes('Absorption') || s.signal_name.includes('Cluster Pressure'))) || s.severity === 'HIGH')
+      const roleSummary = (se.available && se.centrality) ? (se.centrality.role_summary || {}) : {}
+
+      return {
+        interpretation: {
+          heading: 'Coordination Saturation — Active Cognition State',
+          operationalMeaning: hubs.length > 0
+            ? `${hubs.length} coordination hub${hubs.length !== 1 ? 's' : ''} absorb disproportionate structural load. Peak inbound dependency: ${Math.max(...hubs.map(h => h.in_degree || 0))}. Changes to these files amplify across the dependency graph — every downstream consumer is affected.${concentrationSigs.length > 0 ? ` ${concentrationSigs.length} concentration signal${concentrationSigs.length !== 1 ? 's' : ''} confirm structural bottleneck.` : ''}`
+            : 'Coordination saturation detected but no hub nodes identified in structural enrichment.',
+          structuralEvidence: [
+            ...hubs.slice(0, 4).map(h => ({ label: h.path.split('/').slice(-2).join('/'), value: `${h.structural_role} · in:${h.in_degree || 0} out:${h.out_degree || 0}`, severity: (h.in_degree || 0) > 10 ? 'critical' : 'elevated' })),
+            ...concentrationSigs.slice(0, 2).map(s => ({ label: s.signal_name || s.signal_id, value: s.severity, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
+          ],
+          suppressionMask: ['QUALIFICATION_EXPOSURE'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Review hub file changes with expanded scope', priority: 'HIGH' },
+            { action: 'Assess coordination distribution before refactoring', priority: 'MEDIUM' },
+            ...(surface.hub_ratio > 20 ? [{ action: 'Hub concentration exceeds 20% — architectural review recommended', priority: 'HIGH' }] : []),
+          ],
+          qualification: { effect: 'High coordination concentration may indicate architectural fragility — structural centrality assessment informs qualification posture' },
+        },
+
+        guidedCognition: [
+          ...hubs.slice(0, 2).map(hub => ({
+            question: `What depends on "${hub.path.split('/').pop()}"? (${hub.in_degree || 0} inbound)`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From structural_centrality in-degree — deterministic.',
+            answer_derive: (fr) => {
+              const allSpines = ((fr.structural_enrichment || {}).centrality || {}).top_structural_spines || []
+              const node = allSpines.find(s => s.path === hub.path) || hub
+              return {
+                summary: `"${hub.path.split('/').pop()}" is a ${node.structural_role} with ${node.in_degree || 0} inbound and ${node.out_degree || 0} outbound dependencies. Centrality rank: ${node.centrality_rank || '?'}. Any change to this file propagates to all ${node.in_degree || 0} consumers.`,
+                evidence: [
+                  { label: 'In-degree', value: String(node.in_degree || 0), severity: (node.in_degree || 0) > 10 ? 'critical' : 'elevated' },
+                  { label: 'Out-degree', value: String(node.out_degree || 0), severity: 'nominal' },
+                  { label: 'Structural role', value: node.structural_role, severity: 'nominal' },
+                  { label: 'Centrality rank', value: String(node.centrality_rank || '—'), severity: 'nominal' },
+                ],
+                structuralContext: 'Centrality derives from 40.3c structural centrality artifact — normalized degree centrality with role classification.',
+              }
+            },
+          })),
+          {
+            question: 'Is coordination load distributed or concentrated?',
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From structural_enrichment role classification — deterministic.',
+            answer_derive: (fr) => {
+              const rs = ((fr.structural_enrichment || {}).centrality || {}).role_summary || {}
+              const total = Object.values(rs).reduce((a, b) => a + b, 0)
+              const hubCount = (rs.hub || 0) + (rs.authority || 0)
+              const hubPct = total > 0 ? Math.round(hubCount / total * 100) : 0
+              return {
+                summary: `Role distribution: ${Object.entries(rs).map(([r, c]) => `${r}: ${c}`).join(', ')}. Hub+authority concentration: ${hubPct}% (${hubCount}/${total} files).${hubPct > 20 ? ' Concentration above 20% — coordination bottleneck risk.' : hubPct > 10 ? ' Moderate concentration.' : ' Well distributed.'}`,
+                evidence: Object.entries(rs).map(([role, count]) => ({ label: role, value: `${count} (${total > 0 ? Math.round(count / total * 100) : 0}%)`, severity: (role === 'hub' || role === 'authority') && count / Math.max(1, total) > 0.15 ? 'elevated' : 'nominal' })),
+                structuralContext: '7 structural roles classified by first-match-wins from import graph metrics.',
+              }
+            },
+          },
+          {
+            question: 'Do coordination hubs create execution bottlenecks?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From centrality ranking + signal co-presence — deterministic.',
+            answer_derive: (fr) => {
+              const allSpines = ((fr.structural_enrichment || {}).centrality || {}).top_structural_spines || []
+              const topHubs = allSpines.filter(s => s.structural_role === 'hub' || s.structural_role === 'authority').slice(0, 5)
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL')
+              return {
+                summary: topHubs.length > 0
+                  ? `Top ${topHubs.length} coordination nodes handle ${topHubs.reduce((s, h) => s + (h.in_degree || 0), 0)} total inbound dependencies.${activeSigs.length > 0 ? ` ${activeSigs.length} active signal${activeSigs.length !== 1 ? 's' : ''} indicate structural stress at or near these coordination points.` : ' No active signals co-located with coordination hubs.'}`
+                  : 'No hub/authority nodes found in structural enrichment.',
+                evidence: topHubs.map(h => ({ label: h.path.split('/').slice(-2).join('/'), value: `in:${h.in_degree || 0}`, severity: (h.in_degree || 0) > 10 ? 'critical' : 'elevated' })),
+                structuralContext: 'Bottleneck assessment combines centrality metrics with active signal co-presence.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: {
+          highlightDomains: hubPaths.map(p => p.split('/').slice(-2).join('/')),
+          accentDomains: [],
+          dimDomains: [],
+        },
+
+        actions: [
+          { action: 'Assess hub change impact before merging', priority: 'HIGH', type: 'assessment' },
+          { action: 'Review coordination distribution', priority: 'MEDIUM', type: 'investigation' },
+          { action: 'Evaluate interface extraction from concentrated hubs', priority: 'LOW', type: 'architectural' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(!se.available ? [{ gap: 'No structural enrichment available', impact: 'Centrality analysis impossible — coordination hubs undetectable' }] : []),
+            ...(!se.centrality ? [{ gap: 'No centrality data (40.3c)', impact: 'Role classification and hub detection unavailable' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Distribute coordination load across more modules', effect: 'Reduce hub concentration ratio' },
+            { step: 'Extract interfaces from high-centrality hubs', effect: 'Lower individual hub in-degree' },
+            { step: 'Reduce coupling between hub consumers', effect: 'Lower blast radius of hub changes' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── INTEGRATION EXPOSURE ───────────────────────────────────────────
+  INTEGRATION_EXPOSURE: {
+    meta: { code: 'IE', label: 'Integration Exposure', icon: '⇌' },
+    resolve: (fullReport, surface) => {
+      const se = fullReport.structural_enrichment || {}
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const blocks = fullReport.evidence_blocks || []
+      const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
+      const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+      const spines = (se.available && se.centrality) ? (se.centrality.top_structural_spines || []) : []
+      const bridges = spines.filter(s => s.structural_role === 'bridge' || s.structural_role === 'connector')
+      const c = surface.constituents || {}
+      const affectedDomains = surface.affected_domains || []
+      const mode = surface.evidence_mode || 'EVIDENCE_GAP'
+      const topologyCount = (c.bridges || 0) + (c.connectors || 0)
+
+      const operationalMeaning = mode === 'IMPORT_SIGNAL_DRIVEN'
+        ? `${isigSigs.length} file-level import dependency signal${isigSigs.length !== 1 ? 's' : ''} (ISIG) detect elevated structural stress at import boundaries. Cross-domain integration corridor topology is not resolved — exposure assessment is advisory-bound to file-level evidence.`
+        : mode === 'TOPOLOGY_DRIVEN'
+          ? `${topologyCount} cross-domain integration point${topologyCount !== 1 ? 's' : ''} absorb boundary-crossing structural pressure.${passThroughs.length > 0 ? ` ${passThroughs.length} domain${passThroughs.length !== 1 ? 's' : ''} conduct pressure between subsystems.` : ''}`
+          : mode === 'MIXED'
+            ? `${topologyCount} cross-domain integration point${topologyCount !== 1 ? 's' : ''} absorb boundary-crossing structural pressure. ${isigSigs.length} ISIG signal${isigSigs.length !== 1 ? 's' : ''} confirm stress at file-level import boundaries.${passThroughs.length > 0 ? ` ${passThroughs.length} domain${passThroughs.length !== 1 ? 's' : ''} conduct pressure between subsystems.` : ''}`
+            : 'Integration exposure evidence is insufficient for operational assessment.'
+
+      return {
+        interpretation: {
+          heading: mode === 'IMPORT_SIGNAL_DRIVEN'
+            ? 'Integration Exposure — Import Dependency Pressure (Advisory-Bound)'
+            : 'Integration Exposure — Active Cognition State',
+          operationalMeaning,
+          structuralEvidence: [
+            ...bridges.slice(0, 3).map(b => ({ label: b.path.split('/').slice(-2).join('/'), value: `${b.structural_role} · in:${b.in_degree || 0} out:${b.out_degree || 0}`, severity: 'elevated' })),
+            ...isigSigs.map(s => ({ label: s.signal_name || 'ISIG', value: `${s.severity}${s.concentration ? ' · ' + s.concentration : ''}`, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
+            ...passThroughs.slice(0, 2).map(p => ({ label: p.domain_alias, value: `PASS_THROUGH · ${p.grounding_status}`, severity: 'elevated' })),
+            ...(mode === 'IMPORT_SIGNAL_DRIVEN' ? [{ label: 'Integration Topology', value: 'NOT RESOLVED — no bridge/connector roles detected', severity: 'nominal' }] : []),
+          ],
+          suppressionMask: ['OPERATIONAL_TOPOLOGY'],
+        },
+
+        implications: {
+          orchestration: mode === 'IMPORT_SIGNAL_DRIVEN'
+            ? [
+                { action: 'Import dependency concentration creates change amplification risk at file level', priority: 'HIGH' },
+                { action: 'Cross-domain corridor assessment deferred until integration topology resolves', priority: 'MEDIUM' },
+              ]
+            : [
+                { action: 'Cross-domain integration changes require expanded test scope', priority: 'HIGH' },
+                { action: 'Review bridge node stability before boundary modifications', priority: 'MEDIUM' },
+              ],
+          qualification: { effect: mode === 'IMPORT_SIGNAL_DRIVEN'
+            ? 'Import dependency pressure is advisory-bound — structural corridor evidence required for confirmed integration exposure'
+            : 'Integration quality affects structural coherence — high exposure may widen grounding gaps'
+          },
+        },
+
+        guidedCognition: [
+          ...(isigSigs.length > 0 ? [{
+            question: `What do the ${isigSigs.length} ISIG import signal${isigSigs.length !== 1 ? 's' : ''} reveal?`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From ISIG Level 1 signal family — deterministic.',
+            answer_derive: (fr) => {
+              const isigs = (fr.signal_interpretations || []).filter(s => s.signal_family === 'ISIG')
+              return {
+                summary: isigs.length > 0
+                  ? `ISIG signals measure file-level import dependency pressure (Level 1). ${isigs.map(s => `${s.signal_name || s.signal_id}: ${s.severity}`).join('. ')}. These are invisible at architectural binding level (Level 2) — Level 1 reveals software execution intelligence.`
+                  : 'No ISIG signals in current specimen.',
+                evidence: isigs.map(s => ({ label: s.signal_name || s.signal_id, value: `${s.severity}${s.value !== undefined ? ' · ' + s.value : ''}`, severity: s.severity === 'HIGH' ? 'critical' : 'elevated' })),
+                structuralContext: 'ISIG derives from 40.3s code graph + 40.3c centrality. Level 1 signals predict change propagation risk and PR review complexity.',
+              }
+            },
+          }] : []),
+          {
+            question: topologyCount > 0 ? `Which ${topologyCount} bridge${topologyCount !== 1 ? 's' : ''} carry cross-domain load?` : 'Are there structural bridges carrying cross-domain load?',
+            tone: 'operational', archetype: 'SCAN', depth: 'standard',
+            boundary: 'From structural_enrichment centrality — deterministic.',
+            answer_derive: (fr) => {
+              const allBridges = ((fr.structural_enrichment || {}).centrality || {}).top_structural_spines || []
+              const bNodes = allBridges.filter(s => s.structural_role === 'bridge' || s.structural_role === 'connector')
+              return {
+                summary: bNodes.length > 0
+                  ? `${bNodes.length} integration node${bNodes.length !== 1 ? 's' : ''}: ${bNodes.slice(0, 3).map(n => n.path.split('/').pop()).join(', ')}${bNodes.length > 3 ? ` +${bNodes.length - 3} more` : ''}. These files bridge dependency boundaries between domains.`
+                  : 'No bridge/connector nodes identified in structural enrichment. Integration corridor topology is not yet resolved for this specimen.',
+                evidence: bNodes.slice(0, 5).map(n => ({ label: n.path.split('/').slice(-2).join('/'), value: `${n.structural_role} · rank ${n.centrality_rank || '?'}`, severity: 'elevated' })),
+                structuralContext: 'Bridge nodes connect otherwise separate graph components. Connector nodes link clusters with moderate edge weight.',
+              }
+            },
+          },
+          {
+            question: affectedDomains.length > 0 ? `Which domains face integration pressure? (${affectedDomains.length} identified)` : 'Where does integration pressure concentrate?',
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From evidence_blocks + bridge nodes — deterministic.',
+            answer_derive: (fr) => {
+              const pts = (fr.evidence_blocks || []).filter(b => b.propagation_role === 'PASS_THROUGH')
+              return {
+                summary: pts.length > 0
+                  ? `${pts.length} domain${pts.length !== 1 ? 's' : ''} conduct integration pressure: ${pts.map(p => p.domain_alias).join(', ')}. These are pass-through corridors — they neither originate nor terminate pressure, but amplify it through cross-boundary conduction.`
+                  : 'No pass-through domains identified — integration pressure may be direct rather than conducted.',
+                evidence: pts.map(p => ({ label: p.domain_alias, value: `PASS_THROUGH · ${p.grounding_status}`, severity: 'elevated' })),
+                structuralContext: 'Pass-through classification from evidence block analysis.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: {
+          highlightDomains: affectedDomains,
+          accentDomains: bridges.slice(0, 5).map(b => b.path.split('/').slice(-2).join('/')),
+          dimDomains: [],
+        },
+
+        actions: mode === 'IMPORT_SIGNAL_DRIVEN'
+          ? [
+              { action: 'Trace import hub concentration to identify amplification risk', priority: 'HIGH', type: 'investigation' },
+              { action: 'Assess whether import pressure correlates with domain boundaries', priority: 'MEDIUM', type: 'assessment' },
+            ]
+          : [
+              { action: 'Review integration boundary changes with cross-domain scope', priority: 'HIGH', type: 'assessment' },
+              { action: 'Trace import chains from bridge nodes', priority: 'MEDIUM', type: 'investigation' },
+              { action: 'Evaluate connector resilience', priority: 'LOW', type: 'architectural' },
+            ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(!se.available ? [{ gap: 'No structural enrichment', impact: 'Bridge/connector detection unavailable' }] : []),
+            ...(isigSigs.length === 0 && se.available ? [{ gap: 'No ISIG signals', impact: 'File-level import pressure invisible (requires 40.3s code graph)' }] : []),
+            ...(mode === 'IMPORT_SIGNAL_DRIVEN' ? [{ gap: 'No bridge/connector topology roles', impact: 'Cross-domain integration corridor assessment deferred — exposure is advisory-bound to file-level ISIG evidence' }] : []),
+          ],
+          progressionPath: mode === 'IMPORT_SIGNAL_DRIVEN'
+            ? [
+                { step: 'Resolve integration corridor topology', effect: 'Promote advisory-bound import pressure to confirmed corridor exposure' },
+                { step: 'Stabilize import hub concentration', effect: 'Reduce file-level dependency amplification risk' },
+              ]
+            : [
+                { step: 'Stabilize integration boundaries', effect: 'Reduce cross-domain coupling pressure' },
+                { step: 'Improve interface definitions at bridge points', effect: 'Lower blast radius of boundary changes' },
+                { step: 'Reduce pass-through domain count', effect: 'Shorten pressure conduction chains' },
+              ],
+        },
+      }
+    },
+  },
+
+  // ── OPERATIONAL TOPOLOGY POSTURE ────────────────────────────────────
+  OPERATIONAL_TOPOLOGY: {
+    meta: { code: 'OT', label: 'Operational Topology Posture', icon: '◉' },
+    resolve: (fullReport, surface) => {
+      const ts = fullReport.topology_summary || {}
+      const rs = fullReport.reconciliation_summary || {}
+      const se = fullReport.structural_enrichment || {}
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+      const groundingPct = c.grounding_pct || 0
+      const roleDistribution = c.role_distribution || 'unknown'
+      const backed = c.backed || 0
+      const semanticOnly = c.semantic_only || 0
+      const domainCount = c.domain_count || registry.length
+
+      return {
+        interpretation: {
+          heading: 'Operational Topology — Active Cognition State',
+          operationalMeaning: `System topology: ${domainCount} domains, ${backed} structurally grounded (${groundingPct}%), ${semanticOnly} semantic-only. Role distribution: ${roleDistribution}.${groundingPct < 50 ? ' Low grounding means operational assessments rest on semantic inference — structural confirmation needed before deployment decisions.' : groundingPct < 70 ? ' Partial grounding — assessments advisory-qualified for ungrounded domains.' : ' Strong grounding — assessments carry structural authority.'}${rs.available ? ` Reconciliation: ${c.reconciliation_pct || 0}% reconciled.` : ' No reconciliation data available.'}`,
+          structuralEvidence: [
+            { label: 'Grounding', value: `${backed}/${domainCount} (${groundingPct}%)`, severity: groundingPct < 50 ? 'critical' : groundingPct < 70 ? 'elevated' : 'nominal' },
+            { label: 'Role distribution', value: roleDistribution, severity: roleDistribution === 'hub-concentrated' ? 'elevated' : 'nominal' },
+            ...(c.role_breakdown ? Object.entries(c.role_breakdown).slice(0, 3).map(([role, { count, pct }]) => ({ label: role, value: `${count} (${pct}%)`, severity: (role === 'hub' || role === 'authority') && pct > 20 ? 'elevated' : 'nominal' })) : []),
+          ],
+          suppressionMask: [],
+        },
+
+        implications: {
+          orchestration: [
+            ...(semanticOnly > 0 ? [{ action: `${semanticOnly} ungrounded domain${semanticOnly !== 1 ? 's' : ''} require advisory-qualified deployment decisions`, priority: 'MEDIUM' }] : []),
+            ...(roleDistribution === 'hub-concentrated' ? [{ action: 'Hub concentration may constrain deployment flexibility', priority: 'MEDIUM' }] : []),
+          ],
+          qualification: { effect: `Grounding ratio ${groundingPct}% directly affects Q-class. ${groundingPct >= 80 ? 'Q-01 achievable.' : groundingPct >= 50 ? 'Q-02 likely — partial disclosure required.' : 'Q-03 or lower — full disclosure required.'}` },
+        },
+
+        guidedCognition: [
+          ...(semanticOnly > 0 ? [{
+            question: `Which ${semanticOnly} domain${semanticOnly !== 1 ? 's' : ''} lack structural backing?`,
+            tone: 'operational', archetype: 'SCAN', depth: 'standard',
+            boundary: 'From reconciliation correspondence — deterministic.',
+            answer_derive: (fr) => {
+              const reg = fr.semantic_domain_registry || []
+              const ungrounded = reg.filter(d => d.grounding_status === 'semantic_only' || !d.zone_anchor)
+              return {
+                summary: `${ungrounded.length} domain${ungrounded.length !== 1 ? 's' : ''} operate on semantic assertion without structural evidence: ${ungrounded.slice(0, 5).map(d => d.domain_name || d.domain_id).join(', ')}${ungrounded.length > 5 ? ` +${ungrounded.length - 5} more` : ''}.`,
+                evidence: ungrounded.slice(0, 6).map(d => ({ label: d.domain_name || d.domain_id, value: d.grounding_status || 'ungrounded', severity: 'elevated' })),
+                structuralContext: 'Grounding determined by reconciliation correspondence — each domain checked against structural evidence from evidence rebase corridor.',
+              }
+            },
+          }] : []),
+          {
+            question: `Is the structural role distribution balanced? (${roleDistribution})`,
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From structural_enrichment role classification — deterministic.',
+            answer_derive: (fr) => {
+              const rs2 = ((fr.structural_enrichment || {}).centrality || {}).role_summary || {}
+              const total = Object.values(rs2).reduce((a, b) => a + b, 0)
+              return {
+                summary: total > 0 ? `${total} files classified across ${Object.keys(rs2).length} structural roles. ${Object.entries(rs2).map(([r, ct]) => `${r}: ${ct} (${Math.round(ct / total * 100)}%)`).join(', ')}.` : 'No structural role data available.',
+                evidence: Object.entries(rs2).map(([role, ct]) => ({ label: role, value: `${ct} (${total > 0 ? Math.round(ct / total * 100) : 0}%)`, severity: 'nominal' })),
+                structuralContext: '7-role taxonomy from 40.3c structural centrality. First-match-wins classification from import graph metrics.',
+              }
+            },
+          },
+          {
+            question: 'What dependencies radiate from zone anchor domains?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From topology edges + zone_anchor classification — deterministic.',
+            answer_derive: (fr) => {
+              const reg = fr.semantic_domain_registry || []
+              const anchors = reg.filter(d => d.zone_anchor)
+              return {
+                summary: anchors.length > 0 ? `${anchors.length} zone anchor domain${anchors.length !== 1 ? 's' : ''}: ${anchors.map(a => a.domain_name || a.domain_id).join(', ')}. Zone anchors are structural gravity centers — they concentrate evidence mass and propagation density.` : 'No zone anchors identified in domain registry.',
+                evidence: anchors.map(a => ({ label: a.domain_name || a.domain_id, value: `anchor · ${a.grounding_status || 'unknown'}`, severity: a.zone_anchor ? 'elevated' : 'nominal' })),
+                structuralContext: 'Zone anchors selected by evidence density and propagation role in the topology graph.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: {
+          highlightDomains: registry.filter(d => d.zone_anchor).map(d => d.domain_name || d.domain_id),
+          accentDomains: [],
+          dimDomains: [],
+        },
+
+        actions: [
+          ...(semanticOnly > 0 ? [{ action: `Provide structural backing for ${semanticOnly} ungrounded domain${semanticOnly !== 1 ? 's' : ''}`, priority: 'MEDIUM', type: 'remediation' }] : []),
+          { action: 'Assess domain grounding ratio', priority: 'LOW', type: 'investigation' },
+          { action: 'Review structural role distribution', priority: 'LOW', type: 'investigation' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(!rs.available ? [{ gap: 'Reconciliation data unavailable', impact: 'Cannot verify structural backing of semantic domains' }] : []),
+            ...(!se.available ? [{ gap: 'No structural enrichment', impact: 'Role distribution and centrality analysis unavailable' }] : []),
+          ],
+          progressionPath: [
+            ...(groundingPct < 80 ? [{ step: 'Improve grounding ratio above 80%', effect: 'Achieve Q-01 qualification' }] : []),
+            ...(roleDistribution === 'hub-concentrated' ? [{ step: 'Reduce hub concentration', effect: 'Balance coordination load' }] : []),
+            { step: 'Reconcile remaining unreconciled domains', effect: 'Increase reconciliation authority' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── QUALIFICATION EXPOSURE ─────────────────────────────────────────
+  QUALIFICATION_EXPOSURE: {
+    meta: { code: 'QE', label: 'Qualification Exposure', icon: '⊘' },
+    resolve: (fullReport, surface) => {
+      const gl = fullReport.governance_lifecycle || {}
+      const pc = fullReport.proposition_corpus || {}
+      const ri = fullReport.revalidation_intelligence || {}
+      const c = surface.constituents || {}
+      const blockers = c.blockers || []
+      const gaps = c.gaps || []
+      const sLevel = c.s_level || null
+
+      return {
+        interpretation: {
+          heading: 'Qualification Exposure — Active Cognition State',
+          operationalMeaning: sLevel
+            ? `Qualification at ${sLevel}. ${c.artifacts_present || 0} of ${c.artifacts_total || 7} governance artifacts present.${blockers.length > 0 ? ` ${blockers.length} blocker${blockers.length !== 1 ? 's' : ''} prevent advancement: ${blockers.join('; ')}.` : ' No blockers — qualification progression unblocked.'}${c.promotion_eligible ? ' Promotion eligible.' : c.authority_ceiling ? ` Authority ceiling: ${c.authority_ceiling}.` : ''}`
+            : `${c.artifacts_present || 0} of ${c.artifacts_total || 7} governance artifacts present. No governance lifecycle established — SQO not exercised for this specimen.`,
+          structuralEvidence: [
+            ...(sLevel ? [{ label: 'S-Level', value: sLevel, severity: 'nominal' }] : []),
+            { label: 'Artifacts', value: `${c.artifacts_present || 0}/${c.artifacts_total || 7}`, severity: (c.artifacts_present || 0) < 3 ? 'critical' : (c.artifacts_present || 0) < 5 ? 'elevated' : 'nominal' },
+            ...blockers.map((b, i) => ({ label: `Blocker ${i + 1}`, value: b, severity: 'critical' })),
+          ],
+          suppressionMask: [],
+        },
+
+        implications: {
+          orchestration: [
+            ...blockers.map(b => ({ action: `Resolve blocker: ${b}`, priority: 'HIGH' })),
+            ...(gaps.length > 0 ? [{ action: `Produce missing governance artifacts: ${gaps.slice(0, 3).join(', ')}`, priority: 'MEDIUM' }] : []),
+          ],
+          qualification: { effect: blockers.length > 0 ? `${blockers.length} blocker${blockers.length !== 1 ? 's' : ''} prevent S-level advancement` : 'No blockers — qualification progression available' },
+        },
+
+        guidedCognition: [
+          ...(blockers.length > 0 ? [{
+            question: `What ${blockers.length} condition${blockers.length !== 1 ? 's' : ''} block qualification advancement?`,
+            tone: 'alarming', archetype: 'BOUNDARY', depth: 'standard',
+            boundary: 'From governance_lifecycle + proposition_review_state — deterministic.',
+            answer_derive: (fr) => {
+              const glLocal = fr.governance_lifecycle || {}
+              const pcLocal = fr.proposition_corpus || {}
+              const riLocal = fr.revalidation_intelligence || {}
+              const bList = []
+              if (glLocal.available && !glLocal.promotion_eligible && glLocal.hold_reason) bList.push({ label: 'Advancement hold', value: glLocal.hold_reason, severity: 'critical' })
+              if (pcLocal.available && pcLocal.flagged_count > 0) bList.push({ label: 'Flagged propositions', value: String(pcLocal.flagged_count), severity: 'critical' })
+              if (riLocal.available && riLocal.failed > 0) bList.push({ label: 'Revalidation failures', value: String(riLocal.failed), severity: 'critical' })
+              return {
+                summary: bList.length > 0 ? `${bList.length} blocker${bList.length !== 1 ? 's' : ''}: ${bList.map(b2 => b2.label).join(', ')}. Each must be resolved before qualification can advance.` : 'No active blockers identified.',
+                evidence: bList.length > 0 ? bList : [{ label: 'Status', value: 'No blockers', severity: 'nominal' }],
+                structuralContext: 'Blockers derive from governance lifecycle, proposition corpus, and revalidation intelligence.',
+              }
+            },
+          }] : []),
+          {
+            question: `Which governance artifacts are ${gaps.length > 0 ? 'missing' : 'present'}?`,
+            tone: 'operational', archetype: 'SCAN', depth: 'standard',
+            boundary: 'From governance_lifecycle artifact inventory — deterministic.',
+            answer_derive: (fr) => {
+              const artifacts = [
+                { name: 'Governance Lifecycle', present: !!(fr.governance_lifecycle || {}).available },
+                { name: 'Proposition Corpus', present: !!(fr.proposition_corpus || {}).available },
+                { name: 'Revalidation', present: !!(fr.revalidation_intelligence || {}).available },
+                { name: 'Constitutional Anchor', present: !!(fr.constitutional_anchor || {}).available },
+                { name: 'Convergence Intelligence', present: !!(fr.convergence_intelligence || {}).available },
+                { name: 'Chronicle Certification', present: !!(fr.chronicle_certification || {}).available },
+                { name: 'Enrichment Intelligence', present: !!(fr.enrichment_intelligence || {}).available },
+              ]
+              const present = artifacts.filter(a => a.present)
+              const missing = artifacts.filter(a => !a.present)
+              return {
+                summary: `${present.length}/7 governance artifacts present. ${missing.length > 0 ? `Missing: ${missing.map(a => a.name).join(', ')}.` : 'Full governance artifact coverage achieved.'}`,
+                evidence: artifacts.map(a => ({ label: a.name, value: a.present ? 'PRESENT' : 'MISSING', severity: a.present ? 'nominal' : 'elevated' })),
+                structuralContext: 'Governance artifacts are assessed individually — each contributes to qualification depth independently.',
+              }
+            },
+          },
+          {
+            question: 'Is the system ready for qualification advancement?',
+            tone: 'executive', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From SQO promotion_state + revalidation — deterministic.',
+            answer_derive: (fr) => {
+              const glLocal = fr.governance_lifecycle || {}
+              return {
+                summary: glLocal.available
+                  ? `Qualification at ${glLocal.s_level || '?'}. ${glLocal.promotion_eligible ? 'Promotion eligible — advancement can be requested.' : `Not eligible — ${glLocal.hold_reason || 'unresolved conditions'}.`}${glLocal.authority_ceiling ? ` Authority ceiling: ${glLocal.authority_ceiling}.` : ''}`
+                  : 'No governance lifecycle — SQO not exercised for this specimen.',
+                evidence: [
+                  { label: 'S-Level', value: glLocal.s_level || '—', severity: 'nominal' },
+                  { label: 'Promotion', value: glLocal.promotion_eligible ? 'ELIGIBLE' : 'BLOCKED', severity: glLocal.promotion_eligible ? 'nominal' : 'critical' },
+                ],
+                structuralContext: 'Promotion readiness computed from promotion state, qualification blockers, and revalidation status.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: {
+          highlightDomains: [],
+          accentDomains: [],
+          dimDomains: [],
+        },
+
+        actions: [
+          ...blockers.map(b => ({ action: `Resolve: ${b}`, priority: 'HIGH', type: 'governance' })),
+          ...gaps.slice(0, 2).map(g => ({ action: `Produce artifact: ${g}`, priority: 'MEDIUM', type: 'governance' })),
+          ...(c.promotion_eligible ? [{ action: 'Request qualification advancement', priority: 'HIGH', type: 'governance' }] : []),
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: gaps.map(g => ({ gap: `Missing: ${g}`, impact: 'Qualification depth limited without this governance artifact' })),
+          progressionPath: [
+            ...(blockers.length > 0 ? [{ step: `Resolve ${blockers.length} blocker${blockers.length !== 1 ? 's' : ''}`, effect: 'Unblock qualification advancement' }] : []),
+            ...(gaps.length > 0 ? [{ step: `Produce ${gaps.length} missing governance artifact${gaps.length !== 1 ? 's' : ''}`, effect: 'Increase qualification depth' }] : []),
+            ...(c.promotion_eligible ? [{ step: 'Request S-level advancement', effect: `Progress from ${sLevel} to next level` }] : []),
+          ],
+        },
+      }
+    },
+  },
+
+  // ── PROPAGATION RISK ───────────────────────────────────────────────
+  PROPAGATION_RISK: {
+    meta: { code: 'PR', label: 'Propagation Risk', icon: '⟿' },
+    resolve: (fullReport, surface) => {
+      const blocks = fullReport.evidence_blocks || []
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const c = surface.constituents || {}
+      const chain = c.chain || []
+      const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
+      const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+      const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER')
+      const coPresenceSigs = sigs.filter(s => s.co_presence && s.co_presence.length > 0)
+      const concentratedSigs = sigs.filter(s => s.concentration)
+      const concentrationPattern = c.concentration_pattern || 'unknown'
+      const registry = fullReport.semantic_domain_registry || []
+      const allChainDomains = chain.map(n => n.domain)
+
+      return {
+        interpretation: {
+          heading: 'Propagation Risk — Active Cognition State',
+          operationalMeaning: `Pressure propagates from ${origins.length} origin${origins.length !== 1 ? 's' : ''} through ${passThroughs.length} corridor${passThroughs.length !== 1 ? 's' : ''} to ${receivers.length} receiver${receivers.length !== 1 ? 's' : ''}. Signal concentration: ${concentrationPattern}.${coPresenceSigs.length > 0 ? ` ${coPresenceSigs.length} co-presence signal${coPresenceSigs.length !== 1 ? 's' : ''} indicate overlapping pressure at chain nodes.` : ''} Changes at any origin amplify through the chain — deployment sequence matters.`,
+          structuralEvidence: chain.slice(0, 6).map(n => ({
+            label: n.domain,
+            value: `${n.role} · ${n.grounding}`,
+            severity: n.role === 'ORIGIN' ? 'critical' : n.role === 'PASS_THROUGH' ? 'elevated' : 'nominal',
+          })),
+          suppressionMask: ['OPERATIONAL_TOPOLOGY', 'QUALIFICATION_EXPOSURE'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Changes at origins amplify through corridors — deploy origins last', priority: 'HIGH' },
+            { action: 'Assess receiver exposure before propagation-chain modifications', priority: 'MEDIUM' },
+            ...(concentrationPattern === 'concentrated' ? [{ action: 'Concentrated signal pattern — pressure amplification risk', priority: 'HIGH' }] : []),
+          ],
+          qualification: {
+            effect: chain.some(n => findDomainGrounding(n.domain, registry) === 'semantic_only')
+              ? 'Propagation chain includes ungrounded domains — chain assessment advisory-qualified'
+              : 'Propagation chain fully grounded — assessment carries structural authority',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: `How does pressure flow through the ${chain.length}-node chain?`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From evidence_blocks propagation roles — deterministic.',
+            answer_derive: (fr) => {
+              const b = fr.evidence_blocks || []
+              const chainStr = [...b.filter(x => x.propagation_role === 'ORIGIN').map(x => `${x.domain_alias} (ORIGIN)`), ...b.filter(x => x.propagation_role === 'PASS_THROUGH').map(x => `${x.domain_alias} (CORRIDOR)`), ...b.filter(x => x.propagation_role === 'RECEIVER').map(x => `${x.domain_alias} (RECEIVER)`)].join(' → ')
+              return {
+                summary: chainStr ? `Propagation chain: ${chainStr}. Each corridor node conducts pressure — the chain length determines amplification risk.` : 'No propagation chain identified.',
+                evidence: b.map(x => ({ label: x.domain_alias, value: x.propagation_role, severity: x.propagation_role === 'ORIGIN' ? 'critical' : x.propagation_role === 'PASS_THROUGH' ? 'elevated' : 'nominal' })),
+                structuralContext: 'Chain topology from evidence block analysis. Origin/pass-through/receiver roles are deterministic from structural position.',
+              }
+            },
+          },
+          {
+            question: `Is signal pressure ${concentrationPattern} along the chain?`,
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From signal co-presence and concentration — deterministic.',
+            answer_derive: (fr) => {
+              const allSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL')
+              const cSigs = allSigs.filter(s => s.concentration)
+              const cpSigs = allSigs.filter(s => s.co_presence && s.co_presence.length > 0)
+              return {
+                summary: `${cSigs.length} signal${cSigs.length !== 1 ? 's' : ''} show concentration patterns. ${cpSigs.length} show co-presence (multiple signals at same node). ${cSigs.length > allSigs.length * 0.5 ? 'Pressure is concentrated — specific nodes bear disproportionate load.' : 'Pressure is distributed across the chain.'}`,
+                evidence: [...cSigs.slice(0, 3).map(s => ({ label: s.signal_name || s.signal_id, value: `concentrated: ${s.concentration}`, severity: 'elevated' })), ...cpSigs.slice(0, 2).map(s => ({ label: s.signal_name || s.signal_id, value: `co-present with ${(s.co_presence || []).length} other${(s.co_presence || []).length !== 1 ? 's' : ''}`, severity: 'elevated' }))],
+                structuralContext: 'Concentration analysis from signal interpretation metadata.',
+              }
+            },
+          },
+          {
+            question: 'Does the chain amplify or attenuate pressure?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From chain node severity escalation — deterministic.',
+            answer_derive: (fr) => {
+              const b = fr.evidence_blocks || []
+              const originSeverity = b.filter(x => x.propagation_role === 'ORIGIN').length
+              const receiverCount = b.filter(x => x.propagation_role === 'RECEIVER').length
+              const amplifies = receiverCount > originSeverity
+              return {
+                summary: `${originSeverity} origin${originSeverity !== 1 ? 's' : ''} → ${b.filter(x => x.propagation_role === 'PASS_THROUGH').length} corridor${b.filter(x => x.propagation_role === 'PASS_THROUGH').length !== 1 ? 's' : ''} → ${receiverCount} receiver${receiverCount !== 1 ? 's' : ''}. ${amplifies ? 'Chain AMPLIFIES — more domains receive pressure than originate it.' : 'Chain ATTENUATES — pressure does not multiply through the chain.'}`,
+                evidence: [
+                  { label: 'Origins', value: String(originSeverity), severity: 'critical' },
+                  { label: 'Corridors', value: String(b.filter(x => x.propagation_role === 'PASS_THROUGH').length), severity: 'elevated' },
+                  { label: 'Receivers', value: String(receiverCount), severity: receiverCount > originSeverity ? 'critical' : 'nominal' },
+                  { label: 'Amplification', value: amplifies ? 'YES' : 'NO', severity: amplifies ? 'critical' : 'nominal' },
+                ],
+                structuralContext: 'Amplification determined by comparing origin count to receiver count through the propagation chain.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const allAffected = new Set(allChainDomains)
+          return {
+            highlightDomains: origins.map(o => o.domain_alias),
+            accentDomains: [...passThroughs.map(p => p.domain_alias), ...receivers.map(r => r.domain_alias)],
+            dimDomains: registry.filter(d => !allAffected.has(d.domain_name) && !allAffected.has(d.domain_alias)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Review propagation chain before origin domain changes', priority: 'HIGH', type: 'assessment' },
+          { action: 'Assess receiver domains for downstream pressure absorption', priority: 'MEDIUM', type: 'investigation' },
+          { action: 'Evaluate chain length — shorter chains reduce amplification', priority: 'LOW', type: 'architectural' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(!(fullReport.propagation_summary || {}).primary_zone_business_label ? [{ gap: 'No propagation summary', impact: 'Propagation narrative incomplete' }] : []),
+            ...allChainDomains.filter(d => findDomainGrounding(d, registry) === 'semantic_only').map(d => ({ gap: `"${d}" ungrounded in chain`, impact: 'Chain assessment rests on semantic assertion at this node' })),
+          ],
+          progressionPath: [
+            { step: 'Reduce origin concentration', effect: 'Fewer pressure sources in delivery chain' },
+            { step: 'Stabilize corridors', effect: 'Lower conduction amplification' },
+            { step: 'Limit receiver exposure', effect: 'Reduce downstream blast radius' },
+          ],
+        },
       }
     },
   },
@@ -2447,7 +3246,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -2473,6 +3272,114 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
   const compoundNarrative = sigs[0] && sigs[0].compound_narrative
   const confidenceNote = sigs[0] && sigs[0].confidence_note
+
+  // ─── SW-INTEL COGNITION STATE RENDERING ──────────────────────────
+  if (resolvedCognitionContract) {
+    const cc = resolvedCognitionContract
+    const interp = cc.interpretation
+    const activeQuery = cognitionQueryIndex !== null && cc.guidedCognition && cc.guidedCognition[cognitionQueryIndex]
+
+    if (activeQuery && activeQuery.answer_derive) {
+      const derived = activeQuery.answer_derive(fullReport)
+      return (
+        <aside className="intel-interp intel-interp--cognition-query" data-tone={activeQuery.tone} data-depth={activeQuery.depth} aria-label="Cognition state guided query answer">
+          <div className="query-answer-panel query-answer-panel--standard">
+            <div className="query-answer-header">
+              <span className="query-answer-badge">{cc.meta.code}</span>
+              <span className="query-answer-header-label">DOMAIN COGNITION · {cc.meta.label.toUpperCase()}</span>
+              <button className="query-answer-dismiss" onClick={onCognitionQueryDismiss} type="button" aria-label="Dismiss">✕</button>
+            </div>
+            <div className="query-answer-question">{activeQuery.question}</div>
+            <div className="query-answer-summary">{derived.summary}</div>
+            {derived.evidence && derived.evidence.length > 0 && (
+              <div className="query-answer-evidence">
+                {derived.evidence.map((e, ei) => (
+                  <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
+                    <span className="query-answer-evidence-label">{e.label}</span>
+                    <span className="query-answer-evidence-value">{e.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {derived.structuralContext && <div className="query-answer-context">{derived.structuralContext}</div>}
+            <div className="query-answer-boundary">{activeQuery.boundary}</div>
+          </div>
+        </aside>
+      )
+    }
+
+    return (
+      <aside className="intel-interp intel-interp--cognition-state" data-surface={cc.surface.surface_id} data-severity={cc.surface.severity} aria-label={`${cc.meta.label} domain cognition state`}>
+        <div className="interp-tag">
+          <span className="interp-tag-label">{cc.meta.icon} DOMAIN COGNITION</span>
+          <span className="interp-tag-state">{cc.surface.severity}</span>
+        </div>
+
+        <div className="interp-zone-focus">
+          <div className="interp-zone-badge">
+            <span className="interp-zone-badge-code">{cc.meta.code}</span>
+            <span className="interp-zone-badge-label">{interp.heading}</span>
+          </div>
+          <div className="interp-zone-body cognition-operational-meaning">{interp.operationalMeaning}</div>
+
+          {interp.structuralEvidence && interp.structuralEvidence.length > 0 && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">STRUCTURAL EVIDENCE</div>
+              {interp.structuralEvidence.map((e, i) => (
+                <div key={i} className="interp-zone-signal" data-severity={e.severity}>
+                  <span className="interp-zone-signal-severity">{e.label}</span>
+                  <span className="interp-zone-signal-text">{e.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {cc.implications && cc.implications.orchestration && cc.implications.orchestration.length > 0 && (
+            <div className="cognition-implications">
+              <div className="interp-zone-signals-label">ORCHESTRATION IMPLICATIONS</div>
+              {cc.implications.orchestration.map((imp, i) => (
+                <div key={i} className="cognition-implication-item" data-priority={imp.priority}>
+                  <span className="cognition-implication-priority">{imp.priority}</span>
+                  <span className="cognition-implication-text">{imp.action}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {cc.implications && cc.implications.qualification && (
+            <div className="cognition-qualification">
+              <div className="interp-zone-signals-label">QUALIFICATION EFFECT</div>
+              <div className="cognition-qualification-text">{cc.implications.qualification.effect}</div>
+            </div>
+          )}
+
+          {cc.gapsAndProgression && cc.gapsAndProgression.evidenceGaps && cc.gapsAndProgression.evidenceGaps.length > 0 && (
+            <div className="cognition-gaps">
+              <div className="interp-zone-signals-label">EVIDENCE GAPS</div>
+              {cc.gapsAndProgression.evidenceGaps.map((g, i) => (
+                <div key={i} className="cognition-gap-item">
+                  <span className="cognition-gap-label">{g.gap}</span>
+                  <span className="cognition-gap-impact">{g.impact}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {cc.gapsAndProgression && cc.gapsAndProgression.progressionPath && cc.gapsAndProgression.progressionPath.length > 0 && (
+            <div className="cognition-progression">
+              <div className="interp-zone-signals-label">PROGRESSION PATH</div>
+              {cc.gapsAndProgression.progressionPath.map((p, i) => (
+                <div key={i} className="cognition-progression-item">
+                  <span className="cognition-progression-step">{p.step}</span>
+                  <span className="cognition-progression-effect">{p.effect}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </aside>
+    )
+  }
 
   if (boardroomMode) {
     const isS1 = fullReport && fullReport.qualification_level === 'S1'
@@ -3271,8 +4178,67 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
 }
 
 function DenseSignalEntry({ sig }) {
+  const [showDerivation, setShowDerivation] = useState(false)
   const family = sig.signal_family || 'DPSIG'
   const level = sig.derivation_level || (family === 'ISIG' ? 'Level_1' : family === 'PSIG' ? 'Level_2' : 'Topology')
+  const translation = translateSignal(sig.signal_id)
+
+  if (translation) {
+    const isNominal = sig.severity === 'NOMINAL' || sig.activation_state === 'NOMINAL'
+    const consequence = (!isNominal && translation.l3_consequence_gap)
+      ? translation.l3_consequence_gap
+      : translation.l3_consequence
+    return (
+      <div className="dense-signal-entry dense-signal-entry--translated" data-severity={sig.severity} data-family={family}>
+        <div className="dense-signal-header">
+          <span className="dense-signal-name">{translation.l3_title}</span>
+          <span className="dense-signal-badge" data-severity={sig.severity}>{sig.severity}</span>
+        </div>
+        <div className="dense-signal-consequence">{consequence}</div>
+        <div className="dense-signal-topology-effect">
+          <span className="dense-signal-effect-label">Topology effect</span>
+          <span className="dense-signal-effect-value">{translation.topology_effect}</span>
+        </div>
+        <div className="dense-signal-governance">
+          <span className="dense-signal-governance-label">Governance</span>
+          <span className="dense-signal-governance-value">{translation.governance}</span>
+        </div>
+        <div className="dense-signal-l2">
+          <span className="dense-signal-l2-label">{translation.l2}</span>
+        </div>
+        <button
+          className="dense-signal-derivation-toggle"
+          onClick={(e) => { e.stopPropagation(); setShowDerivation(p => !p) }}
+          aria-expanded={showDerivation}
+        >
+          {showDerivation ? '▾' : '▸'} {sig.signal_id}
+        </button>
+        {showDerivation && (
+          <div className="dense-signal-derivation">
+            <div className="dense-signal-derivation-row">
+              <span className="dense-signal-derivation-key">Raw signal</span>
+              <span className="dense-signal-derivation-val">{sig.signal_name}</span>
+            </div>
+            <div className="dense-signal-derivation-row">
+              <span className="dense-signal-derivation-key">Value</span>
+              <span className="dense-signal-derivation-val">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
+            </div>
+            <div className="dense-signal-derivation-row">
+              <span className="dense-signal-derivation-key">Family</span>
+              <span className="dense-signal-derivation-val">{family} · {level}</span>
+            </div>
+            {sig.concentration && (
+              <div className="dense-signal-derivation-row">
+                <span className="dense-signal-derivation-key">Concentration</span>
+                <span className="dense-signal-derivation-val">{sig.concentration}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="dense-signal-entry" data-severity={sig.severity} data-family={family} data-level={level}>
       <div className="dense-signal-header">
@@ -3305,14 +4271,14 @@ function DenseSignalSection({ fullReport }) {
     <div className="actor actor--signal-assessment" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SA</span>
-        <span className="actor-name">Signal Assessment · {sigs.length} signals</span>
+        <span className="actor-name">Structural Signal Cognition · {sigs.length} signals</span>
       </div>
       {hasMultipleFamilies ? (
         <>
           {isigSigs.length > 0 && (
             <div className="dense-signal-group" data-family="ISIG">
               <div className="dense-signal-group-head">
-                <span className="dense-signal-group-label">Level 1 — File Structure</span>
+                <span className="dense-signal-group-label">Dependency Structure</span>
                 <span className="dense-signal-group-count">{isigSigs.length}</span>
               </div>
               {isigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
@@ -3321,7 +4287,7 @@ function DenseSignalSection({ fullReport }) {
           {dpsigSigs.length > 0 && (
             <div className="dense-signal-group" data-family="DPSIG">
               <div className="dense-signal-group-head">
-                <span className="dense-signal-group-label">Topology — Cluster Pressure</span>
+                <span className="dense-signal-group-label">Topology Pressure</span>
                 <span className="dense-signal-group-count">{dpsigSigs.length}</span>
               </div>
               {dpsigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
@@ -3330,7 +4296,7 @@ function DenseSignalSection({ fullReport }) {
           {psigSigs.length > 0 && (
             <div className="dense-signal-group" data-family="PSIG">
               <div className="dense-signal-group-head">
-                <span className="dense-signal-group-label">Level 2 — Architectural Binding</span>
+                <span className="dense-signal-group-label">Architectural Binding</span>
                 <span className="dense-signal-group-count">{psigSigs.length}</span>
               </div>
               {psigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
@@ -3428,7 +4394,7 @@ function DenseGovernanceZone({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange }) {
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -3640,14 +4606,18 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
             </div>
             <div className="topo-maturity-description">{tm.description || ''}</div>
             {showFullSvg ? (
-              <div className="dense-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+              <div className={`dense-topology-preview${cognitionOverlay ? '' : ''}`} onClick={cognitionOverlay ? undefined : openTopoModal} role="button" tabIndex={0} aria-label={cognitionOverlay ? cognitionOverlay.topology_label : 'Open topology explorer'} onKeyDown={e => e.key === 'Enter' && !cognitionOverlay && openTopoModal()}>
                 <TopologyGraph
                   domains={fullReport.semantic_domain_registry}
                   clusters={clusters}
                   edges={fullReport.semantic_topology_edges || []}
                   pressureZoneLabel={pressureZone}
+                  pressureZoneState={fullReport.pressure_zone_state}
+                  cognitionOverlay={cognitionOverlay}
+                  onPressureZoneClick={onPressureZoneClick}
+                  activePressureZone={activePressureZone}
                 />
-                <div className="dense-topology-hint">Open structural topology</div>
+                <div className="dense-topology-hint">{cognitionOverlay ? cognitionOverlay.topology_label : 'Open structural topology'}</div>
               </div>
             ) : (
               <div className="topo-registry-compact">
@@ -3821,6 +4791,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
             clusters={fullReport.semantic_cluster_registry || []}
             edges={fullReport.semantic_topology_edges || []}
             pressureZoneLabel={pressureZone}
+            pressureZoneState={fullReport.pressure_zone_state}
           />
           <div className="investigation-topology-hint">Open forensic topology</div>
         </div>
@@ -4191,9 +5162,13 @@ function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct }) 
     const r = 58
     const gr = 49
     const le = arcEnd(r, levelPct)
-    const levelPath = levelPct > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 ${levelPct > 50 ? 1 : 0} 1 ${le.x.toFixed(1)} ${le.y.toFixed(1)}` : ''
+    const levelPath = levelPct >= 95
+      ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`
+      : levelPct > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${le.x.toFixed(1)} ${le.y.toFixed(1)}` : ''
     const te = arcEnd(gr, tPct)
-    const tensionPath = tPct > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${te.x.toFixed(1)} ${te.y.toFixed(1)}` : ''
+    const tensionPath = tPct >= 95
+      ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${cx + gr} ${cy}`
+      : tPct > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${te.x.toFixed(1)} ${te.y.toFixed(1)}` : ''
     const levelColor = levelPct >= 66 ? '#64ffda' : levelPct >= 33 ? '#4a9eff' : '#6a7a9a'
     const tensionColor = tPct >= 60 ? '#ff9e4a' : tPct >= 30 ? '#ffd700' : '#4a9eff'
 
@@ -4217,9 +5192,13 @@ function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct }) 
   const gr = 49
 
   const se = arcEnd(r, s)
-  const scorePath = s > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${se.x.toFixed(1)} ${se.y.toFixed(1)}` : ''
+  const scorePath = s >= 95
+    ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`
+    : s > 0 ? `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${se.x.toFixed(1)} ${se.y.toFixed(1)}` : ''
   const ge = arcEnd(gr, g)
-  const groundPath = g > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${ge.x.toFixed(1)} ${ge.y.toFixed(1)}` : ''
+  const groundPath = g >= 95
+    ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${cx + gr} ${cy}`
+    : g > 0 ? `M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${ge.x.toFixed(1)} ${ge.y.toFixed(1)}` : ''
   const scoreColor = s >= 80 ? '#64ffda' : s >= 60 ? '#ffd700' : s >= 40 ? '#ff9e4a' : '#ff6b6b'
 
   return (
@@ -5326,6 +6305,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
               clusters={clusterRegistry}
               edges={topologyEdges}
               pressureZoneLabel={zoneName}
+              pressureZoneState={fullReport && fullReport.pressure_zone_state}
               focusedDomain={focusedDomain}
               onNodeSelect={setFocusedDomain}
               isS1={(fullReport && fullReport.qualification_level) === 'S1'}
@@ -5682,6 +6662,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               clusters={fullReport.semantic_cluster_registry || []}
               edges={fullReport.semantic_topology_edges || []}
               pressureZoneLabel={bpTs.pressure_zone || ''}
+              pressureZoneState={fullReport.pressure_zone_state}
             />
             <div className="cockpit-topology-hint">Click to explore governed topology</div>
           </div>
@@ -5718,7 +6699,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       <RepModeTag
         label="Boardroom lens"
         sub="Board · decision-ready posture"
-        zones={[{ id: 'Z1', name: 'Executive Posture' }, { id: 'Z2', name: 'Signal Assessment' }]}
+        zones={[{ id: 'Z1', name: 'Executive Posture' }, { id: 'Z2', name: 'Structural Signal Cognition' }]}
       />
 
       <div className="cockpit-finding" data-found={String(somethingFound)}>
@@ -5830,6 +6811,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             clusters={fullReport.semantic_cluster_registry || []}
             edges={fullReport.semantic_topology_edges || []}
             pressureZoneLabel={pressureZone || ''}
+            pressureZoneState={fullReport.pressure_zone_state}
           />
           <div className="cockpit-topology-hint">Click to explore topology</div>
         </div>
@@ -5995,16 +6977,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding }) {
-  const orchestrationRuntime = (
-    <OrchestrationGuidanceRuntime
-      projection={swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' ? swIntelProjection : null}
-      fullReport={fullReport}
-      sqoAuthorityWorkspace={sqoAuthorityWorkspace}
-      sqoBinding={sqoBinding}
-    />
-  )
-
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay }) {
   if (boardroomMode) {
     return (
       <>
@@ -6012,23 +6985,16 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
           <SoftwareIntelligenceBoardroomSummary projection={swIntelProjection} />
         )}
-        {orchestrationRuntime}
       </>
     )
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
-    if (swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT') {
-      return (
-        <>
-          <SoftwareIntelligenceInvestigationView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} />
-          {orchestrationRuntime}
-        </>
-      )
-    }
     return (
       <>
         <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
-        {orchestrationRuntime}
+        {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
+          <SoftwareIntelligenceInvestigationView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+        )}
       </>
     )
   }
@@ -6039,22 +7005,15 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
           <SoftwareIntelligenceBalancedNarrative projection={swIntelProjection} />
         )}
-        {orchestrationRuntime}
-      </>
-    )
-  }
-  if (swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT') {
-    return (
-      <>
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} />
-        {orchestrationRuntime}
       </>
     )
   }
   return (
     <>
-      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} />
-      {orchestrationRuntime}
+      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} />
+      {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+      )}
     </>
   )
 }
@@ -6067,6 +7026,68 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [emergenceState, setEmergenceState] = useState(null)
   const [piRuntimeActive, setPiRuntimeActive] = useState(false)
   const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
+
+  const [cognitionState, setCognitionState] = useState({
+    activeSurface: null,
+    focusedDomain: null,
+    activePressureZone: null,
+    activeSignals: [],
+    activeQueryIndex: null,
+  })
+  const handleSurfaceSelect = useCallback((surfaceId) => {
+    setCognitionState(prev => ({
+      ...prev,
+      activeSurface: prev.activeSurface === surfaceId ? null : surfaceId,
+      activePressureZone: null,
+      activeQueryIndex: null,
+    }))
+  }, [])
+  const handleDomainFocus = useCallback((domainId) => {
+    setCognitionState(prev => ({
+      ...prev,
+      focusedDomain: prev.focusedDomain === domainId ? null : domainId,
+    }))
+  }, [])
+  const handlePressureZoneFocus = useCallback((zoneId) => {
+    setCognitionState(prev => {
+      const nextZone = prev.activePressureZone === zoneId ? null : zoneId
+      return {
+        ...prev,
+        activePressureZone: nextZone,
+        activeSurface: nextZone ? null : prev.activeSurface,
+        activeQueryIndex: null,
+      }
+    })
+  }, [])
+  const handleCognitionQuerySelect = useCallback((index) => {
+    setCognitionState(prev => ({
+      ...prev,
+      activeQueryIndex: prev.activeQueryIndex === index ? null : index,
+    }))
+  }, [])
+  const handleCognitionQueryDismiss = useCallback(() => {
+    setCognitionState(prev => ({ ...prev, activeQueryIndex: null }))
+  }, [])
+
+  const resolvedCognitionContract = useMemo(() => {
+    if (!cognitionState.activeSurface || !fullReport || !swIntelProjection) return null
+    const contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[cognitionState.activeSurface]
+    if (!contract) return null
+    const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
+    if (!surface) return null
+    return { meta: contract.meta, surface, ...contract.resolve(fullReport, surface) }
+  }, [cognitionState.activeSurface, fullReport, swIntelProjection])
+
+  const topologyCognitionOverlay = useMemo(() => {
+    if (cognitionState.activePressureZone && fullReport) {
+      return derivePressureZoneCognitionState(cognitionState.activePressureZone, fullReport)
+    }
+    if (!cognitionState.activeSurface || !fullReport || !swIntelProjection || !swIntelActive) return null
+    const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
+    if (!surface) return null
+    return deriveTopologyCognitionState(cognitionState.activeSurface, fullReport, surface)
+  }, [cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
+
   const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
   const [selectedNarrativeArc, setSelectedNarrativeArc] = useState(null)
   const isBalanced = !boardroomMode && densityClass === 'EXECUTIVE_BALANCED'
@@ -6236,6 +7257,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         expansions={expansions}
         onExpansionDismiss={handleExpansionDismiss}
         selectedNarrativeArc={selectedNarrativeArc}
+        resolvedCognitionContract={resolvedCognitionContract}
+        cognitionQueryIndex={cognitionState.activeQueryIndex}
+        onCognitionQueryDismiss={handleCognitionQueryDismiss}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -6266,6 +7290,16 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           swIntelActive={swIntelActive}
           swIntelProjection={swIntelProjection}
           onSwIntelDeactivate={onSwIntelDeactivate}
+          cognitionState={cognitionState}
+          onSurfaceSelect={handleSurfaceSelect}
+          onDomainFocus={handleDomainFocus}
+          onPressureZoneFocus={handlePressureZoneFocus}
+          topologyCognitionOverlay={topologyCognitionOverlay}
+        />
+
+        <OrchestrationGuidanceRuntime
+          projection={swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' ? swIntelProjection : null}
+          fullReport={fullReport}
           sqoAuthorityWorkspace={sqoAuthorityWorkspace}
           sqoBinding={sqoBinding}
         />
@@ -6294,6 +7328,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         interrogationTrail={interrogationTrail}
         onTrailExport={handleTrailExport}
         selectedNarrativeArc={selectedNarrativeArc}
+        resolvedCognitionContract={resolvedCognitionContract}
+        cognitionQueryIndex={cognitionState.activeQueryIndex}
+        onCognitionQuerySelect={handleCognitionQuerySelect}
       />
     </div>
   )

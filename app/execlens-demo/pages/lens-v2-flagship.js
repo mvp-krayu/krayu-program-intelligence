@@ -3227,6 +3227,105 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dense-signal-group[data-family="ISIG"] .dense-signal-group-label { color: #4a9eff; }
         .dense-signal-group[data-family="PSIG"] .dense-signal-group-label { color: #64ffda; }
 
+        /* Translated Signal Cognition Entries */
+        .dense-signal-entry--translated {
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.5);
+        }
+        .dense-signal-entry--translated:last-of-type {
+          border-bottom: none;
+        }
+        .dense-signal-entry--translated .dense-signal-header {
+          margin-bottom: 6px;
+        }
+        .dense-signal-entry--translated .dense-signal-name {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 12.5px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .dense-signal-consequence {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 12px;
+          color: #a0adc6;
+          line-height: 1.55;
+          margin-bottom: 8px;
+        }
+        .dense-signal-topology-effect,
+        .dense-signal-governance {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 3px 0;
+        }
+        .dense-signal-effect-label,
+        .dense-signal-governance-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #4a5570;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          min-width: 90px;
+          flex-shrink: 0;
+        }
+        .dense-signal-effect-value {
+          font: 400 11px/1.4 'Courier New', monospace;
+          color: #8a96b2;
+        }
+        .dense-signal-governance-value {
+          font: 400 11px/1.4 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .dense-signal-l2 {
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .dense-signal-l2-label {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+        .dense-signal-derivation-toggle {
+          display: inline-block;
+          margin-top: 6px;
+          padding: 0;
+          border: none;
+          background: none;
+          font: 400 10px/1 'Courier New', monospace;
+          color: #3a4560;
+          cursor: pointer;
+          letter-spacing: 0.02em;
+          transition: color 0.15s ease;
+        }
+        .dense-signal-derivation-toggle:hover {
+          color: #5a6580;
+        }
+        .dense-signal-derivation {
+          margin-top: 4px;
+          padding: 6px 8px;
+          background: rgba(13, 15, 20, 0.5);
+          border-left: 2px solid rgba(42, 47, 64, 0.4);
+        }
+        .dense-signal-derivation-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 2px 0;
+        }
+        .dense-signal-derivation-key {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #3a4560;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          min-width: 80px;
+          flex-shrink: 0;
+        }
+        .dense-signal-derivation-val {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #5a6580;
+        }
+
         /* Investigation Signal Audit */
         .actor--signal-audit {
           margin: 16px 0;
@@ -8407,9 +8506,41 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-left: auto;
         }
 
-        .sw-intel-view { padding: 0 0 16px; }
+        .sw-intel-view {
+          padding: 0 0 16px;
+          margin-top: 16px;
+          border-top: 1px solid #1e2330;
+        }
         .sw-intel-view--dense .sw-intel-panel,
         .sw-intel-view--investigation .sw-intel-panel { margin-bottom: 12px; }
+
+        .sw-intel-view-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 0 8px;
+        }
+        .sw-intel-view-module-tag {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: #4a9eff;
+          text-transform: uppercase;
+          font-family: 'Courier New', monospace;
+        }
+        .sw-intel-deactivate-btn {
+          margin-left: auto;
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+          color: #5e6d8a;
+          cursor: pointer;
+          font-size: 12px;
+          padding: 2px 8px;
+          line-height: 1;
+          transition: color 0.15s, border-color 0.15s;
+        }
+        .sw-intel-deactivate-btn:hover { color: #ccd6f6; border-color: #4a5570; }
 
         /* ─── Cognition Surface Rendering ─── */
 
@@ -8425,11 +8556,22 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: #141720;
           padding: 14px 16px;
           border-left: 3px solid #4a5570;
+          cursor: pointer;
+          transition: border-color 0.15s, background 0.15s;
         }
+        .sw-intel-surface:hover { background: #181c28; }
         .sw-intel-surface[data-severity="HIGH"] { border-left-color: #ff6b6b; }
         .sw-intel-surface[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
         .sw-intel-surface[data-severity="MODERATE"] { border-left-color: #ffd700; }
         .sw-intel-surface[data-severity="LOW"] { border-left-color: #64ffda; }
+        .sw-intel-surface--active {
+          background: #181c28;
+          border-color: #3a4060;
+        }
+        .sw-intel-surface--active[data-severity="HIGH"] { border-left-color: #ff6b6b; border-color: rgba(255, 107, 107, 0.25); border-left-color: #ff6b6b; }
+        .sw-intel-surface--active[data-severity="ELEVATED"] { border-color: rgba(255, 158, 74, 0.25); border-left-color: #ff9e4a; }
+        .sw-intel-surface--active[data-severity="MODERATE"] { border-color: rgba(255, 215, 0, 0.2); border-left-color: #ffd700; }
+        .sw-intel-surface--active[data-severity="LOW"] { border-color: rgba(100, 255, 218, 0.2); border-left-color: #64ffda; }
 
         .sw-intel-surface-header {
           display: flex;
@@ -9608,6 +9750,191 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .sw-intel-guided-action-learning-detail span[data-type="dim"] { color: #4a5570; }
         .sw-intel-guided-action[data-status="completed"] {
           opacity: 0.5;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        /* Domain Cognition State — active reasoning contract */
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        /* Left panel — cognition state interpretation */
+        .intel-interp--cognition-state {
+          border-left: 2px solid rgba(74,158,255,0.25);
+        }
+        .intel-interp--cognition-state[data-severity="HIGH"] {
+          border-left-color: rgba(255,107,107,0.4);
+        }
+        .intel-interp--cognition-state[data-severity="ELEVATED"] {
+          border-left-color: rgba(255,158,74,0.4);
+        }
+        .intel-interp--cognition-state[data-severity="MODERATE"] {
+          border-left-color: rgba(255,215,0,0.35);
+        }
+
+        .cognition-operational-meaning {
+          font-size: 13px;
+          line-height: 1.65;
+          color: #c5cce3;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .cognition-implications {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .cognition-implication-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 5px 8px;
+          background: rgba(10,12,18,0.4);
+          border-radius: 2px;
+          border-left: 2px solid #2a2f40;
+        }
+        .cognition-implication-item[data-priority="HIGH"] {
+          border-left-color: #ff6b6b;
+        }
+        .cognition-implication-item[data-priority="MEDIUM"] {
+          border-left-color: #ffd700;
+        }
+        .cognition-implication-item[data-priority="LOW"] {
+          border-left-color: #64ffda;
+        }
+        .cognition-implication-priority {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          flex-shrink: 0;
+          min-width: 42px;
+        }
+        .cognition-implication-item[data-priority="HIGH"] .cognition-implication-priority { color: #ff6b6b; }
+        .cognition-implication-item[data-priority="MEDIUM"] .cognition-implication-priority { color: #ffd700; }
+        .cognition-implication-text {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 11.5px;
+          color: #9aa0bc;
+          line-height: 1.45;
+        }
+
+        .cognition-qualification {
+          padding: 8px 10px;
+          background: rgba(10,12,18,0.4);
+          border-left: 2px solid rgba(255,215,0,0.25);
+          border-radius: 0 2px 2px 0;
+        }
+        .cognition-qualification-text {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 11.5px;
+          color: #9aa0bc;
+          line-height: 1.5;
+        }
+
+        .cognition-gaps {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .cognition-gap-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 4px 0;
+        }
+        .cognition-gap-label {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #ccd6f6;
+          flex: 1;
+          min-width: 0;
+        }
+        .cognition-gap-impact {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #ff9e4a;
+          flex-shrink: 0;
+          text-align: right;
+        }
+
+        .cognition-progression {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .cognition-progression-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 4px 0;
+          border-bottom: 1px solid rgba(30,35,48,0.4);
+        }
+        .cognition-progression-item:last-child { border-bottom: none; }
+        .cognition-progression-step {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 11.5px;
+          color: #ccd6f6;
+          flex: 1;
+          min-width: 0;
+          line-height: 1.4;
+        }
+        .cognition-progression-effect {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #64ffda;
+          flex-shrink: 0;
+          text-align: right;
+        }
+
+        /* Left panel — cognition query answer overlay */
+        .intel-interp--cognition-query {
+          border-left: 2px solid rgba(74,158,255,0.4);
+        }
+
+        /* Right panel — cognition queries block */
+        .support-block--cognition-queries {
+          padding-top: 18px;
+          border-top: 1px solid #1a2030;
+        }
+        .support-block--cognition-queries .support-paths-list {
+          gap: 3px;
+        }
+        .support-block--cognition-queries .support-path-item {
+          border-left-color: rgba(74,158,255,0.2);
+        }
+        .support-block--cognition-queries .support-path-item[data-active="true"] {
+          border-left-color: #4a9eff;
+          background: rgba(74,158,255,0.06);
+        }
+
+        .cognition-actions-summary {
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid rgba(30,35,48,0.5);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .cognition-action-item {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 3px 0;
+        }
+        .cognition-action-priority {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          flex-shrink: 0;
+          min-width: 42px;
+        }
+        .cognition-action-item[data-priority="HIGH"] .cognition-action-priority { color: #ff6b6b; }
+        .cognition-action-item[data-priority="MEDIUM"] .cognition-action-priority { color: #ffd700; }
+        .cognition-action-item[data-priority="LOW"] .cognition-action-priority { color: #64ffda; }
+        .cognition-action-text {
+          font-size: 11px;
+          color: #9aa0bc;
+          line-height: 1.4;
         }
 
         /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

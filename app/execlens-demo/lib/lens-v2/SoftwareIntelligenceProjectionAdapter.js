@@ -15,6 +15,73 @@ const PROJECTION_STATUS = {
   INVALID: 'INVALID',
 }
 
+// ─── SIGNAL TRANSLATION DOCTRINE ──────────────────────────────────
+// L1 = raw derivation (internal), L2 = structural semantic, L3 = operational cognition
+
+const SIGNAL_COGNITION_MAP = {
+  'PSIG-001': {
+    l2: 'Cross-Domain Propagation Pressure',
+    l3_title: 'Structural Dependency Concentration',
+    l3_consequence: 'Changes in this structural region propagate across multiple operational domains.',
+    topology_effect: 'Dependency amplification corridor active',
+    governance: 'Advisory-bound downstream topology',
+  },
+  'PSIG-002': {
+    l2: 'Domain Interdependency Load',
+    l3_title: 'Operational Coupling Overload',
+    l3_consequence: 'This domain carries disproportionate interdependency — operational independence is constrained.',
+    topology_effect: 'Concentrated coupling corridor',
+    governance: 'Structural confirmation required before deployment decisions',
+  },
+  'PSIG-004': {
+    l2: 'Structural Resilience Concentration',
+    l3_title: 'Resilience Concentration Risk',
+    l3_consequence: 'Operational resilience depends disproportionately on one structural region.',
+    topology_effect: 'Concentrated pressure zone with elevated blast radius',
+    governance: 'Advisory-bound for downstream domains',
+  },
+  'PSIG-006': {
+    l2: 'Structural Coverage Completeness',
+    l3_title: 'Domain Anchoring Status',
+    l3_consequence: 'All structural nodes are domain-anchored. Governance coverage is complete.',
+    l3_consequence_gap: 'Structural components exist without domain anchoring — governance coverage has gaps.',
+    topology_effect: 'Structural blind spots visible on topology',
+    governance: 'Governance coverage verification',
+  },
+  'ISIG-001': {
+    l2: 'Dependency Hub Concentration',
+    l3_title: 'Structural Dependency Choke Point',
+    l3_consequence: 'A structural dependency hub concentrates import traffic — failure at this point has disproportionate downstream impact.',
+    topology_effect: 'Import amplification corridor active',
+    governance: 'Advisory-bound until cross-domain topology confirms corridor exposure',
+  },
+  'ISIG-002': {
+    l2: 'Dependency Spread Asymmetry',
+    l3_title: 'Asymmetric Downstream Exposure',
+    l3_consequence: "One component's changes ripple disproportionately across the system — dependency spread is unbalanced.",
+    topology_effect: 'Asymmetric propagation corridor',
+    governance: 'Advisory-bound — structural confirmation needed',
+  },
+  'DPSIG-031': {
+    l2: 'Structural Load Concentration',
+    l3_title: 'Operational Load Concentration',
+    l3_consequence: 'Structural load is concentrated in a dominant region — this domain carries disproportionate architectural weight.',
+    topology_effect: 'Pressure zone boundary active — concentrated structural mass',
+    governance: 'Elevated structural attention required',
+  },
+  'DPSIG-032': {
+    l2: 'Structural Coordination Overload',
+    l3_title: 'Coordination Responsibility Imbalance',
+    l3_consequence: 'This domain carries disproportionate coordination responsibility across the topology.',
+    topology_effect: 'Coordination hub emphasis — asymmetric structural dependency',
+    governance: 'Organizational dependency on this domain is elevated',
+  },
+}
+
+function translateSignal(signalId) {
+  return SIGNAL_COGNITION_MAP[signalId] || null
+}
+
 const SEVERITY_ORDER = { HIGH: 0, ELEVATED: 1, MODERATE: 2, LOW: 3, NOMINAL: 4 }
 
 function maxSeverity(items) {
@@ -180,6 +247,13 @@ function deriveIntegrationExposure(fullReport) {
   const integrationSignalCount = isigSigs.length + asymmetrySigs.length
   if (bridgeCount === 0 && integrationSignalCount === 0 && passThroughs.length === 0) return null
 
+  const hasTopology = (bridgeCount + connectorCount) > 0 || passThroughs.length > 0
+  const hasIsig = isigSigs.length > 0
+  const evidence_mode = hasTopology && hasIsig ? 'MIXED'
+    : hasTopology ? 'TOPOLOGY_DRIVEN'
+    : hasIsig ? 'IMPORT_SIGNAL_DRIVEN'
+    : 'EVIDENCE_GAP'
+
   const severity = isigSigs.length >= 2 ? 'ELEVATED'
     : (isigSigs.length >= 1 && passThroughs.length >= 2) ? 'ELEVATED'
     : (bridgeCount > 0 && (isigSigs.length > 0 || asymmetrySigs.length > 0)) ? 'MODERATE'
@@ -190,20 +264,48 @@ function deriveIntegrationExposure(fullReport) {
     ...bridgeNodes.map(n => n.path.split('/').slice(-2).join('/')),
   ]
 
+  const topologyCount = bridgeCount + connectorCount
+  let operational_summary
+  if (evidence_mode === 'IMPORT_SIGNAL_DRIVEN') {
+    const peakSev = maxSeverity(isigSigs)
+    operational_summary = `Elevated file-level import dependency pressure — ${isigSigs.length} ${peakSev} ISIG signal${isigSigs.length !== 1 ? 's' : ''} detect structural stress at import boundaries`
+      + (passThroughs.length > 0 ? ` across ${passThroughs.length} pass-through domain${passThroughs.length !== 1 ? 's' : ''}` : '')
+      + `. Cross-domain integration corridor topology not yet resolved.`
+  } else if (evidence_mode === 'TOPOLOGY_DRIVEN') {
+    operational_summary = `${topologyCount} cross-domain integration point${topologyCount !== 1 ? 's' : ''}`
+      + (passThroughs.length > 0 ? ` — ${passThroughs.length} domain${passThroughs.length !== 1 ? 's' : ''} ${passThroughs.length !== 1 ? 'conduct' : 'conducts'} pressure` : '')
+  } else if (evidence_mode === 'MIXED') {
+    operational_summary = `${topologyCount} cross-domain integration point${topologyCount !== 1 ? 's' : ''} under ${isigSigs.length} import dependency signal${isigSigs.length !== 1 ? 's' : ''}`
+      + (passThroughs.length > 0 ? ` — ${passThroughs.length} domain${passThroughs.length !== 1 ? 's' : ''} ${passThroughs.length !== 1 ? 'conduct' : 'conducts'} pressure` : '')
+  } else {
+    operational_summary = 'Integration exposure evidence insufficient for operational assessment'
+  }
+
+  let consequence
+  if (evidence_mode === 'IMPORT_SIGNAL_DRIVEN') {
+    consequence = severity === 'ELEVATED'
+      ? 'File-level import dependency concentration is elevated — advisory-bound until cross-domain integration topology confirms corridor exposure'
+      : 'Import dependency signals present but below elevated threshold'
+  } else {
+    consequence = severity === 'ELEVATED' || severity === 'HIGH'
+      ? 'Integration boundaries are absorbing cross-domain pressure — changes here risk cascading through connected subsystems'
+      : 'Integration points present but not under elevated structural stress'
+  }
+
   return {
     surface_id: 'INTEGRATION_EXPOSURE',
     surface_name: 'Integration Exposure',
     severity,
-    operational_summary: `${bridgeCount + connectorCount} cross-domain integration point${(bridgeCount + connectorCount) !== 1 ? 's' : ''}${isigSigs.length > 0 ? ` under ${isigSigs.length} import dependency signal${isigSigs.length !== 1 ? 's' : ''}` : ''}${passThroughs.length > 0 ? ` — ${passThroughs.length} domain${passThroughs.length !== 1 ? 's' : ''} ${passThroughs.length !== 1 ? 'conduct' : 'conducts'} pressure` : ''}`,
-    consequence: severity === 'ELEVATED'
-      ? 'Integration boundaries are absorbing cross-domain pressure — changes here risk cascading through connected subsystems'
-      : 'Integration points present but not under elevated structural stress',
+    evidence_mode,
+    operational_summary,
+    consequence,
     evidence_density: bridgeCount + connectorCount + isigSigs.length + passThroughs.length,
     affected_domains: [...new Set(affectedDomains)],
     constituents: {
       bridges: bridgeCount,
       connectors: connectorCount,
       isig_signals: isigSigs.length,
+      isig_peak_severity: isigSigs.length > 0 ? maxSeverity(isigSigs) : null,
       pass_through_domains: passThroughs.map(p => p.domain_alias),
     },
     trace_sources: ['structural_enrichment.centrality', 'signal_interpretations', 'evidence_blocks'],
@@ -614,4 +716,308 @@ function deriveProjection(fullReport) {
   }
 }
 
-module.exports = { deriveProjection, deriveModuleState, PROJECTION_STATUS }
+// ─── TOPOLOGY COGNITION STATE ──────────────────────────────────────
+// Produces overlay state for the SVG topology when a SW-Intel surface is active.
+// The topology becomes the cognition canvas — this object drives what changes.
+
+function deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurface) {
+  if (!activeSurfaceId || !fullReport || !resolvedSurface) return null
+
+  const sigs = (fullReport.signal_interpretations || []).filter(isActivated)
+  const blocks = fullReport.evidence_blocks || []
+  const se = fullReport.structural_enrichment || {}
+  const registry = fullReport.semantic_domain_registry || []
+  const pzState = fullReport.pressure_zone_state || {}
+  const zones = pzState.zones || []
+
+  const domainIdSet = new Set(registry.map(d => d.domain_id))
+  const backedDomains = new Set(registry.filter(d => d.structurally_backed).map(d => d.domain_id))
+  const semanticOnlyDomains = new Set(registry.filter(d => d.semantic_only || (!d.structurally_backed && d.lineage_status !== 'PARTIAL')).map(d => d.domain_id))
+  const zoneAnchorDomains = new Set(registry.filter(d => d.zone_anchor).map(d => d.domain_id))
+
+  const base = {
+    active_surface: activeSurfaceId,
+    overlay_mode: null,
+    emphasis_domains: [],
+    dim_domains: [],
+    signal_overlays: [],
+    pressure_zone_emphasis: null,
+    corridor_paths: [],
+    advisory_zones: [],
+    grounding_gradient: null,
+    evidence_gaps: [],
+    topology_label: null,
+    legend_entries: [],
+  }
+
+  if (activeSurfaceId === 'INTEGRATION_EXPOSURE') {
+    const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
+    const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+    const spines = (se.available && se.centrality) ? (se.centrality.top_structural_spines || []) : []
+    const bridges = spines.filter(s => s.structural_role === 'bridge' || s.structural_role === 'connector')
+    const mode = resolvedSurface.evidence_mode || 'EVIDENCE_GAP'
+
+    const signalOverlays = isigSigs.map(s => ({
+      signal_id: s.signal_id,
+      signal_name: s.signal_name,
+      severity: s.severity,
+      type: 'import_pressure',
+      source_entity: s.concentration || null,
+      affected_domain: null,
+    }))
+
+    const ptDomainIds = passThroughs.map(p => {
+      const match = registry.find(d => d.domain_name === p.domain_alias || d.business_label === p.domain_alias)
+      return match ? match.domain_id : null
+    }).filter(Boolean)
+
+    const bridgeDomainIds = bridges.map(b => {
+      const pathTail = b.path.split('/').slice(-2).join('/')
+      const match = registry.find(d => (d.domain_name || '').includes(pathTail) || (d.business_label || '').includes(pathTail))
+      return match ? match.domain_id : null
+    }).filter(Boolean)
+
+    const emphasisIds = [...new Set([...ptDomainIds, ...bridgeDomainIds, ...Array.from(zoneAnchorDomains)])]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    base.overlay_mode = mode === 'IMPORT_SIGNAL_DRIVEN' ? 'IMPORT_PRESSURE' : mode === 'TOPOLOGY_DRIVEN' ? 'INTEGRATION_CORRIDOR' : mode === 'MIXED' ? 'INTEGRATION_MIXED' : 'EVIDENCE_GAP'
+    base.emphasis_domains = emphasisIds
+    base.dim_domains = emphasisIds.length > 0 ? dimIds : []
+    base.signal_overlays = signalOverlays
+    base.advisory_zones = mode === 'IMPORT_SIGNAL_DRIVEN' ? Array.from(domainIdSet) : Array.from(semanticOnlyDomains)
+    base.evidence_gaps = mode === 'IMPORT_SIGNAL_DRIVEN'
+      ? [{ type: 'CORRIDOR_TOPOLOGY_UNRESOLVED', label: 'Integration corridor topology not resolved' }]
+      : []
+    base.topology_label = mode === 'IMPORT_SIGNAL_DRIVEN'
+      ? 'IMPORT DEPENDENCY PRESSURE (ADVISORY-BOUND)'
+      : 'INTEGRATION EXPOSURE'
+    base.legend_entries = [
+      ...(isigSigs.length > 0 ? [{ color: '#ff9e4a', label: `ISIG Signal (${isigSigs.length})`, style: 'pulse' }] : []),
+      ...(bridges.length > 0 ? [{ color: '#4a9eff', label: `Bridge Node (${bridges.length})`, style: 'solid' }] : []),
+      ...(ptDomainIds.length > 0 ? [{ color: '#ffd700', label: `Pass-Through (${ptDomainIds.length})`, style: 'dashed' }] : []),
+      ...(mode === 'IMPORT_SIGNAL_DRIVEN' ? [{ color: '#5e6d8a', label: 'Corridor Unresolved', style: 'dotted' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'DELIVERY_FRAGILITY') {
+    const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
+    const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+    const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER')
+    const highSigs = sigs.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+
+    const resolveDomainId = (alias) => {
+      const match = registry.find(d => d.domain_name === alias || d.business_label === alias)
+      return match ? match.domain_id : null
+    }
+
+    const originIds = origins.map(o => resolveDomainId(o.domain_alias)).filter(Boolean)
+    const ptIds = passThroughs.map(p => resolveDomainId(p.domain_alias)).filter(Boolean)
+    const receiverIds = receivers.map(r => resolveDomainId(r.domain_alias)).filter(Boolean)
+    const corridorIds = [...new Set([...originIds, ...ptIds, ...receiverIds])]
+    const dimIds = Array.from(domainIdSet).filter(id => !corridorIds.includes(id))
+
+    const corridorPaths = []
+    if (originIds.length > 0 && (ptIds.length > 0 || receiverIds.length > 0)) {
+      originIds.forEach(oid => {
+        const targets = ptIds.length > 0 ? ptIds : receiverIds
+        targets.forEach(tid => {
+          corridorPaths.push({ from: oid, to: tid, type: 'pressure_propagation' })
+        })
+      })
+      if (ptIds.length > 0 && receiverIds.length > 0) {
+        ptIds.forEach(pid => {
+          receiverIds.forEach(rid => {
+            corridorPaths.push({ from: pid, to: rid, type: 'pressure_propagation' })
+          })
+        })
+      }
+    }
+
+    base.overlay_mode = 'DELIVERY_FRAGILITY'
+    base.emphasis_domains = corridorIds
+    base.dim_domains = dimIds
+    base.signal_overlays = highSigs.map(s => ({ signal_id: s.signal_id, signal_name: s.signal_name, severity: s.severity, type: 'pressure' }))
+    base.corridor_paths = corridorPaths
+    base.pressure_zone_emphasis = zones.length > 0 ? zones[0].zone_id : null
+    base.advisory_zones = Array.from(semanticOnlyDomains)
+    base.topology_label = 'DELIVERY FRAGILITY'
+    base.legend_entries = [
+      ...(originIds.length > 0 ? [{ color: '#ff6b6b', label: `Origin (${originIds.length})`, style: 'solid' }] : []),
+      ...(ptIds.length > 0 ? [{ color: '#ffd700', label: `Corridor (${ptIds.length})`, style: 'dashed' }] : []),
+      ...(receiverIds.length > 0 ? [{ color: '#ff9e4a', label: `Receiver (${receiverIds.length})`, style: 'solid' }] : []),
+      ...(highSigs.length > 0 ? [{ color: '#ff6b6b', label: `Elevated Signal (${highSigs.length})`, style: 'pulse' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'COORDINATION_SATURATION') {
+    const spines = (se.available && se.centrality) ? (se.centrality.top_structural_spines || []) : []
+    const hubs = spines.filter(s => s.structural_role === 'hub' || s.structural_role === 'authority')
+    const hubDomainIds = hubs.map(h => {
+      const pathTail = h.path.split('/').slice(-2).join('/')
+      const match = registry.find(d => (d.domain_name || '').includes(pathTail) || (d.business_label || '').includes(pathTail))
+      return match ? match.domain_id : null
+    }).filter(Boolean)
+
+    base.overlay_mode = 'COORDINATION_LOAD'
+    base.emphasis_domains = hubDomainIds.length > 0 ? hubDomainIds : Array.from(zoneAnchorDomains)
+    base.dim_domains = Array.from(domainIdSet).filter(id => !base.emphasis_domains.includes(id))
+    base.topology_label = 'COORDINATION LOAD'
+    base.legend_entries = [
+      ...(hubDomainIds.length > 0 ? [{ color: '#4a9eff', label: `Hub/Authority (${hubDomainIds.length})`, style: 'solid' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'OPERATIONAL_TOPOLOGY') {
+    base.overlay_mode = 'TOPOLOGY_POSTURE'
+    base.grounding_gradient = true
+    base.advisory_zones = Array.from(semanticOnlyDomains)
+    base.topology_label = 'TOPOLOGY POSTURE'
+    base.legend_entries = [
+      { color: '#64ffda', label: 'Grounded', style: 'solid' },
+      { color: '#d29922', label: 'Weakly Grounded', style: 'solid' },
+      { color: '#8b949e', label: 'Semantic-Only', style: 'dashed' },
+    ]
+  }
+
+  else if (activeSurfaceId === 'QUALIFICATION_EXPOSURE') {
+    const gl = fullReport.governance_lifecycle || {}
+    base.overlay_mode = 'QUALIFICATION_POSTURE'
+    base.grounding_gradient = true
+    base.advisory_zones = Array.from(semanticOnlyDomains)
+    base.topology_label = gl.available ? `QUALIFICATION POSTURE — ${gl.s_level}` : 'QUALIFICATION POSTURE'
+    base.legend_entries = [
+      { color: '#64ffda', label: 'Governed & Grounded', style: 'solid' },
+      { color: '#8b949e', label: 'Ungrounded Trust', style: 'dashed' },
+    ]
+  }
+
+  else if (activeSurfaceId === 'PROPAGATION_RISK') {
+    const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
+    const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
+    const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER')
+
+    const resolveDomainId = (alias) => {
+      const match = registry.find(d => d.domain_name === alias || d.business_label === alias)
+      return match ? match.domain_id : null
+    }
+
+    const originIds = origins.map(o => resolveDomainId(o.domain_alias)).filter(Boolean)
+    const ptIds = passThroughs.map(p => resolveDomainId(p.domain_alias)).filter(Boolean)
+    const receiverIds = receivers.map(r => resolveDomainId(r.domain_alias)).filter(Boolean)
+    const allIds = [...new Set([...originIds, ...ptIds, ...receiverIds])]
+
+    const corridorPaths = []
+    originIds.forEach(oid => {
+      const next = ptIds.length > 0 ? ptIds : receiverIds
+      next.forEach(tid => corridorPaths.push({ from: oid, to: tid, type: 'propagation' }))
+    })
+    if (ptIds.length > 0 && receiverIds.length > 0) {
+      ptIds.forEach(pid => receiverIds.forEach(rid => corridorPaths.push({ from: pid, to: rid, type: 'propagation' })))
+    }
+
+    base.overlay_mode = 'PROPAGATION_RISK'
+    base.emphasis_domains = allIds
+    base.dim_domains = Array.from(domainIdSet).filter(id => !allIds.includes(id))
+    base.corridor_paths = corridorPaths
+    base.topology_label = 'PROPAGATION RISK'
+    base.legend_entries = [
+      ...(originIds.length > 0 ? [{ color: '#ff6b6b', label: `Origin (${originIds.length})`, style: 'solid' }] : []),
+      ...(ptIds.length > 0 ? [{ color: '#ffd700', label: `Pass-Through (${ptIds.length})`, style: 'dashed' }] : []),
+      ...(receiverIds.length > 0 ? [{ color: '#ff9e4a', label: `Receiver (${receiverIds.length})`, style: 'solid' }] : []),
+    ]
+  }
+
+  return base
+}
+
+// ─── PRESSURE ZONE COGNITION STATE ─────────────────────────────────
+// Produces overlay state for the SVG topology when a pressure zone is activated.
+// Orthogonal to surface activation — the zone itself is a cognition trigger.
+
+function derivePressureZoneCognitionState(zoneId, fullReport) {
+  if (!zoneId || !fullReport) return null
+
+  const pzState = fullReport.pressure_zone_state || {}
+  const zones = pzState.zones || []
+  const zone = zones.find(z => z.zone_id === zoneId)
+  if (!zone) return null
+
+  const registry = fullReport.semantic_domain_registry || []
+  const sigs = fullReport.signal_interpretations || []
+  const domainIdSet = new Set(registry.map(d => d.domain_id))
+
+  function resolveToRegistryId(entityId) {
+    if (domainIdSet.has(entityId)) return entityId
+    const num = entityId.replace(/^DOM-/, '')
+    if (domainIdSet.has(`DOMAIN-${num}`)) return `DOMAIN-${num}`
+    return null
+  }
+
+  const memberIds = (zone.member_entities || [])
+    .map(m => resolveToRegistryId(m.entity_id))
+    .filter(Boolean)
+
+  const anchorId = resolveToRegistryId(zone.anchor_id)
+
+  const contributingConditions = zone.aggregated_conditions || []
+  const contributingSigs = sigs.filter(s =>
+    contributingConditions.includes(s.signal_id)
+  )
+
+  const blindSpotEntities = pzState.structural_blind_spot_entities || []
+  const blindSpots = blindSpotEntities
+    .map(e => resolveToRegistryId(e.entity_id))
+    .filter(Boolean)
+
+  const emphasisIds = [...new Set([...memberIds, ...(anchorId ? [anchorId] : [])])]
+  const dimIds = Array.from(domainIdSet).filter(id =>
+    !emphasisIds.includes(id) && !blindSpots.includes(id)
+  )
+
+  const signalOverlays = contributingSigs.map(s => ({
+    signal_id: s.signal_id,
+    signal_name: s.signal_name,
+    severity: s.activation_state || s.severity,
+    type: 'pressure_condition',
+    source_entity: s.concentration || null,
+  }))
+
+  return {
+    active_surface: null,
+    active_pressure_zone: zoneId,
+    overlay_mode: 'PRESSURE_ZONE',
+    emphasis_domains: emphasisIds,
+    dim_domains: dimIds,
+    signal_overlays: signalOverlays,
+    pressure_zone_emphasis: zoneId,
+    corridor_paths: [],
+    advisory_zones: blindSpots,
+    grounding_gradient: null,
+    evidence_gaps: [],
+    topology_label: `PRESSURE ZONE ${zoneId} · ${zone.zone_class.replace(/_/g, ' ')}`,
+    legend_entries: [
+      { color: '#ff6b6b', label: `Zone Anchor: ${zone.anchor_name || zone.anchor_id}`, style: 'solid' },
+      ...contributingConditions.map(cond => {
+        const translation = translateSignal(cond)
+        return {
+          color: '#ffd700',
+          label: translation ? translation.l2 : cond,
+          style: 'solid',
+        }
+      }),
+      ...(blindSpots.length > 0 ? [{ color: '#5e6d8a', label: `Structural Blind Spot (${blindSpots.length})`, style: 'dashed' }] : []),
+    ],
+    zone_detail: {
+      zone_id: zoneId,
+      zone_class: zone.zone_class,
+      anchor_id: zone.anchor_id,
+      anchor_name: zone.anchor_name,
+      condition_count: zone.condition_count,
+      conditions: contributingConditions,
+      embedded_pair_rules: zone.embedded_pair_rules || [],
+      blind_spot_count: blindSpots.length,
+    },
+  }
+}
+
+module.exports = { deriveProjection, deriveModuleState, deriveTopologyCognitionState, derivePressureZoneCognitionState, translateSignal, SIGNAL_COGNITION_MAP, PROJECTION_STATUS }

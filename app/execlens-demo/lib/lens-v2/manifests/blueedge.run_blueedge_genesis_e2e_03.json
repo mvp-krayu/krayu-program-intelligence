@@ -35,7 +35,8 @@
       "constitutional_replay_anchor": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/constitutional_replay_anchor.json",
       "review_obligations": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/sqo/review_obligations.json",
       "convergence_observations": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/convergence/convergence_observations.json",
-      "chronicle_certification": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/chronicle/chronicle_certification.json"
+      "chronicle_certification": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/chronicle/chronicle_certification.json",
+      "pressure_zone_state": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/75.x/pressure_zone_state.json"
     }
   },
   "report_pack": {},

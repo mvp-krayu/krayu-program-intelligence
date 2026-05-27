@@ -67,13 +67,21 @@ function QualificationContextStrip({ decomposition, qualification }) {
 // ─── COGNITION SURFACE CARD ─────────────────────────────────────────
 // Each surface is a compressed operational assessment, not a list panel
 
-function CognitionSurfaceCard({ surface, expandable }) {
+function CognitionSurfaceCard({ surface, expandable, active, onSelect }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
 
   return (
-    <div className="sw-intel-surface" data-severity={surface.severity} data-surface={surface.surface_id}>
+    <div
+      className={`sw-intel-surface${active ? ' sw-intel-surface--active' : ''}`}
+      data-severity={surface.severity}
+      data-surface={surface.surface_id}
+      onClick={onSelect ? () => onSelect(surface.surface_id) : undefined}
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(surface.surface_id) } } : undefined}
+    >
       <div className="sw-intel-surface-header">
         <span className="sw-intel-surface-icon" style={{ color: sevColor }}>{icon}</span>
         <span className="sw-intel-surface-name">{surface.surface_name}</span>
@@ -304,18 +312,21 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
   const surfaces = projection.surfaces || []
 
   return (
     <div className="sw-intel-view sw-intel-view--dense">
-      <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
-      <SoftwareIntelligenceRawPICoreFallback onDeactivate={onDeactivate} />
+      <div className="sw-intel-view-header">
+        <span className="sw-intel-view-module-tag">SW-INTEL</span>
+        <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
+        <button className="sw-intel-deactivate-btn" onClick={onDeactivate} type="button">✕</button>
+      </div>
       <PeakSeverityStrip surfaces={surfaces} />
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} />
         ))}
       </div>
 
@@ -324,18 +335,21 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate }) {
   )
 }
 
-export function SoftwareIntelligenceInvestigationView({ projection, onDeactivate }) {
+export function SoftwareIntelligenceInvestigationView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
   const surfaces = projection.surfaces || []
 
   return (
     <div className="sw-intel-view sw-intel-view--investigation">
-      <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
-      <SoftwareIntelligenceRawPICoreFallback onDeactivate={onDeactivate} />
+      <div className="sw-intel-view-header">
+        <span className="sw-intel-view-module-tag">SW-INTEL</span>
+        <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
+        <button className="sw-intel-deactivate-btn" onClick={onDeactivate} type="button">✕</button>
+      </div>
       <PeakSeverityStrip surfaces={surfaces} />
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} />
         ))}
       </div>
 
