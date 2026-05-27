@@ -8,6 +8,7 @@ import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, S
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
+import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -49,6 +50,188 @@ const REP_TIER_COLOR = {
   ELEVATED: '#ff9e4a',
   MODERATE: '#ffd700',
   LOW:      '#64ffda',
+}
+
+const SEVERITY_GLYPH_COLOR = { CRITICAL: '#ff6b6b', HIGH: '#ff9e4a', ELEVATED: '#ffd700', MODERATE: '#7a8aaa', NOMINAL: '#2a2f40', LOW: '#4a5570' }
+
+function StructuralGlyph({ type, severity, size = 28 }) {
+  const c = SEVERITY_GLYPH_COLOR[severity] || '#4a9eff'
+  const s = size
+  const h = s / 2
+  if (type === 'convergence') {
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <circle cx={h} cy={h} r={s*0.11} fill={c} opacity="0.9"/>
+        <circle cx={h} cy={h} r={s*0.29} fill="none" stroke={c} strokeWidth="1.5" opacity="0.45"/>
+        <circle cx={h} cy={h} r={s*0.43} fill="none" stroke={c} strokeWidth="1" opacity="0.2"/>
+        <line x1={s*0.1} y1={s*0.1} x2={s*0.35} y2={s*0.35} stroke={c} strokeWidth="1" opacity="0.5"/>
+        <line x1={s*0.9} y1={s*0.1} x2={s*0.65} y2={s*0.35} stroke={c} strokeWidth="1" opacity="0.5"/>
+        <line x1={s*0.1} y1={s*0.9} x2={s*0.35} y2={s*0.65} stroke={c} strokeWidth="1" opacity="0.5"/>
+        <line x1={s*0.9} y1={s*0.9} x2={s*0.65} y2={s*0.65} stroke={c} strokeWidth="1" opacity="0.5"/>
+      </svg>
+    )
+  }
+  if (type === 'spread') {
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <circle cx={s*0.2} cy={h} r={s*0.09} fill={c}/>
+        <line x1={s*0.32} y1={h} x2={s*0.88} y2={s*0.18} stroke={c} strokeWidth="1.5" opacity="0.5" strokeLinecap="round"/>
+        <line x1={s*0.32} y1={h} x2={s*0.92} y2={h} stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1={s*0.32} y1={h} x2={s*0.88} y2={s*0.82} stroke={c} strokeWidth="1.5" opacity="0.35" strokeLinecap="round"/>
+      </svg>
+    )
+  }
+  if (type === 'hub') {
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <circle cx={h} cy={h} r={s*0.13} fill={c} opacity="0.9"/>
+        <line x1={s*0.1} y1={s*0.22} x2={s*0.37} y2={s*0.42} stroke={c} strokeWidth="1.5" opacity="0.55" strokeLinecap="round"/>
+        <line x1={s*0.1} y1={h} x2={s*0.37} y2={h} stroke={c} strokeWidth="1.5" opacity="0.7" strokeLinecap="round"/>
+        <line x1={s*0.1} y1={s*0.78} x2={s*0.37} y2={s*0.58} stroke={c} strokeWidth="1.5" opacity="0.55" strokeLinecap="round"/>
+        <line x1={s*0.9} y1={s*0.36} x2={s*0.63} y2={s*0.46} stroke={c} strokeWidth="1" opacity="0.3" strokeLinecap="round"/>
+        <line x1={s*0.9} y1={s*0.64} x2={s*0.63} y2={s*0.54} stroke={c} strokeWidth="1" opacity="0.3" strokeLinecap="round"/>
+      </svg>
+    )
+  }
+  if (type === 'fragmented-ring') {
+    const r = s * 0.4
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <path d={`M ${h} ${h-r} A ${r} ${r} 0 0 1 ${h+r} ${h}`} fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"/>
+        <path d={`M ${h+r} ${h} A ${r} ${r} 0 0 1 ${h} ${h+r}`} fill="none" stroke="#1e2330" strokeWidth="2"/>
+        <path d={`M ${h} ${h+r} A ${r} ${r} 0 0 1 ${h-r} ${h}`} fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" opacity="0.6"/>
+        <path d={`M ${h-r} ${h} A ${r} ${r} 0 0 1 ${h} ${h-r}`} fill="none" stroke="#1e2330" strokeWidth="2"/>
+      </svg>
+    )
+  }
+  if (type === 'gravity') {
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <circle cx={h} cy={h} r={s*0.18} fill={c} opacity="0.8"/>
+        <circle cx={s*0.22} cy={s*0.25} r={s*0.06} fill={c} opacity="0.3"/>
+        <circle cx={s*0.75} cy={s*0.28} r={s*0.05} fill={c} opacity="0.2"/>
+        <circle cx={s*0.25} cy={s*0.72} r={s*0.04} fill={c} opacity="0.2"/>
+        <circle cx={s*0.78} cy={s*0.7} r={s*0.05} fill={c} opacity="0.25"/>
+      </svg>
+    )
+  }
+  if (type === 'coupling') {
+    return (
+      <svg viewBox={`0 0 ${s} ${s}`} width={s} height={s} className="structural-glyph">
+        <circle cx={s*0.28} cy={h} r={s*0.1} fill={c} opacity="0.7"/>
+        <circle cx={s*0.72} cy={h} r={s*0.1} fill={c} opacity="0.7"/>
+        <line x1={s*0.38} y1={h} x2={s*0.62} y2={h} stroke={c} strokeWidth="2.5" strokeLinecap="round"/>
+        <line x1={h} y1={s*0.2} x2={h} y2={s*0.38} stroke={c} strokeWidth="1" opacity="0.35" strokeLinecap="round"/>
+        <line x1={h} y1={s*0.62} x2={h} y2={s*0.8} stroke={c} strokeWidth="1" opacity="0.35" strokeLinecap="round"/>
+      </svg>
+    )
+  }
+  return null
+}
+
+const PRESSURE_GLYPH_TYPE = { DPSIG: 'convergence', PSIG: 'spread', ISIG: 'hub', RESILIENCE: 'fragmented-ring' }
+const DYNAMICS_GLYPH_TYPE = {
+  DELIVERY_PRESSURE_CONCENTRATION: 'convergence',
+  DEPENDENCY_CHOKE_POINT: 'hub',
+  PROPAGATION_ASYMMETRY: 'spread',
+  STRUCTURAL_MASS_CONCENTRATION: 'gravity',
+  CROSS_DOMAIN_COUPLING_PRESSURE: 'coupling',
+}
+
+function ConvergenceWeb({ slices, postureLabel, postureSeverity, primaryLocus }) {
+  if (!slices || slices.length < 2) return null
+
+  const w = 480, h = 148
+  const cx = w / 2, cy = 56
+  const radius = 33
+  const coreColor = SEVERITY_GLYPH_COLOR[postureSeverity] || '#4a9eff'
+  const n = slices.length
+
+  const nodes = slices.map((s, i) => {
+    const angle = -Math.PI / 2 + (2 * Math.PI * i / n)
+    return {
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle),
+      color: SEVERITY_GLYPH_COLOR[s.severity] || '#4a9eff',
+      name: s.executive_name,
+      angle,
+    }
+  })
+
+  const labelNodes = nodes.map(nd => {
+    const dx = nd.x - cx
+    const dy = nd.y - cy
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1
+    const lx = nd.x + (dx / dist) * 16
+    const ly = nd.y + (dy / dist) * 11
+    const anchor = dx < -3 ? 'end' : dx > 3 ? 'start' : 'middle'
+    return { lx, ly, anchor, name: nd.name, color: nd.color }
+  })
+
+  return (
+    <div className="cockpit-convergence-web">
+      <svg viewBox={`0 0 ${w} ${h}`} width="100%" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="convergence-core-glow">
+            <stop offset="0%" stopColor={coreColor} stopOpacity="0.2" />
+            <stop offset="40%" stopColor={coreColor} stopOpacity="0.08" />
+            <stop offset="100%" stopColor={coreColor} stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="convergence-field-bg">
+            <stop offset="0%" stopColor={coreColor} stopOpacity="0.04" />
+            <stop offset="60%" stopColor={coreColor} stopOpacity="0.015" />
+            <stop offset="100%" stopColor={coreColor} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {primaryLocus && (
+          <text x={cx} y={cy + 1} fill={coreColor} fontSize="4.5" fontFamily="'Courier New', monospace" textAnchor="middle" dominantBaseline="middle" opacity="0.08" letterSpacing="0.15em">
+            {primaryLocus.toUpperCase()}
+          </text>
+        )}
+
+        <circle cx={cx} cy={cy} r={radius + 14} fill="url(#convergence-field-bg)" />
+        <circle cx={cx} cy={cy} r={radius + 7} fill="url(#convergence-core-glow)" />
+
+        {nodes.map((nd, i) => {
+          const next = nodes[(i + 1) % n]
+          return <line key={`web-${i}`} x1={nd.x} y1={nd.y} x2={next.x} y2={next.y} stroke="#2a2f40" strokeWidth="0.7" opacity="0.45" />
+        })}
+
+        {nodes.map((nd, i) => (
+          <line key={`vec-${i}`} x1={nd.x} y1={nd.y} x2={cx} y2={cy} stroke={nd.color} strokeWidth="1" opacity="0.3" strokeDasharray="2.5 1.5" />
+        ))}
+
+        <circle cx={cx} cy={cy} r={14} fill={coreColor} opacity="0.04" />
+        <circle cx={cx} cy={cy} r={10} fill={coreColor} opacity="0.08" />
+        <circle cx={cx} cy={cy} r={6.5} fill={coreColor} opacity="0.18" />
+        <circle cx={cx} cy={cy} r={3.5} fill={coreColor} opacity="0.7" />
+        <circle cx={cx} cy={cy} r={16} fill="none" stroke={coreColor} strokeWidth="0.4" opacity="0.12" />
+
+        {nodes.map((nd, i) => (
+          <g key={`node-${i}`}>
+            <circle cx={nd.x} cy={nd.y} r={3.2} fill={nd.color} opacity="0.75" />
+            <circle cx={nd.x} cy={nd.y} r={5.5} fill="none" stroke={nd.color} strokeWidth="0.5" opacity="0.22" />
+          </g>
+        ))}
+
+        {labelNodes.map((ln, i) => (
+          <text key={`lbl-${i}`} x={ln.lx} y={ln.ly} fill={ln.color} fontSize="7.5" fontFamily="'Courier New', monospace" fontWeight="600" textAnchor={ln.anchor} dominantBaseline="middle" opacity="0.8">
+            {ln.name}
+          </text>
+        ))}
+
+        <text x={cx} y={h - 22} fill={coreColor} fontSize="8" fontWeight="600" fontFamily="'Courier New', monospace" textAnchor="middle" opacity="0.85" letterSpacing="0.02em">
+          {postureLabel}
+        </text>
+        {primaryLocus && (
+          <text x={cx} y={h - 10} fill="#7a8aaa" fontSize="7" fontFamily="'Courier New', monospace" textAnchor="middle" opacity="0.6">
+            {primaryLocus}
+          </text>
+        )}
+      </svg>
+    </div>
+  )
 }
 
 const INTERP_MODE_FRAMING = {
@@ -671,7 +854,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {swIntelActive && resolvedCondition ? (
+      {!boardroomMode && swIntelActive && resolvedCondition ? (
         <div className="support-block support-block--conditions support-block--condition-focus">
           <div className="support-label">FOCUSED CONDITION</div>
           <div className="support-condition-focus-title" data-severity={resolvedCondition.severity}>
@@ -697,7 +880,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             </>
           )}
         </div>
-      ) : swIntelActive && activeConditions && activeConditions.length > 0 ? (
+      ) : !boardroomMode && swIntelActive && activeConditions && activeConditions.length > 0 ? (
         <div className="support-block support-block--conditions">
           <div className="support-label">ACTIVE CONDITIONS</div>
           {activeConditions.slice(0, 4).map(c => (
@@ -733,7 +916,38 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {boardroomMode && paths.length > 0 && (
+      {boardroomMode && swIntelActive ? (
+        <div className="support-block support-block--executive-posture">
+          <div className="support-label">EXECUTIVE POSTURE</div>
+          <div className="support-posture-kv">
+            <div className="support-posture-row">
+              <span className="support-posture-key">Operational concentration</span>
+              <span className="support-posture-val">{activeConditions && activeConditions.length > 0 && activeConditions[0].shared_topology_targets ? activeConditions[0].shared_topology_targets.domains_display?.[0] || 'System-wide' : 'System-wide'}</span>
+            </div>
+            <div className="support-posture-row">
+              <span className="support-posture-key">Primary software dynamic</span>
+              <span className="support-posture-val">{activeConditions && activeConditions.length > 0 ? (activeConditions.find(c => c.severity === 'CRITICAL' || c.severity === 'HIGH') || activeConditions[0]).condition_type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) : '—'}</span>
+            </div>
+            <div className="support-posture-row">
+              <span className="support-posture-key">Propagation risk</span>
+              <span className="support-posture-val">{activeConditions && activeConditions.some(c => c.condition_type === 'PROPAGATION_ASYMMETRY') ? 'Asymmetric downstream spread' : 'Within normal parameters'}</span>
+            </div>
+            <div className="support-posture-row">
+              <span className="support-posture-key">Confidence</span>
+              <span className="support-posture-val" data-confidence={resolvedCondition ? resolvedCondition.governance_boundary : 'ADVISORY_BOUND'}>{resolvedCondition && resolvedCondition.governance_boundary === 'GOVERNED' ? 'Governed' : 'Advisory-bound'}</span>
+            </div>
+            <div className="support-posture-row support-posture-row--implication">
+              <span className="support-posture-key">Operational implication</span>
+              <span className="support-posture-val">{activeConditions && activeConditions.some(c => c.condition_type === 'DELIVERY_PRESSURE_CONCENTRATION') ? 'Delivery coordination structurally constrained' : 'No immediate structural constraint'}</span>
+            </div>
+          </div>
+          <div className="support-label" style={{ marginTop: 12 }}>DESCENT PATHS</div>
+          <div className="support-sw-intel-descent">
+            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">DENSE</span><span className="support-sw-intel-descent-purpose">Topology cognition</span></div>
+            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">INVESTIGATION</span><span className="support-sw-intel-descent-purpose">Derivation proof</span></div>
+          </div>
+        </div>
+      ) : boardroomMode && paths.length > 0 ? (
         <div className="support-block support-block--paths">
           <div className="support-label">AVAILABLE PATHS</div>
           <div className="support-paths-list">
@@ -745,7 +959,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             ))}
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* LEGACY-ONLY: S1 support section — governed S2+ runs never match qualification_level === 'S1' */}
       {boardroomMode && fullReport && fullReport.qualification_level === 'S1' && (() => {
@@ -3825,6 +4039,62 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
               )}
             </>
           )}
+        </aside>
+      )
+    }
+
+    if (boardroomMode && swIntelActive && boardroomProjection && boardroomProjection.qualification_posture.governed) {
+      const qp = boardroomProjection.qualification_posture
+      const primaryDynamic = activeConditions && activeConditions.length > 0
+        ? (activeConditions.find(c => c.severity === 'CRITICAL' || c.severity === 'HIGH') || activeConditions[0])
+        : null
+      const primaryDynamicName = primaryDynamic
+        ? primaryDynamic.condition_type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
+        : '—'
+      const hasPropagation = activeConditions && activeConditions.some(c => c.condition_type === 'PROPAGATION_ASYMMETRY')
+      const hasPressure = activeConditions && activeConditions.some(c => c.condition_type === 'DELIVERY_PRESSURE_CONCENTRATION')
+      return (
+        <aside className="intel-interp intel-interp--executive-posture" data-tone={framing.tone} aria-label="Executive posture — SW-Intel active">
+          <div className="interp-tag">
+            <span className="interp-tag-label">EXECUTIVE POSTURE</span>
+            <span className="interp-tag-state">{qp.s_level}</span>
+          </div>
+
+          <div className="interp-block interp-block--lead">
+            <div className="interp-section-label">OPERATIONAL CONCENTRATION</div>
+            <div className="interp-synthesis">{pressureZone || 'System-wide'}</div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label">PRIMARY SOFTWARE DYNAMIC</div>
+            <div className="interp-synthesis">{primaryDynamicName}</div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label">PROPAGATION RISK</div>
+            <div className="interp-synthesis">{hasPropagation ? 'Asymmetric downstream spread' : 'Within normal parameters'}</div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label">CONFIDENCE</div>
+            <div className="interp-synthesis" data-confidence={primaryDynamic ? primaryDynamic.governance_boundary : 'ADVISORY_BOUND'}>
+              {primaryDynamic && primaryDynamic.governance_boundary === 'GOVERNED' ? 'Governed' : 'Advisory-bound'}
+            </div>
+          </div>
+
+          <div className="interp-block interp-block--implication">
+            <div className="interp-section-label">OPERATIONAL IMPLICATION</div>
+            <div className="interp-synthesis interp-synthesis--implication">
+              {hasPressure ? 'Delivery coordination structurally constrained' : 'No immediate structural constraint'}
+            </div>
+          </div>
+
+          <div className="interp-block">
+            <div className="interp-section-label interp-section-label--descent">DESCENT</div>
+            <div className="interp-synthesis interp-synthesis--descent">
+              DENSE → topology cognition · INVESTIGATION → derivation proof
+            </div>
+          </div>
         </aside>
       )
     }
@@ -7072,11 +7342,26 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
+
+  const swIntelTopoOverlay = useMemo(() => {
+    if (!swIntelActive || !consequencePosture || !fullReport) return null
+    const pzState = fullReport.pressure_zone_state
+    const primaryZoneId = pzState && pzState.zones && pzState.zones[0] ? pzState.zones[0].zone_id : null
+    if (!primaryZoneId) return null
+    return {
+      overlay_mode: 'SW_INTEL_POSTURE',
+      emphasis_domains: [],
+      dim_domains: [],
+      advisory_zones: [],
+      corridor_paths: [],
+      pressure_zone_emphasis: primaryZoneId,
+    }
+  }, [swIntelActive, consequencePosture, fullReport])
 
   // LEGACY PRE-PROJECTION PATH: S1 narrative rendering — governed S2+ runs (genesis_e2e_03) never enter this branch
   const isS1 = fullReport && fullReport.qualification_level === 'S1'
@@ -7148,17 +7433,54 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
     const tensionPct = bpTs.total_signals > 0 ? Math.round((bpTs.activated_count / bpTs.total_signals) * 100) : 0
 
+    const PDIM = { DPSIG: 'Concentration', ISIG: 'Dependency', PSIG: 'Propagation' }
+    const SRANK_LOCAL = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+    const pressureDimensions = bpSi.families
+      .filter(fam => PDIM[fam.family])
+      .map(fam => {
+        const maxSev = fam.signals.reduce((best, s) => (SRANK_LOCAL[s.severity] ?? 5) < (SRANK_LOCAL[best] ?? 5) ? s.severity : best, 'NOMINAL')
+        const activated = fam.activated_count || 0
+        const total = fam.signals.length
+        const pct = total > 0 ? Math.round((activated / total) * 100) : 0
+        return { key: fam.family, name: PDIM[fam.family], severity: maxSev, intensity: Math.max(pct, maxSev !== 'NOMINAL' ? 30 : 0), activated, total }
+      })
+    const covRatio = bpDc.total_domains > 0 ? bpDc.structurally_backed / bpDc.total_domains : 1
+    pressureDimensions.push({
+      key: 'RESILIENCE', name: 'Resilience',
+      severity: covRatio >= 1 ? 'NOMINAL' : covRatio >= 0.85 ? 'MODERATE' : 'ELEVATED',
+      intensity: Math.max(Math.round((1 - covRatio) * 100), covRatio < 1 ? 20 : 0),
+      activated: bpDc.total_domains - bpDc.structurally_backed, total: bpDc.total_domains,
+    })
+    const PLOCALE = {
+      DPSIG: bpTs.pressure_zone ? `Convergence around ${bpTs.pressure_zone}` : 'Cluster pressure distributed',
+      ISIG: (pressureDimensions.find(d => d.key === 'ISIG') || {}).activated > 0 ? 'Import hub amplifies dependency risk' : 'Dependency distribution balanced',
+      PSIG: (pressureDimensions.find(d => d.key === 'PSIG') || {}).activated > 0 ? 'Outbound change propagation asymmetric' : 'Propagation within normal parameters',
+      RESILIENCE: covRatio >= 1 ? 'Complete structural grounding' : `${bpDc.total_domains - bpDc.structurally_backed} domain${bpDc.total_domains - bpDc.structurally_backed !== 1 ? 's' : ''} without structural grounding`,
+    }
+    const activatedDimNames = pressureDimensions.filter(d => d.severity !== 'NOMINAL').map(d => d.name.toLowerCase())
+    const pressureSynthesis = activatedDimNames.length > 0
+      ? `${activatedDimNames.join(', ')} pressure${activatedDimNames.length > 1 ? 's converge' : ' concentrates'}${bpTs.pressure_zone ? ` around ${bpTs.pressure_zone}` : ''}.`
+      : null
+
     return (
       <div className="rep-field rep-field--boardroom rep-field--cockpit rep-field--governed">
         <RepModeTag
           label="Boardroom lens"
-          sub="Board · governed intelligence posture"
+          sub={swIntelActive && consequencePosture ? 'Board · governed intelligence · software intelligence active' : 'Board · governed intelligence posture'}
           zones={[{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
         />
 
         <div className="cockpit-finding" data-found={String(bpTs.activated_count > 0)} data-governed="true">
-          <div className="cockpit-finding-verdict">{bpTs.finding_headline}</div>
-          <div className="cockpit-finding-summary">{bpTs.tension_narrative}</div>
+          <div className="cockpit-finding-verdict">
+            {swIntelActive && consequencePosture
+              ? `${qp.s_level} GOVERNED · OPERATIONAL TENSION${bpTs.pressure_zone ? ` IN ${bpTs.pressure_zone.toUpperCase()}` : ''}`
+              : bpTs.finding_headline}
+          </div>
+          <div className="cockpit-finding-summary">
+            {swIntelActive && consequencePosture
+              ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices.length} software dynamics reinforce systemic fragility.`
+              : bpTs.tension_narrative}
+          </div>
         </div>
 
         {bpSi.families.length > 0 && (
@@ -7166,7 +7488,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             <div className="signal-field-families">
               {bpSi.families.map(fam => (
                 <span key={fam.family} className="signal-field-family-chip" data-family={fam.family} data-active={String(fam.activated_count > 0)}>
-                  <span className="signal-field-family-name">{fam.family}</span>
+                  <span className="signal-field-family-name">{PDIM[fam.family] || fam.family}</span>
                   <span className="signal-field-family-caption">{fam.family_label}</span>
                   {fam.activated_count > 0 && <span className="signal-field-family-count">{fam.activated_count} elevated</span>}
                 </span>
@@ -7186,14 +7508,62 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         )}
 
-        <div className="cockpit-synthesis">
-          <div className="cockpit-synthesis-conclusion">{bpGl.governance_narrative}</div>
-          {sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0 && (
-            <div className="cockpit-synthesis-convergence">
-              Governance patterns confirmed across independent specimens — {sec.cross_specimen.detail.convergences} convergences observed.
+        {swIntelActive && consequencePosture && consequencePosture.cognition_slices.length > 0 && (() => {
+          const cp = consequencePosture
+          return (
+            <div className="cockpit-sw-intel-spine">
+              <div className="cockpit-sw-intel-spine-header">
+                <span className="cockpit-sw-intel-spine-badge">SW-INTEL</span>
+                <span className="cockpit-sw-intel-spine-count">{cp.cognition_slices.length} software dynamics detected</span>
+                <span className="cockpit-sw-intel-spine-posture" data-severity={cp.posture_severity}>{cp.posture_label}</span>
+              </div>
+              <ConvergenceWeb slices={cp.cognition_slices} postureLabel={cp.posture_label} postureSeverity={cp.posture_severity} primaryLocus={cp.primary_locus} />
+              <div className="cockpit-sw-intel-slices">
+                {cp.cognition_slices.map((slice, i) => (
+                  <div key={slice.condition_type} className="cockpit-sw-intel-slice" data-severity={slice.severity}>
+                    <div className="cockpit-sw-intel-slice-body">
+                      <div className="cockpit-sw-intel-slice-head">
+                        <span className="cockpit-sw-intel-slice-name">{slice.executive_name}</span>
+                        <span className="cockpit-sw-intel-slice-domain">{slice.domain}</span>
+                        <span className="cockpit-sw-intel-slice-confidence" data-confidence={slice.confidence}>{slice.confidence_label}</span>
+                      </div>
+                      <div className="cockpit-sw-intel-slice-meaning">{slice.operational_meaning}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {cp.combined_synthesis && (
+                <div className="cockpit-sw-intel-synthesis">{cp.combined_synthesis}</div>
+              )}
             </div>
-          )}
-        </div>
+          )
+        })()}
+
+        {swIntelActive && consequencePosture ? (
+          <div className="cockpit-operational-confidence">
+            <div className="cockpit-operational-confidence-label">OPERATIONAL CONFIDENCE</div>
+            <div className="cockpit-operational-confidence-items">
+              <span className="cockpit-operational-confidence-item" data-level={consequencePosture.overall_confidence}>{consequencePosture.overall_confidence_label}</span>
+              <span className="cockpit-operational-confidence-sep">·</span>
+              <span className="cockpit-operational-confidence-item">Structural reconciliation incomplete</span>
+              {sec.deterministic_replay && sec.deterministic_replay.available && sec.deterministic_replay.detail.status === 'PASS' && (
+                <>
+                  <span className="cockpit-operational-confidence-sep">·</span>
+                  <span className="cockpit-operational-confidence-item" data-level="GOVERNED">Replay-certified evidence lineage active</span>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="cockpit-synthesis">
+            <div className="cockpit-synthesis-conclusion">{bpGl.governance_narrative}</div>
+            {sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0 && (
+              <div className="cockpit-synthesis-convergence">
+                Governance patterns confirmed across independent specimens — {sec.cross_specimen.detail.convergences} convergences observed.
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="cockpit-instruments">
           <div className="cockpit-gauge-panel">
@@ -7205,19 +7575,24 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             </div>
           </div>
 
-          <div className="cockpit-signal-panel">
-            <div className="cockpit-signal-label">SIGNAL ASSESSMENT</div>
-            {/* INTERIM_COMPONENT_COMPATIBILITY_MAPPING: executive_reading → boardroom_interpretation adapter until CockpitSignalBar accepts projection-native fields */}
-            {bpSi.families.flatMap(fam => fam.signals).map(sig => (
-              <CockpitSignalBar key={sig.signal_id} signal={{ ...sig, interpretation: sig.executive_reading, boardroom_interpretation: sig.executive_reading }} governed />
-            ))}
-            {bpTs.total_signals > 0 && (
-              <div className="cockpit-signal-tally">
-                {bpTs.activated_count > 0
-                  ? `${bpTs.activated_count} of ${bpTs.total_signals} activated`
-                  : `${bpTs.total_signals} nominal`
-                }
+          <div className="cockpit-pressure-panel">
+            <div className="cockpit-pressure-label">STRUCTURAL PRESSURE</div>
+            {pressureDimensions.map(dim => (
+              <div key={dim.key} className="cockpit-pressure-dim" data-severity={dim.severity} data-active={String(dim.severity !== 'NOMINAL')}>
+                <div className="cockpit-pressure-dim-visual">
+                  <StructuralGlyph type={PRESSURE_GLYPH_TYPE[dim.key]} severity={dim.severity} size={32} />
+                </div>
+                <div className="cockpit-pressure-dim-content">
+                  <div className="cockpit-pressure-dim-head">
+                    <span className="cockpit-pressure-dim-name">{dim.name}</span>
+                    <span className="cockpit-pressure-dim-severity" data-severity={dim.severity}>{dim.severity !== 'NOMINAL' ? dim.severity : '—'}</span>
+                  </div>
+                  <div className="cockpit-pressure-dim-locale">{PLOCALE[dim.key]}</div>
+                </div>
               </div>
+            ))}
+            {pressureSynthesis && (
+              <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>
             )}
             <div className="cockpit-governance-chips">
               {sec.deterministic_replay && sec.deterministic_replay.available && (
@@ -7263,17 +7638,20 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               edges={fullReport.semantic_topology_edges || []}
               pressureZoneLabel={bpTs.pressure_zone || ''}
               pressureZoneState={fullReport.pressure_zone_state}
+              cognitionOverlay={swIntelTopoOverlay}
             />
-            <div className="cockpit-topology-hint">Click to explore governed topology</div>
+            <div className="cockpit-topology-hint">{swIntelActive ? 'Topology reflects operational posture — click to explore' : 'Click to explore governed topology'}</div>
           </div>
         )}
 
         {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
 
-        <BoardroomGovernanceIntelligence fullReport={fullReport} boardroomProjection={boardroomProjection} />
+        {!(swIntelActive && consequencePosture) && (
+          <BoardroomGovernanceIntelligence fullReport={fullReport} boardroomProjection={boardroomProjection} />
+        )}
 
         <div className="cockpit-footer">
-          Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.
+          {swIntelActive ? 'Structural derivation primary · 75.x bounded authority · All claims trace to evidence' : 'Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.'}
         </div>
       </div>
     )
@@ -7577,15 +7955,10 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture }) {
   if (boardroomMode) {
     return (
-      <>
-        <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} />
-        {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceBoardroomSummary projection={swIntelProjection} />
-        )}
-      </>
+      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
     )
   }
   if (densityClass === 'INVESTIGATION_DENSE') {
@@ -7704,6 +8077,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const synthesisResult = useMemo(() => swIntelActive ? synthesize(fullReport) : null, [fullReport, swIntelActive])
   const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(fullReport) : null, [fullReport, swIntelActive])
   const activeConditions = synthesisResult ? synthesisResult.active : []
+
+  const consequenceResult = useMemo(() => swIntelActive && synthesisResult ? compileConsequences(synthesisResult, fullReport) : null, [synthesisResult, fullReport, swIntelActive])
+  const consequenceTeaser = useMemo(() => {
+    if (swIntelActive || !fullReport) return null
+    const tempSynthesis = synthesize(fullReport)
+    return tempSynthesis ? compileConsequenceTeaser(tempSynthesis, fullReport) : null
+  }, [fullReport, swIntelActive])
+  const consequencePosture = useMemo(() => consequenceResult ? consequencesForBoardroom(consequenceResult, synthesisResult, fullReport) : null, [consequenceResult, synthesisResult, fullReport])
 
   const resolvedCondition = useMemo(() => {
     if (!cognitionState.activeConditionId || !synthesisResult) return null
@@ -7953,14 +8334,17 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onConditionSelect={handleConditionSelect}
           onConditionIntervention={handleConditionIntervention}
           swIntelTeaser={swIntelTeaser}
+          consequencePosture={consequencePosture}
         />
 
-        <OrchestrationGuidanceRuntime
-          projection={swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' ? swIntelProjection : null}
-          fullReport={fullReport}
-          sqoAuthorityWorkspace={sqoAuthorityWorkspace}
-          sqoBinding={sqoBinding}
-        />
+        {!boardroomMode && (
+          <OrchestrationGuidanceRuntime
+            projection={swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' ? swIntelProjection : null}
+            fullReport={fullReport}
+            sqoAuthorityWorkspace={sqoAuthorityWorkspace}
+            sqoBinding={sqoBinding}
+          />
+        )}
       </main>
 
       <SupportRail
