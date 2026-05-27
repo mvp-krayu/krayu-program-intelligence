@@ -402,15 +402,23 @@ When STRUCTURAL_ONLY conditions are corroborated by GOVERNED conditions on the s
 
 ## 6. Evidence Trace Requirements
 
-Every synthesized condition MUST include:
+Every synthesized condition MUST include ALL of the following fields. Missing fields = invalid condition.
+
+### 6.1 Canonical Condition Schema
 
 ```json
 {
   "condition_id": "string — kebab-case unique identifier",
   "condition_type": "string — rule name from §2",
-  "title": "string — operator-facing condition name",
+
+  "internal_condition_id": "string — engine vocabulary (STRUCTURAL_MASS_CONCENTRATION)",
+  "technical_semantic_label": "string — L2 structural semantic (Structural Load Concentration)",
+  "operator_cognition_title": "string — L3 operator vocabulary (Delivery Coordination Overload)",
+  "operational_consequence": "string — what this means for operator decisions",
+  "governance_boundary": "GOVERNED | ADVISORY_BOUND | STRUCTURAL_ONLY",
+  "topology_effect": "string — what the topology does when this condition activates",
+
   "severity": "string — aggregated per §3",
-  "operational_meaning": "string — consequence for operator",
   "supporting_signal_ids": ["array of signal_ids that triggered this condition"],
   "shared_topology_targets": {
     "domains": ["DOMAIN-NN"],
@@ -419,7 +427,7 @@ Every synthesized condition MUST include:
   },
   "pressure_zone_ids": ["PZ-NNN or empty"],
   "evidence_mode": "TOPOLOGY_DRIVEN | SIGNAL_DRIVEN | MIXED",
-  "qualification_boundary": "GOVERNED | ADVISORY_BOUND | STRUCTURAL_ONLY",
+
   "topology_overlay": {
     "overlay_mode": "string",
     "emphasis_domains": [],
@@ -428,12 +436,54 @@ Every synthesized condition MUST include:
     "signal_overlays": [],
     "corridor_paths": []
   },
+
+  "guided_interventions": ["condition-contextual interventions per §12"],
+  "orchestration_hooks": ["downstream runtime mutations this condition enables"],
+
   "contributing_features": ["feature tags from §1"],
   "derivation_trace": "string — human-readable derivation chain"
 }
 ```
 
-The `topology_overlay` is the PRIMARY output. All other fields are explainability.
+### 6.2 Three-Layer Vocabulary Governance
+
+Every condition carries three vocabulary layers. These are NOT optional. They are NOT improvised per component. They are schema-enforced.
+
+| Layer | Field | Purpose | Audience | Example |
+|---|---|---|---|---|
+| L1 — Engine | `internal_condition_id` | Rule identification, code references, logging | Engine / developers | `STRUCTURAL_MASS_CONCENTRATION` |
+| L2 — Structural Semantic | `technical_semantic_label` | Structural meaning for advanced operators / explainability | Technical operators | "Structural Load Concentration" |
+| L3 — Operator Cognition | `operator_cognition_title` | Operational consequence for decision-makers | Executive / operator | "Delivery Coordination Overload" |
+
+### 6.3 GENESIS Vocabulary Table
+
+| Internal (L1) | Structural Semantic (L2) | Operator Cognition (L3) |
+|---|---|---|
+| `DELIVERY_PRESSURE_CONCENTRATION` | Compound Pressure Zone Convergence | Delivery Pressure Concentration |
+| `DEPENDENCY_CHOKE_POINT` | Dependency Hub Concentration | Structural Dependency Bottleneck |
+| `PROPAGATION_ASYMMETRY` | Outbound Dependency Spread Asymmetry | Change Propagation Exposure |
+| `STRUCTURAL_MASS_CONCENTRATION` | Cluster Load Asymmetry | Structural Load Imbalance |
+| `CROSS_DOMAIN_COUPLING_PRESSURE` | Domain Interdependency Overload | Cross-Domain Coupling Risk |
+| `GOVERNANCE_COVERAGE_STATUS` | Structural Anchoring Completeness | Governance Coverage Status |
+| `COMPOUND_CONVERGENCE` | Multi-Condition Topology Convergence | Compound Structural Convergence |
+
+### 6.4 Authority Hierarchy
+
+The `topology_overlay` is the PRIMARY output — it is the topology mutation event.
+
+The `guided_interventions` are the SECONDARY output — they are what the operator can do given this cognition state.
+
+The vocabulary fields (`operator_cognition_title`, `operational_consequence`, `topology_effect`) are EXPLAINABILITY — they describe what the topology is already showing.
+
+TopologyCognitionState is a runtime authority object. It does not get consumed by React components for rendering decisions. It drives:
+- topology overlay mutations (what the SVG shows)
+- left panel content (what evidence and interpretation appears)
+- right panel queries (what the operator can ask)
+- guided interventions (what actions are available)
+- orchestration hooks (what downstream mutations are enabled)
+- SQO progression signals (what qualification transitions are reachable)
+
+Components render what the authority declares. They do not interpret the state.
 
 ---
 
@@ -596,3 +646,90 @@ Different client. Same rules. Different topology targets. No BlueEdge-specific l
 | 8 | Overrideable only through governed rule changes | YES — rules live in this rulebook, not hardcoded |
 | 9 | Conditions are topology mutation events | YES — topology_overlay is primary, text is explainability trace |
 | 10 | No hidden AI | YES — deterministic pattern matching, no LLM, no ML |
+| 11 | 3-layer vocabulary governance | YES — every condition carries L1/L2/L3 as mandatory schema fields |
+| 12 | TopologyCognitionState = runtime authority | YES — drives overlays, panels, queries, interventions, orchestration, SQO |
+| 13 | Guided interventions are condition-contextual | YES — intervention set is a function of active cognition state |
+
+---
+
+## 12. Condition-Contextual Guided Interventions
+
+### 12.1 Doctrine
+
+Guided interventions are NOT a static list. They are a function of the active cognition state.
+
+When no condition is active → no interventions available (topology is in default posture).
+When a condition activates → interventions specific to that condition become available.
+When the condition deactivates → those interventions disappear.
+
+Interventions are NOT detached suggestions. They are runtime mutations enabled by the active cognition state.
+
+### 12.2 Intervention Schema
+
+```json
+{
+  "intervention_id": "string — unique identifier",
+  "condition_id": "string — which condition enables this intervention",
+  "action_type": "INSPECT | DECOMPOSE | TRACE | COMPARE | QUALIFY",
+  "operator_label": "string — what the operator sees",
+  "topology_mutation": "string — what happens to the topology when triggered",
+  "panel_mutation": "string — what the left/right panel shows",
+  "orchestration_effect": "string — downstream effect on orchestration/SQO"
+}
+```
+
+### 12.3 GENESIS Intervention Map
+
+**When COMPOUND_CONVERGENCE is active:**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Decompose convergence into contributing conditions" | DECOMPOSE | Overlay transitions from compound to selected primitive condition's overlay | Left panel shows selected primitive's evidence |
+| "Inspect convergence domain structural role" | INSPECT | Convergence domain enlarges, connections emphasized | Left panel shows domain structural profile (role, centrality, member count) |
+| "Compare convergence severity across conditions" | COMPARE | Conditions listed with severity indicators on topology | Right panel shows severity comparison matrix |
+| "Assess qualification impact of convergence" | QUALIFY | Governance boundary indicators appear on convergence domain | Left panel shows qualification boundary assessment, SQO progression implications |
+
+**When DELIVERY_PRESSURE_CONCENTRATION is active:**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Inspect pressure zone members" | INSPECT | Zone members emphasized, non-members dimmed | Left panel shows zone member inventory with per-member evidence |
+| "Trace condition origins" | TRACE | Contributing signal paths visualized on topology | Left panel shows signal → feature → condition derivation chain |
+| "Assess blast radius" | INSPECT | Advisory zones (blind spots) emphasized | Left panel shows blind spot inventory and proximity to zone |
+
+**When DEPENDENCY_CHOKE_POINT is active:**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Trace dependency hub connections" | TRACE | Import corridors from hub file visualized | Left panel shows top-N dependents of hub file |
+| "Inspect hub domain structural role" | INSPECT | Domain containing hub file emphasized | Left panel shows domain profile |
+| "Assess propagation exposure from hub" | TRACE | Downstream impact paths from hub illuminated | Right panel shows "if this file changes, N files affected" |
+
+**When PROPAGATION_ASYMMETRY is active:**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Trace outbound dependency spread" | TRACE | Fan-out corridors from asymmetric file visualized | Left panel shows outbound dependency inventory |
+| "Inspect propagation domain" | INSPECT | Domain containing fan-out file emphasized | Left panel shows domain profile |
+
+**When STRUCTURAL_MASS_CONCENTRATION is active:**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Inspect dominant cluster composition" | INSPECT | Cluster boundary emphasized, member domains highlighted | Left panel shows cluster member inventory |
+| "Compare cluster load distribution" | COMPARE | All clusters sized by node count on topology | Right panel shows cluster distribution table |
+
+**When GOVERNANCE_COVERAGE_STATUS is active (GAP):**
+
+| Intervention | Action Type | Topology Mutation | Panel Mutation |
+|---|---|---|---|
+| "Inspect unanchored structural components" | INSPECT | Unanchored nodes/domains emphasized | Left panel shows unanchored component inventory |
+| "Assess qualification impact of coverage gap" | QUALIFY | Governance boundary indicators on affected regions | Left panel shows qualification boundary + SQO implications |
+
+### 12.4 Intervention Activation Rules
+
+1. Interventions are ONLY available when their parent condition is active
+2. Triggering an intervention mutates topology AND panel simultaneously
+3. An intervention may transition the cognition state (e.g., DECOMPOSE transitions from COMPOUND_CONVERGENCE to a primitive condition)
+4. Multiple interventions cannot be active simultaneously — triggering one replaces the previous
+5. "Back" returns to the parent condition's default topology state
