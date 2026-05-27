@@ -1,0 +1,20 @@
+{
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "objects": {
+    "semantic_propositions": [
+      {"id": "PROP-001", "class": "STRUCTURAL_DOMINANCE", "status": "CANDIDATE", "confidence": 0.95, "ceu_refs": ["CEU-001", "CEU-002"]},
+      {"id": "PROP-002", "class": "COUPLING_PATTERN", "status": "CANDIDATE", "confidence": 0.88, "ceu_refs": ["CEU-003"]},
+      {"id": "PROP-003", "class": "COUPLING_PATTERN", "status": "CANDIDATE", "confidence": 0.92, "ceu_refs": ["CEU-001", "CEU-004"]},
+      {"id": "PROP-004", "class": "AUTHORITY_TOPOLOGY", "status": "CANDIDATE", "confidence": 0.87, "ceu_refs": ["CEU-005"]},
+      {"id": "PROP-005", "class": "TIER_GROUNDING", "status": "CANDIDATE", "confidence": 0.90, "ceu_refs": ["CEU-002", "CEU-006"]},
+      {"id": "PROP-006", "class": "HERO_MOMENT_GROUNDING", "status": "CANDIDATE", "confidence": 0.85, "ceu_refs": ["CEU-007"]},
+      {"id": "PROP-007", "class": "CLUSTER_ARCHITECTURE", "status": "CANDIDATE", "confidence": 0.79, "ceu_refs": ["CEU-008"]},
+      {"id": "PROP-008", "class": "STRUCTURAL_DOMINANCE", "status": "CANDIDATE", "confidence": 0.93, "ceu_refs": ["CEU-001"]},
+      {"id": "PROP-009", "class": "COUPLING_PATTERN", "status": "CANDIDATE", "confidence": 0.87, "ceu_refs": ["CEU-009"]},
+      {"id": "PROP-010", "class": "COUPLING_PATTERN", "status": "CANDIDATE", "confidence": 0.91, "ceu_refs": ["CEU-010"]},
+      {"id": "PROP-011", "class": "COUPLING_PATTERN", "status": "CANDIDATE", "confidence": 0.86, "ceu_refs": ["CEU-011"]},
+      {"id": "PROP-012", "class": "AUTHORITY_TOPOLOGY", "status": "CANDIDATE", "confidence": 0.88, "ceu_refs": ["CEU-012"]}
+    ]
+  }
+}

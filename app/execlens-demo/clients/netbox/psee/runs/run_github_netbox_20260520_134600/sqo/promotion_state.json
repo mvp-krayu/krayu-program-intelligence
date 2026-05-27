@@ -1,0 +1,42 @@
+{
+  "specimen_id": "netbox",
+  "run_id": "run_github_netbox_20260520_134600",
+  "s_level": "S1",
+  "qualification_path": "SPE",
+  "lanes": {
+    "semantic_candidate": {
+      "state": "COMPLETE",
+      "authority": "L3_PROPOSITION_EVIDENCE",
+      "qualification_path": "SPE",
+      "proposition_count": 75,
+      "derivation_hash": "a1356bb405053b5bb86a741ae361c47dcecbafcbba6ace7edd55b67262a67175"
+    },
+    "review_queue": {
+      "state": "PENDING",
+      "authority": "PROPOSITION_REVIEW"
+    },
+    "crosswalk": {
+      "state": "INAPPLICABLE"
+    },
+    "reconciliation": {
+      "state": "COMPLETE",
+      "authority": "OPERATOR_VALIDATED"
+    },
+    "qualification_debt": {
+      "state": "PENDING",
+      "authority": "NONE"
+    },
+    "promotion_decision": {
+      "state": "BLOCKED",
+      "blocking_gaps": ["REVIEW_PENDING", "DEBT_PENDING", "NO_SEMANTIC_AUTHORITY"]
+    },
+    "runtime_projection": {
+      "state": "STRUCTURAL_ONLY",
+      "authority": "STRUCTURAL"
+    }
+  },
+  "insufficiency_assessment": {
+    "semantic_coverage": "PROPOSITION_EVIDENCE",
+    "promotion_feasibility": "PROPOSITION_REVIEW_AND_QUALIFICATION_REQUIRED"
+  }
+}
