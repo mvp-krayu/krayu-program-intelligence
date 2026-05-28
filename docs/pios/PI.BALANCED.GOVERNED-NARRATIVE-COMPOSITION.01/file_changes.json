@@ -1,0 +1,66 @@
+{
+  "stream_id": "PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01",
+  "classification": "G2",
+  "branch": "feature/runtime-demo",
+  "changes": [
+    {
+      "path": "app/execlens-demo/lib/lens-v2/balanced/OperationalVocabulary.js",
+      "action": "CREATED",
+      "purpose": "Governed vocabulary registry — allowed/forbidden language, templates, validation",
+      "reconciliation_status": "KEPT — vocabulary governance is legitimate, not cognition"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/balanced/NarrativePrimitives.js",
+      "action": "REWRITTEN",
+      "purpose": "5 projection orchestration primitives consuming forBalanced() output (was: 8 derivation primitives reading raw fullReport)",
+      "reconciliation_status": "CORRECTED — 6 derivation violations removed, 3 projection primitives added"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/balanced/CompositionContract.js",
+      "action": "CORRECTED",
+      "purpose": "Zone definitions, transition rules, anti-patterns, audience contract — COMPOSITION_RULES updated to forbid parallel cognition",
+      "reconciliation_status": "CORRECTED — BALANCED_MAY/MAY_NOT rules now reference projection, not derivation"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/balanced/ZoneComposer.js",
+      "action": "REWRITTEN",
+      "purpose": "Zone-level composition engine — now takes (balancedProjection, synthesisResult, fullReport) instead of just fullReport",
+      "reconciliation_status": "CORRECTED — input contract changed to consume forBalanced() as primary cognition source"
+    },
+    {
+      "path": "app/execlens-demo/lib/lens-v2/balanced/index.js",
+      "action": "UPDATED",
+      "purpose": "Barrel export updated for new primitive names"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/IMPLEMENTATION_SEMANTICS.md",
+      "action": "REWRITTEN",
+      "purpose": "§5.5 implementation semantics — corrected to reflect projection orchestration architecture"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/file_changes.json",
+      "action": "UPDATED",
+      "purpose": "File change manifest with reconciliation status"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/validation_log.json",
+      "action": "UPDATED",
+      "purpose": "Validation log — 18/18 PASS (was 15/15, added parallel cognition checks)"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/CLOSURE.md",
+      "action": "UPDATED",
+      "purpose": "Stream closure — records reconciliation correction"
+    },
+    {
+      "path": "docs/pios/PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01/BALANCED_COMPOSITION_ARCHITECTURE_RECONCILIATION.md",
+      "action": "CREATED",
+      "purpose": "Architecture reconciliation — identified and documented parallel cognition path violation"
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.BALANCED-CONSEQUENCE-BRIEFING.01",
+  "classification": "G2",
+  "baseline": "102d623",
+  "timestamp": "2026-05-28",
+  "checks": [
+    {
+      "name": "for_balanced_pure_projection",
+      "description": "forBalanced() is a pure projection function — no compiler semantics modified",
+      "result": "PASS",
+      "detail": "No new consequence types, rules, or mappings added"
+    },
+    {
+      "name": "for_balanced_returns_structure",
+      "description": "forBalanced() returns primary_story + reinforcement_flow + confidence_sentence",
+      "result": "PASS",
+      "detail": "posture_label, posture_severity, posture_scope, primary_locus, primary_story, reinforcement_flow[3], confidence_sentence"
+    },
+    {
+      "name": "relationship_verbs_deterministic",
+      "description": "Relationship verbs are deterministic based on locus + combination + scope",
+      "result": "PASS",
+      "detail": "AMPLIFIED_DEP_FRAG=amplifies, STRUCT_GRAVITY_WELL=amplifies, PROP_EXP=widens"
+    },
+    {
+      "name": "relationship_sentences_compiled",
+      "description": "Relationship sentences compiled from vocabulary, not generated prose",
+      "result": "PASS",
+      "detail": "3 sentences: hub-in-pressure-corridor, delivery-risk-compounds, exposure-extends"
+    },
+    {
+      "name": "primary_story_genesis",
+      "description": "Primary story is SYSTEMIC_OP_FRAG with CRITICAL severity",
+      "result": "PASS",
+      "detail": "title=Systemic Operational Fragility, severity=CRITICAL, scope=SYSTEMIC, is_combination=true"
+    },
+    {
+      "name": "combination_explanation_compiled",
+      "description": "Combination explanation is deterministic template, not generated",
+      "result": "PASS",
+      "detail": "Multiple independent structural conditions converge through independent evidence paths."
+    },
+    {
+      "name": "source_conditions_resolved",
+      "description": "Source conditions resolved from condition IDs to display titles via COGNITION_SLICE_VOCABULARY",
+      "result": "PASS",
+      "detail": "5 source conditions with executive_name display titles"
+    },
+    {
+      "name": "confidence_sentence_compiled",
+      "description": "Confidence sentence is deterministic template with locus insertion",
+      "result": "PASS",
+      "detail": "Advisory-bound — structural reconciliation incomplete outside Platform Infrastructure and Data."
+    },
+    {
+      "name": "combined_synthesis_compiled",
+      "description": "Combined synthesis is deterministic template detecting widening loci",
+      "result": "PASS",
+      "detail": "Systemic Operational Fragility concentrated in Platform Infrastructure and Data — exposure widens to Frontend Application."
+    },
+    {
+      "name": "briefing_corridor_renders",
+      "description": "BalancedConsequenceBriefing renders 5-element corridor when SW-Intel active",
+      "result": "PASS",
+      "detail": "posture headline, primary story, reinforcement flow (3 items), confidence strip, descent"
+    },
+    {
+      "name": "no_prose_drift",
+      "description": "All rendered text traces to CONSEQUENCE_VOCABULARY or deterministic templates",
+      "result": "PASS"
+    },
+    {
+      "name": "no_stacked_card_syndrome",
+      "description": "Reinforcement flow shows relationship verbs, not inventory list",
+      "result": "PASS",
+      "detail": "Verb is primary visual element (uppercase, color-coded), title is secondary"
+    },
+    {
+      "name": "confidence_strip_quiet",
+      "description": "Confidence rendered as single quiet line, no section header weight",
+      "result": "PASS",
+      "detail": "10px monospace, muted color, border-top separator"
+    },
+    {
+      "name": "descent_quiet",
+      "description": "Descent rendered as minimal footer",
+      "result": "PASS",
+      "detail": "9px monospace, dim color"
+    },
+    {
+      "name": "left_panel_briefing_anchor",
+      "description": "BALANCED left panel shows OPERATIONAL BRIEFING anchor when SW-Intel active",
+      "result": "PASS",
+      "detail": "Posture + primary + count + confidence + descent. Not metadata overload."
+    },
+    {
+      "name": "left_panel_teaser_sw_intel_off",
+      "description": "BALANCED left panel shows teaser with consequence awareness when SW-Intel OFF",
+      "result": "PASS",
+      "detail": "4 structural dynamics identified — CRITICAL severity. CTA: Activate for operational briefing"
+    },
+    {
+      "name": "sw_intel_on_briefing_replaces_narrative",
+      "description": "BalancedConsequenceBriefing replaces SoftwareIntelligenceBalancedNarrative when active",
+      "result": "PASS"
+    },
+    {
+      "name": "boardroom_untouched",
+      "description": "BOARDROOM rendering unchanged — convergence web + executive posture intact",
+      "result": "PASS"
+    },
+    {
+      "name": "dense_untouched",
+      "description": "DENSE rendering unchanged — topology + conditions intact",
+      "result": "PASS"
+    },
+    {
+      "name": "compiler_semantics_frozen",
+      "description": "No new consequence types, rules, or mappings in ConsequenceCompiler",
+      "result": "PASS",
+      "detail": "Only forBalanced() projection added, compile() and forBoardroom() unchanged"
+    },
+    {
+      "name": "visual_pacing_primary_dominant",
+      "description": "Primary story has largest visual weight — left border accent, larger type, breathing room",
+      "result": "PASS"
+    },
+    {
+      "name": "visual_pacing_verbs_colored",
+      "description": "Reinforcement verbs color-coded: amplifies=#ff9e4a, widens=#ffd700, reinforces=#64ffda",
+      "result": "PASS"
+    },
+    {
+      "name": "build_passes",
+      "description": "npx next build completes without errors",
+      "result": "PASS"
+    },
+    {
+      "name": "no_console_errors",
+      "description": "Browser dev console shows no runtime errors across all tested states",
+      "result": "PASS",
+      "detail": "Only pre-existing favicon 404"
+    },
+    {
+      "name": "projection_contract_main_canvas",
+      "description": "BALANCED main canvas renders ONLY consequence briefing when SW-Intel active — no evidence inventory, topology, governance telemetry",
+      "result": "PASS",
+      "detail": "BalancedConsequenceField suppressed when consequenceBalanced available"
+    },
+    {
+      "name": "projection_contract_guided_actions",
+      "description": "Guided actions suppressed in BALANCED when consequence briefing active",
+      "result": "PASS",
+      "detail": "OrchestrationGuidanceRuntime hidden in BALANCED consequence mode"
+    },
+    {
+      "name": "projection_contract_right_panel",
+      "description": "ACTIVE CONDITIONS and INTELLIGENCE STATE suppressed in right panel when consequence briefing active",
+      "result": "PASS",
+      "detail": "Right panel shows only Evidence State, Qualifier, Structural Depth, Evidence Record, Report Pack"
+    },
+    {
+      "name": "cognitive_order_enforced",
+      "description": "BALANCED unfolds: posture → why → reinforcement → amplification/widening → implication → confidence → descent",
+      "result": "PASS"
+    },
+    {
+      "name": "sw_intel_augments_not_replaces",
+      "description": "SW-Intel augments BALANCED — no hard early return, PI Core posture context retained via BalancedNarrativePosture",
+      "result": "PASS",
+      "detail": "Composed rendering: BalancedNarrativePosture + BalancedConsequenceBriefing + BalancedContextAnchors"
+    },
+    {
+      "name": "narrative_posture_renders",
+      "description": "BalancedNarrativePosture renders opening operational narrative paragraph with PI Core context",
+      "result": "PASS",
+      "detail": "Posture label, narrative text (pressure + SW-Intel synthesis + combined synthesis), meta line (domains backed + pressure zone)"
+    },
+    {
+      "name": "context_anchors_render",
+      "description": "BalancedContextAnchors renders subordinate evidence boundary, pressure anchor, confidence, and descent",
+      "result": "PASS",
+      "detail": "4 anchors: EVIDENCE BOUNDARY (4/13/17), PRESSURE ANCHOR (Platform Infrastructure and Data), CONFIDENCE (compiled sentence), descent"
+    }
+  ],
+  "summary": {
+    "total": 31,
+    "pass": 31,
+    "fail": 0,
+    "result": "VALID"
+  }
+}

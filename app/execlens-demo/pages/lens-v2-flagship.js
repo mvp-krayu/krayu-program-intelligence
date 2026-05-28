@@ -3363,6 +3363,877 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           max-width: 780px;
         }
 
+        /* ── BALANCED — Zone 1: Operational Posture (PRIMARY) ───────── */
+        .balanced-zone--posture {
+          padding: 40px 0 32px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.25);
+          margin-bottom: 28px;
+        }
+        .balanced-posture-statement {
+          font: 400 16px/1.75 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          max-width: 660px;
+          margin: 0 0 16px;
+        }
+        .balanced-posture-chips {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .balanced-posture-chip {
+          font: 500 10px/1 'Courier New', monospace;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          padding: 4px 10px;
+          border-radius: 2px;
+          border: 1px solid rgba(42, 47, 64, 0.4);
+          color: #8a96b2;
+          background: rgba(20, 23, 32, 0.5);
+        }
+        .balanced-posture-chip[data-tone="critical"] {
+          color: #ff6b6b;
+          border-color: rgba(255, 107, 107, 0.25);
+        }
+        .balanced-posture-chip[data-tone="elevated"] {
+          color: #ff9e4a;
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .balanced-posture-chip[data-tone="nominal"] {
+          color: #64ffda;
+          border-color: rgba(100, 255, 218, 0.2);
+        }
+        .balanced-posture-chip[data-tone="muted"] {
+          color: #7a8aaa;
+          border-color: rgba(42, 47, 64, 0.4);
+        }
+
+        /* ── BALANCED — SW-INTEL Enhancement Elements ──────── */
+        .balanced-sw-enhancement {
+          margin-top: 14px;
+          padding: 12px 14px;
+          border-left: 2px solid rgba(74, 158, 255, 0.3);
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .balanced-sw-enhancement-tag {
+          font: 600 8px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          display: block;
+          margin-bottom: 6px;
+        }
+        .balanced-sw-enhancement-text {
+          font: 400 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 0;
+        }
+        .balanced-sw-enhancement-tag-inline {
+          font: 600 9px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+        .balanced-sw-enhancement-convergence {
+          font: 400 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 0 0 14px;
+        }
+
+        .balanced-zone--reinforcement {
+          padding: 20px 0 24px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.25);
+          margin-bottom: 12px;
+        }
+        .balanced-sw-reinforcement-flow {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .balanced-sw-reinforcement-entry {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+        }
+        .balanced-sw-reinforcement-verb {
+          font: 600 10px/1 'Courier New', monospace;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          flex-shrink: 0;
+          min-width: 90px;
+          color: #4a9eff;
+        }
+        .balanced-sw-reinforcement-entry[data-verb="amplifies"] .balanced-sw-reinforcement-verb { color: #ff9e4a; }
+        .balanced-sw-reinforcement-entry[data-verb="widens"] .balanced-sw-reinforcement-verb { color: #ffd700; }
+        .balanced-sw-reinforcement-entry[data-verb="concentrates"] .balanced-sw-reinforcement-verb { color: #ff6b6b; }
+        .balanced-sw-reinforcement-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .balanced-sw-reinforcement-title {
+          font: 500 13px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+        }
+        .balanced-sw-reinforcement-sentence {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+
+        .balanced-zone--consequence-story {
+          padding: 20px 0 24px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.25);
+          margin-bottom: 12px;
+        }
+        .balanced-sw-consequence-title {
+          font: 500 15px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          border-left: 2px solid #4a9eff;
+          padding-left: 14px;
+          margin-bottom: 10px;
+        }
+        .balanced-sw-consequence-text {
+          font: 400 13px/1.65 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 0 0 10px;
+          padding-left: 16px;
+        }
+        .balanced-sw-consequence-combination {
+          font: 400 12px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 0 0 12px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.3);
+        }
+        .balanced-sw-consequence-conditions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          padding-left: 16px;
+        }
+        .balanced-sw-consequence-condition {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          padding: 3px 8px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        /* ── BALANCED — Zone 2: Pressure Synthesis (SECONDARY) ──────── */
+        .balanced-zone--synthesis {
+          padding: 28px 0 24px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.25);
+          margin-bottom: 24px;
+        }
+        .balanced-zone-label {
+          font: 600 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+        .balanced-synthesis-theme {
+          margin-bottom: 18px;
+        }
+        .balanced-synthesis-theme:last-of-type {
+          margin-bottom: 14px;
+        }
+        .balanced-synthesis-theme-label {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ff9e4a;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .balanced-synthesis-theme-text {
+          font: 400 14px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #b8c4de;
+          max-width: 620px;
+          margin: 0;
+        }
+        .balanced-synthesis-count {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.03em;
+          padding-top: 4px;
+        }
+        .balanced-synthesis-disclosure {
+          margin-top: 14px;
+        }
+        .balanced-synthesis-disclosure-toggle {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.03em;
+          cursor: pointer;
+          list-style: none;
+        }
+        .balanced-synthesis-disclosure-toggle::before {
+          content: '▸ ';
+        }
+        .balanced-synthesis-disclosure[open] .balanced-synthesis-disclosure-toggle::before {
+          content: '▾ ';
+        }
+        .balanced-synthesis-disclosure-toggle::-webkit-details-marker {
+          display: none;
+        }
+        .balanced-synthesis-disclosure-body {
+          padding: 12px 0 4px;
+        }
+        .balanced-synthesis-signal-group {
+          margin-bottom: 12px;
+        }
+        .balanced-synthesis-signal-group-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .balanced-synthesis-signal {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 3px 0;
+          max-width: 480px;
+        }
+        .balanced-synthesis-signal-name {
+          font: 400 11px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+        }
+        .balanced-synthesis-signal-severity {
+          font: 500 9px/1 'Courier New', monospace;
+          letter-spacing: 0.04em;
+        }
+        .balanced-synthesis-signal[data-severity="CRITICAL"] .balanced-synthesis-signal-severity,
+        .balanced-synthesis-signal[data-severity="HIGH"] .balanced-synthesis-signal-severity {
+          color: #ff6b6b;
+        }
+        .balanced-synthesis-signal[data-severity="ELEVATED"] .balanced-synthesis-signal-severity {
+          color: #ff9e4a;
+        }
+        .balanced-synthesis-signal[data-severity="MODERATE"] .balanced-synthesis-signal-severity {
+          color: #ffd700;
+        }
+        .balanced-synthesis-signal {
+          position: relative;
+          cursor: default;
+        }
+        .balanced-synthesis-signal-tooltip {
+          display: none;
+          position: absolute;
+          left: calc(100% + 16px);
+          top: -8px;
+          z-index: 20;
+          width: 380px;
+          background: #12151f;
+          border: 1px solid #1e2330;
+          border-left: 2px solid rgba(74, 158, 255, 0.25);
+          border-radius: 3px;
+          padding: 16px 18px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+          opacity: 0;
+          animation: balanced-annotation-in 0.15s ease forwards;
+        }
+        @keyframes balanced-annotation-in {
+          from { opacity: 0; transform: translateX(-4px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .balanced-synthesis-signal:hover .balanced-synthesis-signal-tooltip {
+          display: block;
+        }
+        .balanced-synthesis-signal-tooltip-consequence {
+          font: 400 12.5px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          margin-bottom: 12px;
+        }
+        .balanced-synthesis-signal-tooltip-row {
+          font: 400 10px/1.5 'Courier New', monospace;
+          color: #8a96b2;
+          padding: 3px 0;
+        }
+        .balanced-synthesis-signal-tooltip-label {
+          color: #7a8aaa;
+          margin-right: 8px;
+        }
+        .balanced-synthesis-signal-tooltip-label::after {
+          content: ':';
+        }
+
+        /* ── Zone 3 — Pressure Anchor (operational epicenter) ── */
+        .balanced-zone--anchor {
+          padding: 32px 0;
+          margin: 12px 0 4px;
+          border-top: 1px solid #2a2f40;
+          border-bottom: 1px solid #2a2f40;
+        }
+        .balanced-anchor-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+        }
+        .balanced-anchor-zone-name {
+          font: 600 21px/1.2 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          letter-spacing: -0.01em;
+          margin-bottom: 8px;
+        }
+        .balanced-zone--anchor[data-tier="HIGH"] .balanced-anchor-zone-name {
+          color: #ffb3b3;
+        }
+        .balanced-zone--anchor[data-tier="ELEVATED"] .balanced-anchor-zone-name {
+          color: #ffdbb8;
+        }
+        .balanced-anchor-statement {
+          font: 400 14px/1.65 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin-bottom: 20px;
+        }
+        .balanced-anchor-meta {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+        }
+        .balanced-anchor-meta-tag {
+          font: 600 9px/1 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #9aa0bc;
+          padding: 3px 8px;
+          border: 1px solid #2a2f40;
+          border-radius: 2px;
+        }
+        .balanced-anchor-meta-tag[data-tier="HIGH"] {
+          color: #ffb3b3;
+          border-color: rgba(255, 107, 107, 0.25);
+        }
+        .balanced-anchor-meta-tag[data-tier="ELEVATED"] {
+          color: #ffdbb8;
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .balanced-anchor-meta-sep {
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background: #2a2f40;
+        }
+        .balanced-anchor-meta-count {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .balanced-anchor-subtitle {
+          font: 400 11px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.04em;
+          margin-bottom: 16px;
+        }
+
+        .balanced-anchor-visual {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 6px;
+        }
+        .balanced-anchor-visual-origin {
+          font: 600 12px/1 'Courier New', monospace;
+          color: #9aa0bc;
+          padding: 4px 10px;
+          border: 1px solid #2a2f40;
+          border-radius: 2px;
+          background: rgba(20, 23, 32, 0.5);
+        }
+        .balanced-anchor-visual-arrow {
+          font: 400 12px/1 'Courier New', monospace;
+          color: #4a5570;
+        }
+        .balanced-anchor-visual-target {
+          font: 600 12px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          padding: 4px 10px;
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          border-radius: 2px;
+          background: rgba(74, 158, 255, 0.05);
+        }
+        .balanced-anchor-visual-role {
+          font: 500 8px/1 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+
+        .balanced-anchor-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 20px;
+        }
+        .balanced-anchor-chip {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.03em;
+          padding: 4px 10px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+        }
+
+        .balanced-anchor-facts {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4px 24px;
+          margin-bottom: 20px;
+        }
+        .balanced-anchor-fact {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 4px 0;
+          border-bottom: 1px solid rgba(26, 32, 48, 0.5);
+        }
+        .balanced-anchor-fact-key {
+          font: 400 9px/1.3 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+        }
+        .balanced-anchor-fact-val {
+          font: 400 11px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa0bc;
+        }
+        .balanced-anchor-fact-val[data-tone="critical"] { color: #ff9e9e; }
+        .balanced-anchor-fact-val[data-tone="elevated"] { color: #ffdbb8; }
+
+        .balanced-anchor-meaning {
+          font: 400 13px/1.65 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+
+        /* ── Zone 4 — Confidence Boundary ── */
+        .balanced-zone--confidence {
+          padding: 32px 0;
+          border-top: 1px solid #1e2330;
+        }
+        .balanced-confidence-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          margin-bottom: 14px;
+        }
+        .balanced-confidence-statement {
+          font: 400 13px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa0bc;
+          margin: 0 0 16px;
+          max-width: 600px;
+        }
+        .balanced-confidence-facts {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 16px;
+        }
+        .balanced-confidence-fact {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+        }
+        .balanced-confidence-fact-key {
+          font: 400 9px/1.3 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+          min-width: 100px;
+        }
+        .balanced-confidence-fact-val {
+          font: 400 11px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+        }
+        .balanced-confidence-bar {
+          display: flex;
+          height: 6px;
+          border-radius: 3px;
+          overflow: hidden;
+          max-width: 320px;
+          margin-bottom: 6px;
+        }
+        .balanced-confidence-bar-confirmed {
+          background: rgba(100, 255, 218, 0.35);
+        }
+        .balanced-confidence-bar-advisory {
+          background: rgba(122, 138, 170, 0.15);
+        }
+        .balanced-confidence-bar-labels {
+          display: flex;
+          justify-content: space-between;
+          max-width: 320px;
+        }
+        .balanced-confidence-bar-label {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #4a5570;
+        }
+
+        /* ── Zone 5 — Descent Paths ── */
+        .balanced-zone--descent {
+          padding: 32px 0 40px;
+          border-top: 1px solid #1e2330;
+        }
+        .balanced-descent-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+        }
+        .balanced-descent-cards {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          max-width: 520px;
+        }
+        .balanced-descent-card {
+          padding: 16px 18px;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          background: rgba(18, 21, 31, 0.4);
+        }
+        .balanced-descent-card-title {
+          font: 600 10px/1 'Courier New', monospace;
+          color: #9aa0bc;
+          letter-spacing: 0.08em;
+          margin-bottom: 8px;
+        }
+        .balanced-descent-card-desc {
+          font: 400 11px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+
+        /* ── BALANCED — Consequence Briefing Corridor ── */
+        .balanced-briefing-corridor {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          max-width: 720px;
+          margin: 0 auto;
+          padding: 32px 24px;
+        }
+        .balanced-briefing-posture {
+          padding: 0 0 24px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .balanced-briefing-headline {
+          font: 400 21px/1.35 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          margin: 0 0 10px;
+          letter-spacing: -0.01em;
+        }
+        .balanced-briefing-dynamics {
+          font: 400 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 0;
+        }
+        .balanced-briefing-chips {
+          display: flex;
+          gap: 8px;
+          margin-top: 12px;
+        }
+        .balanced-briefing-chip {
+          font: 500 9px/1 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 4px 10px;
+          border-radius: 2px;
+          border: 1px solid #2a2f40;
+          color: #7a8aaa;
+          background: rgba(26, 30, 43, 0.5);
+        }
+        .balanced-briefing-chip[data-tone="pressured"] { border-color: rgba(255, 107, 107, 0.3); color: #ff9e9e; }
+        .balanced-briefing-chip[data-tone="advisory"] { border-color: rgba(255, 215, 0, 0.2); color: #e6c547; }
+        .balanced-briefing-chip[data-tone="qualified"] { border-color: rgba(100, 255, 218, 0.2); color: #64ffda; }
+
+        .balanced-briefing-primary-story {
+          padding: 32px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .balanced-briefing-story-anchor {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+        .balanced-briefing-story-label {
+          font: 600 28px/1.15 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          letter-spacing: -0.02em;
+        }
+        .balanced-briefing-story-subtitle {
+          font: 400 11px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .balanced-briefing-story-title {
+          font: 500 16px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+          margin-bottom: 10px;
+          border-left: 2px solid #4a9eff;
+          padding-left: 14px;
+        }
+        .balanced-briefing-story-text {
+          font: 400 14px/1.65 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          padding-left: 16px;
+        }
+        .balanced-briefing-combination {
+          font: 400 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin-top: 10px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.3);
+        }
+        .balanced-briefing-source-conditions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 14px;
+          padding-left: 16px;
+        }
+        .balanced-briefing-source-condition {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          padding: 3px 8px;
+          border: 1px solid #1e2330;
+          border-radius: 2px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+        .balanced-briefing-facts {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+          margin-top: 20px;
+          background: #1e2330;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          overflow: hidden;
+        }
+        .balanced-briefing-fact {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 10px 14px;
+          background: #141720;
+        }
+        .balanced-briefing-fact-key {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .balanced-briefing-fact-value {
+          font: 400 13px/1.3 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .balanced-briefing-fact[data-tone="critical"] .balanced-briefing-fact-value { color: #ff9e9e; }
+
+        .balanced-briefing-reinforcement {
+          padding: 24px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .balanced-briefing-reinforcement-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 14px;
+        }
+        .balanced-briefing-reinforcement-label {
+          font: 500 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+        }
+        .balanced-briefing-reinforcement-count {
+          font: 400 11px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #4a5570;
+        }
+        .balanced-briefing-convergence {
+          font: 400 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          padding: 12px 16px;
+          margin-bottom: 16px;
+          border-left: 2px solid rgba(74, 158, 255, 0.4);
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .balanced-briefing-flow {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .balanced-briefing-flow-entry {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 10px 14px;
+          background: rgba(20, 23, 32, 0.5);
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+        }
+        .balanced-briefing-flow-verb {
+          font: 600 10px/1.6 'Courier New', monospace;
+          color: #4a9eff;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          min-width: 100px;
+          flex-shrink: 0;
+          padding-top: 2px;
+        }
+        .balanced-briefing-flow-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .balanced-briefing-flow-title {
+          font: 500 13px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #ccd6f6;
+        }
+        .balanced-briefing-flow-sentence {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+        .balanced-briefing-flow-entry[data-verb="amplifies"] .balanced-briefing-flow-verb { color: #ff9e4a; }
+        .balanced-briefing-flow-entry[data-verb="widens"] .balanced-briefing-flow-verb { color: #ffd700; }
+        .balanced-briefing-flow-entry[data-verb="concentrates"] .balanced-briefing-flow-verb { color: #ff6b6b; }
+
+        .balanced-briefing-confidence {
+          padding: 20px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .balanced-briefing-confidence-text {
+          font: 400 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+          margin-bottom: 10px;
+        }
+        .balanced-briefing-confidence-bar {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .balanced-briefing-bar-track {
+          height: 8px;
+          background: #1a1e2b;
+          border-radius: 4px;
+          overflow: hidden;
+          border: 1px solid #1e2330;
+        }
+        .balanced-briefing-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #64ffda, rgba(100, 255, 218, 0.6));
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+        .balanced-briefing-bar-labels {
+          display: flex;
+          justify-content: space-between;
+        }
+        .balanced-briefing-bar-confirmed {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #64ffda;
+        }
+        .balanced-briefing-bar-advisory {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+
+        .balanced-briefing-descent {
+          padding: 20px 0 0;
+          display: flex;
+          gap: 12px;
+        }
+        .balanced-briefing-descent-path {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 10px 14px;
+          border: 1px solid #1e2330;
+          border-radius: 3px;
+          background: rgba(20, 23, 32, 0.3);
+        }
+        .balanced-briefing-descent-target {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #4a9eff;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+        }
+        .balanced-briefing-descent-desc {
+          font: 400 11px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+
+        /* ── BALANCED — Left panel orientation block ── */
+        .interp-block--orientation {
+          border-top: 1px solid #1a2030;
+          padding-top: 12px;
+        }
+        .interp-orientation-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          margin-top: 6px;
+        }
+        .interp-orient-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 3px 0;
+        }
+        .interp-orient-key {
+          font: 400 9px/1.3 'Courier New', monospace;
+          color: #4a5570;
+          letter-spacing: 0.03em;
+        }
+        .interp-orient-val {
+          font: 400 10px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a96b2;
+          text-align: right;
+          max-width: 62%;
+        }
+        .interp-orient-val[data-tone="critical"] { color: #ff9e9e; }
+        .interp-orient-val[data-tone="elevated"] { color: #ffdbb8; }
+        .interp-orient-val[data-tone="nominal"] { color: #64ffda; }
+
+        /* ── BALANCED — Side panel compression (not removal) ── */
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-block {
+          padding: 10px 16px;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-label {
+          font-size: 8px;
+          letter-spacing: 0.16em;
+          color: #4a5570;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-readiness,
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-qualifier-class {
+          font-size: 11px;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-coverage-meta {
+          font-size: 9px;
+          color: #4a5570;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .support-block--balanced-compressed .emergence-indicator {
+          padding: 1px 0;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .support-block--balanced-compressed .emergence-indicator-label {
+          font-size: 9px;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-reports-sub,
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-reports-state {
+          display: none;
+        }
+        .intelligence-field[data-mode="EXECUTIVE_BALANCED"] .intel-support .support-report-item {
+          padding: 3px 0;
+        }
+
         .balanced-indicators {
           display: grid;
           grid-template-columns: 1fr 1fr;
