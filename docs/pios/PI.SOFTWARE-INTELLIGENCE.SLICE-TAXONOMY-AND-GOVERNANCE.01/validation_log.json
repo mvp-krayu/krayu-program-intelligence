@@ -1,0 +1,163 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01",
+  "classification": "G1",
+  "baseline": "419ff7e",
+  "validated_at": "2026-05-28",
+  "checks": [
+    {
+      "name": "taxonomy_document_exists",
+      "description": "Canonical taxonomy/governance document created",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/SLICE_TAXONOMY_AND_GOVERNANCE.md"
+    },
+    {
+      "name": "slice_qualification_criteria",
+      "description": "Slice qualification criteria are explicit (10 questions)",
+      "result": "PASS",
+      "section": "§5"
+    },
+    {
+      "name": "non_slice_definition",
+      "description": "Non-slice definition is explicit",
+      "result": "PASS",
+      "section": "§6"
+    },
+    {
+      "name": "ontology_classes_defined",
+      "description": "Slice ontology classes defined (A-E)",
+      "result": "PASS",
+      "section": "§7"
+    },
+    {
+      "name": "foundational_vs_advanced",
+      "description": "Foundational vs advanced slice maturity distinguished",
+      "result": "PASS",
+      "section": "§8"
+    },
+    {
+      "name": "evidence_requirements",
+      "description": "Evidence requirements explicit",
+      "result": "PASS",
+      "section": "§9"
+    },
+    {
+      "name": "replay_provenance",
+      "description": "Replay/provenance requirements explicit with conceptual schema",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "ownership_doctrine",
+      "description": "Ownership doctrine explicit — slice truth owned by L2, not personas",
+      "result": "PASS",
+      "section": "§11"
+    },
+    {
+      "name": "consequence_compiler_relationship",
+      "description": "ConsequenceCompiler relationship explicit (may/may-not boundaries)",
+      "result": "PASS",
+      "section": "§12"
+    },
+    {
+      "name": "balanced_relationship",
+      "description": "BALANCED relationship explicit — consumes, does not derive",
+      "result": "PASS",
+      "section": "§15 (persona projection matrix)"
+    },
+    {
+      "name": "persona_relationships",
+      "description": "BOARDROOM/DENSE/INVESTIGATION relationships explicit",
+      "result": "PASS",
+      "section": "§15"
+    },
+    {
+      "name": "anti_parallel_path",
+      "description": "Anti-parallel-path doctrine explicit",
+      "result": "PASS",
+      "section": "§14"
+    },
+    {
+      "name": "promotion_lifecycle",
+      "description": "Promotion lifecycle exists (6 states, no skip-level)",
+      "result": "PASS",
+      "section": "§13"
+    },
+    {
+      "name": "runtime_object_contract",
+      "description": "Runtime object contract exists conceptually (22 fields)",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "composition_model",
+      "description": "Composition model exists with conflict/tension handling",
+      "result": "PASS",
+      "section": "§16"
+    },
+    {
+      "name": "persona_projection_matrix",
+      "description": "Persona projection matrix exists with minimum maturity requirements",
+      "result": "PASS",
+      "section": "§15"
+    },
+    {
+      "name": "pi_core_preserved",
+      "description": "PI-Core strength preserved — no runtime code modified",
+      "result": "PASS"
+    },
+    {
+      "name": "no_implementation",
+      "description": "No new slice implemented, no UI wired, no compiler created",
+      "result": "PASS"
+    },
+    {
+      "name": "no_runtime_changes",
+      "description": "No runtime behavior changes occurred",
+      "result": "PASS"
+    },
+    {
+      "name": "no_persona_contamination",
+      "description": "No persona contamination — BOARDROOM/DENSE/INVESTIGATION untouched",
+      "result": "PASS"
+    },
+    {
+      "name": "no_new_semantic_path",
+      "description": "No new semantic derivation path introduced",
+      "result": "PASS"
+    },
+    {
+      "name": "terminology_evolution_governed",
+      "description": "New term (SW-INTEL Consequence Slice) added to TERMINOLOGY_LOCK with controlled G1 mutation",
+      "result": "PASS"
+    },
+    {
+      "name": "stale_vault_corrected",
+      "description": "4 stale TERMINOLOGY_LOCK entries corrected: Consequence Class, Consequence Compilation, Combination Pattern, Consequence Scope from SPECIFIED_NOT_IMPLEMENTED to OPERATIONAL",
+      "result": "PASS"
+    },
+    {
+      "name": "layer_model_reconciled",
+      "description": "L1-L4 derivation flow positioned as complementary to locked Three-Layer Architecture, not replacement",
+      "result": "PASS",
+      "section": "§2"
+    },
+    {
+      "name": "vocabulary_hierarchy_preserved",
+      "description": "Existing hierarchy (signals → conditions → surfaces → consequence types → topology slices) acknowledged and preserved",
+      "result": "PASS",
+      "section": "§3"
+    },
+    {
+      "name": "artifact_path_correct",
+      "description": "All artifacts in canonical stream container path",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/"
+    }
+  ],
+  "summary": {
+    "total": 26,
+    "pass": 26,
+    "fail": 0,
+    "verdict": "PASS — SLICE GOVERNANCE BASELINE ESTABLISHED"
+  }
+}

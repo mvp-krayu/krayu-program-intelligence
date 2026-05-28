@@ -1,0 +1,37 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01",
+  "classification": "G1",
+  "baseline": "419ff7e",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/SLICE_TAXONOMY_AND_GOVERNANCE.md",
+      "purpose": "Primary governance document — SW-INTEL consequence slice taxonomy, ontology, evidence contracts, promotion lifecycle, persona projection matrix"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/execution_report.md",
+      "purpose": "Stream execution report with validation findings"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/validation_log.json",
+      "purpose": "26-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/CLOSURE.md",
+      "purpose": "Stream closure with G1 architecture memory propagation"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "purpose": "G1 vault mutation: (1) Consequence Class → OPERATIONAL, (2) Consequence Compilation → OPERATIONAL, (3) Combination Pattern → OPERATIONAL, (4) Consequence Scope → OPERATIONAL, (5) New term: SW-INTEL Consequence Slice"
+    }
+  ]
+}

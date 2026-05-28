@@ -813,41 +813,59 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Definition:** An atomic operational implication dimension produced by the executive consequence compilation layer. Each consequence class represents a distinct operational meaning derived from topology cognition conditions: coordination fragility, dependency amplification, delivery exposure, operational bottleneck, resilience deficit, governance coverage gap, propagation exposure, structural stability risk. Consequence classes are cross-persona semantic objects — all four personas consume them at different compression depths.
 
-**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED — semantic model locked, no runtime compiler.
+**Status:** CANONICAL — constitutionally defined (2026-05-27). **OPERATIONAL** (2026-05-28). ConsequenceCompiler produces 8 primitive consequence types + 3 combination patterns. Cross-persona projection operational: forBoardroom() and forBalanced() produce persona-specific consequence projections. BALANCED governed composition consumes consequence output as SW-INTEL enhancement overlay.
 
 **What it is NOT:** A condition summary. A shorter version of a topology cognition condition. A persona-specific object. Consequence classes are a different semantic class entirely — operational implications derived from structural evidence through deterministic mapping rules.
 
-**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`, `app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js`
 
 ### Consequence Compilation
 
 **Definition:** The deterministic mapping of topology cognition primitives (SignalSynthesisEngine conditions) into operational consequence objects. Consequence compilation pattern-matches over condition structures, evidence classification, and combination state to produce consequence classes with severity, confidence, scope, and three-layer vocabulary. Compilation is distinct from synthesis (which produces conditions from signals), summarization (which compresses existing content), and projection (which renders for personas).
 
-**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+**Status:** CANONICAL — constitutionally defined (2026-05-27). **OPERATIONAL** (2026-05-28). ConsequenceCompiler.js implements compile(), forBoardroom(), forBalanced(). Deterministic against GENESIS specimen (run_blueedge_genesis_e2e_03).
 
 **What it is NOT:** Summarization. Interpretation. AI-generated commentary. 75.x interpretive authority. Consequence compilation operates at deterministic authority level.
 
-**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`, `app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js`
 
 ### Combination Pattern
 
 **Definition:** A named emergent consequence produced when multiple primitive consequence objects share a primary locus. Three patterns defined: AMPLIFIED_DEPENDENCY_FRAGILITY (pressure + choke point co-location), STRUCTURAL_GRAVITY_WELL (mass + pressure co-location), SYSTEMIC_OPERATIONAL_FRAGILITY (3+ independent conditions converging). Combination consequences are emergent — they produce operational meaning that no individual primitive can produce alone.
 
-**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+**Status:** CANONICAL — constitutionally defined (2026-05-27). **OPERATIONAL** (2026-05-28). All three combination patterns fire deterministically in ConsequenceCompiler when locus convergence conditions are met.
 
 **What it is NOT:** A sum of individual consequences. A filtered view. Combination patterns produce NEW consequence objects that require convergence of independent evidence paths as a precondition.
 
-**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`, `app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js`
 
 ### Consequence Scope
 
 **Definition:** The structural extent of a consequence's claim. Three levels: LOCAL (single domain or file-level entity), REGIONAL (cluster or pressure zone), SYSTEMIC (cross-domain, system-level implication). Scope is orthogonal to severity — a LOCAL consequence can be CRITICAL, a SYSTEMIC consequence can be ELEVATED. SYSTEMIC consequences carry `primary_locus` (where evidence concentrates) distinct from `consequence_scope` (what the consequence claims about).
 
-**Status:** CANONICAL — constitutionally defined (2026-05-27). SPECIFIED_NOT_IMPLEMENTED.
+**Status:** CANONICAL — constitutionally defined (2026-05-27). **OPERATIONAL** (2026-05-28). ConsequenceCompiler assigns scope per consequence type definition.
 
 **What it is NOT:** Severity. Importance. Priority. Scope describes how far the structural claim extends, not how operationally consequential it is.
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/EXECUTIVE_CONSEQUENCE_SEMANTICS.md`
+
+### SW-INTEL Consequence Slice
+
+**Definition:** A canonical, evidence-bound, replayable representation of a software-operational behavioral pattern derived from governed structural and/or consequence evidence. SW-INTEL consequence slices are L2 objects (Consequence Cognition) that classify governed behavioral patterns across the existing vocabulary hierarchy (signals → conditions → surfaces → consequence types). Topology cognition slices (the 4 MVP visual overlays) are the projection instances of SW-INTEL consequence slices — one concept projected visually, the other is the governed cognition object.
+
+**Ontology classes:** Five categories — (A) Flow & Propagation, (B) Concentration & Saturation, (C) Fragility & Resilience, (D) Reinforcement & Accumulation, (E) Drift & Instability.
+
+**Maturity classes:** FOUNDATIONAL (deterministic, directly evidence-bound, low interpretive risk) and ADVANCED (composite, multi-evidence, may require temporal comparison, higher governance burden).
+
+**Promotion lifecycle:** CANDIDATE → SPECIMEN → FOUNDATIONAL → COMPOSABLE → CERTIFIED → DEPRECATED. No skip-level promotion.
+
+**Status:** CANONICAL — governance doctrine defined (2026-05-28). 5 foundational slices identified (mapped to existing topology cognition slices + import pressure concentration). Advanced slices at CANDIDATE status only.
+
+**What it is NOT:** A UI card. A prose paragraph. A persona-specific insight. A raw metric. A prompt-generated interpretation. Consequence slices are governed cognition objects, not rendering artifacts.
+
+**Relationship to topology cognition slices:** The existing 4 topology cognition slices are the first 4 SW-INTEL consequence slices projected as topology overlays. This term does not rename them — it identifies the broader governed class they belong to.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/SLICE_TAXONOMY_AND_GOVERNANCE.md`
 
 ## Term Usage Rules
 
