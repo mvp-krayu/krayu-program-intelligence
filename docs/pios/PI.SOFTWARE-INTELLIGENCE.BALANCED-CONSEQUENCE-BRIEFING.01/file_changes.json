@@ -1,0 +1,47 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.BALANCED-CONSEQUENCE-BRIEFING.01",
+  "baseline": "102d623",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "action": "MODIFIED",
+      "description": "Added SCOPE_RANK constant, forBalanced() persona projection with 6 helper functions, updated exports",
+      "sections_affected": [
+        "Constants (SCOPE_RANK)",
+        "Persona: BALANCED (§10.2) — new section",
+        "Exports"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "Added forBalanced import, consequenceBalanced useMemo, three composed rendering components (BalancedNarrativePosture + BalancedConsequenceBriefing + BalancedContextAnchors), BALANCED composed rendering path, left panel briefing anchor + teaser, projection contract enforcement (suppressed inventory/guided actions/right panel conditions)",
+      "sections_affected": [
+        "Import declarations",
+        "BalancedNarrativePosture component (new)",
+        "BalancedConsequenceBriefing component (new)",
+        "BalancedContextAnchors component (new)",
+        "RepresentationField BALANCED branch (composed rendering)",
+        "ExecutiveInterpretation BALANCED branches (SW-Intel active + teaser)",
+        "SupportRail (consequenceBriefingActive suppression)",
+        "OrchestrationGuidanceRuntime (BALANCED suppression)",
+        "Main component useMemo hooks",
+        "Prop threading (ExecutiveInterpretation, RepresentationField, SupportRail)"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Added CSS for BALANCED briefing anchor (left panel), narrative posture, context anchors, and consequence briefing corridor (main canvas) with visual pacing doctrine",
+      "sections_affected": [
+        "BALANCED — Operational Briefing Anchor CSS (new)",
+        "BALANCED — Narrative Posture CSS (new)",
+        "BALANCED — Context Anchors CSS (new)",
+        "BALANCED — Consequence Briefing Corridor CSS (new)"
+      ]
+    }
+  ],
+  "files_read_only": [
+    "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx"
+  ]
+}

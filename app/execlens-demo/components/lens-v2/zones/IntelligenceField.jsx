@@ -8,7 +8,8 @@ import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, S
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
-import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -898,23 +899,26 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       ) : null}
 
-      {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (
-        <div className="support-block support-block--emergence">
-          <div className="support-label">INTELLIGENCE STATE</div>
-          <div className="emergence-index">
-            {Object.values(BALANCED_INTERPRETIVE_NARRATIVES).map(fn => {
-              const state = emergenceState[fn.key]
-              const active = state && state.narrative !== null
-              return (
-                <div key={fn.key} className="emergence-indicator" data-active={active} data-tier={fn.emergenceClass}>
-                  <span className="emergence-indicator-dot">{active ? '●' : '○'}</span>
-                  <span className="emergence-indicator-label">{active ? fn.emergenceLabel : fn.nominalLabel}</span>
-                </div>
-              )
-            })}
+      {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (() => {
+        const emerged = Object.values(emergenceState).filter(n => n && n.narrative !== null)
+        return emerged.length > 0 ? (
+          <div className="support-block support-block--emergence support-block--balanced-compressed">
+            <div className="support-label">INTELLIGENCE STATE</div>
+            <div className="emergence-index">
+              {Object.values(BALANCED_INTERPRETIVE_NARRATIVES).map(fn => {
+                const state = emergenceState[fn.key]
+                const active = state && state.narrative !== null
+                return (
+                  <div key={fn.key} className="emergence-indicator" data-active={active} data-tier={fn.emergenceClass}>
+                    <span className="emergence-indicator-dot">{active ? '●' : '○'}</span>
+                    <span className="emergence-indicator-label">{active ? fn.emergenceLabel : fn.nominalLabel}</span>
+                  </div>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        ) : null
+      })()}
 
       {boardroomMode && swIntelActive ? (
         <div className="support-block support-block--executive-posture">
@@ -3509,7 +3513,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -4258,44 +4262,132 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     )
   }
 
-  if (densityClass === 'EXECUTIVE_BALANCED' && emergenceState) {
-    const emerged = Object.values(emergenceState).filter(n => n && n.narrative !== null)
-    const authorityActive = emerged.length > 0
+  if (densityClass === 'EXECUTIVE_BALANCED' && piRuntimeActive && activeExpansionIndex !== null && expansions && expansions[activeExpansionIndex]) {
+    const expansion = expansions[activeExpansionIndex]
+    const derived = expansion.derive(fullReport)
+    const depth = expansion.depth || 'standard'
+    const typeLabel = EXPANSION_TYPE_LABELS[expansion.expansionType] || 'STRUCTURAL EXPANSION'
     return (
-      <aside className="intel-interp intel-interp--balanced-interpretive" data-tone={framing.tone} aria-label="Executive interpretation — governed narrative">
+      <aside className="intel-interp intel-interp--expansion-active" data-tone={framing.tone} data-depth={depth} aria-label="Structural expansion — bounded interpretation">
+        <div className={`query-answer-panel query-answer-panel--expansion query-answer-panel--${depth}`}>
+          <div className="query-answer-header">
+            <span className="query-answer-badge">◉</span>
+            <span className="query-answer-header-label">{typeLabel}</span>
+            <span className="expansion-authority-marker">75.x</span>
+            <button className="query-answer-dismiss" onClick={onExpansionDismiss} type="button" aria-label="Dismiss expansion">✕</button>
+          </div>
+          <div className="query-answer-question">{expansion.question}</div>
+          <div className="query-answer-summary">{derived.summary}</div>
+          {derived.evidence && derived.evidence.length > 0 && (
+            <div className="query-answer-evidence">
+              {derived.evidence.map((e, ei) => (
+                <div key={ei} className="query-answer-evidence-row" data-severity={e.severity}>
+                  <span className="query-answer-evidence-label">{e.label}</span>
+                  <span className="query-answer-evidence-value">{e.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {derived.structuralContext && (
+            <div className="query-answer-context">{derived.structuralContext}</div>
+          )}
+          <div className="query-answer-boundary">{expansion.boundary}</div>
+          <div className="expansion-governance-footer">BOUNDED INTERPRETATION · evidence-bound · 13 prohibitions enforced</div>
+        </div>
+      </aside>
+    )
+  }
+
+  if (densityClass === 'EXECUTIVE_BALANCED' && emergenceState) {
+    const swEnhancedPanel = swIntelActive && balancedBriefing && balancedBriefing.valid
+    const ps = (fullReport && fullReport.propagation_summary) || {}
+    const balSigs = (fullReport && fullReport.signal_interpretations) || []
+    const balActivated = balSigs.filter(s => s.severity !== 'NOMINAL')
+    const balCritical = balActivated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+    const balZone = ps.primary_zone_business_label || null
+    const qs = (fullReport && fullReport.qualifier_summary) || {}
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const backed = ts.structurally_backed_count || 0
+    const totalDomains = ts.semantic_domain_count || 0
+    const confLabel = qs.qualifier_class === 'Q-01' ? 'Full' : qs.qualifier_class === 'Q-02' ? 'Partial' : 'Advisory-bound'
+
+    const synthesisText = balCritical.length > 0 && balZone
+      ? `Structural pressure converges on ${balZone}. ${balCritical.length > 1 ? 'Multiple independent conditions reinforce this concentration — ' : ''}this is not a localised deficiency but a compound convergence pattern that constrains delivery coordination across the program.`
+      : balActivated.length > 0 && balZone
+        ? `Operational load concentrates around ${balZone}. Pressure is present but has not reached the convergence threshold that would constrain delivery coordination.`
+        : 'Operational dependencies are distributed without disproportionate concentration. No structural convergence pattern detected.'
+
+    const whyText = balCritical.length > 0 && balZone
+      ? `When multiple structural pressures converge on the same operational corridor, delivery coordination becomes dependent on that single area. Program intelligence surfaces this because the pattern is structural — it persists regardless of team composition or sprint planning. Addressing it requires architectural intervention, not process adjustment.`
+      : balActivated.length > 0
+        ? `Structural pressure concentration creates operational risk that is invisible to conventional project tracking. Program intelligence detects it because the evidence is embedded in the codebase topology, not in delivery metrics.`
+        : 'No structural concentration detected. Delivery coordination is not constrained by the current codebase topology.'
+
+    const bz1 = swEnhancedPanel ? balancedBriefing.zones.z1 : null
+    const bz3 = swEnhancedPanel ? balancedBriefing.zones.z3 : null
+
+    return (
+      <aside className="intel-interp intel-interp--balanced" data-tone={framing.tone} data-sw-intel={swEnhancedPanel || undefined} aria-label="Executive interpretation — operational orientation">
         <div className="interp-tag">
           <span className="interp-tag-label">{framing.label}</span>
           <span className="interp-tag-state">{badge.state_label || '—'}</span>
-          {authorityActive && <span className="interp-75x-marker">75.x</span>}
         </div>
 
-        {narrative.executive_summary && (
-          <div className={`interp-block interp-block--lead${authorityActive ? ' interp-block--interpretive' : ''}`}>
-            <div className="interp-section-label">{framing.assessmentLabel}</div>
-            <div className="interp-summary">{narrative.executive_summary}</div>
-          </div>
-        )}
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">{framing.assessmentLabel}</div>
+          <div className="interp-summary">{synthesisText}</div>
+        </div>
 
-        {emerged.filter(n => n.emergenceClass === 'SECONDARY' || n.emergenceClass === 'TERTIARY').map(n => {
-          const registryEntry = Object.values(BALANCED_INTERPRETIVE_NARRATIVES).find(fn => emergenceState[fn.key] === n)
-          return (
-            <div key={(registryEntry && registryEntry.key) || n.structuralBasis} className={`interp-block interp-block--interpretive${n.emergenceClass === 'TERTIARY' ? ' interp-block--tertiary' : ''}`}>
-              <div className="interp-section-label interp-section-label--emerged">
-                {(registryEntry && registryEntry.subordinateLabel) || 'Structural observation'}
-              </div>
-              <div className="interp-synthesis interp-synthesis--emerged">
-                {n.evidenceChain[0] && n.evidenceChain[0].claim}
-              </div>
+        <div className="interp-block interp-block--orientation">
+          <div className="interp-section-label">Operational orientation</div>
+          <div className="interp-orientation-grid">
+            <div className="interp-orient-row">
+              <span className="interp-orient-key">Posture</span>
+              <span className="interp-orient-val" data-tone={balCritical.length > 0 ? 'critical' : balActivated.length > 0 ? 'elevated' : 'nominal'}>
+                {balCritical.length > 0 ? 'Pressure concentrated' : balActivated.length > 0 ? 'Load imbalanced' : 'Distributed'}
+              </span>
             </div>
-          )
-        })}
-
-        {narrative.structural_summary && framing.structuralLabel && (
-          <div className="interp-block">
-            <div className="interp-section-label">{framing.structuralLabel}</div>
-            <div className="interp-structural">{narrative.structural_summary}</div>
+            {balZone && balActivated.length > 0 && (
+              <div className="interp-orient-row">
+                <span className="interp-orient-key">Primary pressure</span>
+                <span className="interp-orient-val">{balZone}</span>
+              </div>
+            )}
+            <div className="interp-orient-row">
+              <span className="interp-orient-key">Propagation</span>
+              <span className="interp-orient-val">{balCritical.length > 1 ? 'Compound — multi-corridor' : balCritical.length > 0 ? 'Concentrated corridor' : 'Within parameters'}</span>
+            </div>
+            {swEnhancedPanel && bz3 && (
+              <div className="interp-orient-row">
+                <span className="interp-orient-key">Primary consequence</span>
+                <span className="interp-orient-val">{bz3.title}</span>
+              </div>
+            )}
+            {swEnhancedPanel && bz1 && (
+              <div className="interp-orient-row">
+                <span className="interp-orient-key">Consequences</span>
+                <span className="interp-orient-val">{bz1.consequence_count} active</span>
+              </div>
+            )}
+            <div className="interp-orient-row">
+              <span className="interp-orient-key">Confidence</span>
+              <span className="interp-orient-val">{confLabel}</span>
+            </div>
+            <div className="interp-orient-row">
+              <span className="interp-orient-key">Grounding</span>
+              <span className="interp-orient-val">{backed} of {totalDomains} domains confirmed</span>
+            </div>
+            <div className="interp-orient-row">
+              <span className="interp-orient-key">Implication</span>
+              <span className="interp-orient-val">{balCritical.length > 0 ? 'Delivery coordination constrained' : balActivated.length > 0 ? 'Structural attention required' : 'No immediate constraint'}</span>
+            </div>
           </div>
-        )}
+        </div>
+
+        <div className="interp-block">
+          <div className="interp-section-label">{framing.whyLabel}</div>
+          <div className="interp-why">{whyText}</div>
+        </div>
       </aside>
     )
   }
@@ -4753,7 +4845,269 @@ function BalancedNarrativeSection({ derived, subordinateLabel }) {
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState }) {
+const BALANCED_SIGNAL_LABELS = {
+  'PSIG-001': 'Dependency Hub Concentration',
+  'PSIG-002': 'Cross-Domain Coordination Load',
+  'PSIG-004': 'Resilience Exposure',
+  'PSIG-006': 'Structural Coverage Gaps',
+  'ISIG-001': 'Dependency Choke Point',
+  'ISIG-002': 'Asymmetric Change Propagation',
+  'DPSIG-031': 'Load Concentration',
+  'DPSIG-032': 'Coordination Responsibility Imbalance',
+}
+
+function balancedSignalLabel(s) {
+  return BALANCED_SIGNAL_LABELS[s.signal_id] || s.signal_name || s.signal_id
+}
+
+function BalancedConsequenceBriefing({ briefing }) {
+  const { z1, z2, z3, z4, z5 } = briefing.zones
+
+  return (
+    <div className="balanced-briefing-corridor">
+      <section className="balanced-briefing-posture">
+        <h2 className="balanced-briefing-headline">{z1.headline}</h2>
+        <p className="balanced-briefing-dynamics">{z1.dynamics}</p>
+        {z1.chips.length > 0 && (
+          <div className="balanced-briefing-chips">
+            {z1.chips.map((c, i) => (
+              <span key={i} className="balanced-briefing-chip" data-tone={c.tone}>{c.label}</span>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="balanced-briefing-primary-story">
+        <div className="balanced-briefing-story-anchor">
+          <span className="balanced-briefing-story-label">{z3.anchorName}</span>
+          <span className="balanced-briefing-story-subtitle">{z3.subtitle}</span>
+        </div>
+        {z3.title && <div className="balanced-briefing-story-title">{z3.title}</div>}
+        {z3.text && <div className="balanced-briefing-story-text">{z3.text}</div>}
+        {z3.is_combination && z3.combination_explanation && (
+          <div className="balanced-briefing-combination">{z3.combination_explanation}</div>
+        )}
+        {z3.source_conditions && z3.source_conditions.length > 0 && (
+          <div className="balanced-briefing-source-conditions">
+            {z3.source_conditions.map((sc, i) => (
+              <span key={i} className="balanced-briefing-source-condition">{sc.display_title}</span>
+            ))}
+          </div>
+        )}
+        {z3.facts && z3.facts.length > 0 && (
+          <div className="balanced-briefing-facts">
+            {z3.facts.map((f, i) => (
+              <div key={i} className="balanced-briefing-fact" data-tone={f.tone}>
+                <span className="balanced-briefing-fact-key">{f.key}</span>
+                <span className="balanced-briefing-fact-value">{f.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {z2.entries.length > 0 && (
+        <section className="balanced-briefing-reinforcement">
+          <div className="balanced-briefing-reinforcement-header">
+            <span className="balanced-briefing-reinforcement-label">REINFORCEMENT FLOW</span>
+            <span className="balanced-briefing-reinforcement-count">{z2.condition_count_label}</span>
+          </div>
+          {z2.convergence && (
+            <div className="balanced-briefing-convergence">{z2.convergence}</div>
+          )}
+          <div className="balanced-briefing-flow">
+            {z2.entries.map((entry, i) => (
+              <div key={i} className="balanced-briefing-flow-entry" data-verb={entry.relationship_verb}>
+                <span className="balanced-briefing-flow-verb">{entry.relationship_verb}</span>
+                <div className="balanced-briefing-flow-content">
+                  <span className="balanced-briefing-flow-title">{entry.title}</span>
+                  <span className="balanced-briefing-flow-sentence">{entry.relationship_sentence}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="balanced-briefing-confidence">
+        <div className="balanced-briefing-confidence-text">{z4.statement}</div>
+        <div className="balanced-briefing-confidence-bar">
+          <div className="balanced-briefing-bar-track">
+            <div className="balanced-briefing-bar-fill" style={{ width: `${z4.bar.confirmedPercent}%` }} />
+          </div>
+          <div className="balanced-briefing-bar-labels">
+            <span className="balanced-briefing-bar-confirmed">{z4.bar.confirmedLabel}</span>
+            {z4.semanticOnly > 0 && (
+              <span className="balanced-briefing-bar-advisory">{z4.bar.advisoryLabel}</span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="balanced-briefing-descent">
+        {z5.paths.map((p, i) => (
+          <div key={i} className="balanced-briefing-descent-path">
+            <span className="balanced-briefing-descent-target">{p.label}</span>
+            <span className="balanced-briefing-descent-desc">{p.description}</span>
+          </div>
+        ))}
+      </section>
+    </div>
+  )
+}
+
+function BalancedPressureAnchor({ fullReport }) {
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const ts = (fullReport && fullReport.topology_summary) || {}
+  const dpsig = (fullReport && fullReport.dpsig_signal_summary) || {}
+  const nb = (dpsig && dpsig.normalization_basis) || {}
+  const zoneName = ps.primary_zone_business_label
+  if (!zoneName) return null
+
+  const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+  const critHigh = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+  const severityTier = critHigh.length > 0 ? 'HIGH' : activated.length > 0 ? 'ELEVATED' : 'NOMINAL'
+  const origin = nb.max_cluster_name || 'unknown'
+  const massNodes = nb.max_cluster_node_count || '—'
+  const totalNodes = nb.total_structural_node_count || '—'
+  const backed = ts.structurally_backed_count || 0
+  const totalDomains = ts.semantic_domain_count || 0
+  const semanticOnly = ts.semantic_only_count || Math.max(0, totalDomains - backed)
+
+  return (
+    <div className="balanced-zone balanced-zone--anchor" data-tier={severityTier}>
+      <div className="balanced-anchor-label">Operational Epicenter</div>
+      <div className="balanced-anchor-zone-name">{zoneName}</div>
+      <div className="balanced-anchor-subtitle">Pressure anchor · {origin} origin</div>
+      <p className="balanced-anchor-statement">
+        The pressure themes above resolve into one operational anchor. {zoneName} concentrates structural mass, dependency load, and propagation exposure around the {origin} execution corridor.
+      </p>
+
+      <div className="balanced-anchor-visual">
+        <span className="balanced-anchor-visual-origin">{origin}</span>
+        <span className="balanced-anchor-visual-arrow">──▸</span>
+        <span className="balanced-anchor-visual-target">{zoneName}</span>
+      </div>
+      <div className="balanced-anchor-visual-role">PRIMARY PRESSURE ANCHOR</div>
+
+      <div className="balanced-anchor-chips">
+        <span className="balanced-anchor-chip">Mass concentration</span>
+        <span className="balanced-anchor-chip">Dependency load</span>
+        <span className="balanced-anchor-chip">Architectural binding</span>
+        <span className="balanced-anchor-chip">Pressure convergence</span>
+      </div>
+
+      <div className="balanced-anchor-facts">
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Structural origin</span><span className="balanced-anchor-fact-val">{origin}</span></div>
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Structural mass</span><span className="balanced-anchor-fact-val">{massNodes} / {totalNodes} nodes</span></div>
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Activation</span><span className="balanced-anchor-fact-val">{activated.length} signals</span></div>
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Severity</span><span className="balanced-anchor-fact-val" data-tone={critHigh.length > 0 ? 'critical' : 'elevated'}>{critHigh.length} critical/high</span></div>
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Grounding</span><span className="balanced-anchor-fact-val">{backed} / {totalDomains} domains backed</span></div>
+        <div className="balanced-anchor-fact"><span className="balanced-anchor-fact-key">Advisory scope</span><span className="balanced-anchor-fact-val">{semanticOnly} semantic-only domains</span></div>
+      </div>
+
+      <p className="balanced-anchor-meaning">
+        This is not a single failing component. It is a compound pressure anchor: multiple structural pressures concentrate around the same execution region, making delivery coordination dependent on this area.
+      </p>
+    </div>
+  )
+}
+
+function BalancedPressureSynthesis({ signals, pressureZone }) {
+  const activated = (signals || []).filter(s => s.severity !== 'NOMINAL')
+  if (activated.length === 0) return null
+
+  const depSignals = activated.filter(s => {
+    const id = s.signal_id || ''
+    return id.startsWith('PSIG') || id.startsWith('ISIG')
+  })
+  const loadSignals = activated.filter(s => {
+    const id = s.signal_id || ''
+    return id.startsWith('DPSIG')
+  })
+
+  const zone = pressureZone || 'the primary zone'
+
+  return (
+    <div className="balanced-zone balanced-zone--synthesis">
+      <div className="balanced-zone-label">Pressure Synthesis</div>
+      {depSignals.length > 0 && (
+        <div className="balanced-synthesis-theme">
+          <div className="balanced-synthesis-theme-label">Dependency concentration</div>
+          <p className="balanced-synthesis-theme-text">
+            {depSignals.length >= 3
+              ? `Dependencies, propagation paths, and structural coupling all converge on ${zone}. Changes in this area carry disproportionate downstream impact across multiple operational domains.`
+              : depSignals.length >= 2
+                ? `Dependencies and propagation paths converge on ${zone}. Changes here propagate beyond the immediate area.`
+                : `A structural dependency corridor runs through ${zone}, creating concentrated downstream exposure.`}
+          </p>
+        </div>
+      )}
+      {loadSignals.length > 0 && (
+        <div className="balanced-synthesis-theme">
+          <div className="balanced-synthesis-theme-label">Load imbalance</div>
+          <p className="balanced-synthesis-theme-text">
+            {loadSignals.length >= 2
+              ? `${zone} carries the dominant share of both structural mass and coordination responsibility. Operational resilience concentrates rather than distributes.`
+              : `Structural load concentrates in ${zone} — this area carries disproportionate architectural weight.`}
+          </p>
+        </div>
+      )}
+      <div className="balanced-synthesis-count">
+        {activated.length} structural signal{activated.length !== 1 ? 's' : ''} compressed into {[depSignals.length > 0, loadSignals.length > 0].filter(Boolean).length} operational pressure theme{[depSignals.length > 0, loadSignals.length > 0].filter(Boolean).length !== 1 ? 's' : ''}
+      </div>
+      <details className="balanced-synthesis-disclosure">
+        <summary className="balanced-synthesis-disclosure-toggle">Show supporting signals</summary>
+        <div className="balanced-synthesis-disclosure-body">
+          {depSignals.length > 0 && (
+            <div className="balanced-synthesis-signal-group">
+              <div className="balanced-synthesis-signal-group-label">Dependency concentration</div>
+              {depSignals.map(s => {
+                const t = translateSignal(s.signal_id)
+                const isGap = s.severity !== 'NOMINAL' && t && t.l3_consequence_gap
+                return (
+                  <div key={s.signal_id} className="balanced-synthesis-signal" data-severity={s.severity}>
+                    <span className="balanced-synthesis-signal-name">{balancedSignalLabel(s)}</span>
+                    <span className="balanced-synthesis-signal-severity">{s.severity}</span>
+                    <div className="balanced-synthesis-signal-tooltip">
+                      <div className="balanced-synthesis-signal-tooltip-consequence">{isGap ? t.l3_consequence_gap : (t && t.l3_consequence) || s.interpretation || ''}</div>
+                      {t && t.topology_effect && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Topology effect</span>{t.topology_effect}</div>}
+                      {s.concentration && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Concentration</span>{s.concentration}</div>}
+                      {t && t.governance && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Governance</span>{t.governance}</div>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          {loadSignals.length > 0 && (
+            <div className="balanced-synthesis-signal-group">
+              <div className="balanced-synthesis-signal-group-label">Load imbalance</div>
+              {loadSignals.map(s => {
+                const t = translateSignal(s.signal_id)
+                return (
+                  <div key={s.signal_id} className="balanced-synthesis-signal" data-severity={s.severity}>
+                    <span className="balanced-synthesis-signal-name">{balancedSignalLabel(s)}</span>
+                    <span className="balanced-synthesis-signal-severity">{s.severity}</span>
+                    <div className="balanced-synthesis-signal-tooltip">
+                      <div className="balanced-synthesis-signal-tooltip-consequence">{(t && t.l3_consequence) || s.interpretation || ''}</div>
+                      {t && t.topology_effect && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Topology effect</span>{t.topology_effect}</div>}
+                      {s.concentration && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Concentration</span>{s.concentration}</div>}
+                      {t && t.governance && <div className="balanced-synthesis-signal-tooltip-row"><span className="balanced-synthesis-signal-tooltip-label">Governance</span>{t.governance}</div>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </details>
+    </div>
+  )
+}
+
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing }) {
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
@@ -4785,75 +5139,132 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
 
   const authorityActive = emergedCount > 0
 
+  const ps = (fullReport && fullReport.propagation_summary) || {}
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const pressureZone = ps.primary_zone_business_label || null
+  const activated = sigs.filter(s => s.severity !== 'NOMINAL')
+  const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+  const semantic = Math.max(0, total - grounded)
+  const qualLabel = (fullReport && fullReport.qualifier_summary && fullReport.qualifier_summary.label) || qualifierClass || 'Semantic Continuity Only'
+
+  const swEnhanced = swIntelActive && balancedBriefing && balancedBriefing.valid
+  const bz = swEnhanced ? balancedBriefing.zones : null
+
   return (
-    <div className="rep-field rep-field--balanced">
+    <div className="rep-field rep-field--balanced" data-sw-intel={swEnhanced || undefined}>
       <RepModeTag
         label="Executive lens"
-        sub="CEO · consequence-first read"
+        sub={swEnhanced ? 'CTO · operational dynamics and consequence · SW-INTEL active' : 'CTO · operational dynamics and consequence'}
         zones={[
-          { id: 'Z1', name: 'Executive Posture' },
-          { id: 'Z4', name: 'Pressure Anchor' },
+          { id: 'Z1', name: 'Operational Posture' },
+          { id: 'Z2', name: 'Pressure Synthesis' },
+          { id: 'Z3', name: 'Pressure Anchor' },
         ]}
       />
 
-      <div className="actor actor--decision-posture">
-        <div className="actor-tag">
-          <span className="actor-code">DP</span>
-          <span className="actor-name">Decision Posture</span>
-        </div>
-        <div className="actor-decision-state">{badge.state_label || '—'}</div>
-        <div className="actor-decision-grounding">
-          <div className="actor-confidence-bar">
-            <div className="actor-confidence-bar-fill" style={{ width: `${groundedPct}%` }} />
-            <div className="actor-confidence-bar-advisory" style={{ width: `${100 - groundedPct}%` }} />
+      {/* Z1 — Operational Posture */}
+      <div className="balanced-zone balanced-zone--posture">
+        <p className="balanced-posture-statement">
+          {critical.length > 0 && pressureZone
+            ? `Delivery coordination depends disproportionately on ${pressureZone}. Multiple independent conditions create pressure on this area simultaneously — this is a convergence pattern, not a single root cause.`
+            : activated.length > 0 && pressureZone
+              ? `Operational load is unevenly distributed, concentrating around ${pressureZone}. Pressure is present but has not reached levels that would constrain delivery coordination.`
+              : `Operational dependencies are distributed without disproportionate concentration. No single area dominates delivery coordination.`}
+        </p>
+        {swEnhanced && bz.z1 && (
+          <div className="balanced-sw-enhancement">
+            <span className="balanced-sw-enhancement-tag">SW-INTEL</span>
+            <p className="balanced-sw-enhancement-text">{bz.z1.dynamics}</p>
           </div>
-          <div className="actor-confidence-meta">
-            <span><span className="actor-confidence-dot actor-confidence-dot--grounded" /> {grounded} of {total} grounded</span>
-            <span><span className="actor-confidence-dot actor-confidence-dot--advisory" /> {total - grounded} advisory bound</span>
-          </div>
+        )}
+        <div className="balanced-posture-chips">
+          <span className="balanced-posture-chip" data-tone={critical.length > 0 ? 'critical' : activated.length > 0 ? 'elevated' : 'nominal'}>
+            {(badge.readiness_label || '').toLowerCase().includes('qualified') ? 'Qualified' : (badge.readiness_label || '').toLowerCase().includes('ready') ? 'Ready' : (badge.readiness_label || '').toLowerCase().includes('blocked') ? 'Blocked' : 'Diagnostic'}
+          </span>
+          {pressureZone && activated.length > 0 && (
+            <span className="balanced-posture-chip" data-tone="elevated">Pressure-concentrated</span>
+          )}
+          {semantic > 0 && (
+            <span className="balanced-posture-chip" data-tone="muted">Advisory-bound</span>
+          )}
         </div>
       </div>
 
-      {origin && (
-        <div className="actor actor--pressure-anchor">
-          <div className="actor-tag">
-            <span className="actor-code">PA</span>
-            <span className="actor-name">Pressure Anchor · origin</span>
-          </div>
-          <div className="actor-anchor-line" data-tier={origin.signal_cards[0].pressure_tier}>
-            <span className="actor-anchor-dot" />
-            <span className="actor-anchor-domain">{origin.domain_alias}</span>
-            <span className="actor-anchor-tier">{origin.signal_cards[0].pressure_label}</span>
+      {/* Z2 — Pressure Synthesis + SW-INTEL Reinforcement Flow */}
+      <BalancedPressureSynthesis signals={sigs} pressureZone={pressureZone} />
+      {swEnhanced && bz.z2 && bz.z2.entries.length > 0 && (
+        <div className="balanced-zone balanced-zone--reinforcement">
+          <div className="balanced-sw-enhancement-tag-inline">SW-INTEL · REINFORCEMENT FLOW</div>
+          {bz.z2.convergence && (
+            <p className="balanced-sw-enhancement-convergence">{bz.z2.convergence}</p>
+          )}
+          <div className="balanced-sw-reinforcement-flow">
+            {bz.z2.entries.map((entry, i) => (
+              <div key={i} className="balanced-sw-reinforcement-entry" data-verb={entry.relationship_verb}>
+                <span className="balanced-sw-reinforcement-verb">{entry.relationship_verb}</span>
+                <div className="balanced-sw-reinforcement-content">
+                  <span className="balanced-sw-reinforcement-title">{entry.title}</span>
+                  <span className="balanced-sw-reinforcement-sentence">{entry.relationship_sentence}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      <BalancedNarrativeSection derived={narratives.executiveSynthesis} />
+      {/* Z3 — Pressure Anchor + SW-INTEL Consequence Story */}
+      <BalancedPressureAnchor fullReport={fullReport} />
+      {swEnhanced && bz.z3 && (
+        <div className="balanced-zone balanced-zone--consequence-story">
+          <div className="balanced-sw-enhancement-tag-inline">SW-INTEL · CONSEQUENCE ASSESSMENT</div>
+          {bz.z3.title && <div className="balanced-sw-consequence-title">{bz.z3.title}</div>}
+          {bz.z3.text && <p className="balanced-sw-consequence-text">{bz.z3.text}</p>}
+          {bz.z3.is_combination && bz.z3.combination_explanation && (
+            <p className="balanced-sw-consequence-combination">{bz.z3.combination_explanation}</p>
+          )}
+          {bz.z3.source_conditions && bz.z3.source_conditions.length > 0 && (
+            <div className="balanced-sw-consequence-conditions">
+              {bz.z3.source_conditions.map((sc, i) => (
+                <span key={i} className="balanced-sw-consequence-condition">{sc.display_title}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-      <QualifierNarrativeLine qualifierClass={qualifierClass} />
+      {/* Z4 — Confidence Boundary (enhanced when SW-INTEL active) */}
+      <div className="balanced-zone balanced-zone--confidence">
+        <div className="balanced-confidence-label">Confidence Boundary</div>
+        <p className="balanced-confidence-statement">
+          {swEnhanced && bz.z4 ? bz.z4.statement : 'Interpretation is advisory-bound outside structurally grounded regions.'}
+        </p>
+        <div className="balanced-confidence-facts">
+          <div className="balanced-confidence-fact"><span className="balanced-confidence-fact-key">Confirmed</span><span className="balanced-confidence-fact-val">{grounded} structurally backed domain{grounded !== 1 ? 's' : ''}</span></div>
+          <div className="balanced-confidence-fact"><span className="balanced-confidence-fact-key">Advisory-bound</span><span className="balanced-confidence-fact-val">{semantic} semantic-only domain{semantic !== 1 ? 's' : ''}</span></div>
+          <div className="balanced-confidence-fact"><span className="balanced-confidence-fact-key">Qualifier</span><span className="balanced-confidence-fact-val">{qualifierClass || 'Q-03'} / {qualLabel}</span></div>
+        </div>
+        <div className="balanced-confidence-bar">
+          <div className="balanced-confidence-bar-confirmed" style={{ width: `${groundedPct}%` }} />
+          <div className="balanced-confidence-bar-advisory" style={{ width: `${100 - groundedPct}%` }} />
+        </div>
+        <div className="balanced-confidence-bar-labels">
+          <span className="balanced-confidence-bar-label">Confirmed {grounded}</span>
+          <span className="balanced-confidence-bar-label">Advisory {semantic}</span>
+        </div>
+      </div>
 
-      <EvidenceBoundarySection scope={scope} fullReport={fullReport} />
-      <BalancedNarrativeSection derived={narratives.groundingIntelligence} subordinateLabel="Grounding posture" />
-
-      <SignalNarrativeBlock fullReport={fullReport} />
-      <BalancedNarrativeSection derived={narratives.pressureIntelligence} subordinateLabel="Pressure concentration" />
-
-      <PressureZoneFocusBlock fullReport={fullReport} />
-      <BalancedNarrativeSection derived={narratives.propagationIntelligence} subordinateLabel="Propagation pattern" />
-
-      <StructuralConclusionBlock fullReport={fullReport} />
-      <BalancedNarrativeSection derived={narratives.qualificationIntelligence} subordinateLabel="Qualification compression" />
-
-      <BalancedNarrativeSection derived={narratives.governancePosture} subordinateLabel="Governance lifecycle" />
-      <BalancedNarrativeSection derived={narratives.enrichmentPosture} subordinateLabel="Substrate correction" />
-      <BalancedNarrativeSection derived={narratives.convergencePosture} subordinateLabel="Cross-specimen pattern" />
-
-      <div className="tier-handoff" aria-label="Governance handoff">
-        <div className="tier-handoff-rule" />
-        <div className="tier-handoff-text">
-          {authorityActive
-            ? 'Structural derivation primary — bounded interpretive synthesis · evidence-bound · 75.x'
-            : 'This surface presents structurally derived evidence only. All outputs are deterministic, traceable, and bound by the governance framework. No inference, ranking, or AI-generated assessment has been applied.'}
+      {/* Z5 — Descent */}
+      <div className="balanced-zone balanced-zone--descent">
+        <div className="balanced-descent-label">Descent Paths</div>
+        <div className="balanced-descent-cards">
+          <div className="balanced-descent-card">
+            <div className="balanced-descent-card-title">DENSE</div>
+            <div className="balanced-descent-card-desc">Inspect topology cognition and structural signal behavior.</div>
+          </div>
+          <div className="balanced-descent-card">
+            <div className="balanced-descent-card-title">INVESTIGATION</div>
+            <div className="balanced-descent-card-desc">Inspect derivation chain and evidence proof.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -7972,7 +8383,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -7990,12 +8401,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <>
-        <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} />
-        {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceBalancedNarrative projection={swIntelProjection} />
-        )}
-      </>
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} />
     )
   }
   return (
@@ -8102,6 +8508,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     return tempSynthesis ? compileConsequenceTeaser(tempSynthesis, fullReport) : null
   }, [fullReport, swIntelActive])
   const consequencePosture = useMemo(() => consequenceResult ? consequencesForBoardroom(consequenceResult, synthesisResult, fullReport) : null, [consequenceResult, synthesisResult, fullReport])
+  const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, fullReport) : null, [consequenceResult, synthesisResult, fullReport])
+  const balancedBriefing = useMemo(() => balancedProjection ? composeBalancedBriefing(balancedProjection, synthesisResult, fullReport) : null, [balancedProjection, synthesisResult, fullReport])
 
   const resolvedCondition = useMemo(() => {
     if (!cognitionState.activeConditionId || !synthesisResult) return null
@@ -8312,6 +8720,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         swIntelActive={swIntelActive}
         swIntelTeaser={swIntelTeaser}
         consequenceTeaser={consequenceTeaser}
+        balancedBriefing={balancedBriefing}
       />
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
@@ -8354,9 +8763,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           swIntelTeaser={swIntelTeaser}
           consequencePosture={consequencePosture}
           consequenceTeaser={consequenceTeaser}
+          balancedBriefing={balancedBriefing}
         />
 
-        {!boardroomMode && (
+        {!boardroomMode && !isBalanced && (
           <OrchestrationGuidanceRuntime
             projection={swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' ? swIntelProjection : null}
             fullReport={fullReport}

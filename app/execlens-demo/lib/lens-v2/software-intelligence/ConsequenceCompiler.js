@@ -8,6 +8,7 @@ const SEVERITY_ESCALATION = {
 }
 
 const CONFIDENCE_RANK = { GOVERNED: 0, ADVISORY_BOUND: 1, STRUCTURAL_ONLY: 2 }
+const SCOPE_RANK = { LOCAL: 0, REGIONAL: 1, SYSTEMIC: 2 }
 
 // ─── Three-Layer Vocabulary (§12) ──────────────────────
 
@@ -576,6 +577,155 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
   }
 }
 
+// ─── Persona: BALANCED (§10.2) ────────────────────────
+
+function resolveSourceConditions(consequence, conditionMap) {
+  return (consequence.source_conditions || []).map(condId => {
+    const cond = conditionMap[condId]
+    if (!cond) return { condition_type: condId, display_title: condId }
+    const vocab = COGNITION_SLICE_VOCABULARY[cond.condition_type]
+    return {
+      condition_type: cond.condition_type,
+      display_title: (vocab && vocab.executive_name) || cond.condition_type,
+    }
+  })
+}
+
+function deriveCombinationExplanation(consequence) {
+  switch (consequence.combination_pattern) {
+    case 'SYSTEMIC_OP_FRAG':
+      return 'Multiple independent structural conditions converge through independent evidence paths.'
+    case 'AMPLIFIED_DEP_FRAG':
+      return 'Coordination fragility compounded by dependency concentration on the same structural point.'
+    case 'STRUCT_GRAVITY_WELL':
+      return 'Delivery exposure and resilience deficit compound on the structurally dominant region.'
+    default:
+      return 'Multiple structural consequences combined.'
+  }
+}
+
+function deriveRelationshipVerb(consequence, primary) {
+  const sameLocus = consequence.primary_locus_display === primary.primary_locus_display
+  if (!sameLocus) return 'widens'
+  if (consequence.combination_pattern) return 'amplifies'
+  const csqScope = SCOPE_RANK[consequence.consequence_scope] ?? 0
+  const priScope = SCOPE_RANK[primary.consequence_scope] ?? 0
+  if (csqScope < priScope) return 'concentrates'
+  if (csqScope > priScope) return 'converges with'
+  return 'reinforces'
+}
+
+function compileRelationshipSentence(verb, consequence, primary) {
+  const typeId = consequence.consequence_type_id
+  const locus = consequence.primary_locus_display
+  const primaryLocus = primary.primary_locus_display
+
+  if (verb === 'amplifies') {
+    if (typeId === 'AMPLIFIED_DEP_FRAG') return 'Dependency hub sits inside the pressure corridor.'
+    if (typeId === 'STRUCT_GRAVITY_WELL') return 'Delivery risk compounds on the structurally dominant region.'
+    return `Compounds structural stress on ${primaryLocus}.`
+  }
+  if (verb === 'reinforces') return `Structural pressure intensifies on ${primaryLocus}.`
+  if (verb === 'widens') return `Structural exposure extends to ${locus}.`
+  if (verb === 'concentrates') return `Pressure concentrates within ${locus}.`
+  if (verb === 'converges with') return `Broader dynamic converges on ${primaryLocus}.`
+  return consequence.operational_implication
+}
+
+function deriveBalancedConfidenceSentence(confidence, primaryLocus) {
+  switch (confidence) {
+    case 'ADVISORY_BOUND':
+      return `Advisory-bound — structural reconciliation incomplete outside ${primaryLocus}.`
+    case 'STRUCTURAL_ONLY':
+      return 'Structural only — no semantic qualification available for this assessment.'
+    case 'GOVERNED':
+      return 'Governed — all evidence classes reconciled.'
+    default:
+      return `${confidence} confidence.`
+  }
+}
+
+function deriveBalancedSynthesis(consequences, postureLabel, primaryLocus) {
+  if (consequences.length === 0) return null
+  if (consequences.length === 1) {
+    return `${consequences[0].operator_consequence_title} concentrated in ${primaryLocus}.`
+  }
+  const wideningLoci = [...new Set(
+    consequences
+      .filter(c => c.primary_locus_display !== primaryLocus)
+      .map(c => c.primary_locus_display)
+  )]
+  if (wideningLoci.length > 0) {
+    return `${postureLabel} concentrated in ${primaryLocus} — exposure widens to ${wideningLoci.join(', ')}.`
+  }
+  return `${postureLabel} concentrated in ${primaryLocus} — ${consequences.length} structural dynamics converge on the same corridor.`
+}
+
+function forBalanced(consequenceResult, synthesisResult, fullReport) {
+  if (!consequenceResult || consequenceResult.consequence_count === 0) return null
+
+  const csqs = consequenceResult.consequences
+  const hasSystemic = consequenceResult.systemic_count > 0
+  const registry = (fullReport && fullReport.semantic_domain_registry) || []
+
+  const postureLabel = derivePostureLabel(csqs, hasSystemic)
+  const primaryLocus = csqs[0].primary_locus_display
+  const overallConfidence = csqs[0].confidence
+
+  const conditionMap = {}
+  if (synthesisResult && synthesisResult.conditions) {
+    for (const cond of synthesisResult.conditions) {
+      conditionMap[cond.condition_id] = cond
+    }
+  }
+
+  const primary = csqs[0]
+  const isCombination = !!primary.combination_pattern
+
+  const primaryStory = {
+    consequence_type_id: primary.consequence_type_id,
+    title: primary.operator_consequence_title,
+    operational_implication: primary.operational_implication,
+    severity: primary.severity,
+    confidence: primary.confidence,
+    confidence_label: CONFIDENCE_EXECUTIVE[primary.confidence] || primary.confidence,
+    scope: primary.consequence_scope,
+    locus: primary.primary_locus_display,
+    source_conditions: resolveSourceConditions(primary, conditionMap),
+    is_combination: isCombination,
+    combination_explanation: isCombination ? deriveCombinationExplanation(primary) : null,
+  }
+
+  const reinforcementFlow = csqs.slice(1).map(csq => {
+    const verb = deriveRelationshipVerb(csq, primary)
+    return {
+      consequence_type_id: csq.consequence_type_id,
+      title: csq.operator_consequence_title,
+      operational_implication: csq.operational_implication,
+      severity: csq.severity,
+      confidence_label: CONFIDENCE_EXECUTIVE[csq.confidence] || csq.confidence,
+      relationship_verb: verb,
+      relationship_sentence: compileRelationshipSentence(verb, csq, primary),
+    }
+  })
+
+  return {
+    posture_label: postureLabel,
+    posture_severity: csqs[0].severity,
+    posture_scope: hasSystemic ? 'SYSTEMIC'
+      : csqs.some(c => c.consequence_scope === 'REGIONAL') ? 'REGIONAL' : 'LOCAL',
+    primary_locus: primaryLocus,
+    consequence_count: consequenceResult.consequence_count,
+    systemic_count: consequenceResult.systemic_count,
+    overall_confidence: overallConfidence,
+    overall_confidence_label: CONFIDENCE_EXECUTIVE[overallConfidence] || overallConfidence,
+    combined_synthesis: deriveBalancedSynthesis(csqs, postureLabel, primaryLocus),
+    primary_story: primaryStory,
+    reinforcement_flow: reinforcementFlow,
+    confidence_sentence: deriveBalancedConfidenceSentence(overallConfidence, primaryLocus),
+  }
+}
+
 // ─── Persona: INVESTIGATION (§10.4) ───────────────────
 
 function forInvestigation(consequenceResult) {
@@ -607,6 +757,7 @@ module.exports = {
   compile,
   compileTeaser,
   forBoardroom,
+  forBalanced,
   forInvestigation,
   CONSEQUENCE_VOCABULARY,
 }

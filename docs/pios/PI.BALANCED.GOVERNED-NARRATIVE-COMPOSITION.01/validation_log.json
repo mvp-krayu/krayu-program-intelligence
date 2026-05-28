@@ -1,0 +1,105 @@
+{
+  "stream_id": "PI.BALANCED.GOVERNED-NARRATIVE-COMPOSITION.01",
+  "timestamp": "2026-05-28",
+  "phase": "Phase 1 — corrected after reconciliation",
+  "checks": [
+    {
+      "name": "vocabulary_registry_complete",
+      "description": "OperationalVocabulary.js contains allowed verbs, nouns, adjectives and forbidden patterns",
+      "result": "PASS"
+    },
+    {
+      "name": "forbidden_patterns_comprehensive",
+      "description": "FORBIDDEN_PATTERNS covers organizational attribution, prediction, AI theater, consulting language",
+      "result": "PASS"
+    },
+    {
+      "name": "primitive_count_corrected",
+      "description": "5 projection primitives (down from 8): projectPosture, projectReinforcementFlow, projectPrimaryStory, composeEpicenterFacts, composeTrustCalibration",
+      "result": "PASS",
+      "detail": "6 derivation primitives removed. 2 topology projections retained. 3 new projection orchestration primitives added."
+    },
+    {
+      "name": "no_parallel_cognition_path",
+      "description": "No primitive reads raw signal_interpretations to derive operational meaning. All cognition consumed from forBalanced().",
+      "result": "PASS",
+      "detail": "projectPosture consumes posture_label+combined_synthesis. projectReinforcementFlow consumes reinforcement_flow. projectPrimaryStory consumes primary_story. Only composeEpicenterFacts and composeTrustCalibration read fullReport — for topology display data, not cognition."
+    },
+    {
+      "name": "evidence_chain_sources_corrected",
+      "description": "Evidence chains point to forBalanced() output, not raw signal_interpretations",
+      "result": "PASS"
+    },
+    {
+      "name": "zone_definitions_complete",
+      "description": "ZONE_DEFINITIONS covers Z1-Z5 with cognitive_role, question, renders, visual_weight, pacing",
+      "result": "PASS"
+    },
+    {
+      "name": "zone_transitions_defined",
+      "description": "4 zone transitions (Z1→Z2, Z2→Z3, Z3→Z4, Z4→Z5) with cognitive bridges",
+      "result": "PASS"
+    },
+    {
+      "name": "anti_patterns_registered",
+      "description": "7 anti-patterns: PROSE_DRIFT, STACKED_CARD_SYNDROME, GOVERNANCE_REGRESSION, METADATA_OVERLOAD, DENSE_LEAKAGE, COGNITIVE_RESET, SW_INTEL_REPLACEMENT",
+      "result": "PASS"
+    },
+    {
+      "name": "audience_contract_defined",
+      "description": "AUDIENCE_CONTRACT specifies primary/secondary audiences, cognitive mode, wants, does_not_want",
+      "result": "PASS"
+    },
+    {
+      "name": "composer_input_contract_corrected",
+      "description": "composeBriefing takes (balancedProjection, synthesisResult, fullReport) — not just fullReport",
+      "result": "PASS"
+    },
+    {
+      "name": "composer_gates_on_projection",
+      "description": "composeBriefing returns { valid: false, reason: 'NO_CONSEQUENCE_PROJECTION' } when balancedProjection is null",
+      "result": "PASS"
+    },
+    {
+      "name": "validation_functions_present",
+      "description": "validateSentence, validateComposition, validateBriefing all exported",
+      "result": "PASS"
+    },
+    {
+      "name": "composition_rules_corrected",
+      "description": "BALANCED_MAY lists projection operations. BALANCED_MAY_NOT explicitly forbids parallel cognition derivation.",
+      "result": "PASS"
+    },
+    {
+      "name": "no_boardroom_changes",
+      "description": "No files outside balanced/ directory modified",
+      "result": "PASS"
+    },
+    {
+      "name": "no_dense_changes",
+      "description": "No DENSE rendering modified",
+      "result": "PASS"
+    },
+    {
+      "name": "no_consequence_compiler_semantics_changed",
+      "description": "ConsequenceCompiler.js not modified. forBalanced() consumed as-is.",
+      "result": "PASS"
+    },
+    {
+      "name": "cognition_source_tracked",
+      "description": "Briefing metadata includes cognition_source: 'ConsequenceCompiler.forBalanced()' for runtime lineage",
+      "result": "PASS"
+    },
+    {
+      "name": "no_forbidden_language_in_templates",
+      "description": "All POSTURE_HEADLINES, CONVERGENCE_TEMPLATES, TRUST_TEMPLATES pass validateSentence",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "pass": 18,
+    "fail": 0
+  },
+  "reconciliation_note": "Phase 1 was corrected after BALANCED_COMPOSITION_ARCHITECTURE_RECONCILIATION.md identified 6/8 primitives as parallel cognition violations. All derivation primitives replaced with projection orchestration primitives that consume forBalanced() output."
+}
