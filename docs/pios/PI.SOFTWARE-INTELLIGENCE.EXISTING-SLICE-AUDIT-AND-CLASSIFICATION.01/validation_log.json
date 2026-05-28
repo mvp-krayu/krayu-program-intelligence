@@ -1,0 +1,129 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01",
+  "classification": "G2",
+  "baseline": "a886d83",
+  "validated_at": "2026-05-28",
+  "checks": [
+    {
+      "name": "audit_document_exists",
+      "description": "Primary audit document created with complete inventory",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/EXISTING_SLICE_AUDIT_AND_CLASSIFICATION.md"
+    },
+    {
+      "name": "all_areas_audited",
+      "description": "All 5 slice-adjacent areas inventoried and classified",
+      "result": "PASS",
+      "areas": ["COGNITION_SLICE_VOCABULARY", "topology_conditions", "projection_surfaces", "consequence_types", "ZoneComposer"]
+    },
+    {
+      "name": "maturity_classification_consistent",
+      "description": "Maturity levels aligned with promotion lifecycle (§13)",
+      "result": "PASS",
+      "classifications": {
+        "cognition_slices": "CANDIDATE",
+        "topology_conditions": "SPECIMEN",
+        "consequence_types": "SPECIMEN",
+        "projection_surfaces": "NON_SLICE",
+        "zone_composer": "NON_SLICE"
+      }
+    },
+    {
+      "name": "ontology_mapping_complete",
+      "description": "All constructs mapped to ontology classes (§7)",
+      "result": "PASS",
+      "coverage": {
+        "A_flow_propagation": "COVERED",
+        "B_concentration_saturation": "COVERED",
+        "C_fragility_resilience": "NOT_COVERED",
+        "D_reinforcement_accumulation": "COVERED",
+        "E_drift_instability": "COVERED"
+      }
+    },
+    {
+      "name": "evidence_contract_assessed",
+      "description": "Evidence contract (§9) assessed for all slice/slice-adjacent constructs",
+      "result": "PASS",
+      "section": "§6"
+    },
+    {
+      "name": "replay_contract_assessed",
+      "description": "Replay contract (§10) assessed for all slice/slice-adjacent constructs",
+      "result": "PASS",
+      "section": "§7"
+    },
+    {
+      "name": "non_slices_classified",
+      "description": "Non-slice constructs correctly identified per §6 non-slice definition",
+      "result": "PASS",
+      "non_slices": ["projection_surfaces", "ZoneComposer", "GOVERNANCE_COVERAGE_STATUS"]
+    },
+    {
+      "name": "determinism_verified",
+      "description": "All audited constructs produce deterministic output",
+      "result": "PASS"
+    },
+    {
+      "name": "evidence_gradient_documented",
+      "description": "Evidence quality gradient (L1→L4) documented with architectural rationale",
+      "result": "PASS",
+      "section": "§9.1"
+    },
+    {
+      "name": "advancement_feasibility_assessed",
+      "description": "FOUNDATIONAL advancement feasibility assessed for each SPECIMEN",
+      "result": "PASS",
+      "section": "§8"
+    },
+    {
+      "name": "remediation_path_documented",
+      "description": "Remediation paths to FOUNDATIONAL documented for evidence and replay contracts",
+      "result": "PASS",
+      "sections": ["§6.3", "§7.3"]
+    },
+    {
+      "name": "next_stream_recommended",
+      "description": "Next stream candidates prioritized",
+      "result": "PASS",
+      "recommendation": "PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01"
+    },
+    {
+      "name": "no_runtime_changes",
+      "description": "No runtime code modified (G2 assessment only)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_vault_mutation",
+      "description": "No vault files modified (G2 — no architecture mutation)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_terminology_change",
+      "description": "No new terms introduced (assessment uses existing taxonomy)",
+      "result": "PASS"
+    },
+    {
+      "name": "governing_taxonomy_referenced",
+      "description": "All classifications reference PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01 sections",
+      "result": "PASS"
+    },
+    {
+      "name": "anti_parallel_path_preserved",
+      "description": "Audit confirms no parallel semantic derivation paths exist",
+      "result": "PASS",
+      "section": "§9.1"
+    },
+    {
+      "name": "boundary_verification_pass",
+      "description": "All boundary conditions verified",
+      "result": "PASS",
+      "section": "§11"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "pass": 18,
+    "fail": 0,
+    "verdict": "PASS — EXISTING SLICE AUDIT COMPLETE"
+  }
+}
