@@ -1,0 +1,32 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01",
+  "classification": "G2",
+  "baseline": "a886d83",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/EXISTING_SLICE_AUDIT_AND_CLASSIFICATION.md",
+      "purpose": "Primary audit document — 11 sections covering inventory, maturity classification, ontology coverage, evidence/replay gap analysis, advancement feasibility, remediation paths"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/execution_report.md",
+      "purpose": "Stream execution report with validation findings"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/validation_log.json",
+      "purpose": "18-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXISTING-SLICE-AUDIT-AND-CLASSIFICATION.01/CLOSURE.md",
+      "purpose": "Stream closure"
+    }
+  ]
+}
