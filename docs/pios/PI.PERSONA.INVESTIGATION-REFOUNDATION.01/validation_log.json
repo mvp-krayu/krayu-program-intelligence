@@ -1,0 +1,63 @@
+{
+  "stream_id": "PI.PERSONA.INVESTIGATION-REFOUNDATION.01",
+  "classification": "G1",
+  "timestamp": "2026-05-29T00:00:00Z",
+  "checks": [
+    {
+      "name": "evidence_chain_grounding",
+      "description": "Design references actual fields from ConsequenceCompiler.js (evidence_refs, source_signal_ids, derivation_trace, evidence_summary, source_condition_types)",
+      "result": "PASS"
+    },
+    {
+      "name": "pipeline_completeness",
+      "description": "All 5 compilation stages mapped: signals→conditions→atomics→combinations→projections",
+      "result": "PASS"
+    },
+    {
+      "name": "mapping_table_accuracy",
+      "description": "§4 condition→consequence mapping table matches actual mapDPC/mapDCkP/mapPA/mapSMC/mapCDCP/mapGCS/mapCC functions",
+      "result": "PASS"
+    },
+    {
+      "name": "combination_table_accuracy",
+      "description": "§5.2 combination patterns match actual detectCombinations() logic (AMPLIFIED_DEP_FRAG, STRUCT_GRAVITY_WELL, SYSTEMIC_OP_FRAG)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_interpretation",
+      "description": "Design specifies pure structural verification — no interpretation, no AI, no semantic inference",
+      "result": "PASS"
+    },
+    {
+      "name": "operator_boundary_clear",
+      "description": "OPERATOR vs INVESTIGATION distinction is explicit — inspection vs verification, high agency vs low agency",
+      "result": "PASS"
+    },
+    {
+      "name": "no_implementation",
+      "description": "Stream produces design document only — no code, no UI, no runtime changes",
+      "result": "PASS"
+    },
+    {
+      "name": "replay_contract_scoped",
+      "description": "Replay verifies compiler only (conditions→consequences), not SSE (signals→conditions) — correctly scoped",
+      "result": "PASS"
+    },
+    {
+      "name": "existing_persona_untouched",
+      "description": "Design does not modify BOARDROOM, BALANCED, DENSE, or OPERATOR behavior",
+      "result": "PASS"
+    },
+    {
+      "name": "sqo_integration_identified",
+      "description": "Replay MATCH identified as SQO qualification gate — not overspecified, relationship stated",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "result": "PASS"
+  }
+}
