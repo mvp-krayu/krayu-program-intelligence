@@ -1185,28 +1185,30 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      <div className="support-block support-block--reports">
-        <div className="support-label">REPORT PACK</div>
-        <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
-        <div className="support-reports-list">
-          {artifacts.map(a => (
-            <div
-              key={a.id}
-              className="support-report-item"
-              aria-disabled="true"
-              title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
-              data-binding="pending"
-            >
-              <span className="support-report-tier">{a.tier}</span>
-              <span className="support-report-name">{a.name}</span>
+      {densityClass !== 'OPERATOR_DENSE' && (
+        <div className="support-block support-block--reports">
+          <div className="support-label">REPORT PACK</div>
+          <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
+          <div className="support-reports-list">
+            {artifacts.map(a => (
+              <div
+                key={a.id}
+                className="support-report-item"
+                aria-disabled="true"
+                title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
+                data-binding="pending"
+              >
+                <span className="support-report-tier">{a.tier}</span>
+                <span className="support-report-name">{a.name}</span>
+              </div>
+            ))}
+            <div className="support-reports-state" aria-live="polite">
+              <span className="support-reports-state-dot" aria-hidden="true" />
+              binding pending — live client/run integration not yet active
             </div>
-          ))}
-          <div className="support-reports-state" aria-live="polite">
-            <span className="support-reports-state-dot" aria-hidden="true" />
-            binding pending — live client/run integration not yet active
           </div>
         </div>
-      </div>
+      )}
     </aside>
   )
 }
@@ -4587,6 +4589,64 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     )
   }
 
+  if (densityClass === 'OPERATOR_DENSE') {
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const gl = (fullReport && fullReport.governance_lifecycle) || {}
+    const backed = ts.structurally_backed_count || 0
+    const total = ts.semantic_domain_count || 0
+    return (
+      <aside className="intel-interp intel-interp--operator-orientation" data-tone={framing.tone} aria-label="Operator orientation">
+        <div className="interp-tag">
+          <span className="interp-tag-label">{framing.label}</span>
+          <span className="interp-tag-state"><TermHint term="Executive Ready">{badge.state_label || '—'}</TermHint></span>
+        </div>
+
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">SPECIMEN OVERVIEW</div>
+          <div className="interp-synthesis">
+            {total > 0 ? <>{total} domains · {ts.cluster_count || 0} clusters · {backed}/{total} <TermHint term="structurally backed">structurally backed</TermHint></> : 'Structural data loading'}
+          </div>
+        </div>
+
+        {gl.available && (
+          <div className="interp-block">
+            <div className="interp-section-label">GOVERNANCE STATE</div>
+            <div className="interp-synthesis"><TermHint term={gl.s_level}>{gl.s_level || '—'}</TermHint> · {(gl.qualification_provenance || '—').replace(/_/g, ' ')}</div>
+          </div>
+        )}
+
+        {activatedSignals.length > 0 && (
+          <div className="interp-block">
+            <div className="interp-section-label">SIGNAL POSTURE</div>
+            <div className="interp-synthesis">{activatedSignals.length} elevated signal{activatedSignals.length !== 1 ? 's' : ''} across the structural topology</div>
+          </div>
+        )}
+
+        {swIntelActive && activeConditions && activeConditions.length > 0 ? (
+          <div className="interp-block interp-block--conditions">
+            <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
+            <div className="interp-conditions-strip">
+              {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
+                <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
+                  <span className="interp-condition-name">{c.operator_cognition_title}</span>
+                  {c.domain_targets && c.domain_targets[0] && (
+                    <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : !swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 ? (
+          <div className="interp-block interp-block--module-teaser">
+            <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
+            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+            <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
+          </div>
+        ) : null}
+      </aside>
+    )
+  }
+
   return (
     <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive interpretation layer">
       <div className="interp-tag">
@@ -4605,7 +4665,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-why">{narrative.why_primary_statement}</div>
         </div>
       )}
-      {narrative.structural_summary && (densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && framing.structuralLabel && (
+      {narrative.structural_summary && densityClass === 'EXECUTIVE_BALANCED' && framing.structuralLabel && (
         <div className="interp-block">
           <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
@@ -5957,7 +6017,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   )
 }
 
-function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -5989,16 +6049,39 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
     <div className="rep-field rep-field--operator">
       <RepModeTag
         label="Evidence lens"
-        sub="Analyst · evidence trace and confidence"
+        sub="Analyst · structural substrate → conditions → signals → governance → lineage"
         zones={[
-          { id: 'Z7', name: 'Evidence Trace' },
-          { id: 'Z5', name: 'Signal Stack' },
-          { id: 'Z2', name: 'Resolution Boundary' },
+          { id: 'Z1', name: 'Structural Substrate' },
+          { id: 'Z5', name: 'Signal Intelligence' },
           { id: 'GA', name: 'Governance Audit' },
+          { id: 'Z7', name: 'Evidence Lineage' },
         ]}
       />
 
       <OperatorReadingGuide />
+
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+          <TopologyGraph
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={pressureZone}
+            pressureZoneState={fullReport.pressure_zone_state}
+          />
+          <div className="operator-topology-hint">Open forensic topology</div>
+        </div>
+      )}
+
+      {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
+        <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+      )}
+
+      {swIntelSlot}
+
+      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
+
+      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
 
       <div className="actor actor--evidence-trace">
         <div className="actor-tag">
@@ -6026,147 +6109,124 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       </div>
 
-      {signalRows.length > 0 && (
-        <div className="actor actor--signal-stack">
+      {blocks && blocks.length > 0 && (
+        <div className="actor actor--signal-evidence-inline">
           <div className="actor-tag">
-            <span className="actor-code">SS</span>
-            <span className="actor-name">Signal Stack · {signalRows.length} active</span>
+            <span className="actor-code">SE</span>
+            <span className="actor-name">Signal Evidence · propagation</span>
           </div>
-          <div className="actor-signal-list">
-            {signalRows.map((s, i) => (
-              <div key={i} className="actor-signal-row" data-tier={s.pressure_tier} data-grounding={s.grounding_status}>
-                <div className="actor-signal-row-mark">
-                  <span className="actor-signal-row-dot" />
-                  <span className="actor-signal-row-tier"><TermHint term={s.pressure_tier}>{s.pressure_tier}</TermHint></span>
-                </div>
-                <div className="actor-signal-row-body">
-                  <div className="actor-signal-row-head">
-                    <span className="actor-signal-row-name">{s.signal_label}</span>
-                    <span className="actor-signal-row-domain">{s.domain}</span>
+          <div className="evidence-grid">
+            {blocks.map((b, i) => {
+              const firstCard = b.signal_cards && b.signal_cards[0]
+              const pm = firstCard ? (PRESSURE_META[firstCard.pressure_tier] || PRESSURE_META.MODERATE) : null
+              const rm = ROLE_META[b.propagation_role] || null
+              const isPartial = b.grounding_status && b.grounding_status !== 'Q-00'
+              return (
+                <div key={b.domain_alias || i} className={`evidence-block${isPartial ? ' evidence-block--partial' : ''}`}>
+                  <div className="eb-header">
+                    <div className="eb-domain">{b.domain_alias}</div>
+                    <div className="eb-tags">
+                      {rm && <span className="eb-tag" style={{ color: rm.color }}>{rm.symbol} {rm.label}</span>}
+                      {pm && <span className="eb-tag" style={{ color: pm.color }}>{pm.symbol} {pm.label}</span>}
+                      {isPartial && <span className="eb-tag eb-tag--partial">PARTIAL</span>}
+                    </div>
                   </div>
-                  <div className="actor-signal-row-pressure">{s.pressure_label}</div>
-                  <div className="actor-signal-row-evidence">{s.evidence_text}</div>
-                  <div className="actor-signal-row-conf">
-                    <span className="actor-signal-row-conf-label"><TermHint term="Confidence">Confidence</TermHint></span>
-                    <span className="actor-signal-row-conf-value">{s.grounding_label}</span>
-                    {s.grounding_status !== 'Q-00' && <span className="actor-signal-row-conf-flag"><TermHint term="advisory bound">advisory bound</TermHint></span>}
-                  </div>
+                  {b.evidence_description && <div className="eb-description">{b.evidence_description}</div>}
+                  {firstCard && firstCard.evidence_text && <div className="eb-signal">{firstCard.evidence_text}</div>}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-        </div>
-      )}
-
-      <InvestigationSignalAudit fullReport={fullReport} signalRowCount={signalRows.length} />
-
-      <div className="actor actor--inference-prohibition">
-        <div className="actor-tag">
-          <span className="actor-code">IP</span>
-          <span className="actor-name">Inference Prohibition</span>
-        </div>
-        <div className="actor-inference-statement">
-          Executive action on partially-grounded signals requires advisory confirmation. The system MUST NOT infer beyond evidence, MUST NOT recommend without grounding, and MUST NOT overstate readiness when a qualifier applies.
-        </div>
-        <div className="actor-inference-rules">
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">Qualifier rules applied</span>
-            <div className="actor-inference-rules-list">
-              {qRules.length > 0 ? qRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">ALI rules applied</span>
-            <div className="actor-inference-rules-list">
-              {aliRules.length > 0 ? aliRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <InvestigationGovernanceAudit fullReport={fullReport} />
-
-      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-          <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
-            clusters={fullReport.semantic_cluster_registry || []}
-            edges={fullReport.semantic_topology_edges || []}
-            pressureZoneLabel={pressureZone}
-            pressureZoneState={fullReport.pressure_zone_state}
-          />
-          <div className="operator-topology-hint">Open forensic topology</div>
         </div>
       )}
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
-
-      <TierHandoffStatement />
     </div>
   )
 }
 
-function InvestigationSignalAudit({ fullReport, signalRowCount }) {
+function OperatorSignalIntelligence({ signalRows, fullReport }) {
   const sigs = (fullReport && fullReport.signal_interpretations) || []
-  if (!sigs.length || sigs.length <= signalRowCount) return null
-
   const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
   const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
   const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
+  const familyCount = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)
 
-  const renderEntry = (sig) => {
+  if (!sigs.length) return null
+
+  const domainRowMap = {}
+  signalRows.forEach(r => {
+    const key = r.signal_label
+    if (!domainRowMap[key]) domainRowMap[key] = r
+  })
+
+  const renderCard = (sig) => {
     const family = sig.signal_family || 'DPSIG'
+    const trans = translateSignal(sig.signal_id)
+    const title = trans ? trans.l3_title : sig.signal_name
+    const domainRow = domainRowMap[sig.signal_name]
+    const isNominal = sig.severity === 'NOMINAL' || sig.activation_state === 'NOMINAL' || sig.activation_state === 'CLUSTER_BALANCED'
     return (
-      <tr key={sig.signal_id} data-severity={sig.severity} data-family={family}>
-        <td className="inv-gov-id">{sig.signal_id}</td>
-        <td><span className="dense-signal-family-tag" data-family={family}>{family}</span></td>
-        <td>{sig.signal_name}</td>
-        <td className="inv-gov-num">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</td>
-        <td data-severity={sig.severity}>{sig.severity}</td>
-        <td className="inv-gov-detail">{sig.interpretation}</td>
-      </tr>
+      <div key={sig.signal_id} className="osi-card" data-severity={sig.severity} data-family={family}>
+        <div className="osi-card-header">
+          <span className="osi-card-id">{sig.signal_id}</span>
+          <span className="dense-signal-family-tag" data-family={family}>{family}</span>
+          <span className="osi-card-severity" data-severity={sig.severity}><TermHint term={sig.severity}>{sig.severity}</TermHint></span>
+        </div>
+        <div className="osi-card-title"><TermHint term={sig.signal_name}>{title}</TermHint></div>
+        <div className="osi-card-value">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</div>
+        <div className="osi-card-interpretation">{sig.interpretation}</div>
+        {sig.concentration && <div className="osi-card-concentration">{sig.concentration}</div>}
+        {domainRow && (
+          <div className="osi-card-domain-context">
+            <span className="osi-card-domain-name">{domainRow.domain}</span>
+            <span className="osi-card-domain-conf"><TermHint term="Confidence">{domainRow.grounding_label}</TermHint></span>
+            {domainRow.grounding_status !== 'Q-00' && <span className="osi-card-domain-advisory"><TermHint term="advisory bound">advisory bound</TermHint></span>}
+          </div>
+        )}
+        {sig.confidence_note && <div className="osi-card-note">{sig.confidence_note}</div>}
+      </div>
+    )
+  }
+
+  const FAMILY_LABELS = {
+    ISIG: { label: 'File Structure', hint: 'L1', desc: 'File-level import dependency analysis' },
+    DPSIG: { label: 'Topology Distribution', hint: null, desc: 'Cluster-level structural mass distribution' },
+    PSIG: { label: 'Architectural Binding', hint: 'L3', desc: 'Cross-domain coupling at architectural level' },
+  }
+
+  const renderGroup = (familySigs, familyKey) => {
+    if (!familySigs.length) return null
+    const fl = FAMILY_LABELS[familyKey]
+    return (
+      <div key={familyKey} className="osi-family-group" data-family={familyKey}>
+        <div className="osi-family-header">
+          <span className="osi-family-tag" data-family={familyKey}>{fl.hint ? <TermHint term={fl.hint}>{familyKey}</TermHint> : familyKey}</span>
+          <span className="osi-family-label">{fl.label}</span>
+          <span className="osi-family-count">{familySigs.length}</span>
+        </div>
+        <div className="osi-family-cards">
+          {familySigs.map(renderCard)}
+        </div>
+      </div>
     )
   }
 
   return (
-    <div className="actor actor--signal-audit">
+    <div className="actor actor--signal-intelligence">
       <div className="actor-tag">
-        <span className="actor-code">SA</span>
-        <span className="actor-name">Signal Audit · {sigs.length} signals across {(isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)} families</span>
+        <span className="actor-code">SI</span>
+        <span className="actor-name">Signal Intelligence · {sigs.length} signals across {familyCount} {familyCount === 1 ? 'family' : 'families'}</span>
       </div>
-      <div className="inv-signal-summary">
-        {isigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="ISIG">ISIG Level 1 · {isigSigs.length}</span>}
-        {dpsigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="DPSIG">DPSIG Topology · {dpsigSigs.length}</span>}
-        {psigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="PSIG">PSIG Level 2 · {psigSigs.length}</span>}
-      </div>
-      <table className="inv-gov-table">
-        <thead><tr><th>ID</th><th>Family</th><th>Signal</th><th>Value</th><th>Severity</th><th>Interpretation</th></tr></thead>
-        <tbody>
-          {isigSigs.map(renderEntry)}
-          {dpsigSigs.map(renderEntry)}
-          {psigSigs.map(renderEntry)}
-        </tbody>
-      </table>
-      {isigSigs.length > 0 && (
-        <div className="inv-signal-isig-detail">
-          <div className="inv-gov-sub-head">Level 1 — File Structure Signals</div>
-          {isigSigs.map(sig => (
-            <div key={sig.signal_id} className="inv-signal-isig-entry">
-              <div className="inv-signal-isig-header">
-                <span className="inv-signal-isig-name">{sig.signal_name}</span>
-                <span className="inv-signal-isig-value">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
-              </div>
-              {sig.concentration && <div className="inv-signal-isig-entity">{sig.concentration}</div>}
-              <div className="inv-signal-isig-note">{sig.confidence_note}</div>
-            </div>
-          ))}
-        </div>
-      )}
+      {renderGroup(isigSigs, 'ISIG')}
+      {renderGroup(dpsigSigs, 'DPSIG')}
+      {renderGroup(psigSigs, 'PSIG')}
     </div>
   )
 }
 
-function InvestigationGovernanceAudit({ fullReport }) {
+function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
+  const [forensicsOpen, setForensicsOpen] = useState(false)
   const gl = fullReport && fullReport.governance_lifecycle
   const pc = fullReport && fullReport.proposition_corpus
   const ei = fullReport && fullReport.enrichment_intelligence
@@ -6177,19 +6237,21 @@ function InvestigationGovernanceAudit({ fullReport }) {
 
   if (!gl || !gl.available) return null
 
+  const deepForensicsCount = [pc && pc.available, ca && ca.available, rv && rv.available, ei && ei.available, ci && ci.available, cc && cc.available].filter(Boolean).length
+
   return (
     <div className="actor actor--operator-governance">
       <div className="actor-tag">
         <span className="actor-code">GA</span>
-        <span className="actor-name">Governance Audit · full traversal</span>
+        <span className="actor-name">Governance Audit · {gl.s_level}{deepForensicsCount > 0 ? ` · ${deepForensicsCount} forensic sections` : ''}</span>
       </div>
 
       <div className="inv-gov-section">
         <div className="inv-gov-section-head">Governance Lifecycle</div>
         <table className="inv-gov-table">
           <tbody>
-            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val">{gl.s_level}</td></tr>
-            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</td></tr>
+            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val"><TermHint term={gl.s_level}>{gl.s_level}</TermHint></td></tr>
+            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
             <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
             <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
             {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
@@ -6215,7 +6277,14 @@ function InvestigationGovernanceAudit({ fullReport }) {
         )}
       </div>
 
-      {pc && pc.available && (
+      {deepForensicsCount > 0 && (
+        <button className="inv-gov-forensics-toggle" onClick={() => setForensicsOpen(p => !p)} type="button" aria-expanded={forensicsOpen}>
+          <span className="inv-gov-forensics-toggle-icon">{forensicsOpen ? '▾' : '▸'}</span>
+          Deep Governance Forensics ({deepForensicsCount} sections)
+        </button>
+      )}
+
+      {forensicsOpen && pc && pc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
           <div className="inv-gov-grid">
@@ -6272,7 +6341,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ca && ca.available && (
+      {forensicsOpen && ca && ca.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Constitutional Anchor ({ca.dimensions.length} dimensions)</div>
           <table className="inv-gov-table">
@@ -6303,7 +6372,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {rv && rv.available && (
+      {forensicsOpen && rv && rv.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Revalidation ({rv.passed}/{rv.total_checks} · {rv.phase_count} phases)</div>
           <table className="inv-gov-table">
@@ -6335,7 +6404,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ei && ei.available && (
+      {forensicsOpen && ei && ei.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Evidence Enrichment</div>
           <table className="inv-gov-table">
@@ -6384,7 +6453,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ci && ci.available && (
+      {forensicsOpen && ci && ci.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Convergence Observations ({ci.total_observations})</div>
           <table className="inv-gov-table">
@@ -6410,7 +6479,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {cc && cc.available && (
+      {forensicsOpen && cc && cc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Chronicle Certification ({cc.passed}/{cc.total_checks})</div>
           <table className="inv-gov-table">
@@ -6439,7 +6508,14 @@ function InvestigationGovernanceAudit({ fullReport }) {
       )}
 
       <div className="inv-gov-footer">
-        All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.
+        <div className="inv-gov-footer-statement">All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.</div>
+        <div className="inv-gov-footer-statement">This surface presents structurally derived evidence only. All outputs are deterministic, traceable, and bound by the governance framework. No inference, ranking, or AI-generated assessment has been applied.</div>
+        {((aliRules && aliRules.length > 0) || (qRules && qRules.length > 0)) && (
+          <div className="inv-gov-footer-rules">
+            {qRules && qRules.length > 0 && <span className="inv-gov-footer-rule-set">Qualifier rules: {qRules.join(', ')}</span>}
+            {aliRules && aliRules.length > 0 && <span className="inv-gov-footer-rule-set">ALI rules: {aliRules.join(', ')}</span>}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -8851,9 +8927,8 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {
-    return (
+    const swIntelSlot = (
       <>
-        <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
           <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} />
         )}
@@ -8861,6 +8936,9 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
           <VerificationProtocolSection verificationState={verificationState} onClose={onVerificationClose} />
         )}
       </>
+    )
+    return (
+      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} />
     )
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {

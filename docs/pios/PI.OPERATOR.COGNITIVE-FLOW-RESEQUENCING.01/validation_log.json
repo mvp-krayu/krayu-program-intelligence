@@ -1,0 +1,32 @@
+{
+  "stream_id": "PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01",
+  "classification": "G2",
+  "timestamp": "2026-05-29",
+  "checks": [
+    { "id": "V-01", "name": "Topology renders FIRST after orientation", "result": "PASS", "evidence": "OperatorTraceField JSX: TopologyGraph immediately after ReadingGuide" },
+    { "id": "V-02", "name": "StructuralSpinesPanel renders after topology", "result": "PASS", "evidence": "OperatorTraceField JSX: StructuralSpinesPanel follows TopologyGraph" },
+    { "id": "V-03", "name": "SW-INTEL renders AFTER substrate via swIntelSlot", "result": "PASS", "evidence": "{swIntelSlot} injection point after StructuralSpinesPanel, before SignalSummary" },
+    { "id": "V-04", "name": "Signals render after SW-INTEL", "result": "PASS", "evidence": "SignalSummary and InvestigationSignalAudit follow swIntelSlot" },
+    { "id": "V-05", "name": "Governance Lifecycle visible by default", "result": "PASS", "evidence": "InvestigationGovernanceAudit renders Governance Lifecycle before forensicsOpen guard" },
+    { "id": "V-06", "name": "Deep forensics behind toggle", "result": "PASS", "evidence": "6 sections guarded by forensicsOpen state, toggle button shows count" },
+    { "id": "V-07", "name": "Evidence Trace renders near end", "result": "PASS", "evidence": "EvidenceTrace positioned after InvestigationGovernanceAudit" },
+    { "id": "V-08", "name": "IP/TierHandoff merged into governance footer", "result": "PASS", "evidence": "inv-gov-footer contains both statement blocks + rules display" },
+    { "id": "V-09", "name": "Report Pack hidden for OPERATOR", "result": "PASS", "evidence": "SupportRail conditionally excludes Report Pack for OPERATOR_DENSE" },
+    { "id": "V-10", "name": "Left panel shows specimen orientation", "result": "PASS", "evidence": "OPERATOR_DENSE branch: SPECIMEN OVERVIEW, GOVERNANCE STATE, SIGNAL POSTURE, CONDITIONS" },
+    { "id": "V-11", "name": "PSIG signals have human names", "result": "PASS", "evidence": "InvestigationSignalAudit renderEntry uses translateSignal for human name + TermHint for machine id" },
+    { "id": "V-12", "name": "TermHint definitions for S2, L1, L3, RICHNESS, GOVERNANCE, RECONCILIATION", "result": "PASS", "evidence": "TERM_DECODE_MAP extended with 18 new entries" },
+    { "id": "V-13", "name": "QualificationContextStrip labels have TermHint", "result": "PASS", "evidence": "RICHNESS, GOVERNANCE, RECONCILIATION, q_class_display, s_level wrapped" },
+    { "id": "V-14", "name": "Signal family chips use descriptive labels", "result": "PASS", "evidence": "ISIG File Structure, DPSIG Topology Distribution, PSIG Architectural Binding" },
+    { "id": "V-15", "name": "Structural spine metrics use full labels", "result": "PASS", "evidence": "IMP→Import, INH→Inherit with title tooltips" },
+    { "id": "V-16", "name": "No console errors on OPERATOR", "result": "PASS", "evidence": "Playwright console_messages: 0 errors" },
+    { "id": "V-17", "name": "No regression on DENSE", "result": "PASS", "evidence": "Visual verification: DENSE renders correctly" },
+    { "id": "V-18", "name": "No regression on BALANCED", "result": "PASS", "evidence": "Visual verification: BALANCED renders correctly" },
+    { "id": "V-19", "name": "No compiler/verifier logic changes", "result": "PASS", "evidence": "ConsequenceCompiler.js and InvestigationVerifier.js not modified" },
+    { "id": "V-20", "name": "scope reference error fixed", "result": "PASS", "evidence": "scope.cluster_count replaced with ts.cluster_count in ExecutiveInterpretation OPERATOR_DENSE" },
+    { "id": "V-21", "name": "Signal Intelligence zone renders grouped cards", "result": "PASS", "evidence": "OperatorSignalIntelligence renders ISIG/DPSIG/PSIG family groups with card layout" },
+    { "id": "V-22", "name": "SignalInterpretationSection suppressed for OPERATOR", "result": "PASS", "evidence": "LensDisclosureShell passes null signalInterpretations when densityClass === OPERATOR_DENSE" },
+    { "id": "V-23", "name": "Evidence block RECEIVER is structurally meaningful", "result": "PASS", "evidence": "RECEIVER shows frontend (368 nodes), not .env.example (1 node); single-node clusters filtered out" },
+    { "id": "V-24", "name": ".env.example eliminated from all personas", "result": "PASS", "evidence": "Playwright evaluate confirms NOT FOUND on OPERATOR, DENSE, BALANCED, BOARDROOM" }
+  ],
+  "summary": "24/24 PASS"
+}

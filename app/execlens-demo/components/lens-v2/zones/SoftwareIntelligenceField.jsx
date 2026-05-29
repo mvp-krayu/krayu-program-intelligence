@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { TermHint } from './OperatorReadingGuide'
 
 const SEVERITY_COLOR = {
   HIGH: '#ff6b6b',
@@ -36,29 +37,29 @@ function QualificationContextStrip({ decomposition, qualification }) {
   return (
     <div className="sw-intel-context-strip">
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">RICHNESS</span>
+        <span className="sw-intel-context-label"><TermHint term="RICHNESS">RICHNESS</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[sr.level] }}>{sr.level}</span>
       </span>
       <span className="sw-intel-context-sep" />
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">GOVERNANCE</span>
+        <span className="sw-intel-context-label"><TermHint term="GOVERNANCE">GOVERNANCE</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[gd.level] }}>{gd.level}</span>
       </span>
       <span className="sw-intel-context-sep" />
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">RECONCILIATION</span>
+        <span className="sw-intel-context-label"><TermHint term="RECONCILIATION">RECONCILIATION</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[ra.level] }}>{ra.level}</span>
       </span>
       {ra.q_class_display && (
         <>
           <span className="sw-intel-context-sep" />
-          <span className="sw-intel-context-qclass">{ra.q_class_display}</span>
+          <span className="sw-intel-context-qclass"><TermHint term={ra.q_class_display}>{ra.q_class_display}</TermHint></span>
         </>
       )}
       {qualification && (
         <>
           <span className="sw-intel-context-sep" />
-          <span className="sw-intel-context-slevel">{qualification.s_level}</span>
+          <span className="sw-intel-context-slevel"><TermHint term={qualification.s_level}>{qualification.s_level}</TermHint></span>
         </>
       )}
     </div>

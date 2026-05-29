@@ -1,0 +1,114 @@
+{
+  "stream_id": "PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01",
+  "classification": "G2",
+  "baseline_commit": "b1e05e3",
+  "branch": "feature/runtime-demo",
+  "changes": [
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "scope": "OPERATOR resequencing + label explanation",
+      "details": [
+        "OperatorTraceField: added swIntelSlot prop, resequenced render order to 8-step cognitive flow",
+        "OperatorTraceField: topology + StructuralSpinesPanel moved to position after ReadingGuide",
+        "OperatorTraceField: swIntelSlot injection point between substrate and signals",
+        "OperatorTraceField: Evidence Trace moved from position 3 to after Governance Audit",
+        "OperatorTraceField: removed standalone Inference Prohibition and TierHandoff sections",
+        "OperatorTraceField: RepModeTag zones and sub text updated for new flow",
+        "InvestigationGovernanceAudit: added aliRules/qRules props, forensicsOpen toggle state",
+        "InvestigationGovernanceAudit: 6 deep forensic sections behind toggle button",
+        "InvestigationGovernanceAudit: IP/TierHandoff text merged into governance footer",
+        "InvestigationSignalAudit: signal rows show human names via translateSignal + TermHint on machine identifiers",
+        "InvestigationSignalAudit: family chips updated to descriptive labels",
+        "InvestigationSignalAudit: severity values wrapped in TermHint",
+        "RepresentationField OPERATOR_DENSE: swIntelSlot created and passed to OperatorTraceField",
+        "SupportRail: Report Pack hidden for OPERATOR_DENSE",
+        "ExecutiveInterpretation: OPERATOR_DENSE branch with specimen orientation",
+        "ExecutiveInterpretation: TermHint wrapping on posture label, structurally backed, S-level",
+        "ExecutiveInterpretation: structural_summary guard changed from OPERATOR+BALANCED to BALANCED only",
+        "InvestigationGovernanceAudit: S-Level and Provenance values wrapped in TermHint",
+        "Fixed scope reference error in OPERATOR_DENSE left panel (scope.cluster_count → ts.cluster_count)"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/OperatorReadingGuide.jsx",
+      "action": "MODIFIED",
+      "scope": "TermHint definitions extended",
+      "details": [
+        "Added 18 new TERM_DECODE_MAP entries: S2, L1, L3, RICHNESS, GOVERNANCE, RECONCILIATION, UNRECONCILED, Executive Ready, Qualified, LIVE SUBSTRATE, Semantic Continuity Only, coupling_pressure, domain_coupling_pressure, zone_coverage_concentration, unanchored_nodes, Cluster Pressure Index, Cluster Fan Asymmetry"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "MODIFIED",
+      "scope": "QualificationContextStrip TermHint wrapping",
+      "details": [
+        "Imported TermHint from OperatorReadingGuide",
+        "RICHNESS, GOVERNANCE, RECONCILIATION labels wrapped in TermHint",
+        "q_class_display and s_level values wrapped in TermHint"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "action": "MODIFIED",
+      "scope": "Spine metric label clarity",
+      "details": [
+        "IMP/INH abbreviations expanded to Import/Inherit with title tooltips"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/LensDisclosureShell.jsx",
+      "action": "MODIFIED",
+      "scope": "Suppress redundant signal interpretation for OPERATOR",
+      "details": [
+        "Pass null signalInterpretations to EvidenceDepthLayer when densityClass === OPERATOR_DENSE"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "action": "MODIFIED",
+      "scope": "Fix evidence block RECEIVER selection",
+      "details": [
+        "RECEIVER selection: filter out single-node clusters (config file artifacts like .env.example)",
+        "RECEIVER selection: sort candidates by node_count descending, pick largest",
+        "Result: RECEIVER now shows frontend (368 nodes) instead of .env.example (1 node)"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "scope": "CSS for new elements",
+      "details": [
+        "Added .inv-gov-forensics-toggle styles (collapsed toggle button)",
+        "Added .inv-gov-forensics-toggle:hover styles",
+        "Added .inv-gov-forensics-toggle-icon styles",
+        "Added .inv-gov-footer-statement styles",
+        "Added .inv-gov-footer-rules styles",
+        "Added .inv-gov-footer-rule-set styles",
+        "Added .inv-signal-human-name styles (sans-serif, prominent)",
+        "Added .inv-signal-raw-name styles (monospace, dim, below human name)",
+        "Added .actor--signal-intelligence, .osi-family-group, .osi-family-header, .osi-family-tag, .osi-family-cards, .osi-card styles"
+      ]
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01/execution_report.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01/validation_log.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01/file_changes.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.01/CLOSURE.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    }
+  ]
+}

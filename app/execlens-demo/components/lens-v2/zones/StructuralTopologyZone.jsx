@@ -121,8 +121,8 @@ export function StructuralSpinesPanel({ structuralEnrichment }) {
               <div className="topo-spine-card-path" title={s.path}>{shortPath}</div>
               <div className="topo-spine-card-role">{s.structural_role}</div>
               <div className="topo-spine-card-metrics">
-                {hasImports && <span className="topo-spine-metric" data-type="import">IMP {s.import_in_degree}↓ {s.import_out_degree}↑</span>}
-                {hasInheritance && <span className="topo-spine-metric" data-type="inherit">INH {s.inherits_in_degree}↓ {s.inherits_out_degree}↑</span>}
+                {hasImports && <span className="topo-spine-metric" data-type="import" title="Import dependencies: inbound ↓ outbound ↑">Import {s.import_in_degree}↓ {s.import_out_degree}↑</span>}
+                {hasInheritance && <span className="topo-spine-metric" data-type="inherit" title="Inheritance dependencies: inbound ↓ outbound ↑">Inherit {s.inherits_in_degree}↓ {s.inherits_out_degree}↑</span>}
               </div>
             </div>
           )

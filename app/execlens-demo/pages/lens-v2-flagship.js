@@ -2316,6 +2316,25 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff9e4a;
           margin-top: 4px;
         }
+        .inv-gov-forensics-toggle {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          width: 100%;
+          margin: 10px 0 4px;
+          padding: 8px 10px;
+          background: var(--card-deep, #12151f);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-radius: 4px;
+          font: 500 10px/1.3 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        .inv-gov-forensics-toggle:hover { color: #9aa6c2; border-color: #2a2f40; }
+        .inv-gov-forensics-toggle-icon { font-size: 10px; color: #4a5570; }
         .inv-gov-footer {
           margin-top: 14px;
           padding-top: 10px;
@@ -2325,6 +2344,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           text-transform: uppercase;
           letter-spacing: 0.08em;
         }
+        .inv-gov-footer-statement { margin-bottom: 4px; }
+        .inv-gov-footer-rules { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .inv-gov-footer-rule-set { color: #4a5570; }
         tr[data-result="PASS"] td[data-result] { color: #64ffda; }
         tr[data-result="FAIL"] td[data-result] { color: #ff6b6b; }
         tr[data-verdict="PASS"] td[data-verdict] { color: #64ffda; }
@@ -4940,6 +4962,156 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* Investigation Signal Audit */
+        .actor--signal-intelligence {
+          margin: 16px 0;
+          padding: 14px;
+          background: var(--card-deep, #12151f);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-left: 2px solid #ff9e4a;
+        }
+        .osi-family-group {
+          margin-top: 12px;
+        }
+        .osi-family-group:first-of-type {
+          margin-top: 8px;
+        }
+        .osi-family-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          padding-bottom: 4px;
+          border-bottom: 1px solid var(--border-dim, #1e2330);
+        }
+        .osi-family-tag {
+          font: 600 9px/1 'Courier New', monospace;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 3px 6px;
+          border-radius: 2px;
+          border: 1px solid #2a2f40;
+        }
+        .osi-family-tag[data-family="ISIG"] { color: #64ffda; border-color: rgba(100, 255, 218, 0.3); }
+        .osi-family-tag[data-family="DPSIG"] { color: #ff9e4a; border-color: rgba(255, 158, 74, 0.3); }
+        .osi-family-tag[data-family="PSIG"] { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); }
+        .osi-family-label {
+          font: 500 10px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #8a96b2;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+        .osi-family-count {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #5a6a8a;
+        }
+        .osi-family-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 8px;
+        }
+        .osi-card {
+          padding: 10px 12px;
+          background: var(--card-bg, #1a1e2b);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-radius: 3px;
+          border-left: 3px solid #2a2f40;
+          transition: border-color 0.15s ease;
+        }
+        .osi-card[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .osi-card[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .osi-card[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .osi-card[data-severity="LOW"] { border-left-color: #64ffda; }
+        .osi-card[data-severity="NOMINAL"] { border-left-color: #2a2f40; }
+        .osi-card[data-severity="ACTIVATED"] { border-left-color: #ffd700; }
+        .osi-card-header {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 4px;
+        }
+        .osi-card-id {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #5a6a8a;
+        }
+        .osi-card-severity {
+          font: 600 9px/1 'Courier New', monospace;
+          letter-spacing: 0.05em;
+          margin-left: auto;
+        }
+        .osi-card-severity[data-severity="HIGH"] { color: #ff6b6b; }
+        .osi-card-severity[data-severity="ELEVATED"] { color: #ff9e4a; }
+        .osi-card-severity[data-severity="MODERATE"] { color: #ffd700; }
+        .osi-card-severity[data-severity="LOW"] { color: #64ffda; }
+        .osi-card-severity[data-severity="NOMINAL"] { color: #5a6a8a; }
+        .osi-card-severity[data-severity="ACTIVATED"] { color: #ffd700; }
+        .osi-card-title {
+          font: 500 12px/1.3 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #ccd6f6;
+          margin-bottom: 2px;
+        }
+        .osi-card-value {
+          font: 400 11px/1 'Courier New', monospace;
+          color: #8a96b2;
+          margin-bottom: 6px;
+        }
+        .osi-card-interpretation {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #8a96b2;
+          margin-bottom: 4px;
+        }
+        .osi-card-concentration {
+          font: 400 10px/1.3 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-bottom: 2px;
+        }
+        .osi-card-domain-context {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-top: 4px;
+          padding-top: 4px;
+          border-top: 1px solid var(--border-dim, #1e2330);
+        }
+        .osi-card-domain-name {
+          font: 500 10px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #9aa6c2;
+        }
+        .osi-card-domain-conf {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .osi-card-domain-advisory {
+          font: italic 9px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #ff9e4a;
+        }
+        .osi-card-note {
+          font: italic 10px/1.3 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #7a8aaa;
+          margin-top: 2px;
+        }
+        .actor--signal-evidence-inline {
+          margin: 16px 0;
+          padding: 14px;
+          background: var(--card-deep, #12151f);
+          border: 1px solid var(--border-dim, #1e2330);
+          border-left: 2px solid #4a9eff;
+        }
+        .actor--signal-evidence-inline .evidence-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-top: 10px;
+        }
+        .actor--signal-evidence-inline .evidence-block {
+          padding: 16px 20px;
+        }
+        .actor--signal-evidence-inline .evidence-block:first-child {
+          padding: 16px 20px;
+          background: rgba(20, 23, 31, 0.78);
+          border-color: #2a334a;
+        }
+        .actor--signal-evidence-inline .evidence-block:first-child .eb-domain { font-size: 13px; }
+        .actor--signal-evidence-inline .evidence-block:first-child .eb-description { font-size: 12px; }
+        .actor--signal-evidence-inline .eb-header { flex-wrap: wrap; }
         .actor--signal-audit {
           margin: 16px 0;
           padding: 14px;
@@ -5012,6 +5184,17 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font: italic 9px/1.3 'Courier New', monospace;
           color: #a0adc6;
           margin-top: 2px;
+        }
+        .inv-signal-human-name {
+          display: block;
+          font: 500 11px/1.3 -apple-system, BlinkMacSystemFont, sans-serif;
+          color: #ccd6f6;
+        }
+        .inv-signal-raw-name {
+          display: block;
+          font: 400 10px/1.2 'Courier New', monospace;
+          color: #5a6a8a;
+          margin-top: 1px;
         }
 
         /* DENSE Governance Lifecycle Zone */
