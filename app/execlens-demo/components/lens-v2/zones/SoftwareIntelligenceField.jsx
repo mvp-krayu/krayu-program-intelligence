@@ -407,7 +407,7 @@ function ConsequencePostureStrip({ posture }) {
           <span className="sw-intel-consequence-chip-title">{posture.primary.title}</span>
           <span className="sw-intel-consequence-chip-meta">
             <span style={{ color: SEVERITY_COLOR[posture.primary.severity] || '#7a8aaa' }}>{posture.primary.severity}</span>
-            <span className="sw-intel-consequence-chip-confidence">{CONFIDENCE_LABEL[posture.primary.confidence] || posture.primary.confidence}</span>
+            <span className="sw-intel-consequence-chip-confidence"><TermHint term={CONFIDENCE_LABEL[posture.primary.confidence] || posture.primary.confidence}>{CONFIDENCE_LABEL[posture.primary.confidence] || posture.primary.confidence}</TermHint></span>
             <span className="sw-intel-consequence-chip-locus">{posture.primary.locus}</span>
           </span>
         </span>

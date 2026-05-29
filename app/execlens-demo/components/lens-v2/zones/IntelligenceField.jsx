@@ -293,7 +293,7 @@ function RepEvidenceState({ adapted, scope, compact }) {
   const chip = (adapted && adapted.qualifierChip) || {}
   return (
     <div className={`rep-evstate${compact ? ' rep-evstate--compact' : ''}`}>
-      <div className="rep-evstate-label">EVIDENCE STATE</div>
+      <div className="rep-evstate-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
       <div className="rep-evstate-readiness">{badge.state_label || '—'}</div>
       <div className="rep-evstate-coverage">
         {(scope && scope.grounding_label) || 'Partial Coverage'}
@@ -841,7 +841,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
       <div className="support-block">
-        <div className="support-label">EVIDENCE STATE</div>
+        <div className="support-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
         <div className="support-readiness">{badge.state_label || '—'}</div>
         <div className="support-coverage">
           {(scope && scope.grounding_label) || 'Partial Coverage'}
@@ -1168,7 +1168,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
 
       {fullReport && (
         <div className="support-block support-block--trail">
-          <div className="support-label">EVIDENCE RECORD</div>
+          <div className="support-label"><TermHint term="EVIDENCE RECORD">EVIDENCE RECORD</TermHint></div>
           {(exploredQueries.size > 0 || interrogationTrail.size > 0) && (
             <div className="trail-export-summary">
               {exploredQueries.size > 0 && <span className="trail-count">{exploredQueries.size} structural queries reviewed</span>}
@@ -6251,8 +6251,8 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         <table className="inv-gov-table">
           <tbody>
             <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val"><TermHint term={gl.s_level}>{gl.s_level}</TermHint></td></tr>
-            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
-            <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
+            <tr><td className="inv-gov-key"><TermHint term="Provenance">Provenance</TermHint></td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
+            <tr><td className="inv-gov-key"><TermHint term="Authority ceiling">Authority ceiling</TermHint></td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
             <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
             {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
             <tr><td className="inv-gov-key">Last updated</td><td className="inv-gov-val">{gl.last_updated || '—'}</td></tr>
@@ -6288,15 +6288,15 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
           <div className="inv-gov-grid">
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.accepted}</span><span className="inv-gov-stat-label">Accepted</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{pc.disposition_counts.rejected}</span><span className="inv-gov-stat-label">Rejected</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--arb">{pc.disposition_counts.arbitrated}</span><span className="inv-gov-stat-label">Arbitrated</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.contested}</span><span className="inv-gov-stat-label">Contested</span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.accepted}</span><span className="inv-gov-stat-label"><TermHint term="Accepted">Accepted</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{pc.disposition_counts.rejected}</span><span className="inv-gov-stat-label"><TermHint term="Rejected">Rejected</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--arb">{pc.disposition_counts.arbitrated}</span><span className="inv-gov-stat-label"><TermHint term="Arbitrated">Arbitrated</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.contested}</span><span className="inv-gov-stat-label"><TermHint term="Contested">Contested</TermHint></span></div>
           </div>
           <table className="inv-gov-table">
             <tbody>
               <tr><td className="inv-gov-key">Mean confidence</td><td className="inv-gov-val">{pc.mean_confidence.toFixed(4)}</td></tr>
-              <tr><td className="inv-gov-key">Friction rate</td><td className="inv-gov-val">{(pc.governance_friction_rate * 100).toFixed(2)}%</td></tr>
+              <tr><td className="inv-gov-key"><TermHint term="Friction rate">Friction rate</TermHint></td><td className="inv-gov-val">{(pc.governance_friction_rate * 100).toFixed(2)}%</td></tr>
               <tr><td className="inv-gov-key">Derivation path</td><td className="inv-gov-val">{pc.derivation_path || '—'}</td></tr>
               <tr><td className="inv-gov-key">Review status</td><td className="inv-gov-val">{pc.review_status || '—'}</td></tr>
               <tr><td className="inv-gov-key">Review completed by</td><td className="inv-gov-val">{pc.review_completed_by || '—'}</td></tr>

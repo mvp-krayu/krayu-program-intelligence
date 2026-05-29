@@ -1,0 +1,77 @@
+{
+  "stream_id": "PI.OPERATOR.LABEL-EXPLAINABILITY-COVERAGE.01",
+  "classification": "G2",
+  "baseline_commit": "1f8869e",
+  "branch": "feature/runtime-demo",
+  "changes": [
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/OperatorReadingGuide.jsx",
+      "action": "MODIFIED",
+      "scope": "TERM_DECODE_MAP extension — 25 new glossary entries",
+      "details": [
+        "Added 7 governance lifecycle entries: Provenance, Authority ceiling, Accepted, Rejected, Arbitrated, Contested, Friction rate",
+        "Added 3 reconciliation level entries: RECONCILED, FULL, EXERCISED",
+        "Added 2 confidence label entries: Governed, Structural",
+        "Added 2 report/export entries: EVIDENCE RECORD, EVIDENCE STATE",
+        "Added 7 topology/centrality entries: STRUCTURAL CLUSTERS, CODE GRAPH FILES, IMPORT EDGES, INHERITANCE EDGES, IMPORT AUTHORITY, INHERITANCE AUTHORITY, NOMINAL",
+        "Added 4 lineage status entries: EXACT, STRONG, PARTIAL, WEAK",
+        "Added 2 topology context entries: Zone Anchor, Primary Pressure Zone"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "scope": "TermHint wrapping on governance + right panel labels",
+      "details": [
+        "InvestigationGovernanceAudit: Provenance key label wrapped in TermHint",
+        "InvestigationGovernanceAudit: Authority ceiling key label wrapped in TermHint",
+        "InvestigationGovernanceAudit: Friction rate key label wrapped in TermHint",
+        "InvestigationGovernanceAudit: 4 disposition stat labels (Accepted, Rejected, Arbitrated, Contested) wrapped in TermHint",
+        "SupportRail: EVIDENCE STATE label wrapped in TermHint",
+        "SupportRail: EVIDENCE RECORD label wrapped in TermHint",
+        "EvidenceStateBlock: EVIDENCE STATE label wrapped in TermHint"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "action": "MODIFIED",
+      "scope": "Import TermHint, wrap topology/centrality/lineage labels",
+      "details": [
+        "Added import: { TermHint } from './OperatorReadingGuide'",
+        "StructuralComposition: STRUCTURAL CLUSTERS, CODE GRAPH FILES, IMPORT EDGES, INHERITANCE EDGES stat labels wrapped in TermHint",
+        "StructuralSpinesPanel: IMPORT AUTHORITY, INHERITANCE AUTHORITY spine labels wrapped in TermHint",
+        "DomainCoverageGrid: lineage status labels (EXACT, STRONG, PARTIAL, WEAK) wrapped in TermHint",
+        "DomainCoverageGrid: Zone Anchor meta label wrapped in TermHint",
+        "DomainCoverageGrid: Primary Pressure Zone legend label wrapped in TermHint"
+      ]
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "MODIFIED",
+      "scope": "Confidence label wrapping in ConsequencePostureStrip",
+      "details": [
+        "ConsequencePostureStrip: confidence label (Governed/Structural) wrapped in TermHint"
+      ]
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.LABEL-EXPLAINABILITY-COVERAGE.01/execution_report.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.LABEL-EXPLAINABILITY-COVERAGE.01/validation_log.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.LABEL-EXPLAINABILITY-COVERAGE.01/file_changes.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.LABEL-EXPLAINABILITY-COVERAGE.01/CLOSURE.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    }
+  ]
+}

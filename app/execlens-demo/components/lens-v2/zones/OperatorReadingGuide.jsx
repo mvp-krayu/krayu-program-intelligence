@@ -117,6 +117,135 @@ const TERM_DECODE_MAP = {
     executive: 'Whether dependencies in this cluster flow evenly or are lopsided — high asymmetry means uneven structural responsibility.',
     technical: 'DPSIG metric: measures the asymmetry of dependency fan-in vs fan-out within a cluster. Higher values indicate structural imbalance.',
   },
+
+  // ─── Governance Lifecycle ────────────────────────
+
+  'Provenance': {
+    executive: 'How the current qualification status was earned — the path through governance.',
+    technical: 'Records whether qualification was achieved through governed review, structural analysis, or semantic continuity from a prior run.',
+  },
+  'Authority ceiling': {
+    executive: 'The maximum qualification level this specimen can reach given current evidence.',
+    technical: 'Based on structural coverage and governance completeness, this is the highest S-level achievable without additional evidence or review.',
+  },
+  'Accepted': {
+    executive: 'Proposition reviewed and accepted — semantic claim validated by governance review.',
+    technical: 'A semantic proposition was evaluated through the governance review process and accepted as accurate. Contributes to qualification progression.',
+  },
+  'Rejected': {
+    executive: 'Proposition reviewed and rejected — semantic claim found invalid or unsupported.',
+    technical: 'A semantic proposition was evaluated and rejected. Does not contribute to qualification. May indicate a gap between semantic description and structural reality.',
+  },
+  'Arbitrated': {
+    executive: 'Proposition resolved through structured arbitration — disputed claim settled by authority.',
+    technical: 'A contested proposition was resolved through formal arbitration rather than standard review. The arbitration decision is binding.',
+  },
+  'Contested': {
+    executive: 'Proposition under active dispute — semantic claim challenged during governance review.',
+    technical: 'A proposition\'s validity is disputed. It has not been accepted or rejected — it remains in a contested state pending resolution.',
+  },
+  'Friction rate': {
+    executive: 'Proportion of propositions that encountered governance resistance.',
+    technical: 'Percentage of reviewed propositions that were rejected, contested, or required arbitration. Higher friction indicates more disagreement between semantic claims and evidence.',
+  },
+
+  // ─── Reconciliation Levels ───────────────────────
+
+  'RECONCILED': {
+    executive: 'Semantic descriptions confirmed by structural evidence — claims match reality.',
+    technical: 'The semantic domain model has been reconciled against the structural code graph. Structural correspondence verified.',
+  },
+  'FULL': {
+    executive: 'Complete reconciliation — all dimensions checked and confirmed.',
+    technical: 'Every reconciliation dimension (coverage, adequacy, structural correspondence) has been evaluated and passed.',
+  },
+  'EXERCISED': {
+    executive: 'Reconciliation was attempted — partial alignment achieved.',
+    technical: 'The reconciliation process was run but did not achieve full confirmation. Some dimensions passed, others remain open.',
+  },
+
+  // ─── Confidence Labels ──────────────────────────
+
+  'Governed': {
+    executive: 'Evidence qualified through formal governance process — highest confidence.',
+    technical: 'This finding is backed by evidence that has been through governed review and qualification. Not just structural analysis — it has been reviewed.',
+  },
+  'Structural': {
+    executive: 'Evidence from structural analysis only — not yet governance-reviewed.',
+    technical: 'This finding is derived from code graph structural analysis. It has not been through governance review. Structurally sound but not governance-qualified.',
+  },
+
+  // ─── Report / Export ────────────────────────────
+
+  'EVIDENCE RECORD': {
+    executive: 'Governed evidence export — the auditable output package from this analysis.',
+    technical: 'A structured export containing all evidence, findings, and governance state from this run. Designed for downstream consumption and audit trail.',
+  },
+  'EVIDENCE STATE': {
+    executive: 'Current evidence backing status — how complete and qualified the structural evidence is.',
+    technical: 'Summary of the evidence coverage: how many domains are structurally backed, what qualification level has been achieved, and what gaps remain.',
+  },
+
+  // ─── Topology / Centrality ──────────────────────
+
+  'STRUCTURAL CLUSTERS': {
+    executive: 'Groups of files that form coherent structural units in the code graph.',
+    technical: 'Clusters identified by structural analysis of import and inheritance relationships. Each cluster is a set of files more connected to each other than to the rest of the codebase.',
+  },
+  'CODE GRAPH FILES': {
+    executive: 'Total files included in the structural analysis.',
+    technical: 'The number of source files that were parsed and included in the code graph. This is the raw input to structural topology computation.',
+  },
+  'IMPORT EDGES': {
+    executive: 'Dependency connections between files through import statements.',
+    technical: 'The number of import/require/include relationships detected between files. These form the primary structural dependency graph.',
+  },
+  'INHERITANCE EDGES': {
+    executive: 'Connections between classes through extends/implements relationships.',
+    technical: 'The number of class inheritance or interface implementation relationships. These form the secondary structural graph measuring behavioral propagation paths.',
+  },
+  'IMPORT AUTHORITY': {
+    executive: 'Files that the most other files depend on — structural centrality from import relationships.',
+    technical: 'Centrality ranking based on the import dependency graph. High import authority means many files import from this component — changes here have wide blast radius.',
+  },
+  'INHERITANCE AUTHORITY': {
+    executive: 'Classes that define behavior inherited by many others — centrality from class hierarchies.',
+    technical: 'Centrality ranking based on the inheritance graph. High inheritance authority means many classes extend this one — behavioral changes propagate broadly.',
+  },
+  'NOMINAL': {
+    executive: 'No structural concern — within normal expected range.',
+    technical: 'This metric or signal shows values within normal parameters. No elevated structural pattern detected.',
+  },
+
+  // ─── Lineage Status ─────────────────────────────
+
+  'EXACT': {
+    executive: 'Perfect structural-semantic alignment — file-level evidence exactly matches semantic description.',
+    technical: 'The domain\'s semantic definition maps one-to-one with structural evidence from the code graph. Highest confidence.',
+  },
+  'STRONG': {
+    executive: 'High-confidence structural backing — strong evidence with minor alignment gaps.',
+    technical: 'Structural evidence strongly supports the semantic description, with only minor discrepancies in boundary mapping.',
+  },
+  'PARTIAL': {
+    executive: 'Some structural evidence — gaps between semantic claims and structural reality.',
+    technical: 'Structural evidence exists but does not fully cover the semantic description. Some claims are unsupported.',
+  },
+  'WEAK': {
+    executive: 'Minimal structural support — most semantic claims lack structural confirmation.',
+    technical: 'Very limited structural evidence supports this domain\'s description. Most claims are semantic-only. Treat findings as provisional.',
+  },
+
+  // ─── Topology Context ──────────────────────────
+
+  'Zone Anchor': {
+    executive: 'The domain that anchors a pressure zone — where structural concentration originates.',
+    technical: 'This domain is the focal point of a pressure zone. Structural signals converge here, making it the primary attribution point for zone-level findings.',
+  },
+  'Primary Pressure Zone': {
+    executive: 'Region of highest structural concentration — where the most operational risk converges.',
+    technical: 'The pressure zone with the highest combined structural signal density. This is where the most significant operational patterns are concentrated.',
+  },
 }
 
 export function TermHint({ term, children }) {
