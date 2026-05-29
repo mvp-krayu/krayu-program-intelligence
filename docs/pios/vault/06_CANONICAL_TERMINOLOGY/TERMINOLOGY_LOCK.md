@@ -206,9 +206,9 @@
 
 ### Persona Projection
 
-**Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Four personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content.
+**Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Four personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content. Each persona operates under a locked Persona Mission Contract that defines its constitutional objective, consumed/prohibited cognition, and attention-control model.
 
-**Status:** CANONICAL — operational in LENS v2 (2026-05-13).
+**Status:** CANONICAL — operational in LENS v2 (2026-05-13). Mission contracts locked (2026-05-29).
 
 ### Structural Cognition
 
@@ -866,6 +866,22 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 **Relationship to topology cognition slices:** The existing 4 topology cognition slices are the first 4 SW-INTEL consequence slices projected as topology overlays. This term does not rename them — it identifies the broader governed class they belong to.
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/SLICE_TAXONOMY_AND_GOVERNANCE.md`
+
+### Persona Mission Contract
+
+**Definition:** A constitutional specification that defines why a LENS persona exists, what cognitive gap it fills, what cognition it consumes and prohibits, how attention and agency are controlled, and what the runtime loses if the persona is removed. Persona mission contracts replace the prior tagline model ("What matters?" / "Why operationally?" / "How structurally?" / "Prove it.") with locked, mutually exclusive cognitive objectives. Each contract specifies 16 fields: constitutional objective, primary question, forbidden questions, operator objective, runtime responsibility, cognition consumed, cognition prohibited, attention-control model, operator-agency model, authority-projection model, success condition, failure condition, disappearance consequence, SW-INTEL ontology consumption posture, implementation freshness, and revalidation requirement.
+
+**Four locked persona objectives:**
+- **BOARDROOM:** Executive consequence qualification (compiled projection, system-controlled attention, lowest operator agency)
+- **BALANCED:** Governed operational cognition briefing (emergence orchestration, co-discovery attention, medium operator agency)
+- **DENSE:** Structural behavior interrogation (zone navigation, operator-controlled attention, highest operator agency)
+- **INVESTIGATION:** Evidence qualification and governed replay (fixed evidence sequence, system-enforced attention, low operator agency)
+
+**Status:** CANONICAL — governance baseline established (2026-05-29). Supersedes tagline model. Mandatory baseline for PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01.
+
+**What it is NOT:** A rendering spec. A UI design. A persona description. A tagline. Mission contracts define cognitive objectives and consumed/prohibited cognition, not visual layout.
+
+**Source:** `docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/PERSONA_MISSION_CONTRACTS_AND_COGNITIVE_OBJECTIVES.md`
 
 ## Term Usage Rules
 

@@ -1,0 +1,42 @@
+{
+  "stream": "PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01",
+  "classification": "G1",
+  "baseline": "332365c",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/PERSONA_MISSION_CONTRACTS_AND_COGNITIVE_OBJECTIVES.md",
+      "purpose": "Primary governance document — 14 sections: 4 persona mission contracts (16 fields each), comparison matrix, boundary rules, ontology relationship, freshness assessment"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/execution_report.md",
+      "purpose": "Stream execution report with repository evidence findings"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/validation_log.json",
+      "purpose": "25-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/CLOSURE.md",
+      "purpose": "Stream closure with G1 architecture memory propagation"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "purpose": "G1 vault mutation: (1) New term: Persona Mission Contract. (2) Persona Projection definition updated to reference mission contracts."
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "purpose": "Updated Cognitive Projection line: 4-persona — mission contracts locked 2026-05-29"
+    }
+  ]
+}

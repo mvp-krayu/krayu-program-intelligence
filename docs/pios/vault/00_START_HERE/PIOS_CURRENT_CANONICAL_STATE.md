@@ -23,7 +23,7 @@ Program Intelligence (category/discipline)
         │     ├── Core Derivation (L2-L4: 40.x, 41.x)
         │     └── Activation (L5: 43.x, 44.x)
         ├── LENS (projection surface — visible executive shell)
-        │     ├── Cognitive Projection (4-persona)
+        │     ├── Cognitive Projection (4-persona — mission contracts locked 2026-05-29)
         │     ├── Guided Investigation (5A/5B)
         │     ├── Evidence Record Export
         │     └── Conversational Intelligence (future)

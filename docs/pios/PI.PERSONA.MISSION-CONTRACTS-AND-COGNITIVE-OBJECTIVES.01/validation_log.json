@@ -1,0 +1,179 @@
+{
+  "stream": "PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01",
+  "classification": "G1",
+  "baseline": "332365c",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "mission_contract_document_exists",
+      "description": "Primary persona mission contract document created",
+      "result": "PASS",
+      "path": "docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/PERSONA_MISSION_CONTRACTS_AND_COGNITIVE_OBJECTIVES.md"
+    },
+    {
+      "name": "all_four_personas_contracted",
+      "description": "All four personas have constitutional objectives defined",
+      "result": "PASS",
+      "sections": ["§4 BOARDROOM", "§5 BALANCED", "§6 DENSE", "§7 INVESTIGATION"]
+    },
+    {
+      "name": "objectives_mutually_distinct",
+      "description": "Persona objectives are mutually exclusive and non-overlapping",
+      "result": "PASS",
+      "objectives": {
+        "BOARDROOM": "Executive consequence qualification",
+        "BALANCED": "Governed operational cognition briefing",
+        "DENSE": "Structural behavior interrogation",
+        "INVESTIGATION": "Evidence qualification and governed replay"
+      }
+    },
+    {
+      "name": "forbidden_questions_defined",
+      "description": "Each persona has explicit forbidden questions",
+      "result": "PASS",
+      "sections": ["§4.3", "§5.3", "§6.3", "§7.3"]
+    },
+    {
+      "name": "consumed_cognition_defined",
+      "description": "Each persona has explicit consumed cognition mapped to 22 cognitive functions",
+      "result": "PASS",
+      "sections": ["§4.6", "§5.6", "§6.6", "§7.6"]
+    },
+    {
+      "name": "prohibited_cognition_defined",
+      "description": "Each persona has explicit prohibited cognition",
+      "result": "PASS",
+      "sections": ["§4.7", "§5.7", "§6.7", "§7.7"]
+    },
+    {
+      "name": "attention_control_defined",
+      "description": "Each persona has attention-control model",
+      "result": "PASS",
+      "models": {
+        "BOARDROOM": "SYSTEM-CONTROLLED",
+        "BALANCED": "CO-DISCOVERY",
+        "DENSE": "OPERATOR-CONTROLLED",
+        "INVESTIGATION": "SYSTEM-ENFORCED SEQUENCE"
+      }
+    },
+    {
+      "name": "operator_agency_defined",
+      "description": "Each persona has operator-agency model",
+      "result": "PASS",
+      "models": {
+        "BOARDROOM": "LOWEST",
+        "BALANCED": "MEDIUM",
+        "DENSE": "HIGHEST",
+        "INVESTIGATION": "LOW"
+      }
+    },
+    {
+      "name": "authority_projection_defined",
+      "description": "Each persona has authority-projection model",
+      "result": "PASS",
+      "models": {
+        "BOARDROOM": "DECLARATION",
+        "BALANCED": "DISCLOSURE WRAPPING",
+        "DENSE": "PER-ACT BOUNDARY",
+        "INVESTIGATION": "PROHIBITION ENUMERATION + TERMINAL CLOSURE"
+      }
+    },
+    {
+      "name": "success_failure_defined",
+      "description": "Each persona has success and failure definitions",
+      "result": "PASS",
+      "sections": ["§4.11-§4.12", "§5.11-§5.12", "§6.11-§6.12", "§7.11-§7.12"]
+    },
+    {
+      "name": "disappearance_consequence_defined",
+      "description": "Each persona has disappearance consequence",
+      "result": "PASS",
+      "sections": ["§4.13", "§5.13", "§6.13", "§7.13"]
+    },
+    {
+      "name": "balanced_not_generic_explanation",
+      "description": "BALANCED defined as governed operational cognition briefing, not generic 'explains'",
+      "result": "PASS",
+      "evidence": "§5.1: 'BALANCED is NOT explains. It is a governed cognition briefing corridor.'"
+    },
+    {
+      "name": "dense_not_investigation",
+      "description": "DENSE defined as structural behavior interrogation, distinct from INVESTIGATION's evidence proof",
+      "result": "PASS",
+      "evidence": "§6.1: 'DENSE explores BEHAVIOR. INVESTIGATION verifies LINEAGE.'"
+    },
+    {
+      "name": "investigation_staleness_acknowledged",
+      "description": "INVESTIGATION marked stale with explicit revalidation requirement",
+      "result": "PASS",
+      "evidence": "§7.15: STALE, last modified 2026-05-14. §7.16: REVALIDATION REQUIRED"
+    },
+    {
+      "name": "sw_intel_ontology_mapped",
+      "description": "SW-INTEL ontology consumption posture mapped for all 4 personas × 5 classes",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "comparison_matrix_exists",
+      "description": "Side-by-side persona comparison matrix covering all dimensions",
+      "result": "PASS",
+      "section": "§8"
+    },
+    {
+      "name": "boundary_rules_defined",
+      "description": "Strict persona boundary rules with anti-patterns defined",
+      "result": "PASS",
+      "section": "§9"
+    },
+    {
+      "name": "no_runtime_code_modified",
+      "description": "No runtime code modified (governance-only stream)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_ontology_consumption_implemented",
+      "description": "No ontology consumption implementation (preparatory alignment only)",
+      "result": "PASS"
+    },
+    {
+      "name": "terminology_new_term_added",
+      "description": "New canonical term 'Persona Mission Contract' added to TERMINOLOGY_LOCK",
+      "result": "PASS"
+    },
+    {
+      "name": "terminology_existing_term_updated",
+      "description": "Persona Projection definition updated to reference mission contracts",
+      "result": "PASS"
+    },
+    {
+      "name": "canonical_state_updated",
+      "description": "PIOS_CURRENT_CANONICAL_STATE.md updated: mission contracts locked 2026-05-29",
+      "result": "PASS"
+    },
+    {
+      "name": "governance_implications_documented",
+      "description": "Future streams must consume mission contracts as baseline",
+      "result": "PASS",
+      "section": "§12"
+    },
+    {
+      "name": "non_goals_explicit",
+      "description": "Non-goals explicitly stated: no UI, no runtime changes, no ontology consumption",
+      "result": "PASS",
+      "section": "§13"
+    },
+    {
+      "name": "closure_verdict_explicit",
+      "description": "Final closure verdict is explicit",
+      "result": "PASS",
+      "verdict": "PASS — PERSONA MISSION CONTRACTS BASELINE ESTABLISHED"
+    }
+  ],
+  "summary": {
+    "total": 25,
+    "pass": 25,
+    "fail": 0,
+    "verdict": "PASS — PERSONA MISSION CONTRACTS BASELINE ESTABLISHED"
+  }
+}
