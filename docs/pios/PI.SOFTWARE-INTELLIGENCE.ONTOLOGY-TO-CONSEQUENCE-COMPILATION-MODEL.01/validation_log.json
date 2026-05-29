@@ -1,0 +1,234 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01",
+  "classification": "G1",
+  "baseline": "d924570",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "primary_document_exists",
+      "description": "Primary ontology-to-consequence compilation model document created",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/ONTOLOGY_TO_CONSEQUENCE_COMPILATION_MODEL.md"
+    },
+    {
+      "name": "compilation_chain_explicit",
+      "description": "7-stage compilation chain defined with stage ownership",
+      "result": "PASS",
+      "stages": ["Signals", "Feature extraction", "Conditions", "Ontology classification", "Consequence types", "Combination patterns", "Persona projections"],
+      "section": "§3"
+    },
+    {
+      "name": "layer_ownership_explicit",
+      "description": "Compilation stages mapped to L1-L4 boundary contract layers",
+      "result": "PASS",
+      "section": "§4"
+    },
+    {
+      "name": "l1_l4_boundary_contract_aligned",
+      "description": "Layer mapping verified against reference_boundary_contract.md — no conflict",
+      "result": "PASS",
+      "verified_against": "docs/governance/runtime/reference_boundary_contract.md"
+    },
+    {
+      "name": "truth_boundary_defined",
+      "description": "Hard rule: truth generation stops at L2, L3 projects only",
+      "result": "PASS",
+      "section": "§3, §4"
+    },
+    {
+      "name": "ontology_class_to_condition_mapping",
+      "description": "All 5 ontology classes mapped to current condition coverage",
+      "result": "PASS",
+      "section": "§5",
+      "conditions_mapped": 7,
+      "gaps_identified": ["Class C — no condition", "Class D — no condition", "Class E — no direct condition"]
+    },
+    {
+      "name": "condition_to_consequence_mapping",
+      "description": "7 condition types mapped to consequence types with activation gates",
+      "result": "PASS",
+      "section": "§6.1",
+      "primitive_consequences": 8,
+      "combination_consequences": 3
+    },
+    {
+      "name": "consequence_ontology_class_assignment",
+      "description": "Each consequence type assigned to primary ontology class with rationale",
+      "result": "PASS",
+      "section": "§6.2"
+    },
+    {
+      "name": "evidence_carried_through_mapping",
+      "description": "Evidence carry-through documented for condition→consequence stage",
+      "result": "PASS",
+      "section": "§6.3"
+    },
+    {
+      "name": "evidence_lost_through_mapping",
+      "description": "Evidence losses documented for condition→consequence stage",
+      "result": "PASS",
+      "section": "§6.4",
+      "losses_identified": 7
+    },
+    {
+      "name": "combination_patterns_mapped",
+      "description": "3 combination patterns documented with triggers and ontology classes",
+      "result": "PASS",
+      "patterns": ["AMPLIFIED_DEP_FRAG", "STRUCT_GRAVITY_WELL", "SYSTEMIC_OP_FRAG"],
+      "section": "§7"
+    },
+    {
+      "name": "combination_truth_status_defined",
+      "description": "Combinations defined as compiling existing truth, not creating new truth",
+      "result": "PASS",
+      "section": "§7.2"
+    },
+    {
+      "name": "severity_escalation_documented",
+      "description": "Escalation rules documented — only SYSTEMIC_OP_FRAG, one level above MAX",
+      "result": "PASS",
+      "section": "§7.4"
+    },
+    {
+      "name": "forBoardroom_transformation_defined",
+      "description": "forBoardroom() transformation semantics defined — what enters, what is compressed, what is preserved/lost",
+      "result": "PASS",
+      "section": "§8.1"
+    },
+    {
+      "name": "forBalanced_transformation_defined",
+      "description": "forBalanced() transformation semantics defined — reinforcement flow derivation, relationship verbs, evidence preservation",
+      "result": "PASS",
+      "section": "§8.2"
+    },
+    {
+      "name": "forInvestigation_transformation_defined",
+      "description": "forInvestigation() transformation semantics defined — maximum evidence preservation projection",
+      "result": "PASS",
+      "section": "§8.3"
+    },
+    {
+      "name": "dense_direct_substrate_defined",
+      "description": "DENSE direct consumption rationale and evidence contract defined",
+      "result": "PASS",
+      "section": "§9.1"
+    },
+    {
+      "name": "investigation_future_proof_defined",
+      "description": "INVESTIGATION future verification targets defined",
+      "result": "PASS",
+      "section": "§9.2"
+    },
+    {
+      "name": "ontology_to_consequence_matrix_defined",
+      "description": "Full matrix: class → conditions → primitives → combinations → boardroom → balanced → dense → investigation",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "evidence_preservation_rules_explicit",
+      "description": "Evidence preservation rules defined for all 4 transformation stages",
+      "result": "PASS",
+      "stages": ["Signals→Conditions", "Conditions→Consequences", "Consequences→Projections", "Projections→Rendering"],
+      "section": "§11"
+    },
+    {
+      "name": "evidence_loss_inventory_explicit",
+      "description": "16 evidence losses identified with severity classification",
+      "result": "PASS",
+      "total_losses": 16,
+      "high": 3,
+      "medium": 8,
+      "low": 5,
+      "section": "§12"
+    },
+    {
+      "name": "compiler_boundary_rules_explicit",
+      "description": "8 permissions and 8 prohibitions defined with enforcement verification",
+      "result": "PASS",
+      "permissions": 8,
+      "prohibitions": 8,
+      "section": "§13"
+    },
+    {
+      "name": "compiler_architectural_identity_defined",
+      "description": "Compiler defined as cognition transformer, not intelligence generator",
+      "result": "PASS",
+      "section": "§13.3"
+    },
+    {
+      "name": "maturity_bridge_doctrine_referenced",
+      "description": "Maturity bridge doctrine referenced from consumption model, not re-derived — overlap avoided",
+      "result": "PASS",
+      "section": "§14",
+      "references": "ONTOLOGY_CONSUMPTION_MODEL.md §7.2-7.3"
+    },
+    {
+      "name": "investigation_dependency_documented",
+      "description": "7 verification targets defined for INVESTIGATION revalidation dependency",
+      "result": "PASS",
+      "verification_targets": 7,
+      "section": "§15"
+    },
+    {
+      "name": "non_goals_explicit",
+      "description": "Non-goals explicitly stated — no implementation, no compiler changes, no INVESTIGATION work",
+      "result": "PASS",
+      "section": "§16"
+    },
+    {
+      "name": "next_stream_recommended",
+      "description": "PI.INVESTIGATION.CONSEQUENCE-VERIFICATION-REVALIDATION.01 recommended",
+      "result": "PASS",
+      "section": "§17"
+    },
+    {
+      "name": "no_runtime_code_modified",
+      "description": "No runtime code modified (governance-only stream)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_consumption_model_overlap",
+      "description": "§8, §9, §14 focus on transformation semantics only — consumption postures deferred to locked consumption model",
+      "result": "PASS"
+    },
+    {
+      "name": "terminology_new_term_added",
+      "description": "New canonical term 'Ontology-to-Consequence Compilation Chain' added to TERMINOLOGY_LOCK",
+      "result": "PASS"
+    },
+    {
+      "name": "canonical_state_updated",
+      "description": "PIOS_CURRENT_CANONICAL_STATE.md updated: compilation chain locked 2026-05-29",
+      "result": "PASS"
+    },
+    {
+      "name": "compiler_not_described_as_creating_truth",
+      "description": "Compiler consistently described as transforming truth, not creating it",
+      "result": "PASS"
+    },
+    {
+      "name": "persona_rendering_not_mixed_with_compiler",
+      "description": "Rendering responsibility clearly separated from compiler projection responsibility",
+      "result": "PASS"
+    },
+    {
+      "name": "evidence_loss_not_ignored",
+      "description": "Evidence losses documented as maturity debt, not suppressed or minimized",
+      "result": "PASS",
+      "section": "§12"
+    },
+    {
+      "name": "closure_verdict_explicit",
+      "description": "Final closure verdict is explicit",
+      "result": "PASS",
+      "verdict": "PASS — ONTOLOGY-TO-CONSEQUENCE COMPILATION MODEL ESTABLISHED"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "pass": 35,
+    "fail": 0,
+    "verdict": "PASS — ONTOLOGY-TO-CONSEQUENCE COMPILATION MODEL ESTABLISHED"
+  }
+}

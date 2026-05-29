@@ -37,7 +37,7 @@ Program Intelligence (category/discipline)
         │     ├── CEU Reconciliation Workflow (10 actions, review_mode governance, bidirectional obligation lineage)
         │     └── Reconciliation Loop
         ├── Marketplace (domain cognition module ecosystem)
-        │     ├── Software Intelligence (first module — OPERATIONAL: SignalSynthesisEngine + 4-slice topology cognition + commercial module gating)
+        │     ├── Software Intelligence (first module — OPERATIONAL: SignalSynthesisEngine + 4-slice topology cognition + commercial module gating + compilation chain locked 2026-05-29)
         │     └── Module Registration (constitutionally specified, not yet implemented)
         └── Domain Cognition Modules (interpretation layers attached to PI Spine)
 ```

@@ -883,6 +883,25 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Source:** `docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/PERSONA_MISSION_CONTRACTS_AND_COGNITIVE_OBJECTIVES.md`
 
+### Ontology-to-Consequence Compilation Chain
+
+**Definition:** The canonical transformation model that defines how SW-INTEL ontology classes become consequence objects consumed by LENS personas. The chain is: Signals (L1) → Conditions (L2 truth) → Ontology Classification (L2) → Consequence Types (L2 truth) → Combination Patterns (L2 truth composition) → Persona Projections (L3 governed projection) → Rendering (L4). Truth generation stops at L2. L3 may project, sequence, compress, group, frame — but must not create new truth. The ConsequenceCompiler is a cognition transformer (not an intelligence generator): it transforms conditions into consequences into governed projections while preserving enough lineage to remain evidence-bound.
+
+**Key architectural laws:**
+- Truth generation stops at L2 (conditions, consequences, combinations)
+- L3 persona projections may compress but not create
+- BOARDROOM and BALANCED consume ontology exclusively through the compiler
+- DENSE and INVESTIGATION consume substrate directly
+- Combinations compile existing truth, they do not create new truth
+- Severity escalation is a governed transformation with explicit tracing
+- All compiler text comes from CONSEQUENCE_VOCABULARY — no freeform generation
+
+**Status:** CANONICAL — compilation model locked (2026-05-29). Mandatory baseline for PI.INVESTIGATION.CONSEQUENCE-VERIFICATION-REVALIDATION.01.
+
+**What it is NOT:** An implementation spec. A rendering pipeline. A data flow diagram. The compilation chain defines transformation semantics and evidence preservation rules, not module APIs or code structure.
+
+**Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/ONTOLOGY_TO_CONSEQUENCE_COMPILATION_MODEL.md`
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
