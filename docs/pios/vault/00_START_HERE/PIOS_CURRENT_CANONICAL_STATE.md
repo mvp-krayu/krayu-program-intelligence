@@ -23,7 +23,7 @@ Program Intelligence (category/discipline)
         │     ├── Core Derivation (L2-L4: 40.x, 41.x)
         │     └── Activation (L5: 43.x, 44.x)
         ├── LENS (projection surface — visible executive shell)
-        │     ├── Cognitive Projection (4-persona — mission contracts locked 2026-05-29)
+        │     ├── Cognitive Projection (5-persona — OPERATOR recognized 2026-05-29, mission contracts locked 2026-05-29)
         │     ├── Guided Investigation (5A/5B)
         │     ├── Evidence Record Export
         │     └── Conversational Intelligence (future)
@@ -78,7 +78,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 LENS v2 has materially transitioned from a static report surface to an interactive structural intelligence instrument. This transition is architectural, not cosmetic. The surface now delivers structurally-derived executive intelligence across four cognitive projection modes with interactive topology, cross-highlighting, evidence boundaries, and governance layers.
 
 **Transition markers:**
-- 4-persona cognitive projection system (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE)
+- 5-persona cognitive projection system (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, OPERATOR, INVESTIGATION [placeholder])
 - Interactive SVG topology with hover, click-to-highlight, zone anchor selection, cross-highlighting
 - Boardroom governed narrative projection at S1 (narrative-first executive prose with proof-graph substrate, deterministic bounded composition under 75.x); cockpit instruments preserved at S2+
 - Evidence boundary activation, pressure zone focus, tier handoff
@@ -119,14 +119,17 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 
 ## Persona-Based Projection Doctrine
 
-Four distinct cognitive projections represent different executive cognition modes, not display variants:
+Five distinct cognitive projections represent different executive cognition modes, not display variants:
 
 | Persona | Cognitive Mode | Primary Audience | Structural Focus |
 |---|---|---|---|
 | BOARDROOM | Executive consequence | Board, C-suite | Governed narrative projection (S1); posture/readiness/risk signal cockpit (S2+) |
 | EXECUTIVE_BALANCED | CEO consequence lens | Senior leadership | Balanced depth across all zones |
 | EXECUTIVE_DENSE | CTO structural lens | Technical leadership | Structural cause, propagation detail |
-| INVESTIGATION_DENSE | Analyst evidence trace | Technical analysts | Full evidence depth, lineage, structural proof |
+| OPERATOR | Engineering evidence inspection | Engineers, technical analysts | Full evidence depth, governance lifecycle, signal audit at 4-decimal precision |
+| INVESTIGATION | Evidence qualification and governed replay | Auditors, compliance | Compilation chain verification, evidence completeness, PASS/FAIL per target (PLACEHOLDER — not yet implemented, requires Program 1) |
+
+**OPERATOR recognition (2026-05-29):** Prior INVESTIGATION_DENSE was assessed as functionally OPERATOR (Verdict A — PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01). OPERATOR is now an explicit persona. True INVESTIGATION will be designed from the compilation model after Program 1 (Evidence Chain Structuring) completes.
 
 **Governing principle:** Same structural truth, different projection depths. Persona gates evidence deterministically — it selects depth, not content.
 
@@ -804,7 +807,7 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - Reconciliation temporal analytics (trend, enrichment effectiveness, debt reduction, degradation)
 - Semantic evidence intake loop (register, classify, validate, accept/reject, eligibility)
 - Runtime qualification projection (unified posture aggregation, 6-gate propagation readiness)
-- 4-persona cognitive projection system (BOARDROOM, BALANCED, DENSE, INVESTIGATION)
+- 5-persona cognitive projection system (BOARDROOM, BALANCED, DENSE, OPERATOR, INVESTIGATION [placeholder])
 - Interactive SVG topology with hover, click, cross-highlighting, zone anchor selection
 - Boardroom governed narrative projection at S1 (synthesis-native composition interface, deterministic bounded provider, proof-graph substrate); cockpit instruments at S2+
 - Dynamic viewBox sizing (tight content-derived viewBox, proportional modal expansion)

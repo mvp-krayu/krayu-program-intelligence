@@ -1,0 +1,122 @@
+{
+  "stream": "PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01",
+  "classification": "G1",
+  "baseline": "accb7e6",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "verdict_a_consumed",
+      "description": "Prior assessment Verdict A (INVESTIGATION = OPERATOR) consumed as input",
+      "result": "PASS",
+      "source": "PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01"
+    },
+    {
+      "name": "operator_recognized",
+      "description": "OPERATOR officially recognized as explicit persona",
+      "result": "PASS",
+      "section": "§1"
+    },
+    {
+      "name": "operator_visible",
+      "description": "OPERATOR is explicit (visible in persona selection), not hidden/internal",
+      "result": "PASS",
+      "section": "§2"
+    },
+    {
+      "name": "capability_boundary_defined",
+      "description": "All 10 current INVESTIGATION capabilities assigned to OPERATOR",
+      "result": "PASS",
+      "section": "§3.1",
+      "capabilities": ["ET", "SS", "SA", "IP", "GA", "Forensic Topology", "Guided Queries", "SW-INTEL View", "Tier Handoff", "Escalation"]
+    },
+    {
+      "name": "investigation_future_defined",
+      "description": "7 future INVESTIGATION capabilities defined from compilation model",
+      "result": "PASS",
+      "section": "§3.2",
+      "capabilities": ["Compilation Chain Verification", "Evidence Completeness Audit", "Combination Decomposition", "Ontology Class Verification", "Maturity Audit", "Fixed Sequence", "Replay"]
+    },
+    {
+      "name": "boundary_table_complete",
+      "description": "OPERATOR vs INVESTIGATION distinguished across 9 dimensions",
+      "result": "PASS",
+      "section": "§3.3"
+    },
+    {
+      "name": "operator_mission_contract_defined",
+      "description": "OPERATOR mission contract defined with 16 fields matching persona model",
+      "result": "PASS",
+      "section": "§4"
+    },
+    {
+      "name": "zero_capability_loss",
+      "description": "All 10 current surfaces survive as OPERATOR — nothing destroyed",
+      "result": "PASS",
+      "section": "§5"
+    },
+    {
+      "name": "shared_capabilities_identified",
+      "description": "3 capabilities identified as potentially shared (ET, SA, IP) with rationale",
+      "result": "PASS",
+      "section": "§6"
+    },
+    {
+      "name": "investigation_substrate_blockers_identified",
+      "description": "Gaps #3 and #4 from evidence loss inventory identified as INVESTIGATION blockers",
+      "result": "PASS",
+      "section": "§7.1"
+    },
+    {
+      "name": "five_persona_model_defined",
+      "description": "5-persona model with cognitive altitude ladder and agency spectrum",
+      "result": "PASS",
+      "section": "§8"
+    },
+    {
+      "name": "mutual_exclusivity_verified",
+      "description": "4 overlap pairs verified for mutual exclusivity",
+      "result": "PASS",
+      "section": "§8.4",
+      "pairs": ["BOARDROOM/BALANCED", "DENSE/OPERATOR", "OPERATOR/INVESTIGATION", "DENSE/INVESTIGATION"]
+    },
+    {
+      "name": "implementation_implications_listed",
+      "description": "9 code changes identified for future implementation stream",
+      "result": "PASS",
+      "section": "§9.1"
+    },
+    {
+      "name": "program_2_reframed",
+      "description": "Program 2 reframed from single program to two: OPERATOR Establishment + INVESTIGATION Design",
+      "result": "PASS",
+      "section": "§9.3"
+    },
+    {
+      "name": "vault_mutations_identified",
+      "description": "4 vault mutations identified with targets and types",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "no_implementation",
+      "description": "No code changes, no route changes, no persona changes in runtime",
+      "result": "PASS"
+    },
+    {
+      "name": "no_vault_mutation_executed",
+      "description": "Vault mutations identified but not executed (deferred to post-closure propagation)",
+      "result": "PASS"
+    },
+    {
+      "name": "classification_correct",
+      "description": "G1 classification correct — introduces new persona, modifies persona model",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "pass": 18,
+    "fail": 0,
+    "verdict": "OPERATOR officially recognized. Boundary locked. Zero capability loss. INVESTIGATION deferred to post-Program 1."
+  }
+}

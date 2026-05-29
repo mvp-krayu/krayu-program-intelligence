@@ -206,9 +206,11 @@
 
 ### Persona Projection
 
-**Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Four personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, INVESTIGATION_DENSE) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content. Each persona operates under a locked Persona Mission Contract that defines its constitutional objective, consumed/prohibited cognition, and attention-control model.
+**Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Five personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, OPERATOR, INVESTIGATION) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content. Each persona operates under a locked Persona Mission Contract that defines its constitutional objective, consumed/prohibited cognition, and attention-control model.
 
-**Status:** CANONICAL — operational in LENS v2 (2026-05-13). Mission contracts locked (2026-05-29).
+**5-persona model (2026-05-29):** OPERATOR was recognized as an explicit persona after assessment revealed that INVESTIGATION_DENSE was functionally an engineering evidence inspection workspace, not a governed evidence verification surface. INVESTIGATION is now a placeholder pending design from the compilation model. OPERATOR fills the cognitive gap between DENSE (structural behavior interrogation) and INVESTIGATION (evidence qualification and governed replay).
+
+**Status:** CANONICAL — operational in LENS v2 (2026-05-13). Mission contracts locked (2026-05-29). OPERATOR boundary established (2026-05-29).
 
 ### Structural Cognition
 
@@ -871,17 +873,34 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Definition:** A constitutional specification that defines why a LENS persona exists, what cognitive gap it fills, what cognition it consumes and prohibits, how attention and agency are controlled, and what the runtime loses if the persona is removed. Persona mission contracts replace the prior tagline model ("What matters?" / "Why operationally?" / "How structurally?" / "Prove it.") with locked, mutually exclusive cognitive objectives. Each contract specifies 16 fields: constitutional objective, primary question, forbidden questions, operator objective, runtime responsibility, cognition consumed, cognition prohibited, attention-control model, operator-agency model, authority-projection model, success condition, failure condition, disappearance consequence, SW-INTEL ontology consumption posture, implementation freshness, and revalidation requirement.
 
-**Four locked persona objectives:**
+**Five locked persona objectives:**
 - **BOARDROOM:** Executive consequence qualification (compiled projection, system-controlled attention, lowest operator agency)
 - **BALANCED:** Governed operational cognition briefing (emergence orchestration, co-discovery attention, medium operator agency)
 - **DENSE:** Structural behavior interrogation (zone navigation, operator-controlled attention, highest operator agency)
-- **INVESTIGATION:** Evidence qualification and governed replay (fixed evidence sequence, system-enforced attention, low operator agency)
+- **OPERATOR:** Engineering evidence inspection and governance audit (evidence sections, operator-controlled attention, high operator agency)
+- **INVESTIGATION:** Evidence qualification and governed replay (fixed evidence sequence, system-enforced attention, low operator agency) — PLACEHOLDER, not yet implemented
 
-**Status:** CANONICAL — governance baseline established (2026-05-29). Supersedes tagline model. Mandatory baseline for PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01.
+**Status:** CANONICAL — governance baseline established (2026-05-29). OPERATOR boundary established (2026-05-29). Supersedes tagline model. Mandatory baseline for PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01.
 
 **What it is NOT:** A rendering spec. A UI design. A persona description. A tagline. Mission contracts define cognitive objectives and consumed/prohibited cognition, not visual layout.
 
 **Source:** `docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/PERSONA_MISSION_CONTRACTS_AND_COGNITIVE_OBJECTIVES.md`
+
+### OPERATOR Persona
+
+**Definition:** The engineering evidence inspection persona within the LENS v2 5-persona cognitive projection system. OPERATOR exists to allow a technical operator to inspect raw evidence at full numeric precision (4-decimal signal values, evidence hash chains), audit governance lifecycle state (S-level, proposition corpus, enrichment, revalidation, certification), view inference prohibitions, and explore the forensic topology. OPERATOR fills the cognitive gap between DENSE (structural behavior interrogation — zone-navigated, 42 queries) and INVESTIGATION (evidence qualification and governed replay — fixed verification sequence, PASS/FAIL assertions).
+
+**Origin:** Prior INVESTIGATION_DENSE implementation was assessed as functionally OPERATOR by PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01 (Verdict A — Current INVESTIGATION = OPERATOR). The behavioral mismatch was unambiguous: mission contract defined LOW agency / SYSTEM-ENFORCED SEQUENCE, but implementation had HIGH agency / OPERATOR-CONTROLLED exploration. Boundary established by PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01.
+
+**Key distinction from DENSE:** DENSE navigates structural behavior (topology, zones, overlays, propagation patterns). OPERATOR inspects evidence values (hashes, 4-decimal signals, governance tables). Different substrate, both high agency.
+
+**Key distinction from INVESTIGATION:** OPERATOR inspects (shows values). INVESTIGATION verifies (asserts correctness). Different output type: data vs assertions.
+
+**Status:** CANONICAL — officially recognized (2026-05-29). Implementation surfaces operational (transferred from prior INVESTIGATION_DENSE).
+
+**What it is NOT:** INVESTIGATION. DENSE-with-more-detail. A temporary label. OPERATOR is a permanent persona with its own constitutional objective (engineering evidence inspection).
+
+**Source:** `docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/OPERATOR_AND_INVESTIGATION_BOUNDARY.md`
 
 ### Ontology-to-Consequence Compilation Chain
 
@@ -891,7 +910,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 - Truth generation stops at L2 (conditions, consequences, combinations)
 - L3 persona projections may compress but not create
 - BOARDROOM and BALANCED consume ontology exclusively through the compiler
-- DENSE and INVESTIGATION consume substrate directly
+- DENSE and OPERATOR consume substrate directly (INVESTIGATION will verify compilation chain)
 - Combinations compile existing truth, they do not create new truth
 - Severity escalation is a governed transformation with explicit tracing
 - All compiler text comes from CONSEQUENCE_VOCABULARY — no freeform generation
