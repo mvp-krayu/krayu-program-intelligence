@@ -8,8 +8,11 @@ import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, Softwa
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
-import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { investigate, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
+
+let _verificationCache = { result: null, timestamp: null, proofData: null }
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -7659,6 +7662,387 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
   )
 }
 
+const VERIFICATION_STEP_NAMES = {
+  EVIDENCE_ANCHOR: 'Evidence Anchor Verification',
+  DERIVATION_TRACE: 'Derivation Trace Replay',
+  CONSEQUENCE_RULES: 'Consequence Rule Verification',
+  COMBINATION_PATTERNS: 'Combination Pattern Verification',
+  COMPILATION_INTEGRITY: 'Compilation Integrity',
+}
+
+const VERDICT_LABELS = {
+  VERIFIED: 'Verified',
+  PARTIALLY_VERIFIED: 'Partial',
+  VERIFICATION_FAILED: 'Failed',
+  CANNOT_INVESTIGATE: 'No target',
+}
+
+const REPLAY_VERDICT_LABELS = {
+  REPLAY_MATCH: 'Deterministic match',
+  REPLAY_DIVERGENCE: 'Divergence detected',
+  REPLAY_ERROR: 'Replay error',
+  INSUFFICIENT: 'Replay unavailable',
+}
+
+function summarizeStep(step, proofData) {
+  const fc = step.failures.length
+  if (step.verdict === 'INSUFFICIENT') return 'Insufficient evidence for verification'
+  if (step.verdict === 'FAIL') return `${fc} failure${fc !== 1 ? 's' : ''} detected`
+  if (!proofData) return 'Passed'
+  switch (step.name) {
+    case 'EVIDENCE_ANCHOR': {
+      const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
+      let refCount = 0
+      let sigCount = 0
+      for (const c of allCsqs) {
+        refCount += (c.evidence_refs || []).length
+        sigCount += (c.source_signal_ids || []).length
+      }
+      return `${refCount} evidence refs · ${sigCount} signal refs · 0 orphaned`
+    }
+    case 'DERIVATION_TRACE': {
+      const traces = (proofData.consequences || []).filter(c => c.derivation_trace && c.derivation_trace.length > 0)
+      const ruleSet = new Set()
+      for (const c of traces) for (const t of c.derivation_trace) ruleSet.add(t.rule)
+      return `${traces.length} traces complete · rules: ${[...ruleSet].join(', ') || 'none'}`
+    }
+    case 'CONSEQUENCE_RULES': {
+      const atomics = proofData.atomic_consequences || []
+      return `${atomics.length} atomics checked against §4 · 0 invalid`
+    }
+    case 'COMBINATION_PATTERNS': {
+      const combos = (proofData.consequences || []).filter(c => c.combination_pattern)
+      return `${combos.length} combination${combos.length !== 1 ? 's' : ''} checked against §5.2`
+    }
+    case 'COMPILATION_INTEGRITY': {
+      const trace = proofData.compilation_trace || {}
+      return `${trace.input_condition_count || 0} inputs · ${proofData.consequence_count || 0} outputs · ordering valid · primary confirmed`
+    }
+    default: return 'Passed'
+  }
+}
+
+function EvidenceAnchorProof({ proofData }) {
+  const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
+  const seen = new Set()
+  const unique = allCsqs.filter(c => { if (seen.has(c.consequence_id)) return false; seen.add(c.consequence_id); return true })
+  return (
+    <div className="vp-proof-table">
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--id">CONSEQUENCE</span>
+        <span className="vp-proof-cell vp-proof-cell--wide">EVIDENCE REFS</span>
+        <span className="vp-proof-cell">SIGNAL REFS</span>
+      </div>
+      {unique.map(csq => (
+        <div key={csq.consequence_id} className="vp-proof-row">
+          <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
+          <span className="vp-proof-cell vp-proof-cell--wide">
+            {(csq.evidence_refs || []).length > 0
+              ? (csq.evidence_refs || []).map((ref, i) => <span key={i} className="vp-proof-tag" data-ref-type={ref.type}>{ref.type}:{ref.id}</span>)
+              : <span className="vp-proof-none">—</span>}
+          </span>
+          <span className="vp-proof-cell">
+            {(csq.source_signal_ids || []).length > 0
+              ? (csq.source_signal_ids || []).map((sid, i) => <span key={i} className="vp-proof-tag">{sid}</span>)
+              : <span className="vp-proof-none">—</span>}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function DerivationTraceProof({ proofData }) {
+  const csqs = (proofData.consequences || []).filter(c => c.derivation_trace && c.derivation_trace.length > 0)
+  return (
+    <div className="vp-proof-traces">
+      {csqs.map(csq => (
+        <div key={csq.consequence_id} className="vp-proof-trace-block">
+          <div className="vp-proof-trace-label">{csq.consequence_id}</div>
+          <div className="vp-proof-trace-chain">
+            {csq.derivation_trace.map((t, i) => (
+              <span key={i} className="vp-proof-trace-step">
+                {i === 0 && <span className="vp-proof-trace-node" data-node-type={t.source_type}>{t.source_id}</span>}
+                <span className="vp-proof-trace-arrow">→</span>
+                <span className="vp-proof-trace-rule">{t.rule}</span>
+                <span className="vp-proof-trace-arrow">→</span>
+                <span className="vp-proof-trace-node" data-node-type={t.target_type}>{t.target_id}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+      {csqs.length === 0 && <div className="vp-proof-none">No derivation traces present</div>}
+    </div>
+  )
+}
+
+function ConsequenceRulesProof({ proofData }) {
+  const atomics = proofData.atomic_consequences || []
+  return (
+    <div className="vp-proof-table">
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--id">ATOMIC</span>
+        <span className="vp-proof-cell">TYPE</span>
+        <span className="vp-proof-cell vp-proof-cell--wide">SOURCE CONDITIONS</span>
+        <span className="vp-proof-cell">§4 RULE</span>
+      </div>
+      {atomics.map(csq => {
+        const condTypes = csq.source_condition_types || []
+        return (
+          <div key={csq.consequence_id} className="vp-proof-row">
+            <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
+            <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.consequence_type_id}</span></span>
+            <span className="vp-proof-cell vp-proof-cell--wide">
+              {condTypes.map((ct, i) => {
+                const rules = SECTION_4_RULES[ct]
+                const match = rules && rules.find(r => r.consequence_type === csq.consequence_type_id)
+                return <span key={i} className="vp-proof-tag" data-rule-status={match ? 'valid' : 'unknown'}>{ct}{match ? ` (${match.defining ? 'defining' : 'conditional'})` : ''}</span>
+              })}
+            </span>
+            <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.activation_rule || '§4'}</span></span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function CombinationPatternsProof({ proofData }) {
+  const combos = (proofData.consequences || []).filter(c => c.combination_pattern)
+  const atomicIndex = {}
+  for (const a of (proofData.atomic_consequences || [])) atomicIndex[a.consequence_id] = a
+  return (
+    <div className="vp-proof-combinations">
+      {combos.map(combo => {
+        const pattern = SECTION_5_2_PATTERNS[combo.combination_pattern]
+        const contributingIds = (combo.decomposition && combo.decomposition.contributing_primitive_consequences) || []
+        return (
+          <div key={combo.consequence_id} className="vp-proof-combo-block">
+            <div className="vp-proof-combo-header">
+              <span className="vp-proof-tag">{combo.combination_pattern}</span>
+              <span className="vp-proof-combo-meta">{combo.consequence_id} · {combo.severity} · {combo.consequence_scope}</span>
+            </div>
+            {pattern && (
+              <div className="vp-proof-combo-rule">
+                §5.2 requires: min {pattern.min_contributors} contributors{pattern.escalation ? ' · escalation' : ' · no escalation'}
+                {pattern.min_distinct_condition_types ? ` · ${pattern.min_distinct_condition_types} distinct condition types` : ''}
+              </div>
+            )}
+            <div className="vp-proof-combo-contributors">
+              <span className="vp-proof-combo-contrib-label">Contributors ({contributingIds.length}):</span>
+              {contributingIds.map((cid, i) => {
+                const a = atomicIndex[cid]
+                return <span key={i} className="vp-proof-tag">{cid}{a ? ` (${a.consequence_type_id})` : ''}</span>
+              })}
+            </div>
+            {combo.escalation_applied && (
+              <div className="vp-proof-combo-escalation">Escalation: {combo.severity}{combo.escalation_reason ? ` — ${combo.escalation_reason}` : ''}</div>
+            )}
+          </div>
+        )
+      })}
+      {combos.length === 0 && <div className="vp-proof-none">No combination patterns</div>}
+    </div>
+  )
+}
+
+function CompilationIntegrityProof({ proofData }) {
+  const trace = proofData.compilation_trace || {}
+  const csqs = proofData.consequences || []
+  const atomics = proofData.atomic_consequences || []
+  const combos = csqs.filter(c => c.combination_pattern)
+  const escalated = combos.filter(c => c.escalation_applied)
+  const systemic = csqs.filter(c => c.consequence_scope === 'SYSTEMIC')
+  const rows = [
+    ['input_condition_count', trace.input_condition_count, proofData.synthesis_condition_count],
+    ['conditions_producing_consequences', trace.conditions_producing_consequences, '—'],
+    ['suppressed_conditions', trace.suppressed_conditions, '—'],
+    ['combination_patterns_matched', trace.combination_patterns_matched, combos.length],
+    ['escalations_applied', trace.escalations_applied, escalated.length],
+    ['consequence_count', proofData.consequence_count, csqs.length],
+    ['systemic_count', proofData.systemic_count, systemic.length],
+    ['primary_consequence', proofData.primary_consequence, csqs.length > 0 ? csqs[0].consequence_id : '—'],
+  ]
+  return (
+    <div className="vp-proof-table">
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--wide">FIELD</span>
+        <span className="vp-proof-cell">CLAIMED</span>
+        <span className="vp-proof-cell">ACTUAL</span>
+      </div>
+      {rows.map(([field, claimed, actual]) => (
+        <div key={field} className="vp-proof-row">
+          <span className="vp-proof-cell vp-proof-cell--wide vp-proof-cell--mono">{field}</span>
+          <span className="vp-proof-cell">{claimed !== undefined && claimed !== null ? String(claimed) : '—'}</span>
+          <span className="vp-proof-cell" data-match={String(claimed) === String(actual) ? 'yes' : actual === '—' ? 'skip' : 'no'}>{String(actual)}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ReplayProof({ replay, proofData }) {
+  if (!replay) return null
+  const trace = proofData ? proofData.compilation_trace || {} : {}
+  return (
+    <div className="vp-proof-replay">
+      {replay.verdict === 'REPLAY_MATCH' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-line">Re-compilation: identical output</div>
+          <div className="vp-proof-replay-line">Divergences: 0</div>
+          <div className="vp-proof-replay-line">Fields compared: consequence_count, systemic_count, consequence_ids, consequence_types, severities, compilation_trace ({Object.keys(trace).length} fields)</div>
+        </div>
+      )}
+      {replay.verdict === 'REPLAY_DIVERGENCE' && (
+        <div className="vp-proof-replay-detail">
+          {replay.divergences.map((d, i) => (
+            <div key={i} className="vp-proof-replay-divergence">{d}</div>
+          ))}
+        </div>
+      )}
+      {replay.verdict === 'REPLAY_ERROR' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-divergence">{replay.error || 'Replay threw an exception'}</div>
+        </div>
+      )}
+      {replay.verdict === 'INSUFFICIENT' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-line">No compile function available for replay verification</div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function StepProofContent({ step, proofData }) {
+  if (!proofData) return null
+  switch (step.name) {
+    case 'EVIDENCE_ANCHOR': return <EvidenceAnchorProof proofData={proofData} />
+    case 'DERIVATION_TRACE': return <DerivationTraceProof proofData={proofData} />
+    case 'CONSEQUENCE_RULES': return <ConsequenceRulesProof proofData={proofData} />
+    case 'COMBINATION_PATTERNS': return <CombinationPatternsProof proofData={proofData} />
+    case 'COMPILATION_INTEGRITY': return <CompilationIntegrityProof proofData={proofData} />
+    default: return null
+  }
+}
+
+function VerificationStepProof({ step, proofData, expanded, onToggle }) {
+  return (
+    <div className="verification-step" data-verdict={step.verdict} data-expanded={expanded ? 'true' : 'false'}>
+      <div className="verification-step-header" onClick={onToggle}>
+        <span className="verification-step-number">STEP {step.step}</span>
+        <span className="verification-step-name">{VERIFICATION_STEP_NAMES[step.name] || step.name}</span>
+        <span className="verification-step-verdict">{step.verdict}</span>
+        <span className="verification-step-expand">{expanded ? '▾' : '▸'}</span>
+      </div>
+      <div className="verification-step-summary">{summarizeStep(step, proofData)}</div>
+      {step.verdict === 'FAIL' && (
+        <div className="verification-step-failures">
+          {step.failures.map((f, i) => (
+            <div key={i} className="verification-failure">
+              <span className="verification-failure-type">{f.failure_type}</span>
+              <span className="verification-failure-detail">{f.detail}</span>
+              <span className="verification-failure-severity">{f.severity}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {step.verdict === 'INSUFFICIENT' && (
+        <div className="verification-step-insufficient">Insufficient evidence for verification</div>
+      )}
+      {expanded && proofData && (
+        <div className="verification-proof-detail">
+          <StepProofContent step={step} proofData={proofData} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function VerificationProtocolSection({ verificationState, onClose }) {
+  const { result, timestamp, proofData } = verificationState
+  const [expandedSteps, setExpandedSteps] = useState(new Set())
+
+  if (!result) return null
+
+  const toggleStep = (key) => {
+    setExpandedSteps(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
+
+  const passCount = result.steps.filter(s => s.verdict === 'PASS').length
+  const totalSteps = result.steps.length
+  const replayLabel = result.replay ? REPLAY_VERDICT_LABELS[result.replay.verdict] || result.replay.verdict : null
+
+  return (
+    <div className="verification-protocol-section">
+      <div className="verification-protocol-header">
+        <span className="verification-protocol-title">VERIFICATION PROTOCOL</span>
+        <button className="verification-protocol-collapse" onClick={onClose} aria-label="Collapse verification" type="button">✕</button>
+      </div>
+
+      <div className="verification-verdict" data-verdict={result.verdict}>
+        <div className="verification-verdict-label">{result.verdict.replace(/_/g, ' ')}</div>
+        <div className="verification-verdict-meta">
+          <span>{passCount}/{totalSteps} steps passed</span>
+          {replayLabel && <span> · {replayLabel.toLowerCase()}</span>}
+        </div>
+        {timestamp && <div className="verification-verdict-ts">{timestamp}</div>}
+        {result.failure_count > 0 && (
+          <div className="verification-verdict-failures">{result.failure_count} failure{result.failure_count !== 1 ? 's' : ''} across {result.steps.filter(s => s.verdict === 'FAIL').length} step{result.steps.filter(s => s.verdict === 'FAIL').length !== 1 ? 's' : ''}</div>
+        )}
+      </div>
+
+      <div className="verification-steps">
+        {result.steps.map(step => (
+          <VerificationStepProof key={step.step} step={step} proofData={proofData} expanded={expandedSteps.has(step.step)} onToggle={() => toggleStep(step.step)} />
+        ))}
+      </div>
+
+      {result.replay && (
+        <div className="verification-replay-section">
+          <div className="verification-step" data-verdict={result.replay.verdict === 'REPLAY_MATCH' ? 'PASS' : result.replay.verdict === 'INSUFFICIENT' ? 'INSUFFICIENT' : 'FAIL'} data-expanded={expandedSteps.has('replay') ? 'true' : 'false'}>
+            <div className="verification-step-header" onClick={() => toggleStep('replay')}>
+              <span className="verification-step-number">REPLAY</span>
+              <span className="verification-step-name">Determinism Verification</span>
+              <span className="verification-step-verdict">{result.replay.verdict === 'REPLAY_MATCH' ? 'MATCH' : result.replay.verdict}</span>
+              <span className="verification-step-expand">{expandedSteps.has('replay') ? '▾' : '▸'}</span>
+            </div>
+            <div className="verification-step-summary">
+              {result.replay.verdict === 'REPLAY_MATCH' && 'Re-compilation produced identical output · 0 divergences'}
+              {result.replay.verdict === 'REPLAY_DIVERGENCE' && `${result.replay.divergences.length} divergence${result.replay.divergences.length !== 1 ? 's' : ''} detected`}
+              {result.replay.verdict === 'REPLAY_ERROR' && 'Replay threw an exception'}
+              {result.replay.verdict === 'INSUFFICIENT' && 'No compile function available'}
+            </div>
+            {result.replay.verdict === 'REPLAY_DIVERGENCE' && (
+              <div className="verification-step-failures">
+                {result.replay.divergences.map((d, i) => (
+                  <div key={i} className="verification-failure">
+                    <span className="verification-failure-type">DIVERGENCE</span>
+                    <span className="verification-failure-detail">{d}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {expandedSteps.has('replay') && (
+              <div className="verification-proof-detail">
+                <ReplayProof replay={result.replay} proofData={proofData} />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="verification-protocol-footer">Protocol complete</div>
+    </div>
+  )
+}
+
 const ARC_LABELS = {
   OPENING: 'System Profile',
   REVELATION: 'Structural Discovery',
@@ -8383,7 +8767,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -8394,7 +8778,10 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
       <>
         <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} />
+        )}
+        {verificationState && verificationState.active && verificationState.result && (
+          <VerificationProtocolSection verificationState={verificationState} onClose={onVerificationClose} />
         )}
       </>
     )
@@ -8537,6 +8924,28 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     if (!surface) return null
     return deriveTopologyCognitionState(cognitionState.activeSurface, fullReport, surface)
   }, [resolvedCondition, cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
+
+  const [verificationState, setVerificationState] = useState(() => ({ active: false, result: _verificationCache.result, timestamp: _verificationCache.timestamp, proofData: _verificationCache.proofData }))
+  const verificationTargetReady = useMemo(() => !!(consequenceResult && consequenceResult.consequences && consequenceResult.consequences.length > 0 && synthesisResult && fullReport), [consequenceResult, synthesisResult, fullReport])
+
+  const handleVerificationInvoke = useCallback(() => {
+    if (!verificationTargetReady || !consequenceResult || !synthesisResult || !fullReport) return
+    const result = investigate(consequenceResult, synthesisResult, fullReport, {
+      compileFn: (syn, rep) => compileConsequences(syn, rep),
+    })
+    const proofData = consequencesForInvestigation(consequenceResult, synthesisResult)
+    const ts = new Date().toISOString()
+    _verificationCache = { result, timestamp: ts, proofData }
+    setVerificationState({ active: true, result, timestamp: ts, proofData })
+  }, [verificationTargetReady, consequenceResult, synthesisResult, fullReport])
+
+  const handleVerificationClose = useCallback(() => {
+    setVerificationState(prev => ({ ...prev, active: false }))
+  }, [])
+
+  const handleVerificationReopen = useCallback(() => {
+    setVerificationState(prev => prev.result ? { ...prev, active: true } : prev)
+  }, [])
 
   const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
   const [selectedNarrativeArc, setSelectedNarrativeArc] = useState(null)
@@ -8764,6 +9173,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           consequencePosture={consequencePosture}
           consequenceTeaser={consequenceTeaser}
           balancedBriefing={balancedBriefing}
+          verificationState={verificationState}
+          verificationTargetReady={verificationTargetReady}
+          onVerificationInvoke={handleVerificationInvoke}
+          onVerificationClose={handleVerificationClose}
+          onVerificationReopen={handleVerificationReopen}
         />
 
         {!boardroomMode && !isBalanced && (

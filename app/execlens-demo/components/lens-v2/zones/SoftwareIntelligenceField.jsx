@@ -351,14 +351,28 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
   )
 }
 
-export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
+const VERIFICATION_BADGE_LABEL = { VERIFIED: 'Verified', PARTIALLY_VERIFIED: 'Partial', VERIFICATION_FAILED: 'Failed', CANNOT_INVESTIGATE: 'No target' }
+
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen }) {
   const surfaces = projection.surfaces || []
+  const hasResult = verificationState && verificationState.result
 
   return (
     <div className="sw-intel-view sw-intel-view--operator">
       <div className="sw-intel-view-header">
         <span className="sw-intel-view-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
+        {hasResult && (
+          <button className="sw-intel-verification-badge" data-verdict={verificationState.result.verdict} onClick={onVerificationReopen} type="button" title="Reopen verification corridor">
+            <span className="sw-intel-verification-dot" />
+            {VERIFICATION_BADGE_LABEL[verificationState.result.verdict] || verificationState.result.verdict}
+          </button>
+        )}
+        {onVerificationInvoke && (
+          <button className="sw-intel-verify-btn" onClick={onVerificationInvoke} disabled={!verificationTargetReady} type="button" title={verificationTargetReady ? 'Run verification protocol' : 'No verification target'}>
+            VERIFY
+          </button>
+        )}
         <button className="sw-intel-deactivate-btn" onClick={onDeactivate} type="button">✕</button>
       </div>
       <PeakSeverityStrip surfaces={surfaces} />
