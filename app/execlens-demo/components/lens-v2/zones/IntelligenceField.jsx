@@ -8,8 +8,12 @@ import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, Softwa
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
-import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { investigate, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
+import { resolveNode, resolveConnections } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
+
+let _verificationCache = { result: null, timestamp: null, proofData: null }
 
 const SEMANTIC_ACTORS = {
   decisionPosture:       { id: 'A', code: 'DP', name: 'Decision Posture' },
@@ -1181,28 +1185,30 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      <div className="support-block support-block--reports">
-        <div className="support-label">REPORT PACK</div>
-        <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
-        <div className="support-reports-list">
-          {artifacts.map(a => (
-            <div
-              key={a.id}
-              className="support-report-item"
-              aria-disabled="true"
-              title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
-              data-binding="pending"
-            >
-              <span className="support-report-tier">{a.tier}</span>
-              <span className="support-report-name">{a.name}</span>
+      {densityClass !== 'OPERATOR_DENSE' && (
+        <div className="support-block support-block--reports">
+          <div className="support-label">REPORT PACK</div>
+          <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
+          <div className="support-reports-list">
+            {artifacts.map(a => (
+              <div
+                key={a.id}
+                className="support-report-item"
+                aria-disabled="true"
+                title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
+                data-binding="pending"
+              >
+                <span className="support-report-tier">{a.tier}</span>
+                <span className="support-report-name">{a.name}</span>
+              </div>
+            ))}
+            <div className="support-reports-state" aria-live="polite">
+              <span className="support-reports-state-dot" aria-hidden="true" />
+              binding pending — live client/run integration not yet active
             </div>
-          ))}
-          <div className="support-reports-state" aria-live="polite">
-            <span className="support-reports-state-dot" aria-hidden="true" />
-            binding pending — live client/run integration not yet active
           </div>
         </div>
-      </div>
+      )}
     </aside>
   )
 }
@@ -4583,6 +4589,64 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     )
   }
 
+  if (densityClass === 'OPERATOR_DENSE') {
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const gl = (fullReport && fullReport.governance_lifecycle) || {}
+    const backed = ts.structurally_backed_count || 0
+    const total = ts.semantic_domain_count || 0
+    return (
+      <aside className="intel-interp intel-interp--operator-orientation" data-tone={framing.tone} aria-label="Operator orientation">
+        <div className="interp-tag">
+          <span className="interp-tag-label">{framing.label}</span>
+          <span className="interp-tag-state"><TermHint term="Executive Ready">{badge.state_label || '—'}</TermHint></span>
+        </div>
+
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">SPECIMEN OVERVIEW</div>
+          <div className="interp-synthesis">
+            {total > 0 ? <>{total} domains · {ts.cluster_count || 0} clusters · {backed}/{total} <TermHint term="structurally backed">structurally backed</TermHint></> : 'Structural data loading'}
+          </div>
+        </div>
+
+        {gl.available && (
+          <div className="interp-block">
+            <div className="interp-section-label">GOVERNANCE STATE</div>
+            <div className="interp-synthesis"><TermHint term={gl.s_level}>{gl.s_level || '—'}</TermHint> · {(gl.qualification_provenance || '—').replace(/_/g, ' ')}</div>
+          </div>
+        )}
+
+        {activatedSignals.length > 0 && (
+          <div className="interp-block">
+            <div className="interp-section-label">SIGNAL POSTURE</div>
+            <div className="interp-synthesis">{activatedSignals.length} elevated signal{activatedSignals.length !== 1 ? 's' : ''} across the structural topology</div>
+          </div>
+        )}
+
+        {swIntelActive && activeConditions && activeConditions.length > 0 ? (
+          <div className="interp-block interp-block--conditions">
+            <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
+            <div className="interp-conditions-strip">
+              {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
+                <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
+                  <span className="interp-condition-name">{c.operator_cognition_title}</span>
+                  {c.domain_targets && c.domain_targets[0] && (
+                    <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : !swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 ? (
+          <div className="interp-block interp-block--module-teaser">
+            <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
+            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+            <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
+          </div>
+        ) : null}
+      </aside>
+    )
+  }
+
   return (
     <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive interpretation layer">
       <div className="interp-tag">
@@ -4601,7 +4665,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-why">{narrative.why_primary_statement}</div>
         </div>
       )}
-      {narrative.structural_summary && (densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && framing.structuralLabel && (
+      {narrative.structural_summary && densityClass === 'EXECUTIVE_BALANCED' && framing.structuralLabel && (
         <div className="interp-block">
           <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
@@ -5953,7 +6017,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   )
 }
 
-function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -5985,16 +6049,39 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
     <div className="rep-field rep-field--operator">
       <RepModeTag
         label="Evidence lens"
-        sub="Analyst · evidence trace and confidence"
+        sub="Analyst · structural substrate → conditions → signals → governance → lineage"
         zones={[
-          { id: 'Z7', name: 'Evidence Trace' },
-          { id: 'Z5', name: 'Signal Stack' },
-          { id: 'Z2', name: 'Resolution Boundary' },
+          { id: 'Z1', name: 'Structural Substrate' },
+          { id: 'Z5', name: 'Signal Intelligence' },
           { id: 'GA', name: 'Governance Audit' },
+          { id: 'Z7', name: 'Evidence Lineage' },
         ]}
       />
 
       <OperatorReadingGuide />
+
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
+        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+          <TopologyGraph
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={pressureZone}
+            pressureZoneState={fullReport.pressure_zone_state}
+          />
+          <div className="operator-topology-hint">Open forensic topology</div>
+        </div>
+      )}
+
+      {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
+        <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+      )}
+
+      {swIntelSlot}
+
+      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
+
+      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
 
       <div className="actor actor--evidence-trace">
         <div className="actor-tag">
@@ -6022,147 +6109,124 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       </div>
 
-      {signalRows.length > 0 && (
-        <div className="actor actor--signal-stack">
+      {blocks && blocks.length > 0 && (
+        <div className="actor actor--signal-evidence-inline">
           <div className="actor-tag">
-            <span className="actor-code">SS</span>
-            <span className="actor-name">Signal Stack · {signalRows.length} active</span>
+            <span className="actor-code">SE</span>
+            <span className="actor-name">Signal Evidence · propagation</span>
           </div>
-          <div className="actor-signal-list">
-            {signalRows.map((s, i) => (
-              <div key={i} className="actor-signal-row" data-tier={s.pressure_tier} data-grounding={s.grounding_status}>
-                <div className="actor-signal-row-mark">
-                  <span className="actor-signal-row-dot" />
-                  <span className="actor-signal-row-tier"><TermHint term={s.pressure_tier}>{s.pressure_tier}</TermHint></span>
-                </div>
-                <div className="actor-signal-row-body">
-                  <div className="actor-signal-row-head">
-                    <span className="actor-signal-row-name">{s.signal_label}</span>
-                    <span className="actor-signal-row-domain">{s.domain}</span>
+          <div className="evidence-grid">
+            {blocks.map((b, i) => {
+              const firstCard = b.signal_cards && b.signal_cards[0]
+              const pm = firstCard ? (PRESSURE_META[firstCard.pressure_tier] || PRESSURE_META.MODERATE) : null
+              const rm = ROLE_META[b.propagation_role] || null
+              const isPartial = b.grounding_status && b.grounding_status !== 'Q-00'
+              return (
+                <div key={b.domain_alias || i} className={`evidence-block${isPartial ? ' evidence-block--partial' : ''}`}>
+                  <div className="eb-header">
+                    <div className="eb-domain">{b.domain_alias}</div>
+                    <div className="eb-tags">
+                      {rm && <span className="eb-tag" style={{ color: rm.color }}>{rm.symbol} {rm.label}</span>}
+                      {pm && <span className="eb-tag" style={{ color: pm.color }}>{pm.symbol} {pm.label}</span>}
+                      {isPartial && <span className="eb-tag eb-tag--partial">PARTIAL</span>}
+                    </div>
                   </div>
-                  <div className="actor-signal-row-pressure">{s.pressure_label}</div>
-                  <div className="actor-signal-row-evidence">{s.evidence_text}</div>
-                  <div className="actor-signal-row-conf">
-                    <span className="actor-signal-row-conf-label"><TermHint term="Confidence">Confidence</TermHint></span>
-                    <span className="actor-signal-row-conf-value">{s.grounding_label}</span>
-                    {s.grounding_status !== 'Q-00' && <span className="actor-signal-row-conf-flag"><TermHint term="advisory bound">advisory bound</TermHint></span>}
-                  </div>
+                  {b.evidence_description && <div className="eb-description">{b.evidence_description}</div>}
+                  {firstCard && firstCard.evidence_text && <div className="eb-signal">{firstCard.evidence_text}</div>}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-        </div>
-      )}
-
-      <InvestigationSignalAudit fullReport={fullReport} signalRowCount={signalRows.length} />
-
-      <div className="actor actor--inference-prohibition">
-        <div className="actor-tag">
-          <span className="actor-code">IP</span>
-          <span className="actor-name">Inference Prohibition</span>
-        </div>
-        <div className="actor-inference-statement">
-          Executive action on partially-grounded signals requires advisory confirmation. The system MUST NOT infer beyond evidence, MUST NOT recommend without grounding, and MUST NOT overstate readiness when a qualifier applies.
-        </div>
-        <div className="actor-inference-rules">
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">Qualifier rules applied</span>
-            <div className="actor-inference-rules-list">
-              {qRules.length > 0 ? qRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-          <div className="actor-inference-rules-block">
-            <span className="actor-inference-rules-label">ALI rules applied</span>
-            <div className="actor-inference-rules-list">
-              {aliRules.length > 0 ? aliRules.map(r => <span key={r} className="actor-inference-rule">{r}</span>) : <span className="actor-inference-rule">—</span>}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <InvestigationGovernanceAudit fullReport={fullReport} />
-
-      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-          <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
-            clusters={fullReport.semantic_cluster_registry || []}
-            edges={fullReport.semantic_topology_edges || []}
-            pressureZoneLabel={pressureZone}
-            pressureZoneState={fullReport.pressure_zone_state}
-          />
-          <div className="operator-topology-hint">Open forensic topology</div>
         </div>
       )}
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
-
-      <TierHandoffStatement />
     </div>
   )
 }
 
-function InvestigationSignalAudit({ fullReport, signalRowCount }) {
+function OperatorSignalIntelligence({ signalRows, fullReport }) {
   const sigs = (fullReport && fullReport.signal_interpretations) || []
-  if (!sigs.length || sigs.length <= signalRowCount) return null
-
   const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
   const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
   const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
+  const familyCount = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)
 
-  const renderEntry = (sig) => {
+  if (!sigs.length) return null
+
+  const domainRowMap = {}
+  signalRows.forEach(r => {
+    const key = r.signal_label
+    if (!domainRowMap[key]) domainRowMap[key] = r
+  })
+
+  const renderCard = (sig) => {
     const family = sig.signal_family || 'DPSIG'
+    const trans = translateSignal(sig.signal_id)
+    const title = trans ? trans.l3_title : sig.signal_name
+    const domainRow = domainRowMap[sig.signal_name]
+    const isNominal = sig.severity === 'NOMINAL' || sig.activation_state === 'NOMINAL' || sig.activation_state === 'CLUSTER_BALANCED'
     return (
-      <tr key={sig.signal_id} data-severity={sig.severity} data-family={family}>
-        <td className="inv-gov-id">{sig.signal_id}</td>
-        <td><span className="dense-signal-family-tag" data-family={family}>{family}</span></td>
-        <td>{sig.signal_name}</td>
-        <td className="inv-gov-num">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</td>
-        <td data-severity={sig.severity}>{sig.severity}</td>
-        <td className="inv-gov-detail">{sig.interpretation}</td>
-      </tr>
+      <div key={sig.signal_id} className="osi-card" data-severity={sig.severity} data-family={family}>
+        <div className="osi-card-header">
+          <span className="osi-card-id">{sig.signal_id}</span>
+          <span className="dense-signal-family-tag" data-family={family}>{family}</span>
+          <span className="osi-card-severity" data-severity={sig.severity}><TermHint term={sig.severity}>{sig.severity}</TermHint></span>
+        </div>
+        <div className="osi-card-title"><TermHint term={sig.signal_name}>{title}</TermHint></div>
+        <div className="osi-card-value">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</div>
+        <div className="osi-card-interpretation">{sig.interpretation}</div>
+        {sig.concentration && <div className="osi-card-concentration">{sig.concentration}</div>}
+        {domainRow && (
+          <div className="osi-card-domain-context">
+            <span className="osi-card-domain-name">{domainRow.domain}</span>
+            <span className="osi-card-domain-conf"><TermHint term="Confidence">{domainRow.grounding_label}</TermHint></span>
+            {domainRow.grounding_status !== 'Q-00' && <span className="osi-card-domain-advisory"><TermHint term="advisory bound">advisory bound</TermHint></span>}
+          </div>
+        )}
+        {sig.confidence_note && <div className="osi-card-note">{sig.confidence_note}</div>}
+      </div>
+    )
+  }
+
+  const FAMILY_LABELS = {
+    ISIG: { label: 'File Structure', hint: 'L1', desc: 'File-level import dependency analysis' },
+    DPSIG: { label: 'Topology Distribution', hint: null, desc: 'Cluster-level structural mass distribution' },
+    PSIG: { label: 'Architectural Binding', hint: 'L3', desc: 'Cross-domain coupling at architectural level' },
+  }
+
+  const renderGroup = (familySigs, familyKey) => {
+    if (!familySigs.length) return null
+    const fl = FAMILY_LABELS[familyKey]
+    return (
+      <div key={familyKey} className="osi-family-group" data-family={familyKey}>
+        <div className="osi-family-header">
+          <span className="osi-family-tag" data-family={familyKey}>{fl.hint ? <TermHint term={fl.hint}>{familyKey}</TermHint> : familyKey}</span>
+          <span className="osi-family-label">{fl.label}</span>
+          <span className="osi-family-count">{familySigs.length}</span>
+        </div>
+        <div className="osi-family-cards">
+          {familySigs.map(renderCard)}
+        </div>
+      </div>
     )
   }
 
   return (
-    <div className="actor actor--signal-audit">
+    <div className="actor actor--signal-intelligence">
       <div className="actor-tag">
-        <span className="actor-code">SA</span>
-        <span className="actor-name">Signal Audit · {sigs.length} signals across {(isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)} families</span>
+        <span className="actor-code">SI</span>
+        <span className="actor-name">Signal Intelligence · {sigs.length} signals across {familyCount} {familyCount === 1 ? 'family' : 'families'}</span>
       </div>
-      <div className="inv-signal-summary">
-        {isigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="ISIG">ISIG Level 1 · {isigSigs.length}</span>}
-        {dpsigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="DPSIG">DPSIG Topology · {dpsigSigs.length}</span>}
-        {psigSigs.length > 0 && <span className="inv-signal-family-chip" data-family="PSIG">PSIG Level 2 · {psigSigs.length}</span>}
-      </div>
-      <table className="inv-gov-table">
-        <thead><tr><th>ID</th><th>Family</th><th>Signal</th><th>Value</th><th>Severity</th><th>Interpretation</th></tr></thead>
-        <tbody>
-          {isigSigs.map(renderEntry)}
-          {dpsigSigs.map(renderEntry)}
-          {psigSigs.map(renderEntry)}
-        </tbody>
-      </table>
-      {isigSigs.length > 0 && (
-        <div className="inv-signal-isig-detail">
-          <div className="inv-gov-sub-head">Level 1 — File Structure Signals</div>
-          {isigSigs.map(sig => (
-            <div key={sig.signal_id} className="inv-signal-isig-entry">
-              <div className="inv-signal-isig-header">
-                <span className="inv-signal-isig-name">{sig.signal_name}</span>
-                <span className="inv-signal-isig-value">{sig.signal_value != null ? sig.signal_value.toFixed(4) : '—'}</span>
-              </div>
-              {sig.concentration && <div className="inv-signal-isig-entity">{sig.concentration}</div>}
-              <div className="inv-signal-isig-note">{sig.confidence_note}</div>
-            </div>
-          ))}
-        </div>
-      )}
+      {renderGroup(isigSigs, 'ISIG')}
+      {renderGroup(dpsigSigs, 'DPSIG')}
+      {renderGroup(psigSigs, 'PSIG')}
     </div>
   )
 }
 
-function InvestigationGovernanceAudit({ fullReport }) {
+function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
+  const [forensicsOpen, setForensicsOpen] = useState(false)
   const gl = fullReport && fullReport.governance_lifecycle
   const pc = fullReport && fullReport.proposition_corpus
   const ei = fullReport && fullReport.enrichment_intelligence
@@ -6173,19 +6237,21 @@ function InvestigationGovernanceAudit({ fullReport }) {
 
   if (!gl || !gl.available) return null
 
+  const deepForensicsCount = [pc && pc.available, ca && ca.available, rv && rv.available, ei && ei.available, ci && ci.available, cc && cc.available].filter(Boolean).length
+
   return (
     <div className="actor actor--operator-governance">
       <div className="actor-tag">
         <span className="actor-code">GA</span>
-        <span className="actor-name">Governance Audit · full traversal</span>
+        <span className="actor-name">Governance Audit · {gl.s_level}{deepForensicsCount > 0 ? ` · ${deepForensicsCount} forensic sections` : ''}</span>
       </div>
 
       <div className="inv-gov-section">
         <div className="inv-gov-section-head">Governance Lifecycle</div>
         <table className="inv-gov-table">
           <tbody>
-            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val">{gl.s_level}</td></tr>
-            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</td></tr>
+            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val"><TermHint term={gl.s_level}>{gl.s_level}</TermHint></td></tr>
+            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
             <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
             <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
             {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
@@ -6211,7 +6277,14 @@ function InvestigationGovernanceAudit({ fullReport }) {
         )}
       </div>
 
-      {pc && pc.available && (
+      {deepForensicsCount > 0 && (
+        <button className="inv-gov-forensics-toggle" onClick={() => setForensicsOpen(p => !p)} type="button" aria-expanded={forensicsOpen}>
+          <span className="inv-gov-forensics-toggle-icon">{forensicsOpen ? '▾' : '▸'}</span>
+          Deep Governance Forensics ({deepForensicsCount} sections)
+        </button>
+      )}
+
+      {forensicsOpen && pc && pc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
           <div className="inv-gov-grid">
@@ -6268,7 +6341,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ca && ca.available && (
+      {forensicsOpen && ca && ca.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Constitutional Anchor ({ca.dimensions.length} dimensions)</div>
           <table className="inv-gov-table">
@@ -6299,7 +6372,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {rv && rv.available && (
+      {forensicsOpen && rv && rv.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Revalidation ({rv.passed}/{rv.total_checks} · {rv.phase_count} phases)</div>
           <table className="inv-gov-table">
@@ -6331,7 +6404,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ei && ei.available && (
+      {forensicsOpen && ei && ei.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Evidence Enrichment</div>
           <table className="inv-gov-table">
@@ -6380,7 +6453,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {ci && ci.available && (
+      {forensicsOpen && ci && ci.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Convergence Observations ({ci.total_observations})</div>
           <table className="inv-gov-table">
@@ -6406,7 +6479,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
         </div>
       )}
 
-      {cc && cc.available && (
+      {forensicsOpen && cc && cc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Chronicle Certification ({cc.passed}/{cc.total_checks})</div>
           <table className="inv-gov-table">
@@ -6435,7 +6508,14 @@ function InvestigationGovernanceAudit({ fullReport }) {
       )}
 
       <div className="inv-gov-footer">
-        All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.
+        <div className="inv-gov-footer-statement">All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.</div>
+        <div className="inv-gov-footer-statement">This surface presents structurally derived evidence only. All outputs are deterministic, traceable, and bound by the governance framework. No inference, ranking, or AI-generated assessment has been applied.</div>
+        {((aliRules && aliRules.length > 0) || (qRules && qRules.length > 0)) && (
+          <div className="inv-gov-footer-rules">
+            {qRules && qRules.length > 0 && <span className="inv-gov-footer-rule-set">Qualifier rules: {qRules.join(', ')}</span>}
+            {aliRules && aliRules.length > 0 && <span className="inv-gov-footer-rule-set">ALI rules: {aliRules.join(', ')}</span>}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -7659,6 +7739,463 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
   )
 }
 
+const VERIFICATION_STEP_NAMES = {
+  EVIDENCE_ANCHOR: 'Evidence Anchor Verification',
+  DERIVATION_TRACE: 'Derivation Trace Replay',
+  CONSEQUENCE_RULES: 'Consequence Rule Verification',
+  COMBINATION_PATTERNS: 'Combination Pattern Verification',
+  COMPILATION_INTEGRITY: 'Compilation Integrity',
+}
+
+const VERDICT_LABELS = {
+  VERIFIED: 'Verified',
+  PARTIALLY_VERIFIED: 'Partial',
+  VERIFICATION_FAILED: 'Failed',
+  CANNOT_INVESTIGATE: 'No target',
+}
+
+const REPLAY_VERDICT_LABELS = {
+  REPLAY_MATCH: 'Deterministic match',
+  REPLAY_DIVERGENCE: 'Divergence detected',
+  REPLAY_ERROR: 'Replay error',
+  INSUFFICIENT: 'Replay unavailable',
+}
+
+function summarizeStep(step, proofData) {
+  const fc = step.failures.length
+  if (step.verdict === 'INSUFFICIENT') return 'Insufficient evidence for verification'
+  if (step.verdict === 'FAIL') return `${fc} failure${fc !== 1 ? 's' : ''} detected`
+  if (!proofData) return 'Passed'
+  switch (step.name) {
+    case 'EVIDENCE_ANCHOR': {
+      const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
+      let refCount = 0
+      let sigCount = 0
+      for (const c of allCsqs) {
+        refCount += (c.evidence_refs || []).length
+        sigCount += (c.source_signal_ids || []).length
+      }
+      return `${refCount} evidence refs · ${sigCount} signal refs · 0 orphaned`
+    }
+    case 'DERIVATION_TRACE': {
+      const traces = (proofData.consequences || []).filter(c => c.derivation_trace && c.derivation_trace.length > 0)
+      const ruleSet = new Set()
+      for (const c of traces) for (const t of c.derivation_trace) ruleSet.add(t.rule)
+      return `${traces.length} traces complete · rules: ${[...ruleSet].join(', ') || 'none'}`
+    }
+    case 'CONSEQUENCE_RULES': {
+      const atomics = proofData.atomic_consequences || []
+      return `${atomics.length} atomics checked against §4 · 0 invalid`
+    }
+    case 'COMBINATION_PATTERNS': {
+      const combos = (proofData.consequences || []).filter(c => c.combination_pattern)
+      return `${combos.length} combination${combos.length !== 1 ? 's' : ''} checked against §5.2`
+    }
+    case 'COMPILATION_INTEGRITY': {
+      const trace = proofData.compilation_trace || {}
+      return `${trace.input_condition_count || 0} inputs · ${proofData.consequence_count || 0} outputs · ordering valid · primary confirmed`
+    }
+    default: return 'Passed'
+  }
+}
+
+function CognitionNodeExplanation({ nodeId, compact }) {
+  const resolved = resolveNode(nodeId)
+  if (!resolved) return null
+  const { ontology } = resolved
+  const connections = resolveConnections(nodeId)
+  return (
+    <div className="vp-explanation">
+      <div className="vp-explanation-name">{ontology.human_name}</div>
+      <div className="vp-explanation-text">{ontology.what_it_means}</div>
+      <div className="vp-operational-implication">{ontology.operational_implication}</div>
+      {!compact && connections && (
+        <div className="vp-graph-context">
+          {connections.upstream.length > 0 && (
+            <span className="vp-graph-direction">
+              <span className="vp-graph-arrow">{'←'}</span>
+              {connections.upstream.map((u, i) => (
+                <span key={u.ref}>{i > 0 && ' · '}<span className="vp-graph-ref" data-ref={u.ref}>{u.human_name}</span></span>
+              ))}
+            </span>
+          )}
+          {connections.downstream.length > 0 && (
+            <span className="vp-graph-direction">
+              <span className="vp-graph-arrow">{'→'}</span>
+              {connections.downstream.map((d, i) => (
+                <span key={d.ref}>{i > 0 && ' · '}<span className="vp-graph-ref" data-ref={d.ref}>{d.human_name}</span></span>
+              ))}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function EvidenceAnchorProof({ proofData }) {
+  const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
+  const seen = new Set()
+  const unique = allCsqs.filter(c => { if (seen.has(c.consequence_id)) return false; seen.add(c.consequence_id); return true })
+  return (
+    <div className="vp-proof-table">
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--id">CONSEQUENCE</span>
+        <span className="vp-proof-cell vp-proof-cell--wide">EVIDENCE REFS</span>
+        <span className="vp-proof-cell">SIGNAL REFS</span>
+      </div>
+      {unique.map(csq => (
+        <div key={csq.consequence_id} className="vp-proof-row">
+          <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
+          <span className="vp-proof-cell vp-proof-cell--wide">
+            {(csq.evidence_refs || []).length > 0
+              ? (csq.evidence_refs || []).map((ref, i) => <span key={i} className="vp-proof-tag" data-ref-type={ref.type}>{ref.type}:{ref.id}</span>)
+              : <span className="vp-proof-none">—</span>}
+          </span>
+          <span className="vp-proof-cell">
+            {(csq.source_signal_ids || []).length > 0
+              ? (csq.source_signal_ids || []).map((sid, i) => <span key={i} className="vp-proof-tag">{sid}</span>)
+              : <span className="vp-proof-none">—</span>}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function DerivationTraceProof({ proofData }) {
+  const csqs = (proofData.consequences || []).filter(c => c.derivation_trace && c.derivation_trace.length > 0)
+  function nodeHumanName(id) {
+    const n = resolveNode(id)
+    return n ? n.ontology.human_name : null
+  }
+  function ruleHumanName(rule) {
+    const n = resolveNode(rule)
+    return n ? n.ontology.human_name : null
+  }
+  return (
+    <div className="vp-proof-traces">
+      {csqs.map(csq => (
+        <div key={csq.consequence_id} className="vp-proof-trace-block">
+          <div className="vp-proof-trace-label">{csq.consequence_id}</div>
+          <div className="vp-proof-trace-chain">
+            {csq.derivation_trace.map((t, i) => {
+              const sourceHuman = i === 0 ? nodeHumanName(t.source_id) : null
+              const targetHuman = nodeHumanName(t.target_id)
+              const ruleHuman = ruleHumanName(t.rule)
+              return (
+                <span key={i} className="vp-proof-trace-step">
+                  {i === 0 && (
+                    <span className="vp-proof-trace-node" data-node-type={t.source_type}>
+                      <span className="vp-graph-ref" data-ref={t.source_id}>{t.source_id}</span>
+                      {sourceHuman && <span className="vp-proof-trace-human">{sourceHuman}</span>}
+                    </span>
+                  )}
+                  <span className="vp-proof-trace-arrow">→</span>
+                  <span className="vp-proof-trace-rule">
+                    {t.rule}
+                    {ruleHuman && <span className="vp-proof-trace-human">{ruleHuman}</span>}
+                  </span>
+                  <span className="vp-proof-trace-arrow">→</span>
+                  <span className="vp-proof-trace-node" data-node-type={t.target_type}>
+                    <span className="vp-graph-ref" data-ref={t.target_id}>{t.target_id}</span>
+                    {targetHuman && <span className="vp-proof-trace-human">{targetHuman}</span>}
+                  </span>
+                </span>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+      {csqs.length === 0 && <div className="vp-proof-none">No derivation traces present</div>}
+    </div>
+  )
+}
+
+function ConsequenceRulesProof({ proofData }) {
+  const atomics = proofData.atomic_consequences || []
+  const ruleNode = resolveNode('§4')
+  return (
+    <div className="vp-proof-table">
+      {ruleNode && (
+        <div className="vp-explanation vp-explanation--rule">
+          <div className="vp-explanation-name">{ruleNode.ontology.human_name}</div>
+          <div className="vp-explanation-text">{ruleNode.ontology.what_it_means}</div>
+        </div>
+      )}
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--id">ATOMIC</span>
+        <span className="vp-proof-cell">TYPE</span>
+        <span className="vp-proof-cell vp-proof-cell--wide">SOURCE CONDITIONS</span>
+        <span className="vp-proof-cell">§4 RULE</span>
+      </div>
+      {atomics.map(csq => {
+        const condTypes = csq.source_condition_types || []
+        return (
+          <Fragment key={csq.consequence_id}>
+            <div className="vp-proof-row">
+              <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
+              <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.consequence_type_id}</span></span>
+              <span className="vp-proof-cell vp-proof-cell--wide">
+                {condTypes.map((ct, i) => {
+                  const rules = SECTION_4_RULES[ct]
+                  const match = rules && rules.find(r => r.consequence_type === csq.consequence_type_id)
+                  return <span key={i} className="vp-proof-tag" data-rule-status={match ? 'valid' : 'unknown'}>{ct}{match ? ` (${match.defining ? 'defining' : 'conditional'})` : ''}</span>
+                })}
+              </span>
+              <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.activation_rule || '§4'}</span></span>
+            </div>
+            <CognitionNodeExplanation nodeId={csq.consequence_type_id} />
+          </Fragment>
+        )
+      })}
+    </div>
+  )
+}
+
+function CombinationPatternsProof({ proofData }) {
+  const combos = (proofData.consequences || []).filter(c => c.combination_pattern)
+  const atomicIndex = {}
+  for (const a of (proofData.atomic_consequences || [])) atomicIndex[a.consequence_id] = a
+  const ruleNode = resolveNode('§5.2')
+  return (
+    <div className="vp-proof-combinations">
+      {ruleNode && (
+        <div className="vp-explanation vp-explanation--rule">
+          <div className="vp-explanation-name">{ruleNode.ontology.human_name}</div>
+          <div className="vp-explanation-text">{ruleNode.ontology.what_it_means}</div>
+        </div>
+      )}
+      {combos.map(combo => {
+        const pattern = SECTION_5_2_PATTERNS[combo.combination_pattern]
+        const contributingIds = (combo.decomposition && combo.decomposition.contributing_primitive_consequences) || []
+        return (
+          <div key={combo.consequence_id} className="vp-proof-combo-block">
+            <div className="vp-proof-combo-header">
+              <span className="vp-proof-tag">{combo.combination_pattern}</span>
+              <span className="vp-proof-combo-meta">{combo.consequence_id} · {combo.severity} · {combo.consequence_scope}</span>
+            </div>
+            {pattern && (
+              <div className="vp-proof-combo-rule">
+                §5.2 requires: min {pattern.min_contributors} contributors{pattern.escalation ? ' · escalation' : ' · no escalation'}
+                {pattern.min_distinct_condition_types ? ` · ${pattern.min_distinct_condition_types} distinct condition types` : ''}
+              </div>
+            )}
+            <div className="vp-proof-combo-contributors">
+              <span className="vp-proof-combo-contrib-label">Contributors ({contributingIds.length}):</span>
+              {contributingIds.map((cid, i) => {
+                const a = atomicIndex[cid]
+                return <span key={i} className="vp-proof-tag">{cid}{a ? ` (${a.consequence_type_id})` : ''}</span>
+              })}
+            </div>
+            {combo.escalation_applied && (
+              <div className="vp-proof-combo-escalation">Escalation: {combo.severity}{combo.escalation_reason ? ` — ${combo.escalation_reason}` : ''}</div>
+            )}
+            <CognitionNodeExplanation nodeId={combo.combination_pattern} />
+          </div>
+        )
+      })}
+      {combos.length === 0 && <div className="vp-proof-none">No combination patterns</div>}
+    </div>
+  )
+}
+
+function CompilationIntegrityProof({ proofData }) {
+  const trace = proofData.compilation_trace || {}
+  const csqs = proofData.consequences || []
+  const atomics = proofData.atomic_consequences || []
+  const combos = csqs.filter(c => c.combination_pattern)
+  const escalated = combos.filter(c => c.escalation_applied)
+  const systemic = csqs.filter(c => c.consequence_scope === 'SYSTEMIC')
+  const rows = [
+    ['input_condition_count', trace.input_condition_count, proofData.synthesis_condition_count],
+    ['conditions_producing_consequences', trace.conditions_producing_consequences, '—'],
+    ['suppressed_conditions', trace.suppressed_conditions, '—'],
+    ['combination_patterns_matched', trace.combination_patterns_matched, combos.length],
+    ['escalations_applied', trace.escalations_applied, escalated.length],
+    ['consequence_count', proofData.consequence_count, csqs.length],
+    ['systemic_count', proofData.systemic_count, systemic.length],
+    ['primary_consequence', proofData.primary_consequence, csqs.length > 0 ? csqs[0].consequence_id : '—'],
+  ]
+  return (
+    <div className="vp-proof-table">
+      <div className="vp-proof-row vp-proof-row--header">
+        <span className="vp-proof-cell vp-proof-cell--wide">FIELD</span>
+        <span className="vp-proof-cell">CLAIMED</span>
+        <span className="vp-proof-cell">ACTUAL</span>
+      </div>
+      {rows.map(([field, claimed, actual]) => (
+        <div key={field} className="vp-proof-row">
+          <span className="vp-proof-cell vp-proof-cell--wide vp-proof-cell--mono">{field}</span>
+          <span className="vp-proof-cell">{claimed !== undefined && claimed !== null ? String(claimed) : '—'}</span>
+          <span className="vp-proof-cell" data-match={String(claimed) === String(actual) ? 'yes' : actual === '—' ? 'skip' : 'no'}>{String(actual)}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ReplayProof({ replay, proofData }) {
+  if (!replay) return null
+  const trace = proofData ? proofData.compilation_trace || {} : {}
+  return (
+    <div className="vp-proof-replay">
+      {replay.verdict === 'REPLAY_MATCH' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-line">Re-compilation: identical output</div>
+          <div className="vp-proof-replay-line">Divergences: 0</div>
+          <div className="vp-proof-replay-line">Fields compared: consequence_count, systemic_count, consequence_ids, consequence_types, severities, compilation_trace ({Object.keys(trace).length} fields)</div>
+        </div>
+      )}
+      {replay.verdict === 'REPLAY_DIVERGENCE' && (
+        <div className="vp-proof-replay-detail">
+          {replay.divergences.map((d, i) => (
+            <div key={i} className="vp-proof-replay-divergence">{d}</div>
+          ))}
+        </div>
+      )}
+      {replay.verdict === 'REPLAY_ERROR' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-divergence">{replay.error || 'Replay threw an exception'}</div>
+        </div>
+      )}
+      {replay.verdict === 'INSUFFICIENT' && (
+        <div className="vp-proof-replay-detail">
+          <div className="vp-proof-replay-line">No compile function available for replay verification</div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function StepProofContent({ step, proofData }) {
+  if (!proofData) return null
+  switch (step.name) {
+    case 'EVIDENCE_ANCHOR': return <EvidenceAnchorProof proofData={proofData} />
+    case 'DERIVATION_TRACE': return <DerivationTraceProof proofData={proofData} />
+    case 'CONSEQUENCE_RULES': return <ConsequenceRulesProof proofData={proofData} />
+    case 'COMBINATION_PATTERNS': return <CombinationPatternsProof proofData={proofData} />
+    case 'COMPILATION_INTEGRITY': return <CompilationIntegrityProof proofData={proofData} />
+    default: return null
+  }
+}
+
+function VerificationStepProof({ step, proofData, expanded, onToggle }) {
+  return (
+    <div className="verification-step" data-verdict={step.verdict} data-expanded={expanded ? 'true' : 'false'}>
+      <div className="verification-step-header" onClick={onToggle}>
+        <span className="verification-step-number">STEP {step.step}</span>
+        <span className="verification-step-name">{VERIFICATION_STEP_NAMES[step.name] || step.name}</span>
+        <span className="verification-step-verdict">{step.verdict}</span>
+        <span className="verification-step-expand">{expanded ? '▾' : '▸'}</span>
+      </div>
+      <div className="verification-step-summary">{summarizeStep(step, proofData)}</div>
+      {step.verdict === 'FAIL' && (
+        <div className="verification-step-failures">
+          {step.failures.map((f, i) => (
+            <div key={i} className="verification-failure">
+              <span className="verification-failure-type">{f.failure_type}</span>
+              <span className="verification-failure-detail">{f.detail}</span>
+              <span className="verification-failure-severity">{f.severity}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {step.verdict === 'INSUFFICIENT' && (
+        <div className="verification-step-insufficient">Insufficient evidence for verification</div>
+      )}
+      {expanded && proofData && (
+        <div className="verification-proof-detail">
+          <StepProofContent step={step} proofData={proofData} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function VerificationProtocolSection({ verificationState, onClose }) {
+  const { result, timestamp, proofData } = verificationState
+  const [expandedSteps, setExpandedSteps] = useState(new Set())
+
+  if (!result) return null
+
+  const toggleStep = (key) => {
+    setExpandedSteps(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
+
+  const passCount = result.steps.filter(s => s.verdict === 'PASS').length
+  const totalSteps = result.steps.length
+  const replayLabel = result.replay ? REPLAY_VERDICT_LABELS[result.replay.verdict] || result.replay.verdict : null
+
+  return (
+    <div className="verification-protocol-section">
+      <div className="verification-protocol-header">
+        <span className="verification-protocol-title">VERIFICATION PROTOCOL</span>
+        <button className="verification-protocol-collapse" onClick={onClose} aria-label="Collapse verification" type="button">✕</button>
+      </div>
+
+      <div className="verification-verdict" data-verdict={result.verdict}>
+        <div className="verification-verdict-label">{result.verdict.replace(/_/g, ' ')}</div>
+        <div className="verification-verdict-meta">
+          <span>{passCount}/{totalSteps} steps passed</span>
+          {replayLabel && <span> · {replayLabel.toLowerCase()}</span>}
+        </div>
+        {timestamp && <div className="verification-verdict-ts">{timestamp}</div>}
+        {result.failure_count > 0 && (
+          <div className="verification-verdict-failures">{result.failure_count} failure{result.failure_count !== 1 ? 's' : ''} across {result.steps.filter(s => s.verdict === 'FAIL').length} step{result.steps.filter(s => s.verdict === 'FAIL').length !== 1 ? 's' : ''}</div>
+        )}
+      </div>
+
+      <div className="verification-steps">
+        {result.steps.map(step => (
+          <VerificationStepProof key={step.step} step={step} proofData={proofData} expanded={expandedSteps.has(step.step)} onToggle={() => toggleStep(step.step)} />
+        ))}
+      </div>
+
+      {result.replay && (
+        <div className="verification-replay-section">
+          <div className="verification-step" data-verdict={result.replay.verdict === 'REPLAY_MATCH' ? 'PASS' : result.replay.verdict === 'INSUFFICIENT' ? 'INSUFFICIENT' : 'FAIL'} data-expanded={expandedSteps.has('replay') ? 'true' : 'false'}>
+            <div className="verification-step-header" onClick={() => toggleStep('replay')}>
+              <span className="verification-step-number">REPLAY</span>
+              <span className="verification-step-name">Determinism Verification</span>
+              <span className="verification-step-verdict">{result.replay.verdict === 'REPLAY_MATCH' ? 'MATCH' : result.replay.verdict}</span>
+              <span className="verification-step-expand">{expandedSteps.has('replay') ? '▾' : '▸'}</span>
+            </div>
+            <div className="verification-step-summary">
+              {result.replay.verdict === 'REPLAY_MATCH' && 'Re-compilation produced identical output · 0 divergences'}
+              {result.replay.verdict === 'REPLAY_DIVERGENCE' && `${result.replay.divergences.length} divergence${result.replay.divergences.length !== 1 ? 's' : ''} detected`}
+              {result.replay.verdict === 'REPLAY_ERROR' && 'Replay threw an exception'}
+              {result.replay.verdict === 'INSUFFICIENT' && 'No compile function available'}
+            </div>
+            {result.replay.verdict === 'REPLAY_DIVERGENCE' && (
+              <div className="verification-step-failures">
+                {result.replay.divergences.map((d, i) => (
+                  <div key={i} className="verification-failure">
+                    <span className="verification-failure-type">DIVERGENCE</span>
+                    <span className="verification-failure-detail">{d}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {expandedSteps.has('replay') && (
+              <div className="verification-proof-detail">
+                <ReplayProof replay={result.replay} proofData={proofData} />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="verification-protocol-footer">Protocol complete</div>
+    </div>
+  )
+}
+
 const ARC_LABELS = {
   OPENING: 'System Profile',
   REVELATION: 'Structural Discovery',
@@ -8383,20 +8920,25 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {
-    return (
+    const swIntelSlot = (
       <>
-        <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} />
+        )}
+        {verificationState && verificationState.active && verificationState.result && (
+          <VerificationProtocolSection verificationState={verificationState} onClose={onVerificationClose} />
         )}
       </>
+    )
+    return (
+      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} />
     )
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
@@ -8537,6 +9079,28 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     if (!surface) return null
     return deriveTopologyCognitionState(cognitionState.activeSurface, fullReport, surface)
   }, [resolvedCondition, cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
+
+  const [verificationState, setVerificationState] = useState(() => ({ active: false, result: _verificationCache.result, timestamp: _verificationCache.timestamp, proofData: _verificationCache.proofData }))
+  const verificationTargetReady = useMemo(() => !!(consequenceResult && consequenceResult.consequences && consequenceResult.consequences.length > 0 && synthesisResult && fullReport), [consequenceResult, synthesisResult, fullReport])
+
+  const handleVerificationInvoke = useCallback(() => {
+    if (!verificationTargetReady || !consequenceResult || !synthesisResult || !fullReport) return
+    const result = investigate(consequenceResult, synthesisResult, fullReport, {
+      compileFn: (syn, rep) => compileConsequences(syn, rep),
+    })
+    const proofData = consequencesForInvestigation(consequenceResult, synthesisResult)
+    const ts = new Date().toISOString()
+    _verificationCache = { result, timestamp: ts, proofData }
+    setVerificationState({ active: true, result, timestamp: ts, proofData })
+  }, [verificationTargetReady, consequenceResult, synthesisResult, fullReport])
+
+  const handleVerificationClose = useCallback(() => {
+    setVerificationState(prev => ({ ...prev, active: false }))
+  }, [])
+
+  const handleVerificationReopen = useCallback(() => {
+    setVerificationState(prev => prev.result ? { ...prev, active: true } : prev)
+  }, [])
 
   const [interrogationTrail, setInterrogationTrail] = useState(() => new Set())
   const [selectedNarrativeArc, setSelectedNarrativeArc] = useState(null)
@@ -8764,6 +9328,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           consequencePosture={consequencePosture}
           consequenceTeaser={consequenceTeaser}
           balancedBriefing={balancedBriefing}
+          verificationState={verificationState}
+          verificationTargetReady={verificationTargetReady}
+          onVerificationInvoke={handleVerificationInvoke}
+          onVerificationClose={handleVerificationClose}
+          onVerificationReopen={handleVerificationReopen}
         />
 
         {!boardroomMode && !isBalanced && (

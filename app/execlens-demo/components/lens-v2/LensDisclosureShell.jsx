@@ -223,6 +223,7 @@ export default function LensDisclosureShell({
           />
         )
       case 'EvidenceDepthLayer':
+        if (densityClass === 'OPERATOR_DENSE') return null
         return (
           <EvidenceDepthLayer
             evidenceBlocks={evidenceBlocks}

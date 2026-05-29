@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { TermHint } from './OperatorReadingGuide'
 
 const SEVERITY_COLOR = {
   HIGH: '#ff6b6b',
@@ -36,29 +37,29 @@ function QualificationContextStrip({ decomposition, qualification }) {
   return (
     <div className="sw-intel-context-strip">
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">RICHNESS</span>
+        <span className="sw-intel-context-label"><TermHint term="RICHNESS">RICHNESS</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[sr.level] }}>{sr.level}</span>
       </span>
       <span className="sw-intel-context-sep" />
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">GOVERNANCE</span>
+        <span className="sw-intel-context-label"><TermHint term="GOVERNANCE">GOVERNANCE</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[gd.level] }}>{gd.level}</span>
       </span>
       <span className="sw-intel-context-sep" />
       <span className="sw-intel-context-axis">
-        <span className="sw-intel-context-label">RECONCILIATION</span>
+        <span className="sw-intel-context-label"><TermHint term="RECONCILIATION">RECONCILIATION</TermHint></span>
         <span className="sw-intel-context-value" style={{ color: AXIS_LEVEL_COLOR[ra.level] }}>{ra.level}</span>
       </span>
       {ra.q_class_display && (
         <>
           <span className="sw-intel-context-sep" />
-          <span className="sw-intel-context-qclass">{ra.q_class_display}</span>
+          <span className="sw-intel-context-qclass"><TermHint term={ra.q_class_display}>{ra.q_class_display}</TermHint></span>
         </>
       )}
       {qualification && (
         <>
           <span className="sw-intel-context-sep" />
-          <span className="sw-intel-context-slevel">{qualification.s_level}</span>
+          <span className="sw-intel-context-slevel"><TermHint term={qualification.s_level}>{qualification.s_level}</TermHint></span>
         </>
       )}
     </div>
@@ -351,14 +352,28 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
   )
 }
 
-export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
+const VERIFICATION_BADGE_LABEL = { VERIFIED: 'Verified', PARTIALLY_VERIFIED: 'Partial', VERIFICATION_FAILED: 'Failed', CANNOT_INVESTIGATE: 'No target' }
+
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen }) {
   const surfaces = projection.surfaces || []
+  const hasResult = verificationState && verificationState.result
 
   return (
     <div className="sw-intel-view sw-intel-view--operator">
       <div className="sw-intel-view-header">
         <span className="sw-intel-view-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
+        {hasResult && (
+          <button className="sw-intel-verification-badge" data-verdict={verificationState.result.verdict} onClick={onVerificationReopen} type="button" title="Reopen verification corridor">
+            <span className="sw-intel-verification-dot" />
+            {VERIFICATION_BADGE_LABEL[verificationState.result.verdict] || verificationState.result.verdict}
+          </button>
+        )}
+        {onVerificationInvoke && (
+          <button className="sw-intel-verify-btn" onClick={onVerificationInvoke} disabled={!verificationTargetReady} type="button" title={verificationTargetReady ? 'Run verification protocol' : 'No verification target'}>
+            VERIFY
+          </button>
+        )}
         <button className="sw-intel-deactivate-btn" onClick={onDeactivate} type="button">✕</button>
       </div>
       <PeakSeverityStrip surfaces={surfaces} />

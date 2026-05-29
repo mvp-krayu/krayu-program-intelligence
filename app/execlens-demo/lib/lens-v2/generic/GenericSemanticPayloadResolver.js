@@ -780,10 +780,12 @@ function resolveSemanticPayload(manifest) {
     const passthroughDomId = manifest.passthrough_dom || null;
     const passthroughDom = passthroughDomId && canonicalTopology.clusters &&
       canonicalTopology.clusters.find((c) => c.cluster_id === passthroughDomId);
-    const receiverDom = canonicalTopology.clusters && canonicalTopology.clusters.find(
-      (c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) &&
-             (!passthroughDomId || c.cluster_id !== passthroughDomId)
-    );
+    const receiverCandidates = (canonicalTopology.clusters || [])
+      .filter((c) => c.cluster_id !== ((dpsigSummary.normalization_basis || {}).max_cluster_id) &&
+             (!passthroughDomId || c.cluster_id !== passthroughDomId) &&
+             (c.node_count || 0) > 1)
+      .sort((a, b) => (b.node_count || 0) - (a.node_count || 0));
+    const receiverDom = receiverCandidates[0] || null;
     return [
       clusterToEvidenceBlock(originDom, 'ORIGIN', resolveCanonicalCluster(originDom, crosswalkIndex), zoneAnchorBusinessLabel),
       clusterToEvidenceBlock(passthroughDom, 'PASS_THROUGH', resolveCanonicalCluster(passthroughDom, crosswalkIndex), zoneAnchorBusinessLabel),
