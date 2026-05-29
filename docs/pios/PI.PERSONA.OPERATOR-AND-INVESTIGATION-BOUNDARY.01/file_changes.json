@@ -1,0 +1,52 @@
+{
+  "stream": "PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01",
+  "classification": "G1",
+  "baseline": "accb7e6",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/OPERATOR_AND_INVESTIGATION_BOUNDARY.md",
+      "purpose": "Primary boundary document — 11 sections: decision gate, visibility, capability boundary, OPERATOR mission contract, survival table, migration table, build-from-scratch table, 5-persona model, implementation implications, vault mutation delta"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/execution_report.md",
+      "purpose": "Execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/validation_log.json",
+      "purpose": "18-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/CLOSURE.md",
+      "purpose": "Stream closure with G1 architecture memory propagation"
+    }
+  ],
+  "vault_mutations_identified": [
+    {
+      "action": "EXTEND",
+      "target": "PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01",
+      "mutation": "Add OPERATOR mission contract, update 4-persona matrix to 5-persona",
+      "status": "IDENTIFIED_NOT_EXECUTED"
+    },
+    {
+      "action": "UPDATE",
+      "target": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "mutation": "4-persona → 5-persona, OPERATOR boundary established",
+      "status": "IDENTIFIED_NOT_EXECUTED"
+    },
+    {
+      "action": "UPDATE",
+      "target": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "mutation": "Add OPERATOR Persona term, update Persona Projection count, update Persona Mission Contract note",
+      "status": "IDENTIFIED_NOT_EXECUTED"
+    }
+  ]
+}

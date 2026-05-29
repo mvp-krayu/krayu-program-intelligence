@@ -1,0 +1,111 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01",
+  "classification": "G2",
+  "baseline": "6613e9c",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "primary_document_exists",
+      "description": "Gap consolidation and execution roadmap document created",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/GAP_CONSOLIDATION_AND_EXECUTION_ROADMAP.md"
+    },
+    {
+      "name": "all_53_gaps_absorbed",
+      "description": "All 53 gaps from the gap inventory are absorbed into programs",
+      "result": "PASS",
+      "absorption": {
+        "program_1": 13,
+        "program_2": 9,
+        "program_3": 12,
+        "program_4": 11,
+        "program_5": 8,
+        "total": 53
+      }
+    },
+    {
+      "name": "programs_within_range",
+      "description": "4-6 executable programs defined",
+      "result": "PASS",
+      "count": 5
+    },
+    {
+      "name": "each_program_classified",
+      "description": "Each program classified by type and priority",
+      "result": "PASS",
+      "classifications": {
+        "Program 1": "INFRASTRUCTURE — MUST FIX",
+        "Program 2": "GOVERNANCE DEBT — MUST FIX",
+        "Program 3": "GOVERNANCE DEBT + REPLAY DEBT — SHOULD FIX",
+        "Program 4": "PRODUCT EXPANSION — CAN WAIT",
+        "Program 5": "PRODUCT EXPANSION — CAN WAIT SIGNIFICANTLY"
+      }
+    },
+    {
+      "name": "dependency_graph_defined",
+      "description": "Program dependency graph with critical path and parallel path",
+      "result": "PASS",
+      "section": "§5"
+    },
+    {
+      "name": "root_causes_identified",
+      "description": "5 root causes identified that generate all 53 gaps",
+      "result": "PASS",
+      "section": "§3"
+    },
+    {
+      "name": "design_choices_separated",
+      "description": "9 gaps identified as design choices (not bugs), 3 as consequential (resolve upstream)",
+      "result": "PASS",
+      "design_choices": 9,
+      "consequential": 3,
+      "require_implementation": 41
+    },
+    {
+      "name": "execution_phases_defined",
+      "description": "4 execution phases defined with stream mapping",
+      "result": "PASS",
+      "phases": ["A — Verification Foundation", "B — Maturity Advancement", "C — Coverage Expansion", "D — Deferred"],
+      "section": "§8"
+    },
+    {
+      "name": "streams_mapped_to_programs",
+      "description": "Expected streams identified for each program",
+      "result": "PASS",
+      "stream_count": 7
+    },
+    {
+      "name": "no_stream_authorized",
+      "description": "Roadmap does not authorize streams — each requires separate execution contract",
+      "result": "PASS",
+      "section": "§9"
+    },
+    {
+      "name": "all_five_baselines_consumed",
+      "description": "All 5 governing baselines referenced and consumed",
+      "result": "PASS"
+    },
+    {
+      "name": "no_runtime_code_modified",
+      "description": "No runtime code modified (governance-only stream)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_vault_mutation",
+      "description": "No vault mutation (G2 — architecture-consuming)",
+      "result": "PASS"
+    },
+    {
+      "name": "closure_verdict_explicit",
+      "description": "Final closure verdict is explicit",
+      "result": "PASS",
+      "verdict": "PASS — 53 GAPS CONSOLIDATED INTO 5 PROGRAMS"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 14,
+    "fail": 0,
+    "verdict": "PASS — 53 GAPS CONSOLIDATED INTO 5 PROGRAMS"
+  }
+}
