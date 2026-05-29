@@ -14,13 +14,13 @@ const {
   resolveCinemaOrchestration,
   resolveAttentionHierarchy,
   resolveUrgencyFrame,
-  resolveInvestigationStage,
+  resolveOperatorStage,
   resolveNextStage,
   resolvePreviousStage,
   resolveGravityToken,
   resolvePresenceToken,
   resolveVisibleRegions,
-  INVESTIGATION_STAGES,
+  OPERATOR_STAGES,
 } = require('./flagshipOrchestration');
 
 module.exports = {
@@ -29,11 +29,11 @@ module.exports = {
   resolveCinemaOrchestration,
   resolveAttentionHierarchy,
   resolveUrgencyFrame,
-  resolveInvestigationStage,
+  resolveOperatorStage,
   resolveNextStage,
   resolvePreviousStage,
   resolveGravityToken,
   resolvePresenceToken,
   resolveVisibleRegions,
-  INVESTIGATION_STAGES,
+  OPERATOR_STAGES,
 };

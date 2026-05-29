@@ -51,7 +51,7 @@ const QUERY_CATALOG = [
     query_text: 'What claims were rejected during governance review?',
     query_category: 'FRICTION',
     grounding: 'governance_friction',
-    depth_target: 'INVESTIGATION',
+    depth_target: 'OPERATOR',
   },
   {
     query_id: 'GQ-03',
@@ -65,7 +65,7 @@ const QUERY_CATALOG = [
     query_text: 'What governance patterns converge across specimens?',
     query_category: 'CONVERGENCE',
     grounding: 'convergence_observations',
-    depth_target: 'INVESTIGATION',
+    depth_target: 'OPERATOR',
   },
   {
     query_id: 'GQ-05',
@@ -79,7 +79,7 @@ const QUERY_CATALOG = [
     query_text: 'What constitutional dimensions were assessed?',
     query_category: 'ANCHOR',
     grounding: 'constitutional_anchor_dimensions',
-    depth_target: 'INVESTIGATION',
+    depth_target: 'OPERATOR',
   },
   {
     query_id: 'GQ-07',

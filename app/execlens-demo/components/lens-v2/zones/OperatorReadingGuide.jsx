@@ -77,13 +77,13 @@ export function TermHint({ term, children }) {
   )
 }
 
-export default function InvestigationReadingGuide() {
+export default function OperatorReadingGuide() {
   return (
-    <div className="reading-guide-preamble" role="region" aria-label="Investigation reading guide">
+    <div className="reading-guide-preamble" role="region" aria-label="Operator reading guide">
       <div className="reading-guide-preamble-label">HOW TO READ THIS VIEW</div>
       <div className="reading-guide-preamble-body">
         <p className="reading-guide-prose">
-          This investigation surface presents structural evidence organized by propagation — how pressure moves through the system. Each domain carries a <strong>propagation role</strong>: origins generate pressure, pass-throughs conduct it, receivers absorb it. When you see elevated pressure on a pass-through domain, it typically reflects upstream origination, not local problems.
+          This operator surface presents structural evidence organized by propagation — how pressure moves through the system. Each domain carries a <strong>propagation role</strong>: origins generate pressure, pass-throughs conduct it, receivers absorb it. When you see elevated pressure on a pass-through domain, it typically reflects upstream origination, not local problems.
         </p>
         <p className="reading-guide-prose">
           <strong>Pressure tiers</strong> (HIGH, ELEVATED, MODERATE, LOW) are derived from structural signal computation — not subjective assessment. They measure a domain's structural footprint against the system's total mass. Pressure is not inherently negative; a delivery-focused domain will naturally carry more weight than a coordination layer. What matters is whether it's proportional.

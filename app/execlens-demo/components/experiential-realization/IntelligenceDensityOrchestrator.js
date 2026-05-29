@@ -47,8 +47,8 @@ const EXPERIENTIAL_DENSITY_MAP = {
     density_token: 'density-executive-dense',
     presentation_compatible: true,
   },
-  INVESTIGATION_DENSE: {
-    density_class: 'INVESTIGATION_DENSE',
+  OPERATOR_DENSE: {
+    density_class: 'OPERATOR_DENSE',
     show_executive_summary: true,
     show_why_statement: true,
     show_structural_findings: true,
@@ -57,7 +57,7 @@ const EXPERIENTIAL_DENSITY_MAP = {
     max_visible_chains: 3,
     max_visible_evidence_links: 3,
     collapsed_by_default: false,
-    density_token: 'density-investigation-dense',
+    density_token: 'density-operator-dense',
     presentation_compatible: false,
   },
 };
@@ -69,7 +69,7 @@ const EXPERIENTIAL_DENSITY_MAP = {
  * Governance-critical elements are always visible — they cannot be suppressed by density.
  *
  * Parameters:
- *   densityClass  — 'EXECUTIVE_BALANCED' | 'EXECUTIVE_DENSE' | 'INVESTIGATION_DENSE'
+ *   densityClass  — 'EXECUTIVE_BALANCED' | 'EXECUTIVE_DENSE' | 'OPERATOR_DENSE'
  *   renderState   — 'EXECUTIVE_READY' | 'EXECUTIVE_READY_WITH_QUALIFIER' | 'DIAGNOSTIC_ONLY' | 'BLOCKED'
  *   adaptedProps  — { qualifier_class, executive_summary, why_primary_statement, structural_summary, ... }
  */

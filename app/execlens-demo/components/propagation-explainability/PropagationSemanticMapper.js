@@ -156,7 +156,7 @@ const PROPAGATION_DENSITY_MAP = {
     chains_collapsed_by_default: true,
     evidence_references_preserved: true,
   },
-  INVESTIGATION_DENSE: {
+  OPERATOR_DENSE: {
     show_propagation_summary: true,
     show_propagation_chains: true,
     show_evidence_linkage: true,

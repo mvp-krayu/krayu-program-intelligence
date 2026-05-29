@@ -111,8 +111,8 @@ describe('Spinoff route — orchestration produces correct state', () => {
     assert.equal(result.presenceToken, 'presence-qualified-authority');
   });
 
-  it('investigationStage is SUMMARY', () => {
-    assert.equal(result.investigationStage, 'SUMMARY');
+  it('operatorStage is SUMMARY', () => {
+    assert.equal(result.operatorStage, 'SUMMARY');
   });
 });
 
@@ -171,13 +171,13 @@ describe('Spinoff route — density switching', () => {
     assert.equal(result.densityClass, 'EXECUTIVE_DENSE');
   });
 
-  it('INVESTIGATION_DENSE density produces correct result', () => {
-    const result = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'INVESTIGATION_DENSE');
-    assert.equal(result.densityClass, 'INVESTIGATION_DENSE');
+  it('OPERATOR_DENSE density produces correct result', () => {
+    const result = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'OPERATOR_DENSE');
+    assert.equal(result.densityClass, 'OPERATOR_DENSE');
   });
 
   it('qualifier_notice_visible true across all density classes', () => {
-    ['EXECUTIVE_BALANCED', 'EXECUTIVE_DENSE', 'INVESTIGATION_DENSE'].forEach(density => {
+    ['EXECUTIVE_BALANCED', 'EXECUTIVE_DENSE', 'OPERATOR_DENSE'].forEach(density => {
       const result = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', density);
       assert.equal(result.densityLayout.qualifier_notice_visible, true,
         `qualifier_notice_visible should be true for density ${density}`);

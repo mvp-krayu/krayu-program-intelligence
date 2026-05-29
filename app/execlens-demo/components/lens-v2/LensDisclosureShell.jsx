@@ -34,7 +34,7 @@ const SEVERITY_INDICATORS = {
 function shouldCollapseTier(tier, persona) {
   if (tier === 'tier0' || tier === 'tier1') return false
   if (tier === 'tier2') {
-    if (persona === 'INVESTIGATION_DENSE') return false
+    if (persona === 'OPERATOR_DENSE') return false
     return true
   }
   return true

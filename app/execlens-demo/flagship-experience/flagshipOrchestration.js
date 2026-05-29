@@ -16,7 +16,7 @@
  *   - resolveBoardroomConfig() — boardroom presentation config
  *   - resolveCinemaOrchestration() — cinematic orchestration
  *   - resolveAttentionHierarchy() — executive attention flow
- *   - resolveInvestigationStage() — bounded investigation stages
+ *   - resolveOperatorStage() — bounded investigation stages
  *   - resolveGravityToken() — operational gravity
  *   - resolvePresenceToken() — intelligence presence
  *   - resolveVisibleRegions() — canvas region visibility
@@ -86,24 +86,24 @@ function resolveUrgencyFrame(renderState) {
   return 'OPERATIONAL_AUTHORITY';
 }
 
-// Investigation stages (mirrors StructuralInvestigationFlow)
-const INVESTIGATION_STAGES = ['SUMMARY', 'EVIDENCE', 'PROPAGATION', 'EXPLAINABILITY', 'LINEAGE'];
+// Operator stages (mirrors StructuralOperatorFlow)
+const OPERATOR_STAGES = ['SUMMARY', 'EVIDENCE', 'PROPAGATION', 'EXPLAINABILITY', 'LINEAGE'];
 
-function resolveInvestigationStage(stage) {
-  if (INVESTIGATION_STAGES.includes(stage)) return stage;
+function resolveOperatorStage(stage) {
+  if (OPERATOR_STAGES.includes(stage)) return stage;
   return 'SUMMARY';
 }
 
 function resolveNextStage(currentStage) {
-  const idx = INVESTIGATION_STAGES.indexOf(currentStage);
-  if (idx === -1 || idx === INVESTIGATION_STAGES.length - 1) return null;
-  return INVESTIGATION_STAGES[idx + 1];
+  const idx = OPERATOR_STAGES.indexOf(currentStage);
+  if (idx === -1 || idx === OPERATOR_STAGES.length - 1) return null;
+  return OPERATOR_STAGES[idx + 1];
 }
 
 function resolvePreviousStage(currentStage) {
-  const idx = INVESTIGATION_STAGES.indexOf(currentStage);
+  const idx = OPERATOR_STAGES.indexOf(currentStage);
   if (idx <= 0) return null;
-  return INVESTIGATION_STAGES[idx - 1];
+  return OPERATOR_STAGES[idx - 1];
 }
 
 // Gravity tokens (mirrors OperationalGravitySystem)
@@ -155,18 +155,18 @@ function resolveVisibleRegions(densityClass, renderState) {
 }
 
 /**
- * orchestrateFlagshipExperience(reportObject, audienceTier, densityClass, boardroomMode, investigationStage)
+ * orchestrateFlagshipExperience(reportObject, audienceTier, densityClass, boardroomMode, operatorStage)
  *
  * Full flagship experience orchestration.
  * Runs the complete LENS v2 pipeline for a given report_object.
  * Returns the full experiential state for rendering.
  * Deterministic: same input → same output.
  */
-function orchestrateFlagshipExperience(reportObject, audienceTier, densityClass, boardroomMode, investigationStage) {
+function orchestrateFlagshipExperience(reportObject, audienceTier, densityClass, boardroomMode, operatorStage) {
   const tier = audienceTier || 'EXECUTIVE';
   const density = densityClass || 'EXECUTIVE_DENSE';
   const boardroom = !!boardroomMode;
-  const stage = resolveInvestigationStage(investigationStage || 'SUMMARY');
+  const stage = resolveOperatorStage(operatorStage || 'SUMMARY');
 
   // Full adapter pipeline
   const adapted = adaptReport(reportObject, tier, 2);
@@ -212,7 +212,7 @@ function orchestrateFlagshipExperience(reportObject, audienceTier, densityClass,
     visibleRegions,
 
     // Investigation state
-    investigationStage: stage,
+    operatorStage: stage,
     nextStage: resolveNextStage(stage),
     previousStage: resolvePreviousStage(stage),
 
@@ -242,13 +242,13 @@ module.exports = {
   resolveCinemaOrchestration,
   resolveAttentionHierarchy,
   resolveUrgencyFrame,
-  resolveInvestigationStage,
+  resolveOperatorStage,
   resolveNextStage,
   resolvePreviousStage,
   resolveGravityToken,
   resolvePresenceToken,
   resolveVisibleRegions,
-  INVESTIGATION_STAGES,
+  OPERATOR_STAGES,
   GRAVITY_INTENSITY_MAP,
   PRESENCE_TOKENS,
 };

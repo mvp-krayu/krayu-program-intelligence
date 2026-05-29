@@ -72,7 +72,7 @@ const ZONE_SEVERITY_RULES = {
     critical: 'evidence present but integrity check failed (all_valid false)',
     elevated: 'evidence has rejected or quarantined items',
     ambient: 'evidence available with full integrity',
-    suppressed: 'outside investigation context or no evidence data',
+    suppressed: 'outside operator context or no evidence data',
   },
 };
 
@@ -166,7 +166,7 @@ function classifyIntelligenceField(input) {
 }
 
 function classifyEvidenceDepthLayer(input) {
-  if (input.densityClass !== 'INVESTIGATION_DENSE' || input.boardroomMode) return 'SUPPRESSED';
+  if (input.densityClass !== 'OPERATOR_DENSE' || input.boardroomMode) return 'SUPPRESSED';
   if (!input.evidenceAvailable) return 'SUPPRESSED';
   var sb = input.substrateBinding;
   if (sb && sb.evidenceVisibility) {

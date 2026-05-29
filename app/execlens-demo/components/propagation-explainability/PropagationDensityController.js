@@ -18,7 +18,7 @@ const { mapPropagationDensity } = require('./PropagationSemanticMapper');
  * resolvePropagationDensityLayout(densityClass, propagationProps)
  *
  * Parameters:
- *   densityClass      — 'EXECUTIVE_DENSE' | 'EXECUTIVE_BALANCED' | 'INVESTIGATION_DENSE'
+ *   densityClass      — 'EXECUTIVE_DENSE' | 'EXECUTIVE_BALANCED' | 'OPERATOR_DENSE'
  *   propagationProps  — { propagation_summary, propagation_chains[], evidence_links[] }
  *
  * Returns density-resolved layout decisions.

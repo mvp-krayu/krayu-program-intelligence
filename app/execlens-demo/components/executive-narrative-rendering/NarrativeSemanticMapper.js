@@ -109,7 +109,7 @@ const NARRATIVE_DENSITY_MAP = {
     why_default_expanded: true,
     evidence_references_preserved: true,
   },
-  INVESTIGATION_DENSE: {
+  OPERATOR_DENSE: {
     show_executive_summary: true,
     show_why_statement: true,
     show_structural_findings: true,

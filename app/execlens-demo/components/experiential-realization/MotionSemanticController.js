@@ -112,11 +112,11 @@ const DENSITY_TRANSITION_MAP = {
     expand_section_ms: 300,
     density_token: 'motion-density-dense',
   },
-  INVESTIGATION_DENSE: {
+  OPERATOR_DENSE: {
     transition_ms: 200,
     collapse_section_ms: 180,
     expand_section_ms: 200,
-    density_token: 'motion-density-investigation',
+    density_token: 'motion-density-operator',
   },
 };
 

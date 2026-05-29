@@ -155,7 +155,7 @@ function checkInteractionGovernance(interactionRegistry) {
   const errors = [];
   if (!interactionRegistry || !Array.isArray(interactionRegistry.interactions)) return errors;
 
-  const FORBIDDEN_ACTIVE_TYPES_PHASE2 = ['COPILOT_ENTRY', 'INVESTIGATION_ENTRY'];
+  const FORBIDDEN_ACTIVE_TYPES_PHASE2 = ['COPILOT_ENTRY', 'OPERATOR_ENTRY'];
 
   interactionRegistry.interactions.forEach((interaction, i) => {
     if (FORBIDDEN_ACTIVE_TYPES_PHASE2.includes(interaction.interaction_type) && interaction.active === true) {

@@ -3,60 +3,60 @@
 import React from 'react';
 
 /**
- * StructuralInvestigationFlow
+ * StructuralOperatorFlow
  * PI.LENS.V2.INTEGRATED-EXECUTIVE-EXPERIENCE.01
  *
- * Supports guided executive investigation with bounded transitions:
+ * Supports guided executive operator with bounded transitions:
  *   SUMMARY → EVIDENCE → PROPAGATION → EXPLAINABILITY → LINEAGE
  *
- * Preserves bounded investigation semantics.
+ * Preserves bounded operator semantics.
  * Does not introduce free-form exploration. Does not introduce prompt interaction.
  * Does not introduce conversational UX.
  */
 
-const INVESTIGATION_STAGES = ['SUMMARY', 'EVIDENCE', 'PROPAGATION', 'EXPLAINABILITY', 'LINEAGE'];
+const OPERATOR_STAGES = ['SUMMARY', 'EVIDENCE', 'PROPAGATION', 'EXPLAINABILITY', 'LINEAGE'];
 
-export function resolveInvestigationStage(stage) {
-  if (INVESTIGATION_STAGES.includes(stage)) return stage;
+export function resolveOperatorStage(stage) {
+  if (OPERATOR_STAGES.includes(stage)) return stage;
   return 'SUMMARY';
 }
 
 export function resolveNextStage(currentStage) {
-  const idx = INVESTIGATION_STAGES.indexOf(currentStage);
-  if (idx === -1 || idx === INVESTIGATION_STAGES.length - 1) return null;
-  return INVESTIGATION_STAGES[idx + 1];
+  const idx = OPERATOR_STAGES.indexOf(currentStage);
+  if (idx === -1 || idx === OPERATOR_STAGES.length - 1) return null;
+  return OPERATOR_STAGES[idx + 1];
 }
 
 export function resolvePreviousStage(currentStage) {
-  const idx = INVESTIGATION_STAGES.indexOf(currentStage);
+  const idx = OPERATOR_STAGES.indexOf(currentStage);
   if (idx <= 0) return null;
-  return INVESTIGATION_STAGES[idx - 1];
+  return OPERATOR_STAGES[idx - 1];
 }
 
-export default function StructuralInvestigationFlow({
+export default function StructuralOperatorFlow({
   currentStage,
   renderState,
   densityClass,
   children,
 }) {
-  const resolvedStage = resolveInvestigationStage(currentStage || 'SUMMARY');
-  const stageIndex = INVESTIGATION_STAGES.indexOf(resolvedStage);
+  const resolvedStage = resolveOperatorStage(currentStage || 'SUMMARY');
+  const stageIndex = OPERATOR_STAGES.indexOf(resolvedStage);
   const nextStage = resolveNextStage(resolvedStage);
   const prevStage = resolvePreviousStage(resolvedStage);
 
   return (
     <div
-      data-investigation-flow="true"
+      data-operator-flow="true"
       data-current-stage={resolvedStage}
       data-stage-index={stageIndex}
-      data-stage-total={INVESTIGATION_STAGES.length}
+      data-stage-total={OPERATOR_STAGES.length}
       data-next-stage={nextStage || 'none'}
       data-prev-stage={prevStage || 'none'}
       data-render-state={renderState}
       data-no-free-form-exploration="true"
       data-no-prompt-interaction="true"
       data-no-conversational-ux="true"
-      data-investigation-bounded="true"
+      data-operator-bounded="true"
     >
       {children}
     </div>
