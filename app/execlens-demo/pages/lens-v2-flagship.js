@@ -10760,6 +10760,79 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.6;
         }
 
+        /* ─── Cognition Node Explanations ─── */
+
+        .vp-explanation {
+          padding: 8px 12px;
+          margin: 2px 0 8px 0;
+          border-left: 2px solid #1e2330;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          line-height: 1.5;
+        }
+        .vp-explanation--rule {
+          margin-bottom: 10px;
+          border-left-color: #2a2f40;
+        }
+        .vp-explanation-name {
+          font-size: 12px;
+          color: #9aa6c2;
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+        .vp-explanation-text {
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .vp-operational-implication {
+          font-size: 11px;
+          color: #9aa6c2;
+          margin-top: 4px;
+        }
+        .vp-graph-context {
+          margin-top: 6px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .vp-graph-direction {
+          font-size: 11px;
+          color: #6a7a9a;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 0;
+        }
+        .vp-graph-arrow {
+          margin-right: 6px;
+          color: #4a5570;
+          font-family: 'Courier New', monospace;
+        }
+        .vp-graph-ref {
+          color: #7a8aaa;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.15s ease;
+        }
+        .vp-graph-ref:hover {
+          color: #9aa6c2;
+          text-decoration: underline;
+          text-decoration-color: #3a4a6a;
+          text-underline-offset: 2px;
+        }
+        .vp-proof-trace-human {
+          display: inline;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 10px;
+          color: #6a7a9a;
+          margin-left: 4px;
+        }
+        .vp-proof-trace-human::before {
+          content: '(';
+        }
+        .vp-proof-trace-human::after {
+          content: ')';
+        }
+
         .verification-protocol-footer {
           padding: 10px 16px;
           font-size: 10px;

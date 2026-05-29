@@ -10,6 +10,7 @@ import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveC
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
+import { resolveNode, resolveConnections } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
 
 let _verificationCache = { result: null, timestamp: null, proofData: null }
@@ -7722,6 +7723,40 @@ function summarizeStep(step, proofData) {
   }
 }
 
+function CognitionNodeExplanation({ nodeId, compact }) {
+  const resolved = resolveNode(nodeId)
+  if (!resolved) return null
+  const { ontology } = resolved
+  const connections = resolveConnections(nodeId)
+  return (
+    <div className="vp-explanation">
+      <div className="vp-explanation-name">{ontology.human_name}</div>
+      <div className="vp-explanation-text">{ontology.what_it_means}</div>
+      <div className="vp-operational-implication">{ontology.operational_implication}</div>
+      {!compact && connections && (
+        <div className="vp-graph-context">
+          {connections.upstream.length > 0 && (
+            <span className="vp-graph-direction">
+              <span className="vp-graph-arrow">{'←'}</span>
+              {connections.upstream.map((u, i) => (
+                <span key={u.ref}>{i > 0 && ' · '}<span className="vp-graph-ref" data-ref={u.ref}>{u.human_name}</span></span>
+              ))}
+            </span>
+          )}
+          {connections.downstream.length > 0 && (
+            <span className="vp-graph-direction">
+              <span className="vp-graph-arrow">{'→'}</span>
+              {connections.downstream.map((d, i) => (
+                <span key={d.ref}>{i > 0 && ' · '}<span className="vp-graph-ref" data-ref={d.ref}>{d.human_name}</span></span>
+              ))}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function EvidenceAnchorProof({ proofData }) {
   const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
   const seen = new Set()
@@ -7754,21 +7789,45 @@ function EvidenceAnchorProof({ proofData }) {
 
 function DerivationTraceProof({ proofData }) {
   const csqs = (proofData.consequences || []).filter(c => c.derivation_trace && c.derivation_trace.length > 0)
+  function nodeHumanName(id) {
+    const n = resolveNode(id)
+    return n ? n.ontology.human_name : null
+  }
+  function ruleHumanName(rule) {
+    const n = resolveNode(rule)
+    return n ? n.ontology.human_name : null
+  }
   return (
     <div className="vp-proof-traces">
       {csqs.map(csq => (
         <div key={csq.consequence_id} className="vp-proof-trace-block">
           <div className="vp-proof-trace-label">{csq.consequence_id}</div>
           <div className="vp-proof-trace-chain">
-            {csq.derivation_trace.map((t, i) => (
-              <span key={i} className="vp-proof-trace-step">
-                {i === 0 && <span className="vp-proof-trace-node" data-node-type={t.source_type}>{t.source_id}</span>}
-                <span className="vp-proof-trace-arrow">→</span>
-                <span className="vp-proof-trace-rule">{t.rule}</span>
-                <span className="vp-proof-trace-arrow">→</span>
-                <span className="vp-proof-trace-node" data-node-type={t.target_type}>{t.target_id}</span>
-              </span>
-            ))}
+            {csq.derivation_trace.map((t, i) => {
+              const sourceHuman = i === 0 ? nodeHumanName(t.source_id) : null
+              const targetHuman = nodeHumanName(t.target_id)
+              const ruleHuman = ruleHumanName(t.rule)
+              return (
+                <span key={i} className="vp-proof-trace-step">
+                  {i === 0 && (
+                    <span className="vp-proof-trace-node" data-node-type={t.source_type}>
+                      <span className="vp-graph-ref" data-ref={t.source_id}>{t.source_id}</span>
+                      {sourceHuman && <span className="vp-proof-trace-human">{sourceHuman}</span>}
+                    </span>
+                  )}
+                  <span className="vp-proof-trace-arrow">→</span>
+                  <span className="vp-proof-trace-rule">
+                    {t.rule}
+                    {ruleHuman && <span className="vp-proof-trace-human">{ruleHuman}</span>}
+                  </span>
+                  <span className="vp-proof-trace-arrow">→</span>
+                  <span className="vp-proof-trace-node" data-node-type={t.target_type}>
+                    <span className="vp-graph-ref" data-ref={t.target_id}>{t.target_id}</span>
+                    {targetHuman && <span className="vp-proof-trace-human">{targetHuman}</span>}
+                  </span>
+                </span>
+              )
+            })}
           </div>
         </div>
       ))}
@@ -7779,8 +7838,15 @@ function DerivationTraceProof({ proofData }) {
 
 function ConsequenceRulesProof({ proofData }) {
   const atomics = proofData.atomic_consequences || []
+  const ruleNode = resolveNode('§4')
   return (
     <div className="vp-proof-table">
+      {ruleNode && (
+        <div className="vp-explanation vp-explanation--rule">
+          <div className="vp-explanation-name">{ruleNode.ontology.human_name}</div>
+          <div className="vp-explanation-text">{ruleNode.ontology.what_it_means}</div>
+        </div>
+      )}
       <div className="vp-proof-row vp-proof-row--header">
         <span className="vp-proof-cell vp-proof-cell--id">ATOMIC</span>
         <span className="vp-proof-cell">TYPE</span>
@@ -7790,18 +7856,21 @@ function ConsequenceRulesProof({ proofData }) {
       {atomics.map(csq => {
         const condTypes = csq.source_condition_types || []
         return (
-          <div key={csq.consequence_id} className="vp-proof-row">
-            <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
-            <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.consequence_type_id}</span></span>
-            <span className="vp-proof-cell vp-proof-cell--wide">
-              {condTypes.map((ct, i) => {
-                const rules = SECTION_4_RULES[ct]
-                const match = rules && rules.find(r => r.consequence_type === csq.consequence_type_id)
-                return <span key={i} className="vp-proof-tag" data-rule-status={match ? 'valid' : 'unknown'}>{ct}{match ? ` (${match.defining ? 'defining' : 'conditional'})` : ''}</span>
-              })}
-            </span>
-            <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.activation_rule || '§4'}</span></span>
-          </div>
+          <Fragment key={csq.consequence_id}>
+            <div className="vp-proof-row">
+              <span className="vp-proof-cell vp-proof-cell--id">{csq.consequence_id}</span>
+              <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.consequence_type_id}</span></span>
+              <span className="vp-proof-cell vp-proof-cell--wide">
+                {condTypes.map((ct, i) => {
+                  const rules = SECTION_4_RULES[ct]
+                  const match = rules && rules.find(r => r.consequence_type === csq.consequence_type_id)
+                  return <span key={i} className="vp-proof-tag" data-rule-status={match ? 'valid' : 'unknown'}>{ct}{match ? ` (${match.defining ? 'defining' : 'conditional'})` : ''}</span>
+                })}
+              </span>
+              <span className="vp-proof-cell"><span className="vp-proof-tag">{csq.activation_rule || '§4'}</span></span>
+            </div>
+            <CognitionNodeExplanation nodeId={csq.consequence_type_id} />
+          </Fragment>
         )
       })}
     </div>
@@ -7812,8 +7881,15 @@ function CombinationPatternsProof({ proofData }) {
   const combos = (proofData.consequences || []).filter(c => c.combination_pattern)
   const atomicIndex = {}
   for (const a of (proofData.atomic_consequences || [])) atomicIndex[a.consequence_id] = a
+  const ruleNode = resolveNode('§5.2')
   return (
     <div className="vp-proof-combinations">
+      {ruleNode && (
+        <div className="vp-explanation vp-explanation--rule">
+          <div className="vp-explanation-name">{ruleNode.ontology.human_name}</div>
+          <div className="vp-explanation-text">{ruleNode.ontology.what_it_means}</div>
+        </div>
+      )}
       {combos.map(combo => {
         const pattern = SECTION_5_2_PATTERNS[combo.combination_pattern]
         const contributingIds = (combo.decomposition && combo.decomposition.contributing_primitive_consequences) || []
@@ -7839,6 +7915,7 @@ function CombinationPatternsProof({ proofData }) {
             {combo.escalation_applied && (
               <div className="vp-proof-combo-escalation">Escalation: {combo.severity}{combo.escalation_reason ? ` — ${combo.escalation_reason}` : ''}</div>
             )}
+            <CognitionNodeExplanation nodeId={combo.combination_pattern} />
           </div>
         )
       })}

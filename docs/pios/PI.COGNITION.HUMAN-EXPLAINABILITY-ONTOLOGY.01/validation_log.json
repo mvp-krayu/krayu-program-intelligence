@@ -1,0 +1,41 @@
+{
+  "stream_id": "PI.COGNITION.HUMAN-EXPLAINABILITY-ONTOLOGY.01",
+  "classification": "G2",
+  "timestamp": "2026-05-29T00:00:00Z",
+  "checks": [
+    { "name": "build_passes", "description": "npx next build succeeds", "result": "PASS" },
+    { "name": "ontology_module_created", "description": "CognitionOntology.js exists with 20 cognition nodes", "result": "PASS" },
+    { "name": "condition_nodes_count", "description": "7 condition nodes authored", "result": "PASS" },
+    { "name": "consequence_nodes_count", "description": "8 consequence nodes authored", "result": "PASS" },
+    { "name": "combination_nodes_count", "description": "3 combination nodes authored", "result": "PASS" },
+    { "name": "rule_nodes_count", "description": "2 rule nodes authored (§4, §5.2)", "result": "PASS" },
+    { "name": "all_nodes_have_human_name", "description": "Every node has human_name field", "result": "PASS" },
+    { "name": "all_nodes_have_operational_implication", "description": "Every node has operational_implication field", "result": "PASS" },
+    { "name": "all_nodes_have_six_explanation_fields", "description": "Every node has all 6 human explanation fields", "result": "PASS" },
+    { "name": "resolve_node_returns_two_layer", "description": "resolveNode() returns { ontology, runtime } shape", "result": "PASS" },
+    { "name": "resolve_node_runtime_null_without_context", "description": "resolveNode() without context returns runtime: null", "result": "PASS" },
+    { "name": "resolve_connections_returns_human_names", "description": "resolveConnections() resolves refs to human_name", "result": "PASS" },
+    { "name": "graph_connections_use_cognition_refs", "description": "All upstream/downstream use { ref, role } format", "result": "PASS" },
+    { "name": "graph_bidirectional_consistency", "description": "upstream/downstream edges consistent with SECTION_4_RULES and SECTION_5_2_PATTERNS", "result": "PASS" },
+    { "name": "step3_rule_explanation", "description": "§4 rule explanation renders in ConsequenceRulesProof", "result": "PASS" },
+    { "name": "step3_consequence_explanations", "description": "Per-consequence cognition node explanations render (9 found)", "result": "PASS" },
+    { "name": "step3_graph_refs", "description": "Clickable graph refs with data-ref attributes render (22 found)", "result": "PASS" },
+    { "name": "step4_rule_explanation", "description": "§5.2 rule explanation renders in CombinationPatternsProof", "result": "PASS" },
+    { "name": "step4_combination_explanations", "description": "Per-combination cognition node explanations render (3 found)", "result": "PASS" },
+    { "name": "step4_graph_refs", "description": "Upstream contributor refs render as clickable refs (4 found)", "result": "PASS" },
+    { "name": "step2_human_labels", "description": "Human-readable names alongside trace nodes (41 found)", "result": "PASS" },
+    { "name": "step2_graph_refs", "description": "Graph refs with data-ref in derivation traces (25 found)", "result": "PASS" },
+    { "name": "boardroom_clean", "description": "No verification or ontology elements in BOARDROOM", "result": "PASS" },
+    { "name": "balanced_clean", "description": "No verification or ontology elements in BALANCED", "result": "PASS" },
+    { "name": "dense_clean", "description": "No verification or ontology elements in DENSE", "result": "PASS" },
+    { "name": "compiler_unchanged", "description": "ConsequenceCompiler.js not modified", "result": "PASS" },
+    { "name": "verifier_unchanged", "description": "InvestigationVerifier.js not modified", "result": "PASS" },
+    { "name": "no_console_errors", "description": "No application console errors on page load or verification", "result": "PASS" }
+  ],
+  "summary": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0,
+    "result": "PASS"
+  }
+}

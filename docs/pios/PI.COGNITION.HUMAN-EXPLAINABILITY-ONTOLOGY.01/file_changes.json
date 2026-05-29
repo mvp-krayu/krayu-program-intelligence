@@ -1,0 +1,26 @@
+{
+  "stream_id": "PI.COGNITION.HUMAN-EXPLAINABILITY-ONTOLOGY.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js",
+      "action": "CREATED",
+      "description": "Two-layer cognition node ontology module: 20 authored cognition nodes (7 conditions, 8 consequences, 3 combinations, 2 rules), each with 6 human explanation fields, graph connections (upstream/downstream/visible_in/verification_scope/related_rules), resolveNode() returning { ontology, runtime } shape, resolveConnections() resolving refs to human_names"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "Added CognitionOntology import, CognitionNodeExplanation rendering component, modified ConsequenceRulesProof (§4 rule explanation + per-consequence node explanations with graph refs), CombinationPatternsProof (§5.2 rule explanation + per-combination explanations with upstream refs), DerivationTraceProof (human_name annotations on trace nodes and rule references)"
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Added CSS for .vp-explanation, .vp-explanation--rule, .vp-explanation-name, .vp-explanation-text, .vp-operational-implication, .vp-graph-context, .vp-graph-direction, .vp-graph-arrow, .vp-graph-ref (with hover), .vp-proof-trace-human (with before/after pseudo-elements)"
+    }
+  ],
+  "summary": {
+    "total_files": 3,
+    "modified": 2,
+    "created": 1,
+    "deleted": 0
+  }
+}
