@@ -131,6 +131,21 @@ function hubInDegree(condition, structuralEnrichment) {
   return 0
 }
 
+function extractSignalFamilies(signalIds) {
+  if (!signalIds || signalIds.length === 0) return []
+  const families = new Set()
+  for (const id of signalIds) {
+    const upper = (id || '').toUpperCase()
+    if (upper.startsWith('PSIG')) families.add('PSIG')
+    else if (upper.startsWith('DPSIG')) families.add('DPSIG')
+    else if (upper.startsWith('ISIG')) families.add('ISIG')
+    else if (upper.startsWith('BSIG')) families.add('BSIG')
+    else if (upper.startsWith('CSIG')) families.add('CSIG')
+    else if (upper.startsWith('ESIG')) families.add('ESIG')
+  }
+  return [...families]
+}
+
 // ─── Atomic Consequence Factory ────────────────────────
 
 function makeAtomic(typeId, condition, scope, isDefining, registry) {
@@ -157,13 +172,32 @@ function makeAtomic(typeId, condition, scope, isDefining, registry) {
     },
     primary_locus_display: display,
     source_conditions: [condition.condition_id],
+    source_condition_types: [condition.condition_type],
+    source_signal_ids: [...(condition.supporting_signal_ids || [])],
     activation_rule: '§4 ' + condition.condition_type + ' → ' + typeId,
     combination_pattern: null,
     escalation_applied: false,
     escalation_reason: null,
-    evidence_summary: condition.condition_type + ' (' + condition.severity + ', ' + condition.governance_boundary + ')',
+    evidence_summary: {
+      condition_count: 1,
+      condition_types: [condition.condition_type],
+      source_signal_families: extractSignalFamilies(condition.supporting_signal_ids),
+    },
+    evidence_refs: [{
+      type: 'condition',
+      id: condition.condition_id,
+      condition_type: condition.condition_type,
+    }],
     governance_caveat: null,
-    derivation_trace: condition.condition_id + ' → ' + typeId + ' (§4)',
+    derivation_trace: [{
+      source_id: condition.condition_id,
+      source_type: condition.condition_type,
+      rule: '§4',
+      target_id: typeId,
+      target_type: 'consequence',
+    }],
+    pressure_zone_id: condition.pressure_zone_id || null,
+    temporal_marker: null,
     _src_type: condition.condition_type,
     _src_boundary: condition.governance_boundary,
     _defining: isDefining,
@@ -259,11 +293,14 @@ function deduplicateConsequences(atomics) {
     } else {
       const g = groups[key]
       g.source_conditions = [...new Set([...g.source_conditions, ...csq.source_conditions])]
+      g.source_condition_types = [...new Set([...(g.source_condition_types || []), ...(csq.source_condition_types || [])])]
+      g.source_signal_ids = [...new Set([...(g.source_signal_ids || []), ...(csq.source_signal_ids || [])])]
       g.severity = maxSev([g.severity, csq.severity])
       g._src_types.push(csq._src_type)
       g._src_boundaries.push(csq._src_boundary)
       g._defining = g._defining || csq._defining
-      g.derivation_trace += ' + ' + csq.derivation_trace
+      g.derivation_trace = [...(g.derivation_trace || []), ...(csq.derivation_trace || [])]
+      g.evidence_refs = [...(g.evidence_refs || []), ...(csq.evidence_refs || [])]
     }
   }
 
@@ -271,7 +308,12 @@ function deduplicateConsequences(atomics) {
   for (const g of result) {
     g.confidence = minConfidence(g._src_boundaries)
     g.consequence_id = 'csq-' + g.consequence_type_id.toLowerCase().replace(/_/g, '-') + '-' + locusIdPart(g._lk)
-    g.evidence_summary = g.source_conditions.length + ' condition(s): ' + [...new Set(g._src_types)].join(', ')
+    const uniqueTypes = [...new Set(g._src_types)]
+    g.evidence_summary = {
+      condition_count: g.source_conditions.length,
+      condition_types: uniqueTypes,
+      source_signal_families: extractSignalFamilies(g.source_signal_ids),
+    }
   }
   return result
 }
@@ -293,11 +335,27 @@ function makeCombination(patternId, contributing, lk, escalate, registry) {
   const first = contributing[0]
 
   const distinctPrimitiveTypes = new Set()
+  const allSignalIds = []
+  const allEvidenceRefs = []
+  const allDerivationSteps = []
   for (const c of contributing) {
     for (const t of (c._src_types || [c._src_type])) {
       if (t !== 'COMPOUND_CONVERGENCE') distinctPrimitiveTypes.add(t)
     }
+    allSignalIds.push(...(c.source_signal_ids || []))
+    allEvidenceRefs.push(...(c.evidence_refs || []))
+    allDerivationSteps.push(...(c.derivation_trace || []))
   }
+
+  const combinationStep = {
+    source_id: contributing.map(c => c.consequence_type_id).join(' + '),
+    source_type: 'combination',
+    rule: escalate ? '§5.2 + §6.1' : '§5.2',
+    target_id: patternId,
+    target_type: 'consequence',
+  }
+
+  const mergedSignalIds = [...new Set(allSignalIds)]
 
   return {
     consequence_id: 'csq-' + patternId.toLowerCase().replace(/_/g, '-') + '-' + locusIdPart(lk),
@@ -311,6 +369,8 @@ function makeCombination(patternId, contributing, lk, escalate, registry) {
     primary_locus: first.primary_locus,
     primary_locus_display: first.primary_locus_display,
     source_conditions: allSources,
+    source_condition_types: [...distinctPrimitiveTypes],
+    source_signal_ids: mergedSignalIds,
     contributing_consequences: contributing.map(c => c.consequence_id),
     activation_rule: '§5.2 ' + patternId,
     combination_pattern: patternId,
@@ -322,10 +382,23 @@ function makeCombination(patternId, contributing, lk, escalate, registry) {
       contributing_primitive_consequences: contributing.map(c => c.consequence_id),
       decomposition_available: true,
     },
-    evidence_summary: distinctPrimitiveTypes.size + ' primitive conditions: ' + [...distinctPrimitiveTypes].join(', '),
+    evidence_summary: {
+      condition_count: allSources.length,
+      condition_types: [...distinctPrimitiveTypes],
+      source_signal_families: extractSignalFamilies(mergedSignalIds),
+    },
+    evidence_refs: [
+      ...allEvidenceRefs,
+      ...contributing.map(c => ({
+        type: 'consequence',
+        id: c.consequence_id,
+        condition_type: c.consequence_type_id,
+      })),
+    ],
     governance_caveat: null,
-    derivation_trace: contributing.map(c => c.consequence_type_id).join(' + ') +
-      ' → ' + patternId + (escalate ? ' → escalation §6 (' + baseSev + ' → ' + severity + ')' : ''),
+    derivation_trace: [...allDerivationSteps, combinationStep],
+    pressure_zone_id: first.pressure_zone_id || null,
+    temporal_marker: null,
   }
 }
 
@@ -544,6 +617,12 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         severity: cond.severity,
         confidence: cond.governance_boundary,
         confidence_label: CONFIDENCE_EXECUTIVE[cond.governance_boundary] || cond.governance_boundary,
+        evidence_refs: [{
+          type: 'condition',
+          id: cond.condition_id,
+          condition_type: cond.condition_type,
+        }],
+        source_signal_ids: [...(cond.supporting_signal_ids || [])],
       })
     }
   }
@@ -692,6 +771,8 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
     scope: primary.consequence_scope,
     locus: primary.primary_locus_display,
     source_conditions: resolveSourceConditions(primary, conditionMap),
+    evidence_refs: primary.evidence_refs || [],
+    source_signal_ids: primary.source_signal_ids || [],
     is_combination: isCombination,
     combination_explanation: isCombination ? deriveCombinationExplanation(primary) : null,
   }
@@ -706,6 +787,7 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
       confidence_label: CONFIDENCE_EXECUTIVE[csq.confidence] || csq.confidence,
       relationship_verb: verb,
       relationship_sentence: compileRelationshipSentence(verb, csq, primary),
+      evidence_refs: csq.evidence_refs || [],
     }
   })
 
@@ -740,6 +822,10 @@ function forInvestigation(consequenceResult) {
       confidence: c.confidence,
       consequence_scope: c.consequence_scope,
       source_conditions: c.source_conditions,
+      source_condition_types: c.source_condition_types || [],
+      source_signal_ids: c.source_signal_ids || [],
+      evidence_refs: c.evidence_refs || [],
+      evidence_summary: c.evidence_summary || null,
       combination_pattern: c.combination_pattern,
       escalation_applied: c.escalation_applied,
       escalation_reason: c.escalation_reason,
