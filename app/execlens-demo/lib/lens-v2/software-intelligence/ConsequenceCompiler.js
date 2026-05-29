@@ -837,6 +837,41 @@ function forOperator(consequenceResult) {
   }
 }
 
+// ─── Persona: INVESTIGATION (verification-oriented) ───
+
+function forInvestigation(consequenceResult, synthesisResult) {
+  if (!consequenceResult) return null
+
+  return {
+    consequences: consequenceResult.consequences.map(c => ({
+      consequence_id: c.consequence_id,
+      consequence_type_id: c.consequence_type_id,
+      severity: c.severity,
+      confidence: c.confidence,
+      consequence_scope: c.consequence_scope,
+      activation_rule: c.activation_rule,
+      combination_pattern: c.combination_pattern,
+      escalation_applied: c.escalation_applied,
+      escalation_reason: c.escalation_reason,
+      source_conditions: c.source_conditions,
+      source_condition_types: c.source_condition_types || [],
+      source_signal_ids: c.source_signal_ids || [],
+      evidence_refs: c.evidence_refs || [],
+      evidence_summary: c.evidence_summary || null,
+      derivation_trace: c.derivation_trace || [],
+      decomposition: c.decomposition || null,
+      primary_locus: c.primary_locus,
+    })),
+    atomic_consequences: consequenceResult.atomic_consequences,
+    combination_consequences: consequenceResult.combination_consequences,
+    compilation_trace: consequenceResult.compilation_trace,
+    consequence_count: consequenceResult.consequence_count,
+    systemic_count: consequenceResult.systemic_count,
+    primary_consequence: consequenceResult.primary_consequence,
+    synthesis_condition_count: synthesisResult ? synthesisResult.conditions.length : 0,
+  }
+}
+
 // ─── Exports ───────────────────────────────────────────
 
 module.exports = {
@@ -845,5 +880,6 @@ module.exports = {
   forBoardroom,
   forBalanced,
   forOperator,
+  forInvestigation,
   CONSEQUENCE_VOCABULARY,
 }

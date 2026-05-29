@@ -1,0 +1,27 @@
+{
+  "stream_id": "PI.PERSONA.INVESTIGATION-VERIFICATION-ENGINE.01",
+  "commit": "6e42fce",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "action": "CREATED",
+      "description": "5-step verification engine with codified §4 and §5.2 rule tables, replay contract, investigate() entry point"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "action": "MODIFIED",
+      "description": "Added forInvestigation() persona projection — verification-oriented data view. No semantic changes."
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/tests/investigationVerifier.test.js",
+      "action": "CREATED",
+      "description": "43 tests covering all 5 verification steps, replay, overall verdicts, forInvestigation projection"
+    }
+  ],
+  "summary": {
+    "total_files": 3,
+    "modified": 1,
+    "created": 2,
+    "deleted": 0
+  }
+}
