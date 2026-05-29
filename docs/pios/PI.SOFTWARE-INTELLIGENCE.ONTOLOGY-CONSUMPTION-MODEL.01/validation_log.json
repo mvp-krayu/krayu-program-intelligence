@@ -1,0 +1,208 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01",
+  "classification": "G2",
+  "baseline": "16f8a85",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "primary_document_exists",
+      "description": "Primary ontology consumption model document created",
+      "result": "PASS",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/ONTOLOGY_CONSUMPTION_MODEL.md"
+    },
+    {
+      "name": "consumption_posture_vocabulary_defined",
+      "description": "Six consumption postures defined with rendering implication and evidence requirement",
+      "result": "PASS",
+      "postures": ["PRIMARY", "SECONDARY", "COMPRESSED", "SUPPRESSED", "PROOF-ONLY", "NOT APPLICABLE"],
+      "section": "§2"
+    },
+    {
+      "name": "all_five_classes_referenced",
+      "description": "All five ontology classes from slice taxonomy included",
+      "result": "PASS",
+      "classes": ["A — Flow & Propagation", "B — Concentration & Saturation", "C — Fragility & Resilience", "D — Reinforcement & Accumulation", "E — Drift & Instability"]
+    },
+    {
+      "name": "all_four_personas_covered",
+      "description": "All four personas have consumption contracts defined",
+      "result": "PASS",
+      "sections": ["§5.1 BOARDROOM", "§5.2 BALANCED", "§5.3 DENSE", "§5.4 INVESTIGATION"]
+    },
+    {
+      "name": "full_matrix_defined",
+      "description": "4×5 consumption matrix with 20 cells, all populated",
+      "result": "PASS",
+      "section": "§4.1",
+      "cells": 20
+    },
+    {
+      "name": "matrix_reading_guide",
+      "description": "Matrix reading guide explains column (persona) and row (class) consistency",
+      "result": "PASS",
+      "section": "§4.2"
+    },
+    {
+      "name": "boardroom_consumption_contract",
+      "description": "BOARDROOM contract: 1 PRIMARY (B), 3 COMPRESSED (A,C,D), 1 SUPPRESSED (E)",
+      "result": "PASS",
+      "section": "§5.1"
+    },
+    {
+      "name": "balanced_consumption_contract",
+      "description": "BALANCED contract: 2 PRIMARY (B,D), 3 SECONDARY (A,C,E)",
+      "result": "PASS",
+      "section": "§5.2"
+    },
+    {
+      "name": "dense_consumption_contract",
+      "description": "DENSE contract: 2 PRIMARY (A,B), 3 SECONDARY (C,D,E)",
+      "result": "PASS",
+      "section": "§5.3"
+    },
+    {
+      "name": "investigation_consumption_contract",
+      "description": "INVESTIGATION contract: 4 PROOF-ONLY (A,B,D,E), 1 NOT APPLICABLE (C)",
+      "result": "PASS",
+      "section": "§5.4"
+    },
+    {
+      "name": "no_class_exceeds_three_primary",
+      "description": "Cross-class rule: no class is PRIMARY in more than 3 personas",
+      "result": "PASS",
+      "max_primary": {"class": "B", "count": 3},
+      "section": "§6.1"
+    },
+    {
+      "name": "proof_only_investigation_exclusive",
+      "description": "PROOF-ONLY posture used only by INVESTIGATION",
+      "result": "PASS",
+      "section": "§6.2"
+    },
+    {
+      "name": "suppressed_justified",
+      "description": "All SUPPRESSED postures have explicit justification",
+      "result": "PASS",
+      "suppressions": [{"class": "E", "persona": "BOARDROOM", "justification": "Below executive altitude, interpretive risk"}],
+      "section": "§6.3"
+    },
+    {
+      "name": "not_applicable_gap_signal",
+      "description": "NOT APPLICABLE postures documented as ontology gaps, not persona gaps",
+      "result": "PASS",
+      "gaps": [{"class": "C", "persona": "INVESTIGATION", "reason": "No independent fragility evidence"}],
+      "section": "§6.4"
+    },
+    {
+      "name": "maturity_gated_consumption_defined",
+      "description": "Per-persona maturity gates defined with current maturity assessment",
+      "result": "PASS",
+      "gates": {
+        "BOARDROOM": "CERTIFIED",
+        "BALANCED": "COMPOSABLE",
+        "DENSE": "FOUNDATIONAL",
+        "INVESTIGATION": "FOUNDATIONAL"
+      },
+      "section": "§7"
+    },
+    {
+      "name": "compiler_bridge_documented",
+      "description": "Compiler maturity bridge mechanism documented — how sub-maturity slices are consumed via governed projection",
+      "result": "PASS",
+      "section": "§7.2"
+    },
+    {
+      "name": "per_class_consumption_detail",
+      "description": "All 5 classes have detailed per-persona consumption tables with Receives/Via columns",
+      "result": "PASS",
+      "sections": ["§8.1", "§8.2", "§8.3", "§8.4", "§8.5"]
+    },
+    {
+      "name": "implementation_gaps_per_class",
+      "description": "Each class has explicit implementation gap assessment",
+      "result": "PASS",
+      "gaps_found": ["Class C — no FOUNDATIONAL slice", "Class D — INVESTIGATION stale", "Class E — minimal coverage"]
+    },
+    {
+      "name": "consumption_evolution_rules",
+      "description": "Rules for new slice entry, posture change, and Class C gap closure defined",
+      "result": "PASS",
+      "section": "§9"
+    },
+    {
+      "name": "compiler_responsibility_map",
+      "description": "Compiler output to persona/class mapping defined",
+      "result": "PASS",
+      "section": "§10"
+    },
+    {
+      "name": "implementation_alignment_assessed",
+      "description": "All 4 personas assessed for alignment: 3 ALIGNED, 1 STALE",
+      "result": "PASS",
+      "alignment": {
+        "BOARDROOM": "ALIGNED",
+        "BALANCED": "ALIGNED",
+        "DENSE": "ALIGNED",
+        "INVESTIGATION": "STALE"
+      },
+      "section": "§11"
+    },
+    {
+      "name": "gaps_and_risks_registered",
+      "description": "5 gaps/risks registered with severity and affected parties",
+      "result": "PASS",
+      "count": 5,
+      "section": "§12"
+    },
+    {
+      "name": "non_goals_explicit",
+      "description": "Non-goals explicitly stated: no implementation, no compiler changes, no new slices, no runtime changes",
+      "result": "PASS",
+      "section": "§13"
+    },
+    {
+      "name": "next_streams_recommended",
+      "description": "3 recommended next streams with priority and purpose",
+      "result": "PASS",
+      "section": "§14"
+    },
+    {
+      "name": "no_runtime_code_modified",
+      "description": "No runtime code modified (governance-only stream)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_vault_mutation",
+      "description": "No vault mutation (G2 — architecture-consuming)",
+      "result": "PASS"
+    },
+    {
+      "name": "no_new_terminology",
+      "description": "No new terminology introduced — uses existing terms from TERMINOLOGY_LOCK",
+      "result": "PASS"
+    },
+    {
+      "name": "governing_inputs_traced",
+      "description": "All content traceable to 3 governing inputs (slice taxonomy, persona contracts, slice audit)",
+      "result": "PASS"
+    },
+    {
+      "name": "constitutional_objectives_consistent",
+      "description": "Persona consumption contracts consistent with persona mission contract objectives",
+      "result": "PASS",
+      "evidence": "Each persona's consumption posture pattern matches its constitutional objective"
+    },
+    {
+      "name": "closure_verdict_explicit",
+      "description": "Final closure verdict is explicit",
+      "result": "PASS",
+      "verdict": "PASS — ONTOLOGY CONSUMPTION MODEL ESTABLISHED"
+    }
+  ],
+  "summary": {
+    "total": 30,
+    "pass": 30,
+    "fail": 0,
+    "verdict": "PASS — ONTOLOGY CONSUMPTION MODEL ESTABLISHED"
+  }
+}

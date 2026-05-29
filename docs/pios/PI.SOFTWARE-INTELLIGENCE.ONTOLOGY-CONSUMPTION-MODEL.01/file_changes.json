@@ -1,0 +1,32 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01",
+  "classification": "G2",
+  "baseline": "16f8a85",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/ONTOLOGY_CONSUMPTION_MODEL.md",
+      "purpose": "Primary governance document — 15 sections: consumption posture vocabulary, 4×5 matrix, 4 per-persona contracts, cross-class rules, maturity gates, compiler bridge, per-class detail, evolution rules, compiler responsibility map, implementation alignment, gaps/risks"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/execution_report.md",
+      "purpose": "Stream execution report with evidence sources and key decisions"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/validation_log.json",
+      "purpose": "30-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01/CLOSURE.md",
+      "purpose": "Stream closure — G2, no vault mutation"
+    }
+  ]
+}
