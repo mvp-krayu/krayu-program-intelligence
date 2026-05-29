@@ -1,0 +1,42 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01",
+  "classification": "G1",
+  "baseline": "d924570",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/ONTOLOGY_TO_CONSEQUENCE_COMPILATION_MODEL.md",
+      "purpose": "Primary governance document — 18 sections: compilation chain, layer ownership, condition/consequence/combination mappings, persona compiler outputs, evidence preservation rules, evidence loss inventory, compiler boundary rules, ontology-to-consequence matrix"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/execution_report.md",
+      "purpose": "Stream execution report with repository evidence findings"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/validation_log.json",
+      "purpose": "35-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/CLOSURE.md",
+      "purpose": "Stream closure with G1 architecture memory propagation"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "purpose": "G1 vault mutation: New term — Ontology-to-Consequence Compilation Chain"
+    },
+    {
+      "action": "MODIFY",
+      "path": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "purpose": "Updated Software Intelligence line: compilation chain locked 2026-05-29"
+    }
+  ]
+}
