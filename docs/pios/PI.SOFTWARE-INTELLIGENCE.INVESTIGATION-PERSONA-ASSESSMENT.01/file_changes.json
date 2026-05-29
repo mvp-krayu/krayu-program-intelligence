@@ -1,0 +1,32 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01",
+  "classification": "G2",
+  "baseline": "6613e9c",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/INVESTIGATION_PERSONA_ASSESSMENT.md",
+      "purpose": "Primary assessment document — 9 sections: current behavior audit, behavioral classification, OPERATOR vs INVESTIGATION distinction, disappearance consequence, fresh design comparison, verdict"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/execution_report.md",
+      "purpose": "Execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/validation_log.json",
+      "purpose": "10-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/CLOSURE.md",
+      "purpose": "Stream closure — assessment only"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01",
+  "classification": "G2",
+  "baseline": "6613e9c",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "all_six_questions_answered",
+      "description": "All 6 assessment questions answered with evidence",
+      "result": "PASS",
+      "sections": ["§1", "§2", "§3", "§4", "§5", "§6"]
+    },
+    {
+      "name": "current_behavior_documented",
+      "description": "7 current INVESTIGATION capabilities documented from code evidence",
+      "result": "PASS",
+      "capabilities": ["ET", "SS", "SA", "IP", "GA", "Forensic Topology", "Guided Queries"]
+    },
+    {
+      "name": "behavioral_classification_performed",
+      "description": "Each capability classified against mission contract",
+      "result": "PASS",
+      "section": "§2"
+    },
+    {
+      "name": "operator_vs_investigation_distinguished",
+      "description": "OPERATOR and INVESTIGATION distinguished across 8 dimensions",
+      "result": "PASS",
+      "section": "§6"
+    },
+    {
+      "name": "disappearance_consequence_assessed",
+      "description": "What would be lost if INVESTIGATION disappeared — 4 unique surfaces identified",
+      "result": "PASS",
+      "section": "§4"
+    },
+    {
+      "name": "fresh_investigation_defined",
+      "description": "7 capabilities a fresh INVESTIGATION would have, 4 it would not",
+      "result": "PASS",
+      "section": "§5"
+    },
+    {
+      "name": "verdict_explicit",
+      "description": "Clear verdict: A — Current INVESTIGATION = OPERATOR",
+      "result": "PASS",
+      "section": "§7"
+    },
+    {
+      "name": "no_implementation",
+      "description": "No code changes, no route changes, no persona changes",
+      "result": "PASS"
+    },
+    {
+      "name": "no_vault_mutation",
+      "description": "No vault mutation (G2 assessment)",
+      "result": "PASS"
+    },
+    {
+      "name": "program_2_implications_stated",
+      "description": "Implications for Program 2 explicitly stated",
+      "result": "PASS",
+      "section": "§7"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "verdict": "VERDICT A — CURRENT INVESTIGATION = OPERATOR"
+  }
+}
