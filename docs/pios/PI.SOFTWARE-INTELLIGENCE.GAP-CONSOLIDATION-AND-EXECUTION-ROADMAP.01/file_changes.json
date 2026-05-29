@@ -1,0 +1,32 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01",
+  "classification": "G2",
+  "baseline": "6613e9c",
+  "changes": [
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/GAP_CONSOLIDATION_AND_EXECUTION_ROADMAP.md",
+      "purpose": "Primary document — 10 sections: root cause analysis, 5 programs, dependency graph, gap absorption matrix, execution phases"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/execution_report.md",
+      "purpose": "Stream execution report"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/validation_log.json",
+      "purpose": "14-check validation log"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/file_changes.json",
+      "purpose": "File change manifest"
+    },
+    {
+      "action": "CREATE",
+      "path": "docs/pios/PI.SOFTWARE-INTELLIGENCE.GAP-CONSOLIDATION-AND-EXECUTION-ROADMAP.01/CLOSURE.md",
+      "purpose": "Stream closure — G2, no vault mutation"
+    }
+  ]
+}
