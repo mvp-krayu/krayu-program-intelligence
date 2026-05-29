@@ -423,7 +423,7 @@ The mission contract document (PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECT
 ### §10.2 — Canonical State
 
 PIOS_CURRENT_CANONICAL_STATE.md must be updated:
-- "4-persona projection" → "5-persona projection (OPERATOR recognized, INVESTIGATION placeholder)"
+- "4-persona projection" → "5-persona projection (OPERATOR recognized, INVESTIGATION constitutional — no certified implementation yet)"
 - "mission contracts locked 2026-05-29" → "mission contracts locked 2026-05-29, OPERATOR boundary established 2026-05-29"
 
 ### §10.3 — Terminology Lock
@@ -440,7 +440,7 @@ TERMINOLOGY_LOCK.md must be updated:
 | OPERATOR mission contract addition | Mission contract document | EXTENSION — adds persona, does not modify existing |
 | 4→5 persona count | Canonical state, terminology lock | UPDATE — count change |
 | OPERATOR term | Terminology lock | NEW TERM |
-| INVESTIGATION placeholder | Canonical state | UPDATE — INVESTIGATION marked as placeholder pending design |
+| INVESTIGATION status | Canonical state | UPDATE — INVESTIGATION marked as constitutional, no certified implementation yet |
 
 ---
 

@@ -60,7 +60,7 @@ READY — boundary locked. Implementation (rename INVESTIGATION_DENSE → OPERAT
 |---|---|---|
 | OPERATOR persona recognized | NEW CONCEPT | 5-persona cognitive projection model |
 | 4-persona → 5-persona | COUNT CHANGE | Persona Projection term, canonical state |
-| INVESTIGATION status | STATUS CHANGE | PLACEHOLDER — pending design from compilation model |
+| INVESTIGATION status | STATUS CHANGE | Constitutional persona — no certified implementation yet, design from compilation model |
 | OPERATOR Persona term | NEW TERM | TERMINOLOGY_LOCK.md |
 | OPERATOR boundary | NEW BOUNDARY | OPERATOR inspects evidence, INVESTIGATION verifies claims |
 | Program 2 reframe | SUPERSESSION | Single program → two programs (OPERATOR Establishment + INVESTIGATION Design) |

@@ -78,7 +78,7 @@ The system consists of six evolutionary strata. All are active and reconciled:
 LENS v2 has materially transitioned from a static report surface to an interactive structural intelligence instrument. This transition is architectural, not cosmetic. The surface now delivers structurally-derived executive intelligence across four cognitive projection modes with interactive topology, cross-highlighting, evidence boundaries, and governance layers.
 
 **Transition markers:**
-- 5-persona cognitive projection system (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, OPERATOR, INVESTIGATION [placeholder])
+- 5-persona cognitive projection system (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, OPERATOR, INVESTIGATION [constitutional — no certified implementation yet])
 - Interactive SVG topology with hover, click-to-highlight, zone anchor selection, cross-highlighting
 - Boardroom governed narrative projection at S1 (narrative-first executive prose with proof-graph substrate, deterministic bounded composition under 75.x); cockpit instruments preserved at S2+
 - Evidence boundary activation, pressure zone focus, tier handoff
@@ -127,7 +127,7 @@ Five distinct cognitive projections represent different executive cognition mode
 | EXECUTIVE_BALANCED | CEO consequence lens | Senior leadership | Balanced depth across all zones |
 | EXECUTIVE_DENSE | CTO structural lens | Technical leadership | Structural cause, propagation detail |
 | OPERATOR | Engineering evidence inspection | Engineers, technical analysts | Full evidence depth, governance lifecycle, signal audit at 4-decimal precision |
-| INVESTIGATION | Evidence qualification and governed replay | Auditors, compliance | Compilation chain verification, evidence completeness, PASS/FAIL per target (PLACEHOLDER — not yet implemented, requires Program 1) |
+| INVESTIGATION | Evidence qualification and governed replay | Auditors, compliance | Compilation chain verification, evidence completeness, PASS/FAIL per target (constitutional — no certified implementation yet, requires Program 1) |
 
 **OPERATOR recognition (2026-05-29):** Prior INVESTIGATION_DENSE was assessed as functionally OPERATOR (Verdict A — PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01). OPERATOR is now an explicit persona. True INVESTIGATION will be designed from the compilation model after Program 1 (Evidence Chain Structuring) completes.
 

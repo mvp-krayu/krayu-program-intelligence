@@ -208,7 +208,7 @@
 
 **Definition:** The system's mechanism for projecting the same structural truth at different cognitive depths. Five personas (BOARDROOM, EXECUTIVE_BALANCED, EXECUTIVE_DENSE, OPERATOR, INVESTIGATION) represent distinct executive cognition modes, not display variants. Persona gates evidence deterministically — it selects depth, not content. Each persona operates under a locked Persona Mission Contract that defines its constitutional objective, consumed/prohibited cognition, and attention-control model.
 
-**5-persona model (2026-05-29):** OPERATOR was recognized as an explicit persona after assessment revealed that INVESTIGATION_DENSE was functionally an engineering evidence inspection workspace, not a governed evidence verification surface. INVESTIGATION is now a placeholder pending design from the compilation model. OPERATOR fills the cognitive gap between DENSE (structural behavior interrogation) and INVESTIGATION (evidence qualification and governed replay).
+**5-persona model (2026-05-29):** OPERATOR was recognized as an explicit persona after assessment revealed that INVESTIGATION_DENSE was functionally an engineering evidence inspection workspace, not a governed evidence verification surface. INVESTIGATION is constitutional but has no certified implementation yet — it will be designed from the compilation model. OPERATOR fills the cognitive gap between DENSE (structural behavior interrogation) and INVESTIGATION (evidence qualification and governed replay).
 
 **Status:** CANONICAL — operational in LENS v2 (2026-05-13). Mission contracts locked (2026-05-29). OPERATOR boundary established (2026-05-29).
 
@@ -878,7 +878,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 - **BALANCED:** Governed operational cognition briefing (emergence orchestration, co-discovery attention, medium operator agency)
 - **DENSE:** Structural behavior interrogation (zone navigation, operator-controlled attention, highest operator agency)
 - **OPERATOR:** Engineering evidence inspection and governance audit (evidence sections, operator-controlled attention, high operator agency)
-- **INVESTIGATION:** Evidence qualification and governed replay (fixed evidence sequence, system-enforced attention, low operator agency) — PLACEHOLDER, not yet implemented
+- **INVESTIGATION:** Evidence qualification and governed replay (fixed evidence sequence, system-enforced attention, low operator agency) — constitutional, no certified implementation yet
 
 **Status:** CANONICAL — governance baseline established (2026-05-29). OPERATOR boundary established (2026-05-29). Supersedes tagline model. Mandatory baseline for PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-CONSUMPTION-MODEL.01.
 

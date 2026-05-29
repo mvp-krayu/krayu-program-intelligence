@@ -60,7 +60,7 @@ To: Two programs: OPERATOR Establishment (rename) + INVESTIGATION Design (new, r
 
 ### Decision 6: Vault Mutations Identified, Not Executed
 
-4 vault mutations identified (OPERATOR mission contract, 4→5 persona count, OPERATOR term, INVESTIGATION placeholder). Deferred to post-closure propagation.
+4 vault mutations identified (OPERATOR mission contract, 4→5 persona count, OPERATOR term, INVESTIGATION status update). Deferred to post-closure propagation.
 
 ---
 
