@@ -639,8 +639,8 @@ describe('evidence_references_preserved — always true regardless of density', 
     assert.equal(layout.evidence_references_preserved, true);
   });
 
-  test('INVESTIGATION_DENSE preserves evidence references', () => {
-    const layout = resolvePropagationDensityLayout('INVESTIGATION_DENSE', { propagation_summary: 'x', propagation_chains: [], evidence_links: [] });
+  test('OPERATOR_DENSE preserves evidence references', () => {
+    const layout = resolvePropagationDensityLayout('OPERATOR_DENSE', { propagation_summary: 'x', propagation_chains: [], evidence_links: [] });
     assert.equal(layout.evidence_references_preserved, true);
   });
 });

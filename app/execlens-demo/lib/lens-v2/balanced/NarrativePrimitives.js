@@ -290,8 +290,8 @@ export const DESCENT_PATHS = [
     description: 'See the topology — how signals structurally behave across the architecture.',
   },
   {
-    target: 'INVESTIGATION',
-    label: 'INVESTIGATION',
+    target: 'OPERATOR',
+    label: 'OPERATOR',
     description: 'Trace the derivation chain — prove every claim back to structural evidence.',
   },
 ]

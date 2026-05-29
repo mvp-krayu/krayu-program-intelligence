@@ -1,7 +1,7 @@
 'use strict';
 
-const FLAGSHIP_INVESTIGATION_FLOW_FIXTURE = {
-  investigation_stages: [
+const FLAGSHIP_OPERATOR_FLOW_FIXTURE = {
+  operator_stages: [
     { stage: 'SUMMARY', from: null, to: 'SUMMARY', allowed: true },
     { stage: 'EVIDENCE', from: 'SUMMARY', to: 'EVIDENCE', allowed: true },
     { stage: 'PROPAGATION', from: 'EVIDENCE', to: 'PROPAGATION', allowed: true },
@@ -16,14 +16,14 @@ const FLAGSHIP_INVESTIGATION_FLOW_FIXTURE = {
     { type: 'ai_mediated_navigation', forbidden: true },
   ],
   expected: {
-    investigation_is_bounded: true,
+    operator_is_bounded: true,
     no_free_form_exploration: true,
     no_prompt_interaction: true,
     no_conversational_ux: true,
     all_stages_deterministic: true,
-    investigation_preserves_topology_immutability: true,
-    investigation_preserves_evidence_integrity: true,
+    operator_preserves_topology_immutability: true,
+    operator_preserves_evidence_integrity: true,
   },
 };
 
-module.exports = { FLAGSHIP_INVESTIGATION_FLOW_FIXTURE };
+module.exports = { FLAGSHIP_OPERATOR_FLOW_FIXTURE };

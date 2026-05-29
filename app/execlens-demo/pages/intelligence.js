@@ -55,8 +55,8 @@ export default function Intelligence() {
                 <span className="pi-preview-desc">Structural interrogation</span>
               </div>
               <div className="pi-preview-item">
-                <span className="pi-preview-mode">INVESTIGATION</span>
-                <span className="pi-preview-desc">Forensic evidence verification</span>
+                <span className="pi-preview-mode">OPERATOR</span>
+                <span className="pi-preview-desc">Engineering evidence inspection</span>
               </div>
             </div>
             <div className="pi-preview-footer">
@@ -534,8 +534,8 @@ export default function Intelligence() {
                 </div>
               </div>
               <div className="pi-mode">
-                <div className="pi-mode-label">INVESTIGATION</div>
-                <div className="pi-mode-role">Forensic Evidence Verification Runtime</div>
+                <div className="pi-mode-label">OPERATOR</div>
+                <div className="pi-mode-role">Engineering Evidence Inspection</div>
                 <div className="pi-mode-desc">
                   Full evidence depth. Every claim traced to structural source. Evidence lineage visible.
                   Qualification boundaries explicit. The operator sees not just what the system concluded but

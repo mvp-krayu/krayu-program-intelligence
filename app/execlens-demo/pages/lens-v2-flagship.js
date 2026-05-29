@@ -69,11 +69,11 @@ const DENSITY_OPTIONS = [
     aria: 'Dense — Structural (CTO) cause and propagation lens',
   },
   {
-    value: 'INVESTIGATION_DENSE',
-    label: 'INVESTIGATION',
+    value: 'OPERATOR_DENSE',
+    label: 'OPERATOR',
     persona_label: 'Evidence lens',
-    persona_sub: 'Analyst · evidence trace and confidence',
-    aria: 'Investigation — Analyst evidence trace and confidence lens',
+    persona_sub: 'Operator · evidence inspection and confidence',
+    aria: 'Operator — engineering evidence inspection and confidence lens',
   },
 ]
 const BOARDROOM_PERSONA = {
@@ -236,7 +236,7 @@ export async function getServerSideProps(context) {
 export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
-  const [investigationStage, setInvestigationStage] = useState('SUMMARY')
+  const [operatorStage, setOperatorStage] = useState('SUMMARY')
   const [pendingTransitionDomain, setPendingTransitionDomain] = useState(null)
   const [pendingTransitionZone, setPendingTransitionZone] = useState(null)
   const [swIntelActive, setSwIntelActive] = useState(false)
@@ -257,9 +257,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
       'EXECUTIVE',
       densityClass,
       boardroomMode,
-      investigationStage,
+      operatorStage,
     )
-  }, [reportObject, densityClass, boardroomMode, investigationStage])
+  }, [reportObject, densityClass, boardroomMode, operatorStage])
 
   const boardroomProjection = useMemo(() => {
     if (!reportObject || !boardroomMode) return null
@@ -1846,7 +1846,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 2px;
         }
 
-        /* ── Integrated investigation flow (5A.6) ─────────────────────────── */
+        /* ── Integrated operator flow (5A.6) ───────────────────────────────── */
         .temporal-summary-persistent-domain--link {
           cursor: pointer;
           transition: color 0.15s ease;
@@ -2060,9 +2060,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 12px;
         }
 
-        /* ── Topology Preview (DENSE + INVESTIGATION) ────────────────── */
+        /* ── Topology Preview (DENSE + OPERATOR) ────────────────── */
         .dense-topology-preview,
-        .investigation-topology-preview {
+        .operator-topology-preview {
           padding: 12px 0;
           border-top: 1px solid #1e2330;
           cursor: pointer;
@@ -2071,24 +2071,24 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 8px;
         }
         .dense-topology-preview:hover,
-        .investigation-topology-preview:hover {
+        .operator-topology-preview:hover {
           background: rgba(74, 158, 255, 0.03);
         }
         .dense-topology-preview .topo-graph-wrap,
-        .investigation-topology-preview .topo-graph-wrap {
+        .operator-topology-preview .topo-graph-wrap {
           margin-bottom: 0;
         }
         .dense-topology-preview .topo-graph-heading,
-        .investigation-topology-preview .topo-graph-heading {
+        .operator-topology-preview .topo-graph-heading {
           font-size: 9px;
           text-align: center;
         }
         .dense-topology-preview .topo-graph-svg,
-        .investigation-topology-preview .topo-graph-svg {
+        .operator-topology-preview .topo-graph-svg {
           pointer-events: none;
         }
         .dense-topology-hint,
-        .investigation-topology-hint {
+        .operator-topology-hint {
           text-align: center;
           font-size: 9px;
           color: #7a8aaa;
@@ -2097,12 +2097,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           transition: color 0.2s;
         }
         .dense-topology-preview:hover .dense-topology-hint,
-        .investigation-topology-preview:hover .investigation-topology-hint {
+        .operator-topology-preview:hover .operator-topology-hint {
           color: #4a9eff;
         }
 
         /* ── Investigation Governance Audit ── */
-        .actor--investigation-governance {
+        .actor--operator-governance {
           margin: 20px 0;
           padding: 16px;
           background: var(--card-deep, #12151f);
@@ -6787,7 +6787,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             radial-gradient(55% 42% at 50% 55%, rgba(255,158,74,0.06) 0%, transparent 72%),
             radial-gradient(34% 28% at 80% 80%, rgba(230,184,0,0.06) 0%, transparent 65%);
         }
-        .rep-field--investigation::after {
+        .rep-field--operator::after {
           background:
             linear-gradient(180deg, rgba(74,158,255,0.04) 0%, transparent 30%, rgba(230,184,0,0.04) 100%);
         }
@@ -7160,8 +7160,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 0 4px 4px 0;
         }
 
-        /* ── INVESTIGATION — Evidence Trace Field ───────────────────────── */
-        .rep-field--investigation .rep-trace-stack {
+        /* ── OPERATOR — Evidence Trace Field ───────────────────────── */
+        .rep-field--operator .rep-trace-stack {
           display: flex;
           flex-direction: column;
           gap: 10px;
@@ -8204,7 +8204,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
          *   tier0 — command declaration: calm, undeniable, minimal density
          *   tier1 — operational context: stable rhythm, low-friction scan
          *   tier2 — exploratory depth: recessed, lower interruption
-         *   tier3 — investigation immersion: isolated, intentionally deep
+         *   tier3 — operator immersion: isolated, intentionally deep
          * ════════════════════════════════════════════════════════════════ */
 
         .disclosure-shell {
@@ -8277,10 +8277,10 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           opacity: 0.88;
         }
 
-        /* Tier 3 — investigation immersion layer
+        /* Tier 3 — operator immersion layer
          * Isolated from the executive flow. Darker atmospheric
          * ground signals forensic depth. The reader has
-         * intentionally entered investigation territory. */
+         * intentionally entered operator territory. */
         .disclosure-tier--3 {
           margin-top: var(--tier-gap-3);
           animation: v2Enter 0.55s ease 0.38s both;
@@ -8301,7 +8301,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           pointer-events: none;
         }
         .disclosure-tier--3::after {
-          content: 'INVESTIGATION DEPTH';
+          content: 'OPERATOR DEPTH';
           position: absolute;
           top: -8px;
           left: 56px;
@@ -8419,10 +8419,10 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* Investigation persona: deepen tier3 immersion further. */
-        .disclosure-shell[data-persona="INVESTIGATION_DENSE"] {
+        .disclosure-shell[data-persona="OPERATOR_DENSE"] {
           --tier-gap-3: 32px;
         }
-        .disclosure-shell[data-persona="INVESTIGATION_DENSE"] .disclosure-tier--3 {
+        .disclosure-shell[data-persona="OPERATOR_DENSE"] .disclosure-tier--3 {
           background:
             linear-gradient(180deg, rgba(8,10,15,0.55) 0%, rgba(8,10,15,0.3) 50%, transparent);
           padding: 16px 0 0;
@@ -10287,7 +10287,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-top: 1px solid #1e2330;
         }
         .sw-intel-view--dense .sw-intel-panel,
-        .sw-intel-view--investigation .sw-intel-panel { margin-bottom: 12px; }
+        .sw-intel-view--operator .sw-intel-panel { margin-bottom: 12px; }
 
         .sw-intel-view-header {
           display: flex;

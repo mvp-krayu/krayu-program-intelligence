@@ -6,7 +6,7 @@ import { resolveExperientialDensityLayout } from '../components/experiential-rea
 import ExecutiveBoardroomMode from './ExecutiveBoardroomMode';
 import OperationalGravitySystem from './OperationalGravitySystem';
 import IntelligenceRevealCinema from './IntelligenceRevealCinema';
-import StructuralInvestigationFlow from './StructuralInvestigationFlow';
+import StructuralOperatorFlow from './StructuralOperatorFlow';
 import ExecutiveOperationalCanvas from './ExecutiveOperationalCanvas';
 import TopologySafeVisualRealization from './TopologySafeVisualRealization';
 import ExecutiveAttentionDirector from './ExecutiveAttentionDirector';
@@ -24,7 +24,7 @@ import IntelligencePresenceLayer from './IntelligencePresenceLayer';
  *   - propagation explainability
  *   - cinematic reveal orchestration
  *   - operational posture
- *   - investigation continuity
+ *   - operator continuity
  *   - executive presentation mode
  *
  * Integrates all major experiential systems built across PI.LENS streams 1–14.
@@ -49,10 +49,10 @@ export default function LensV2FlagshipExperience({
   densityClass,
   boardroomMode,
   presentationMode,
-  investigationStage,
+  operatorStage,
 }) {
   const resolvedDensity = densityClass || 'EXECUTIVE_DENSE';
-  const resolvedStage = investigationStage || 'SUMMARY';
+  const resolvedStage = operatorStage || 'SUMMARY';
 
   const revealSequence = resolveRevealSequence(renderState);
   const motionProfile = resolveMotionProfile(renderState);
@@ -82,7 +82,7 @@ export default function LensV2FlagshipExperience({
               qualifierClass={qualifierClass}
             >
               <IntelligenceRevealCinema renderState={renderState} qualifierClass={qualifierClass}>
-                <StructuralInvestigationFlow
+                <StructuralOperatorFlow
                   currentStage={resolvedStage}
                   renderState={renderState}
                   densityClass={resolvedDensity}
@@ -212,7 +212,7 @@ export default function LensV2FlagshipExperience({
                     </div>
                   )}
 
-                </StructuralInvestigationFlow>
+                </StructuralOperatorFlow>
               </IntelligenceRevealCinema>
             </ExecutiveOperationalCanvas>
           </ExecutiveAttentionDirector>

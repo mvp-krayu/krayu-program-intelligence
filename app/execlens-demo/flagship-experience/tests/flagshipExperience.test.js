@@ -9,13 +9,13 @@ const {
   resolveCinemaOrchestration,
   resolveAttentionHierarchy,
   resolveUrgencyFrame,
-  resolveInvestigationStage,
+  resolveOperatorStage,
   resolveNextStage,
   resolvePreviousStage,
   resolveGravityToken,
   resolvePresenceToken,
   resolveVisibleRegions,
-  INVESTIGATION_STAGES,
+  OPERATOR_STAGES,
 } = require('../flagshipOrchestration');
 
 const { FLAGSHIP_REAL_REPORT, FLAGSHIP_PROPAGATION_CHAINS, FLAGSHIP_REAL_REPORT_EXPECTED } = require('../fixtures/flagship_real_report.fixture');
@@ -25,7 +25,7 @@ const { FLAGSHIP_Q02_FIXTURE } = require('../fixtures/flagship_q02.fixture');
 const { FLAGSHIP_DIAGNOSTIC_FIXTURE } = require('../fixtures/flagship_diagnostic.fixture');
 const { FLAGSHIP_BLOCKED_FIXTURE } = require('../fixtures/flagship_blocked.fixture');
 const { FLAGSHIP_BOARDROOM_MODE_FIXTURE } = require('../fixtures/flagship_boardroom_mode.fixture');
-const { FLAGSHIP_INVESTIGATION_FLOW_FIXTURE } = require('../fixtures/flagship_investigation_flow.fixture');
+const { FLAGSHIP_OPERATOR_FLOW_FIXTURE } = require('../fixtures/flagship_operator_flow.fixture');
 const { FLAGSHIP_OPERATIONAL_CANVAS_FIXTURE } = require('../fixtures/flagship_operational_canvas.fixture');
 const { FLAGSHIP_TOPOLOGY_SAFE_FIXTURE } = require('../fixtures/flagship_topology_safe.fixture');
 const { FLAGSHIP_FORBIDDEN_PROMPT_FIXTURE } = require('../fixtures/flagship_forbidden_prompt.fixture');
@@ -210,8 +210,8 @@ describe('Qualifier persistence — globally enforced', () => {
     assert.equal(result.densityLayout.qualifier_notice_visible, true);
   });
 
-  it('Q-01 qualifier_notice_visible across INVESTIGATION_DENSE', () => {
-    const result = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'INVESTIGATION_DENSE');
+  it('Q-01 qualifier_notice_visible across OPERATOR_DENSE', () => {
+    const result = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'OPERATOR_DENSE');
     assert.equal(result.densityLayout.qualifier_notice_visible, true);
   });
 
@@ -478,24 +478,24 @@ describe('Intelligence presence layer', () => {
 });
 
 // ────────────────────────────────────────────────────────────────────────────
-// 12. Investigation Flow — bounded stages
+// 12. Operator Flow — bounded stages
 // ────────────────────────────────────────────────────────────────────────────
 
-describe('Structural investigation flow — bounded stages', () => {
-  it('INVESTIGATION_STAGES has 5 stages', () => {
-    assert.equal(INVESTIGATION_STAGES.length, 5);
+describe('Structural operator flow — bounded stages', () => {
+  it('OPERATOR_STAGES has 5 stages', () => {
+    assert.equal(OPERATOR_STAGES.length, 5);
   });
 
   it('first stage is SUMMARY', () => {
-    assert.equal(INVESTIGATION_STAGES[0], 'SUMMARY');
+    assert.equal(OPERATOR_STAGES[0], 'SUMMARY');
   });
 
   it('last stage is LINEAGE', () => {
-    assert.equal(INVESTIGATION_STAGES[INVESTIGATION_STAGES.length - 1], 'LINEAGE');
+    assert.equal(OPERATOR_STAGES[OPERATOR_STAGES.length - 1], 'LINEAGE');
   });
 
   it('unknown stage resolves to SUMMARY (fail safe)', () => {
-    assert.equal(resolveInvestigationStage('UNKNOWN'), 'SUMMARY');
+    assert.equal(resolveOperatorStage('UNKNOWN'), 'SUMMARY');
   });
 
   it('SUMMARY next stage is EVIDENCE', () => {
@@ -526,14 +526,14 @@ describe('Structural investigation flow — bounded stages', () => {
     assert.equal(resolvePreviousStage('EVIDENCE'), 'SUMMARY');
   });
 
-  it('investigation flow fixture confirms bounded semantics', () => {
-    assert.equal(FLAGSHIP_INVESTIGATION_FLOW_FIXTURE.expected.investigation_is_bounded, true);
-    assert.equal(FLAGSHIP_INVESTIGATION_FLOW_FIXTURE.expected.no_prompt_interaction, true);
-    assert.equal(FLAGSHIP_INVESTIGATION_FLOW_FIXTURE.expected.no_free_form_exploration, true);
+  it('operator flow fixture confirms bounded semantics', () => {
+    assert.equal(FLAGSHIP_OPERATOR_FLOW_FIXTURE.expected.operator_is_bounded, true);
+    assert.equal(FLAGSHIP_OPERATOR_FLOW_FIXTURE.expected.no_prompt_interaction, true);
+    assert.equal(FLAGSHIP_OPERATOR_FLOW_FIXTURE.expected.no_free_form_exploration, true);
   });
 
-  it('all investigation transitions in fixture are marked allowed=true for valid stages', () => {
-    const validTransitions = FLAGSHIP_INVESTIGATION_FLOW_FIXTURE.investigation_stages;
+  it('all operator transitions in fixture are marked allowed=true for valid stages', () => {
+    const validTransitions = FLAGSHIP_OPERATOR_FLOW_FIXTURE.operator_stages;
     validTransitions.forEach(t => {
       assert.equal(t.allowed, true);
     });
@@ -646,9 +646,9 @@ describe('Governance invariants — full flagship orchestration', () => {
   it('governance invariants identical across all density classes', () => {
     const balanced = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'EXECUTIVE_BALANCED');
     const dense = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'EXECUTIVE_DENSE');
-    const investigation = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'INVESTIGATION_DENSE');
+    const operator = orchestrateFlagshipExperience(FLAGSHIP_REAL_REPORT, 'EXECUTIVE', 'OPERATOR_DENSE');
     assert.deepEqual(balanced.governance, dense.governance);
-    assert.deepEqual(dense.governance, investigation.governance);
+    assert.deepEqual(dense.governance, operator.governance);
   });
 });
 
@@ -690,7 +690,7 @@ describe('Determinism — full flagship orchestration', () => {
     assert.equal(a.motionProfile.profile, b.motionProfile.profile);
     assert.equal(a.gravityToken, b.gravityToken);
     assert.equal(a.presenceToken, b.presenceToken);
-    assert.equal(a.investigationStage, b.investigationStage);
+    assert.equal(a.operatorStage, b.operatorStage);
   });
 
   it('cinema orchestration is deterministic across all states', () => {
@@ -701,8 +701,8 @@ describe('Determinism — full flagship orchestration', () => {
     });
   });
 
-  it('investigation stage resolution is deterministic', () => {
-    assert.equal(resolveInvestigationStage('EVIDENCE'), resolveInvestigationStage('EVIDENCE'));
+  it('operator stage resolution is deterministic', () => {
+    assert.equal(resolveOperatorStage('EVIDENCE'), resolveOperatorStage('EVIDENCE'));
     assert.equal(resolveNextStage('EVIDENCE'), resolveNextStage('EVIDENCE'));
   });
 });

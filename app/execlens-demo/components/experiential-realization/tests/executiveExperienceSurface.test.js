@@ -228,8 +228,8 @@ describe('resolveDensityTransition — all density classes', () => {
     assert.equal(result.transition_ms, 300);
   });
 
-  test('INVESTIGATION_DENSE returns transition_ms 200', () => {
-    const result = resolveDensityTransition('INVESTIGATION_DENSE');
+  test('OPERATOR_DENSE returns transition_ms 200', () => {
+    const result = resolveDensityTransition('OPERATOR_DENSE');
     assert.equal(result.transition_ms, 200);
   });
 

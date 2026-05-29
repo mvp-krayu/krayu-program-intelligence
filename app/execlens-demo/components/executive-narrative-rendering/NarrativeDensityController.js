@@ -21,7 +21,7 @@ const { mapNarrativeDensity } = require('./NarrativeSemanticMapper');
  * evidence_references_preserved is always true (NORM-DENSITY-01 principle).
  *
  * Parameters:
- *   densityClass    — 'EXECUTIVE_DENSE' | 'EXECUTIVE_BALANCED' | 'INVESTIGATION_DENSE'
+ *   densityClass    — 'EXECUTIVE_DENSE' | 'EXECUTIVE_BALANCED' | 'OPERATOR_DENSE'
  *   narrativeProps  — output from NarrativeAdapter (executive_summary, why_primary_statement, structural_summary)
  *
  * Returns:

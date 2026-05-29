@@ -11,7 +11,7 @@
  *   tier0 — always visible, no expansion required
  *   tier1 — visible by default, collapsible
  *   tier2 — collapsed by default, expandable
- *   tier3 — investigation-depth only, explicit entry required
+ *   tier3 — operator-depth only, explicit entry required
  *
  * Density mode = who is reading (persona selection).
  * Disclosure tier = how deep the reader is going (depth sequencing).
@@ -35,7 +35,7 @@ const KNOWN_ZONES = [
 const KNOWN_PERSONAS = [
   'EXECUTIVE_BALANCED',
   'EXECUTIVE_DENSE',
-  'INVESTIGATION_DENSE',
+  'OPERATOR_DENSE',
   'BOARDROOM',
 ];
 
@@ -56,7 +56,7 @@ const DISCLOSURE_TIERS = {
     tier2: ['GovernanceRibbon'],
     tier3: ['EvidenceDepthLayer'],
   },
-  INVESTIGATION_DENSE: {
+  OPERATOR_DENSE: {
     tier0: ['DeclarationZone'],
     tier1: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate'],
     tier2: ['IntelligenceField', 'SQOIntelligenceZone', 'EvidenceDepthLayer', 'GovernanceRibbon'],
@@ -85,7 +85,7 @@ const ZONE_METADATA = {
   },
   GovernanceRibbon: {
     conditional: false,
-    description: 'Governance qualifier, classification, and confidence band — investigation-tier ambient',
+    description: 'Governance qualifier, classification, and confidence band — operator-tier ambient',
   },
   QualifierMandate: {
     conditional: true,
@@ -104,7 +104,7 @@ const ZONE_METADATA = {
   },
   IntelligenceField: {
     conditional: false,
-    description: 'Persona-dispatched intelligence rendering (Balanced/Dense/Investigation/Boardroom)',
+    description: 'Persona-dispatched intelligence rendering (Balanced/Dense/Operator/Boardroom)',
   },
   SQOIntelligenceZone: {
     conditional: true,
@@ -113,7 +113,7 @@ const ZONE_METADATA = {
   },
   EvidenceDepthLayer: {
     conditional: true,
-    condition: 'Currently gated to INVESTIGATION_DENSE mode only (non-boardroom)',
+    condition: 'Currently gated to OPERATOR_DENSE mode only (non-boardroom)',
     description: 'Raw evidence blocks with full trace data and confidence scores',
   },
 };

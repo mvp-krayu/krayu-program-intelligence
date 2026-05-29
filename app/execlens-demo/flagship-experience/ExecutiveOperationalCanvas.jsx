@@ -8,7 +8,7 @@ import React from 'react';
  *
  * Creates the cinematic operational canvas. Integrates all experiential regions
  * into a cohesive executive intelligence composition.
- * Orchestrates density, evidence accessibility, investigation posture continuity.
+ * Orchestrates density, evidence accessibility, operator posture continuity.
  *
  * Does not devolve into widget dashboards. Does not create fragmented UI zones.
  * Does not hide governance-critical information.

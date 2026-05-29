@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useRef, useMemo, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN } from './constants'
-import InvestigationReadingGuide, { TermHint } from './InvestigationReadingGuide'
+import OperatorReadingGuide, { TermHint } from './OperatorReadingGuide'
 import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
-import { SoftwareIntelligenceDenseView, SoftwareIntelligenceInvestigationView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
+import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
@@ -32,7 +32,7 @@ const SEMANTIC_ACTORS = {
 const LENS_MODE_SEMANTICS = {
   EXECUTIVE_BALANCED: ['decisionPosture', 'confidenceBoundary', 'resolutionBoundary', 'pressureAnchor', 'reportArtifactAccess'],
   EXECUTIVE_DENSE:    ['semanticTopology', 'structuralBacking', 'semanticOnlyExposure', 'clusterConcentration', 'absorptionLoad', 'pressureAnchor'],
-  INVESTIGATION_DENSE:['evidenceTrace', 'signalStack', 'inferenceProhibition', 'confidenceBoundary', 'resolutionBoundary'],
+  OPERATOR_DENSE:['evidenceTrace', 'signalStack', 'inferenceProhibition', 'confidenceBoundary', 'resolutionBoundary'],
   BOARDROOM:          ['decisionPosture', 'confidenceBoundary', 'pressureAnchor', 'reportArtifactAccess'],
 }
 
@@ -238,7 +238,7 @@ function ConvergenceWeb({ slices, postureLabel, postureSeverity, primaryLocus })
 const INTERP_MODE_FRAMING = {
   EXECUTIVE_BALANCED:  { label: 'EXECUTIVE INTERPRETATION', tone: 'posture',    assessmentLabel: 'Assessment',          whyLabel: 'Why this matters',         structuralLabel: 'Structural context' },
   EXECUTIVE_DENSE:     { label: 'STRUCTURAL INTERPRETATION', tone: 'structural', assessmentLabel: 'Structural reading',  whyLabel: 'Cause and propagation',    structuralLabel: 'Structural context' },
-  INVESTIGATION_DENSE: { label: 'FORENSIC INTERPRETATION',   tone: 'forensic',   assessmentLabel: 'Evidence reading',    whyLabel: 'What the evidence shows',  structuralLabel: 'Structural lineage' },
+  OPERATOR_DENSE: { label: 'FORENSIC INTERPRETATION',   tone: 'forensic',   assessmentLabel: 'Evidence reading',    whyLabel: 'What the evidence shows',  structuralLabel: 'Structural lineage' },
   BOARDROOM:           { label: 'EXECUTIVE BRIEFING',         tone: 'projection', assessmentLabel: 'Assessment',          whyLabel: 'Why this matters',         structuralLabel: '' },
 }
 
@@ -358,7 +358,7 @@ const STRUCTURAL_ESCALATION_CONDITIONS = {
     const ts = (fullReport && fullReport.topology_summary) || {}
     return (ts.structurally_backed_count || 0) < (ts.semantic_domain_count || 0)
   },
-  investigation: (fullReport) => {
+  operator: (fullReport) => {
     const blocks = (fullReport && fullReport.evidence_blocks) || []
     return blocks.some(b => b && (!b.structural_backing || b.structural_backing === 'SEMANTIC_ONLY'))
   },
@@ -381,7 +381,7 @@ const DENSE_ZONE_PATHS = {
     { label: 'Descend into forensic lineage', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Opens the full evidence chain for each domain, including source traceability and reconciliation status.',
       answers: 'What evidence exists for each structural claim?',
-      boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+      boundary: 'Requires OPERATOR mode — full forensic depth.' },
     { label: 'Semantic continuity domains', icon: '○', tone: 'quiet', archetype: 'SCAN', depth: 'micro',
       narrative: 'Identifies domains that operate on semantic assertion alone without structural correspondence.',
       answers: 'Which domains operate primarily on semantic continuity?',
@@ -485,7 +485,7 @@ const DENSE_ZONE_PATHS = {
     { label: 'Descend to forensic traversal', icon: '↓', tone: 'forensic', archetype: 'TRACE', depth: 'standard',
       narrative: 'Opens forensic-depth analysis of propagation chain nodes with per-domain evidence lineage and temporal continuity.',
       answers: 'What evidence supports each link in the propagation chain?',
-      boundary: 'Requires INVESTIGATION mode — full forensic depth.' },
+      boundary: 'Requires OPERATOR mode — full forensic depth.' },
     { label: 'Containment failure', icon: '◆', tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
       narrative: 'Identifies where propagation containment fails — pressure traverses the full chain into receiving domains.',
       answers: 'Where does propagation containment fail?',
@@ -948,7 +948,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           <div className="support-label" style={{ marginTop: 12 }}>DESCENT PATHS</div>
           <div className="support-sw-intel-descent">
             <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">DENSE</span><span className="support-sw-intel-descent-purpose">Topology cognition</span></div>
-            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">INVESTIGATION</span><span className="support-sw-intel-descent-purpose">Derivation proof</span></div>
+            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">OPERATOR</span><span className="support-sw-intel-descent-purpose">Evidence inspection</span></div>
           </div>
         </div>
       ) : boardroomMode && paths.length > 0 ? (
@@ -3413,7 +3413,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
     ]
   },
 
-  INVESTIGATION_DENSE: (fullReport) => {
+  OPERATOR_DENSE: (fullReport) => {
     const blocks = (fullReport && fullReport.evidence_blocks) || []
     const domains = (fullReport && fullReport.semantic_domain_registry) || []
     const ts = (fullReport && fullReport.topology_summary) || {}
@@ -4096,7 +4096,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-block">
             <div className="interp-section-label interp-section-label--descent">DESCENT</div>
             <div className="interp-synthesis interp-synthesis--descent">
-              DENSE → topology cognition · INVESTIGATION → derivation proof
+              DENSE → topology cognition · OPERATOR → evidence inspection
             </div>
           </div>
         </aside>
@@ -4601,7 +4601,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           <div className="interp-why">{narrative.why_primary_statement}</div>
         </div>
       )}
-      {narrative.structural_summary && (densityClass === 'INVESTIGATION_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && framing.structuralLabel && (
+      {narrative.structural_summary && (densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') && framing.structuralLabel && (
         <div className="interp-block">
           <div className="interp-section-label">{framing.structuralLabel}</div>
           <div className="interp-structural">{narrative.structural_summary}</div>
@@ -5262,8 +5262,8 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
             <div className="balanced-descent-card-desc">Inspect topology cognition and structural signal behavior.</div>
           </div>
           <div className="balanced-descent-card">
-            <div className="balanced-descent-card-title">INVESTIGATION</div>
-            <div className="balanced-descent-card-desc">Inspect derivation chain and evidence proof.</div>
+            <div className="balanced-descent-card-title">OPERATOR</div>
+            <div className="balanced-descent-card-desc">Inspect evidence chain and operational proof.</div>
           </div>
         </div>
       </div>
@@ -5953,7 +5953,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   )
 }
 
-function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
+function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -5982,7 +5982,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
   const qRules = renderingMeta.qualifier_rules_applied || []
 
   return (
-    <div className="rep-field rep-field--investigation">
+    <div className="rep-field rep-field--operator">
       <RepModeTag
         label="Evidence lens"
         sub="Analyst · evidence trace and confidence"
@@ -5994,7 +5994,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
         ]}
       />
 
-      <InvestigationReadingGuide />
+      <OperatorReadingGuide />
 
       <div className="actor actor--evidence-trace">
         <div className="actor-tag">
@@ -6083,7 +6083,7 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
       <InvestigationGovernanceAudit fullReport={fullReport} />
 
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="investigation-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
           <TopologyGraph
             domains={fullReport.semantic_domain_registry}
             clusters={fullReport.semantic_cluster_registry || []}
@@ -6091,11 +6091,11 @@ function InvestigationTraceField({ adapted, blocks, scope, fullReport, correspon
             pressureZoneLabel={pressureZone}
             pressureZoneState={fullReport.pressure_zone_state}
           />
-          <div className="investigation-topology-hint">Open forensic topology</div>
+          <div className="operator-topology-hint">Open forensic topology</div>
         </div>
       )}
 
-      {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="investigation" />, document.body)}
+      {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
 
       <TierHandoffStatement />
     </div>
@@ -6174,7 +6174,7 @@ function InvestigationGovernanceAudit({ fullReport }) {
   if (!gl || !gl.available) return null
 
   return (
-    <div className="actor actor--investigation-governance">
+    <div className="actor actor--operator-governance">
       <div className="actor-tag">
         <span className="actor-code">GA</span>
         <span className="actor-name">Governance Audit · full traversal</span>
@@ -7287,7 +7287,7 @@ function DomainPostureCard({ domainId, correspondenceData, evidenceIntakeData, d
     { label: 'Grounding state', value: grounded ? 'Structurally grounded' : 'Ungrounded — no structural backing', tone: grounded ? 'ok' : 'gap', target: 'EXECUTIVE_DENSE', zoneKey: 'clusterConcentration' },
     { label: 'Exposure posture', value: effectiveExposure, tone: debtClear ? 'ok' : domainBlocksS3 ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE', zoneKey: 'pressureZoneFocus' },
     { label: 'Temporal continuity', value: temporalLabel, tone: temporalLabel === 'Stable across epochs' ? 'ok' : temporalLabel.includes('Persistent') ? 'gap' : 'partial', target: 'EXECUTIVE_DENSE', zoneKey: 'propagationFlow' },
-    { label: 'Evidence availability', value: evidenceLabel, tone: sourceCount > 0 ? 'ok' : 'gap', target: 'INVESTIGATION_DENSE' },
+    { label: 'Evidence availability', value: evidenceLabel, tone: sourceCount > 0 ? 'ok' : 'gap', target: 'OPERATOR_DENSE' },
   ]
 
   const domainName = corr ? corr.semantic_domain_name : domainId
@@ -7321,8 +7321,8 @@ function DomainPostureCard({ domainId, correspondenceData, evidenceIntakeData, d
       {onModeTransition && (
         <div className="posture-card-transitions">
           <div className="posture-card-transitions-rule" />
-          <button className="posture-card-transition" type="button" onClick={() => onModeTransition('INVESTIGATION_DENSE', domainId)}>
-            Open investigation workspace <span className="posture-card-transition-arrow">→</span>
+          <button className="posture-card-transition" type="button" onClick={() => onModeTransition('OPERATOR_DENSE', domainId)}>
+            Open operator workspace <span className="posture-card-transition-arrow">→</span>
           </button>
         </div>
       )}
@@ -8389,12 +8389,12 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
     )
   }
-  if (densityClass === 'INVESTIGATION_DENSE') {
+  if (densityClass === 'OPERATOR_DENSE') {
     return (
       <>
-        <InvestigationTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
+        <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} />
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceInvestigationView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
+          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} />
         )}
       </>
     )
@@ -8543,7 +8543,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const isBalanced = !boardroomMode && densityClass === 'EXECUTIVE_BALANCED'
   const handleEmergenceState = useCallback((state) => { setEmergenceState(state) }, [])
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
-  const isInvestigation = !boardroomMode && densityClass === 'INVESTIGATION_DENSE'
+  const isOperator = !boardroomMode && densityClass === 'OPERATOR_DENSE'
   const canvasRef = useRef(null)
 
   const escalationAvailable = useMemo(() => {
@@ -8551,9 +8551,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     if (boardroomMode) return STRUCTURAL_ESCALATION_CONDITIONS.boardroom(fullReport)
     if (isBalanced) return STRUCTURAL_ESCALATION_CONDITIONS.balanced(fullReport)
     if (isDense) return STRUCTURAL_ESCALATION_CONDITIONS.dense(fullReport, activeZoneKey)
-    if (isInvestigation) return STRUCTURAL_ESCALATION_CONDITIONS.investigation(fullReport)
+    if (isOperator) return STRUCTURAL_ESCALATION_CONDITIONS.operator(fullReport)
     return false
-  }, [fullReport, boardroomMode, isBalanced, isDense, isInvestigation, activeZoneKey])
+  }, [fullReport, boardroomMode, isBalanced, isDense, isOperator, activeZoneKey])
 
   const escalationContext = useMemo(() => {
     if (!escalationAvailable || !fullReport) return null

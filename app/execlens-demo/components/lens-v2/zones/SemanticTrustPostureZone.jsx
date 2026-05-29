@@ -31,7 +31,7 @@ export default function SemanticTrustPostureZone({ binding, densityClass, boardr
   }
 
   const isBalanced = densityClass === 'EXECUTIVE_BALANCED'
-  const isInvestigation = densityClass === 'INVESTIGATION_DENSE'
+  const isOperator = densityClass === 'OPERATOR_DENSE'
 
   if (isBalanced) {
     return (
@@ -140,7 +140,7 @@ export default function SemanticTrustPostureZone({ binding, densityClass, boardr
         </div>
       )}
 
-      {isInvestigation && structuralBacking && (
+      {isOperator && structuralBacking && (
         <div className="trust-zone-structural">
           <div className="trust-zone-structural-label">STRUCTURAL BACKING DETAIL</div>
           <div className="trust-zone-structural-grid">

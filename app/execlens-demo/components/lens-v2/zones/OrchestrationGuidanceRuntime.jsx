@@ -63,7 +63,7 @@ function deriveConditionActions(projection, fullReport) {
       decisions: [
         { label: 'Non-operational artifact', value: 'non_operational' },
         { label: 'Valid operational receiver', value: 'valid' },
-        { label: 'Requires investigation', value: 'investigate' },
+        { label: 'Requires operator inspection', value: 'investigate' },
       ],
     })
   }

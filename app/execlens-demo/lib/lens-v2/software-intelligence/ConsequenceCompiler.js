@@ -808,9 +808,9 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
   }
 }
 
-// ─── Persona: INVESTIGATION (§10.4) ───────────────────
+// ─── Persona: OPERATOR (§10.4) ───────────────────
 
-function forInvestigation(consequenceResult) {
+function forOperator(consequenceResult) {
   if (!consequenceResult) return null
 
   return {
@@ -844,6 +844,6 @@ module.exports = {
   compileTeaser,
   forBoardroom,
   forBalanced,
-  forInvestigation,
+  forOperator,
   CONSEQUENCE_VOCABULARY,
 }

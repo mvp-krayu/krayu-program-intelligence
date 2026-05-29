@@ -137,9 +137,9 @@ test('DensityResolver: EXECUTIVE → EXECUTIVE_DENSE', () => {
   assert.equal(densityClass, 'EXECUTIVE_DENSE');
 });
 
-test('DensityResolver: ADVISORY → INVESTIGATION_DENSE', () => {
+test('DensityResolver: ADVISORY → OPERATOR_DENSE', () => {
   const { densityClass } = resolveDensityClass('ADVISORY');
-  assert.equal(densityClass, 'INVESTIGATION_DENSE');
+  assert.equal(densityClass, 'OPERATOR_DENSE');
 });
 
 test('DensityResolver: AUDIT → AUDIT_DENSE', () => {

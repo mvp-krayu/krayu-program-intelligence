@@ -351,11 +351,11 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
   )
 }
 
-export function SoftwareIntelligenceInvestigationView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect }) {
   const surfaces = projection.surfaces || []
 
   return (
-    <div className="sw-intel-view sw-intel-view--investigation">
+    <div className="sw-intel-view sw-intel-view--operator">
       <div className="sw-intel-view-header">
         <span className="sw-intel-view-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />

@@ -295,7 +295,7 @@ export default function ReconciliationAwarenessZone({ awareness, densityClass, b
   }
 
   const isExecutive = densityClass === 'EXECUTIVE_BALANCED'
-  const isInvestigation = densityClass === 'INVESTIGATION_DENSE'
+  const isOperator = densityClass === 'OPERATOR_DENSE'
 
   return (
     <div className={`recon-zone recon-zone--${densityClass.toLowerCase()}`}>
@@ -342,11 +342,11 @@ export default function ReconciliationAwarenessZone({ awareness, densityClass, b
         <ReconDebtDrilldown debtPosture={debtPosture} domainTraceability={domainTraceability} />
       )}
 
-      {isInvestigation && domainTraceability && domainTraceability.length > 0 && (
+      {isOperator && domainTraceability && domainTraceability.length > 0 && (
         <ReconDomainDrilldownTable domains={domainTraceability} />
       )}
 
-      {isInvestigation && lifecycle && lifecycle.provenance && (
+      {isOperator && lifecycle && lifecycle.provenance && (
         <ReconProvenance provenance={lifecycle.provenance} />
       )}
     </div>

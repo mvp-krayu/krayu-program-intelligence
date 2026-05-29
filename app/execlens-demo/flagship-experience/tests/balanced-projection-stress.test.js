@@ -233,7 +233,7 @@ describe('CATEGORY A — Current governed BALANCED proof', () => {
       assert.ok(q.query_id);
       assert.ok(q.query_text);
       assert.ok(q.grounding);
-      assert.ok(['DENSE', 'INVESTIGATION'].includes(q.depth_target));
+      assert.ok(['DENSE', 'OPERATOR'].includes(q.depth_target));
     }
   });
 
