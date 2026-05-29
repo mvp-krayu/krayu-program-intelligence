@@ -286,13 +286,29 @@ No new data sources required. INVESTIGATION operates on the same compilation out
    - REPLAY_ERROR: replay threw an error
 ```
 
-### Replay Scope
+### Replay Scope — Phased Extension
 
-Replay verifies the **compiler** (conditions → consequences). It does NOT replay the SSE (signals → conditions) because SSE synthesis depends on runtime topology state that may differ between sessions. INVESTIGATION verifies SSE output by anchor-checking (Step 1), not by replaying.
+Compiler-only replay is a **Phase 1 implementation boundary**, not a permanent doctrine. The SSE is equally deterministic (same `evidence_blocks` + same `semantic_domain_registry` → same `conditions[]`), but it lacks the structured lineage fields that Program 1 gave the compiler (`derivation_trace`, `evidence_refs`).
+
+**Phase 1 (this design):** Compiler replay only (conditions → consequences). SSE output is verified by anchor-checking (Step 1), not by replaying. This is sufficient because Program 1 structured the compiler's full evidence chain.
+
+**Phase 2 (future stream):** SSE replay (signals → conditions). Requires equivalent evidence-chain structuring on the SSE side — `derivation_trace` on conditions tracing back to signal blocks, `evidence_refs` on conditions pointing to `evidence_blocks[]` entries. This is the same pattern Program 1 applied to consequences, applied one layer upstream.
+
+Phase 2 closes the full replayable chain:
+
+```
+SIGNALS → CONDITIONS → CONSEQUENCES
+         ↑ Phase 2      ↑ Phase 1
+         (SSE replay)   (compiler replay)
+```
+
+Phase 2 is a separate stream with its own §5.5 assessment. It does not block Phase 1 implementation.
 
 ### Replay as Qualification Gate
 
 Replay MATCH is a precondition for any SQO qualification advancement that depends on consequence-derived evidence. If the system cannot replay its own derivation, it cannot assert qualification readiness.
+
+Phase 1 replay (compiler) is sufficient for initial qualification gates. Full-chain replay (Phase 2) becomes a requirement when qualification claims depend on signal-level provenance.
 
 ---
 
