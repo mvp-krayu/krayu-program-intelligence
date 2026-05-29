@@ -1,0 +1,143 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01",
+  "classification": "G2",
+  "baseline": "d564348",
+  "validated_at": "2026-05-29",
+  "checks": [
+    {
+      "name": "e1_structured_derivation_trace",
+      "description": "derivation_trace replaced with array of { source_id, source_type, rule, target_id, target_type }",
+      "result": "PASS",
+      "gap": "E-1",
+      "locations": ["makeAtomic()", "deduplicateConsequences()", "makeCombination()"]
+    },
+    {
+      "name": "e2_signal_ids_preserved",
+      "description": "source_signal_ids[] added to all consequence objects",
+      "result": "PASS",
+      "gap": "E-2",
+      "locations": ["makeAtomic()", "deduplicateConsequences()", "makeCombination()"]
+    },
+    {
+      "name": "e4_structured_evidence_summary",
+      "description": "evidence_summary replaced with { condition_count, condition_types[], source_signal_families[] }",
+      "result": "PASS",
+      "gap": "E-4",
+      "locations": ["makeAtomic()", "deduplicateConsequences()", "makeCombination()"]
+    },
+    {
+      "name": "e5_cognition_slice_evidence_refs",
+      "description": "evidence_refs[] added to forBoardroom() cognition slices",
+      "result": "PASS",
+      "gap": "E-5",
+      "location": "forBoardroom()"
+    },
+    {
+      "name": "e10_pressure_zone_id",
+      "description": "pressure_zone_id added to atomic and combination consequences",
+      "result": "PASS",
+      "gap": "E-10",
+      "locations": ["makeAtomic()", "makeCombination()"]
+    },
+    {
+      "name": "e12_condition_type_preserved",
+      "description": "source_condition_types[] preserved on all consequence objects (not stripped)",
+      "result": "PASS",
+      "gap": "E-12",
+      "verification": "stripInternal() only removes underscore-prefixed fields"
+    },
+    {
+      "name": "e14_evidence_refs_addressable",
+      "description": "evidence_refs[] as [{ type, id, condition_type }] — addressable evidence reference format",
+      "result": "PASS",
+      "gap": "E-14",
+      "locations": ["makeAtomic()", "deduplicateConsequences()", "makeCombination()"]
+    },
+    {
+      "name": "e15_temporal_marker_field",
+      "description": "temporal_marker field present on all consequences (null — population requires SSE changes)",
+      "result": "PASS",
+      "gap": "E-15",
+      "note": "Field structural presence only; population deferred"
+    },
+    {
+      "name": "s4_cognition_slice_provenance",
+      "description": "source_signal_ids[] and evidence_refs[] added to cognition slices",
+      "result": "PASS",
+      "gap": "S-4",
+      "location": "forBoardroom()"
+    },
+    {
+      "name": "investigation_evidence_chain",
+      "description": "forInvestigation() passes source_condition_types, source_signal_ids, evidence_refs, evidence_summary",
+      "result": "PASS",
+      "location": "forInvestigation()"
+    },
+    {
+      "name": "balanced_evidence_refs",
+      "description": "forBalanced() primary_story and reinforcement_flow carry evidence_refs",
+      "result": "PASS",
+      "location": "forBalanced()"
+    },
+    {
+      "name": "dedup_merge_correct",
+      "description": "deduplicateConsequences() properly merges all new structured fields",
+      "result": "PASS",
+      "fields": ["source_condition_types", "source_signal_ids", "derivation_trace", "evidence_refs", "evidence_summary"]
+    },
+    {
+      "name": "combination_merge_correct",
+      "description": "makeCombination() properly aggregates structured fields from contributing consequences",
+      "result": "PASS",
+      "fields": ["source_condition_types", "source_signal_ids", "derivation_trace", "evidence_refs", "evidence_summary", "pressure_zone_id"]
+    },
+    {
+      "name": "no_consumer_breakage",
+      "description": "No JSX renders evidence_summary or derivation_trace as string — only condition-level derivation_trace (SSE) is rendered as string",
+      "result": "PASS",
+      "verification": "grep of IntelligenceField.jsx and SoftwareIntelligenceField.jsx"
+    },
+    {
+      "name": "build_passes",
+      "description": "npx next build completes with no errors",
+      "result": "PASS"
+    },
+    {
+      "name": "syntax_check",
+      "description": "node -c ConsequenceCompiler.js passes",
+      "result": "PASS"
+    },
+    {
+      "name": "four_persona_verification",
+      "description": "All 4 personas render correctly with SW-Intel active — no console errors",
+      "result": "PASS",
+      "personas": ["BOARDROOM", "BALANCED", "DENSE", "INVESTIGATION"]
+    },
+    {
+      "name": "compiler_semantics_unchanged",
+      "description": "No new consequence types, rules, or mappings — only structural field additions",
+      "result": "PASS"
+    },
+    {
+      "name": "sse_unchanged",
+      "description": "SignalSynthesisEngine.js not modified — condition-level changes deferred",
+      "result": "PASS"
+    },
+    {
+      "name": "no_boardroom_regression",
+      "description": "BOARDROOM rendering unchanged — convergence web and posture intact",
+      "result": "PASS"
+    },
+    {
+      "name": "no_balanced_regression",
+      "description": "BALANCED consequence briefing corridor unchanged — reinforcement flow intact",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 21,
+    "pass": 21,
+    "fail": 0,
+    "verdict": "Program 1 evidence chain structuring complete. 8 of 13 gaps resolved, 1 partial, 2 deferred, 2 acceptable loss. Full derivation lineage preserved from signal through all persona projections."
+  }
+}

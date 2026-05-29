@@ -1,0 +1,40 @@
+{
+  "stream": "PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01",
+  "baseline": "d564348",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "action": "MODIFY",
+      "description": "Added extractSignalFamilies() helper. Structured derivation_trace, evidence_summary, evidence_refs, source_condition_types, source_signal_ids, pressure_zone_id, temporal_marker in makeAtomic(), deduplicateConsequences(), makeCombination(). Added evidence_refs and source_signal_ids to forBoardroom() cognition slices, forBalanced() primary_story and reinforcement_flow, forInvestigation() headline consequences.",
+      "functions_modified": [
+        "extractSignalFamilies (NEW)",
+        "makeAtomic",
+        "deduplicateConsequences",
+        "makeCombination",
+        "forBoardroom",
+        "forBalanced",
+        "forInvestigation"
+      ]
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01/execution_report.md",
+      "action": "CREATE",
+      "description": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01/validation_log.json",
+      "action": "CREATE",
+      "description": "Stream validation log — 21/21 PASS"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01/file_changes.json",
+      "action": "CREATE",
+      "description": "Stream file change manifest"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EVIDENCE-CHAIN-STRUCTURING.01/CLOSURE.md",
+      "action": "CREATE",
+      "description": "Stream closure document"
+    }
+  ]
+}
