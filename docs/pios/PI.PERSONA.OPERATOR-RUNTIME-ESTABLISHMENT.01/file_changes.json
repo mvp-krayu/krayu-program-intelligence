@@ -1,0 +1,203 @@
+{
+  "stream_id": "PI.PERSONA.OPERATOR-RUNTIME-ESTABLISHMENT.01",
+  "commit": "91957cf",
+  "changes": [
+    {
+      "file": "app/execlens-demo/adapters/SurfaceModeResolver.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in surface mode map and ADVISORY binding"
+    },
+    {
+      "file": "app/execlens-demo/adapters/tests/adapters.test.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in test assertions"
+    },
+    {
+      "file": "app/execlens-demo/components/executive-narrative-rendering/NarrativeDensityController.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in density controller"
+    },
+    {
+      "file": "app/execlens-demo/components/executive-narrative-rendering/NarrativeSemanticMapper.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in semantic mapper"
+    },
+    {
+      "file": "app/execlens-demo/components/experiential-realization/IntelligenceDensityOrchestrator.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in density orchestrator and CSS class"
+    },
+    {
+      "file": "app/execlens-demo/components/experiential-realization/MotionSemanticController.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in motion controller"
+    },
+    {
+      "file": "app/execlens-demo/components/experiential-realization/tests/executiveExperienceSurface.test.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in test assertions"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/LensDisclosureShell.jsx",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in disclosure shell"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "Major rename: INVESTIGATION_DENSE→OPERATOR_DENSE, InvestigationTraceField→OperatorTraceField, isInvestigation→isOperator, InvestigationReadingGuide→OperatorReadingGuide import, SoftwareIntelligenceInvestigationView→SoftwareIntelligenceOperatorView import, all display text and mode semantics"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/InvestigationReadingGuide.jsx",
+      "action": "DELETED",
+      "description": "Renamed to OperatorReadingGuide.jsx"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/OperatorReadingGuide.jsx",
+      "action": "CREATED",
+      "description": "Renamed from InvestigationReadingGuide.jsx. Component name, aria-label, and prose updated."
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/OrchestrationGuidanceRuntime.jsx",
+      "action": "MODIFIED",
+      "description": "Investigation→operator in guidance text"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/ReconciliationAwarenessZone.jsx",
+      "action": "MODIFIED",
+      "description": "isInvestigation→isOperator, INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/SemanticTrustPostureZone.jsx",
+      "action": "MODIFIED",
+      "description": "isInvestigation→isOperator, INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "SoftwareIntelligenceInvestigationView→SoftwareIntelligenceOperatorView, CSS class"
+    },
+    {
+      "file": "app/execlens-demo/components/propagation-explainability/PropagationDensityController.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/components/propagation-explainability/PropagationSemanticMapper.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/components/propagation-explainability/tests/propagationExplainability.test.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/ExecutiveOperationalCanvas.jsx",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/LensV2FlagshipExperience.jsx",
+      "action": "MODIFIED",
+      "description": "StructuralInvestigationFlow→StructuralOperatorFlow import, investigationStage→operatorStage props"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/StructuralInvestigationFlow.jsx",
+      "action": "DELETED",
+      "description": "Renamed to StructuralOperatorFlow.jsx"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/StructuralOperatorFlow.jsx",
+      "action": "CREATED",
+      "description": "Renamed from StructuralInvestigationFlow.jsx. All constants, functions, component, and display text renamed."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/fixtures/flagship_forbidden_ai.fixture.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in fixture"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/fixtures/flagship_investigation_flow.fixture.js",
+      "action": "DELETED",
+      "description": "Renamed to flagship_operator_flow.fixture.js"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/fixtures/flagship_operator_flow.fixture.js",
+      "action": "CREATED",
+      "description": "Renamed from flagship_investigation_flow.fixture.js. All constants and field names renamed."
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/flagshipOrchestration.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_STAGES→OPERATOR_STAGES, resolveInvestigationStage→resolveOperatorStage, investigationStage→operatorStage"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/index.js",
+      "action": "MODIFIED",
+      "description": "All exports renamed: OPERATOR_STAGES, resolveOperatorStage, StructuralOperatorFlow"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/balanced-projection-stress.test.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION→OPERATOR in depth_target assertion"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/flagshipExperience.test.js",
+      "action": "MODIFIED",
+      "description": "Major rename: all INVESTIGATION→OPERATOR in imports, constants, assertions, fixture references"
+    },
+    {
+      "file": "app/execlens-demo/flagship-experience/tests/flagshipSpinoffSmoke.test.js",
+      "action": "MODIFIED",
+      "description": "investigationStage→operatorStage, INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/DisclosureSequencingContract.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE in KNOWN_PERSONAS and DISCLOSURE_TIERS"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SeverityHierarchyResolver.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_DENSE→OPERATOR_DENSE"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/balanced/NarrativePrimitives.js",
+      "action": "MODIFIED",
+      "description": "target/label INVESTIGATION→OPERATOR in descent reference"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/BalancedProjectionCompiler.js",
+      "action": "MODIFIED",
+      "description": "depth_target INVESTIGATION→OPERATOR"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "action": "MODIFIED",
+      "description": "forInvestigation→forOperator export name and comment"
+    },
+    {
+      "file": "app/execlens-demo/pages/intelligence.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION→OPERATOR in density labels, display text, and aria text"
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Major rename: INVESTIGATION_DENSE→OPERATOR_DENSE, investigationStage→operatorStage, all CSS classes, labels, data attributes"
+    },
+    {
+      "file": "app/execlens-demo/validation/GovernanceGuard.js",
+      "action": "MODIFIED",
+      "description": "INVESTIGATION_ENTRY→OPERATOR_ENTRY in forbidden interaction types"
+    }
+  ],
+  "summary": {
+    "total_files": 38,
+    "modified": 30,
+    "created": 4,
+    "deleted": 4,
+    "net_logic_change": "zero — pure string substitution"
+  }
+}
