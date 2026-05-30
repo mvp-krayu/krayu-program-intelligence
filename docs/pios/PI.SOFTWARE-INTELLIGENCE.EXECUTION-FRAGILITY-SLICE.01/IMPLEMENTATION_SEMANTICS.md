@@ -80,7 +80,7 @@ Standard 17-field condition shape plus:
 | Parameter | Value | Tuned/Governed |
 |-----------|-------|----------------|
 | `coupling_min` | 5 | TUNED — minimum edge count for meaningful cohesion measurement |
-| Module depth | 2 segments | TUNED — `path.split('/').slice(0, 2)` for module grouping |
+| Module depth | 2 segments | MVP HEURISTIC — `path.split('/').slice(0, 2)` for module grouping. Works for BlueEdge monorepo structure. Will fail on flat layouts (`src/lib/domain/`). NOT a canonical Software Intelligence contract — must be parameterized per client repository structure before multi-specimen deployment. |
 | Fragility threshold | `max(p75, nonZeroMedian)` | TUNED — avoids zero-median when many files have perfect cohesion |
 | HIGH severity | `maxFrag >= p90` | TUNED — top 10th percentile of all fragility scores |
 | ELEVATED severity | `maxFrag >= medianScore * 3` | TUNED — 3x median |
@@ -90,7 +90,7 @@ Standard 17-field condition shape plus:
 
 | Point | Description |
 |-------|-------------|
-| Module grouping depth | Currently 2 segments — could be parameterized per client/repo structure |
+| Module grouping depth | MVP HEURISTIC. Currently 2 segments — MUST be parameterized per client/repo structure before multi-specimen deployment. Candidate approaches: client-provided module map, package.json/go.mod boundary detection, or configurable depth per onboarding manifest. |
 | Temporal fragility | Could extend with churn data to compute fragility-over-time trajectories |
 | Cross-module fragility corridors | fragility_surface data enables corridor analysis between fragile modules |
 | Fragility-weighted propagation | Fragility scores could weight propagation analysis in future slice types |
