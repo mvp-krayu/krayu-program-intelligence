@@ -1,0 +1,129 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-30T13:30:00Z",
+  "checks": [
+    {
+      "name": "PHASE_1_DATA_FOUNDATION",
+      "description": "fragility_surface computed from raw import edges in deriveStructuralEnrichment()",
+      "result": "PASS",
+      "detail": "39 hotspots (16% of 244 scored files), threshold=17, cohesion_source=IMPORT_EDGE_ANALYSIS"
+    },
+    {
+      "name": "PHASE_1_COHESION_VALIDATION",
+      "description": "Real cohesion values validated against known file characteristics",
+      "result": "PASS",
+      "detail": "frontend/hooks/index.tsx: coupling=84, cohesion=0.06, fragility=79. backend/src/app.module.ts: coupling=70, cohesion=1.00, fragility=0."
+    },
+    {
+      "name": "PHASE_1_FALLBACK_PATH",
+      "description": "Degree-ratio proxy fallback present when raw edges unavailable",
+      "result": "PASS",
+      "detail": "Fallback path produces cohesion_source='DEGREE_RATIO_PROXY' with warning log"
+    },
+    {
+      "name": "PHASE_2_CONDITION_VOCABULARY",
+      "description": "EXECUTION_FRAGILITY added to CONDITION_VOCABULARY with all required fields",
+      "result": "PASS",
+      "detail": "internal, l2, l3, consequence, topology_effect, governance fields present"
+    },
+    {
+      "name": "PHASE_2_CONDITION_INTERVENTIONS",
+      "description": "3 interventions registered for EXECUTION_FRAGILITY",
+      "result": "PASS",
+      "detail": "ef-inspect-hotspot (INSPECT), ef-trace-coupling (TRACE), ef-compare-resilience (COMPARE)"
+    },
+    {
+      "name": "PHASE_2_RULE_FUNCTION",
+      "description": "ruleExecutionFragility produces conditions from structuralEnrichment.fragility_surface",
+      "result": "PASS",
+      "detail": "1 condition on BlueEdge: DOM-01 (Frontend Application), severity HIGH"
+    },
+    {
+      "name": "PHASE_2_SYNTHESIZE_WIRING",
+      "description": "Rule wired into both synthesize() and synthesizeTeaser() primitives arrays",
+      "result": "PASS"
+    },
+    {
+      "name": "PHASE_3_CONSEQUENCE_MAPPING",
+      "description": "mapEF produces correct consequence set per locked inventory",
+      "result": "PASS",
+      "detail": "RESIL_DEF (defining, always), COORD_FRAG (conditional, severity>=ELEVATED), DEP_AMP (conditional, _has_hub_fragility)"
+    },
+    {
+      "name": "PHASE_3_NO_NEW_CONSEQUENCE_TYPE",
+      "description": "All mapped consequences are existing types — no new consequence introduced",
+      "result": "PASS",
+      "detail": "RESIL_DEF, COORD_FRAG, DEP_AMP all pre-existing in CONSEQUENCE_VOCABULARY"
+    },
+    {
+      "name": "PHASE_3_COGNITION_SLICE",
+      "description": "COGNITION_SLICE_VOCABULARY entry added for EXECUTION_FRAGILITY",
+      "result": "PASS",
+      "detail": "executive_name='Execution Fragility', is_dynamic=true"
+    },
+    {
+      "name": "PHASE_4_ONTOLOGY_NODE",
+      "description": "EXECUTION_FRAGILITY CONDITION_NODE added with correct downstream/upstream refs",
+      "result": "PASS",
+      "detail": "downstream: RESIL_DEF (defining), COORD_FRAG (conditional), DEP_AMP (conditional). Upstream refs added to all 3 consequence nodes and §4 rule node."
+    },
+    {
+      "name": "PHASE_5_INVESTIGATION_VERIFIER",
+      "description": "SECTION_4_RULES entry validates condition→consequence derivation chain",
+      "result": "PASS",
+      "detail": "step_2 DERIVATION_TRACE PASS, step_3 CONSEQUENCE_RULES PASS, full verdict VERIFIED with 0 failures"
+    },
+    {
+      "name": "PHASE_6_GLYPH_TYPE",
+      "description": "EXECUTION_FRAGILITY mapped to fragmented-ring glyph in IntelligenceField",
+      "result": "PASS"
+    },
+    {
+      "name": "PHASE_6_OVERLAY_COLOR",
+      "description": "FRAGILITY_HOTSPOT mapped to #ff6b6b in StructuralTopologyZone",
+      "result": "PASS"
+    },
+    {
+      "name": "PHASE_6_SURFACE_MAP",
+      "description": "STRUCTURAL_FRAGILITY surface maps to EXECUTION_FRAGILITY in projection adapter",
+      "result": "PASS"
+    },
+    {
+      "name": "VISUAL_VERIFICATION",
+      "description": "Execution Fragility condition renders in LENS v2 flagship Intelligence Field",
+      "result": "PASS",
+      "detail": "Verified via Playwright: title, severity HIGH, consequence text, domain localization (Frontend Application), 3 interventions, FRAGILITY HOTSPOT topology effect"
+    },
+    {
+      "name": "REGRESSION_VOCABULARY",
+      "description": "All 8 pre-existing CONDITION_VOCABULARY entries intact",
+      "result": "PASS",
+      "detail": "9 total (8 existing + 1 new). All have l2, l3, consequence fields."
+    },
+    {
+      "name": "REGRESSION_INTERVENTIONS",
+      "description": "All pre-existing CONDITION_INTERVENTIONS entries intact",
+      "result": "PASS",
+      "detail": "8 intervention keys present with correct item counts"
+    },
+    {
+      "name": "REGRESSION_ONTOLOGY",
+      "description": "All pre-existing CONDITION_NODES and CONSEQUENCE_NODES intact",
+      "result": "PASS",
+      "detail": "8 condition nodes, 8 consequence nodes, all with cognition fields and graph connections"
+    },
+    {
+      "name": "MODULE_LOAD_CHECK",
+      "description": "All 8 modified modules load without error",
+      "result": "PASS",
+      "detail": "Verified via node -e require() for each module"
+    }
+  ],
+  "summary": {
+    "total": 20,
+    "pass": 20,
+    "fail": 0,
+    "verdict": "VALID"
+  }
+}

@@ -102,6 +102,140 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
         inheritance_dominant: { path: inheritsDominant.path, inherits_in_degree: inheritsDominant.inherits_in_degree || 0 },
       };
     }
+
+    // ─── Fragility Surface ─────────────────────────────────
+    const roleIndex = {};
+    for (const n of ranking) {
+      if (!(n.false_positive_flags && n.false_positive_flags.length > 0)) {
+        roleIndex[n.path] = { structural_role: n.structural_role, centrality_rank: n.centrality_rank };
+      }
+    }
+
+    const importEdges = (cg && cg.relationships)
+      ? cg.relationships.filter(r => r.relation_type === 'IMPORTS' && r.source_path && r.target_path)
+      : null;
+
+    if (importEdges && importEdges.length > 0) {
+      const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; };
+
+      const stats = {};
+      for (const e of importEdges) {
+        const sameMod = modOf(e.source_path) === modOf(e.target_path);
+        if (!stats[e.source_path]) stats[e.source_path] = { intra_out: 0, inter_out: 0, intra_in: 0, inter_in: 0 };
+        if (!stats[e.target_path]) stats[e.target_path] = { intra_out: 0, inter_out: 0, intra_in: 0, inter_in: 0 };
+        if (sameMod) {
+          stats[e.source_path].intra_out++;
+          stats[e.target_path].intra_in++;
+        } else {
+          stats[e.source_path].inter_out++;
+          stats[e.target_path].inter_in++;
+        }
+      }
+
+      const scored = [];
+      for (const [path, s] of Object.entries(stats)) {
+        const total = s.intra_out + s.inter_out + s.intra_in + s.inter_in;
+        if (total < 5) continue;
+        const intra = s.intra_out + s.intra_in;
+        const cohesion = intra / total;
+        const coupling = total;
+        const fragility = coupling * (1 - cohesion);
+        const ri = roleIndex[path] || {};
+        const isHub = ri.structural_role === 'hub' || ri.structural_role === 'authority';
+        scored.push({
+          path,
+          fragility_score: Math.round(fragility * 100) / 100,
+          coupling,
+          cohesion: Math.round(cohesion * 100) / 100,
+          structural_role: ri.structural_role || null,
+          role_context: (fragility > 0 && isHub) ? 'fragile_hub' : null,
+          module_prefix: modOf(path),
+        });
+      }
+
+      const allScores = scored.map(s => s.fragility_score).sort((a, b) => a - b);
+      const nonZero = allScores.filter(s => s > 0);
+      const p75 = allScores.length > 0 ? allScores[Math.floor(allScores.length * 0.75)] : 0;
+      const nonZeroMedian = nonZero.length > 0 ? nonZero[Math.floor(nonZero.length / 2)] : 0;
+      const threshold = Math.max(p75, nonZeroMedian);
+
+      const hotspots = scored
+        .filter(s => s.fragility_score > threshold)
+        .sort((a, b) => b.fragility_score - a.fragility_score);
+
+      const moduleMap = {};
+      for (const s of scored) {
+        if (!moduleMap[s.module_prefix]) moduleMap[s.module_prefix] = { files: [], cohesions: [], fragilities: [] };
+        moduleMap[s.module_prefix].files.push(s);
+        moduleMap[s.module_prefix].cohesions.push(s.cohesion);
+        moduleMap[s.module_prefix].fragilities.push(s.fragility_score);
+      }
+
+      const moduleCohesion = [];
+      const absorptiveModules = [];
+      for (const [prefix, m] of Object.entries(moduleMap)) {
+        const meanCoh = m.cohesions.reduce((a, b) => a + b, 0) / m.cohesions.length;
+        const meanFrag = m.fragilities.reduce((a, b) => a + b, 0) / m.fragilities.length;
+        const maxFrag = Math.max(...m.fragilities);
+        moduleCohesion.push({
+          module_prefix: prefix,
+          file_count: m.files.length,
+          mean_cohesion: Math.round(meanCoh * 100) / 100,
+          mean_fragility: Math.round(meanFrag * 100) / 100,
+          max_fragility: Math.round(maxFrag * 100) / 100,
+        });
+        if (meanCoh >= 0.7) {
+          absorptiveModules.push({ module_prefix: prefix, file_count: m.files.length, mean_cohesion: Math.round(meanCoh * 100) / 100 });
+        }
+      }
+
+      enrichment.fragility_surface = {
+        fragility_hotspots: hotspots,
+        module_cohesion: moduleCohesion,
+        absorptive_modules: absorptiveModules,
+        thresholds: { coupling_min: 5, fragility_threshold: Math.round(threshold * 100) / 100 },
+        fragile_count: hotspots.length,
+        absorptive_count: absorptiveModules.length,
+        cohesion_source: 'IMPORT_EDGE_ANALYSIS',
+      };
+    } else if (ranking.length > 0) {
+      const scored = [];
+      for (const n of ranking) {
+        if (n.false_positive_flags && n.false_positive_flags.length > 0) continue;
+        const iin = n.import_in_degree || 0;
+        const iout = n.import_out_degree || 0;
+        const coupling = iin + iout;
+        if (coupling < 5) continue;
+        const fragility = coupling * (iout / Math.max(iin, 1));
+        const isHub = n.structural_role === 'hub' || n.structural_role === 'authority';
+        const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; };
+        scored.push({
+          path: n.path,
+          fragility_score: Math.round(fragility * 100) / 100,
+          coupling,
+          cohesion: null,
+          structural_role: n.structural_role,
+          role_context: (fragility > 0 && isHub) ? 'fragile_hub' : null,
+          module_prefix: modOf(n.path),
+        });
+      }
+      const allScores = scored.map(s => s.fragility_score).sort((a, b) => a - b);
+      const nonZero = allScores.filter(s => s > 0);
+      const p75 = allScores.length > 0 ? allScores[Math.floor(allScores.length * 0.75)] : 0;
+      const nonZeroMedian = nonZero.length > 0 ? nonZero[Math.floor(nonZero.length / 2)] : 0;
+      const threshold = Math.max(p75, nonZeroMedian);
+      const hotspots = scored.filter(s => s.fragility_score > threshold).sort((a, b) => b.fragility_score - a.fragility_score);
+
+      enrichment.fragility_surface = {
+        fragility_hotspots: hotspots,
+        module_cohesion: [],
+        absorptive_modules: [],
+        thresholds: { coupling_min: 5, fragility_threshold: Math.round(threshold * 100) / 100 },
+        fragile_count: hotspots.length,
+        absorptive_count: 0,
+        cohesion_source: 'DEGREE_RATIO_PROXY',
+      };
+    }
   }
 
   return enrichment;

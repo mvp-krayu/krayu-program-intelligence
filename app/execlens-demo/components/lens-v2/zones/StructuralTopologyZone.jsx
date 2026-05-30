@@ -218,6 +218,7 @@ const COGNITION_OVERLAY_COLORS = {
   PRESSURE_ZONE: '#ff6b6b',
   EVIDENCE_GAP: '#5e6d8a',
   SW_INTEL_POSTURE: '#ff6b6b',
+  FRAGILITY_HOTSPOT: '#ff6b6b',
 }
 
 const ROLE_COLORS = {

@@ -66,6 +66,14 @@ const CONDITION_VOCABULARY = {
     topology_effect: 'Compound convergence overlay — zone boundary + hub indicator + import corridors + cluster emphasis',
     governance: 'Structural review mandatory before delivery-affecting decisions',
   },
+  EXECUTION_FRAGILITY: {
+    internal: 'EXECUTION_FRAGILITY',
+    l2: 'Structural Fragility Concentration',
+    l3: 'Execution Fragility',
+    consequence: 'Localized structural weakness amplifies operational disruption — high external coupling combined with low internal cohesion creates a fragility hotspot where changes propagate disproportionate risk.',
+    topology_effect: 'Fragility hotspot emphasis with coupling/cohesion surface',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
 }
 
 // ─── Severity ──────────────────────────────────────────────────────
@@ -110,6 +118,11 @@ const CONDITION_INTERVENTIONS = {
     { intervention_id: 'cc-decompose', action_type: 'DECOMPOSE', operator_label: 'Break down contributing conditions', topology_mutation: 'Transitions from compound overlay to selected primitive', panel_mutation: 'Selected primitive condition evidence' },
     { intervention_id: 'cc-inspect-convergence', action_type: 'INSPECT', operator_label: 'Show convergence domain', topology_mutation: 'Convergence domain enlarged, connections emphasized', panel_mutation: 'Domain structural profile with convergence factor count' },
     { intervention_id: 'cc-qualify', action_type: 'QUALIFY', operator_label: 'Check qualification impact', topology_mutation: 'Governance boundary indicators on convergence domain', panel_mutation: 'Qualification boundary assessment and SQO implications' },
+  ],
+  EXECUTION_FRAGILITY: [
+    { intervention_id: 'ef-inspect-hotspot', action_type: 'INSPECT', operator_label: 'Show fragility hotspot files', topology_mutation: 'Fragility hotspot files emphasized, absorptive files dimmed', panel_mutation: 'Fragility hotspot inventory with per-file coupling/cohesion metrics' },
+    { intervention_id: 'ef-trace-coupling', action_type: 'TRACE', operator_label: 'Trace coupling exposure', topology_mutation: 'Import corridors from fragile files visualized', panel_mutation: 'Inbound/outbound dependency inventory for fragile files' },
+    { intervention_id: 'ef-compare-resilience', action_type: 'COMPARE', operator_label: 'Compare fragile vs absorptive regions', topology_mutation: 'Bidirectional resilience overlay — fragile highlighted, absorptive dimmed', panel_mutation: 'Resilience distribution table by module' },
   ],
 }
 
@@ -233,6 +246,7 @@ function buildDomainTargets(domainIds, registry, conditionType) {
     GOVERNANCE_COVERAGE_GAP: 'advisory blind spot',
     GOVERNANCE_COVERAGE_COMPLETE: 'anchored',
     COMPOUND_CONVERGENCE: 'convergence target',
+    EXECUTION_FRAGILITY: 'fragility hotspot',
   }
   return (domainIds || []).map(id => {
     const resolved = resolveDomainDisplay(id, registry)
@@ -755,6 +769,95 @@ function ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnri
   }]
 }
 
+function ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const fs = structuralEnrichment && structuralEnrichment.fragility_surface
+  if (!fs || !fs.fragility_hotspots || fs.fragility_hotspots.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.EXECUTION_FRAGILITY
+
+  const domainHotspots = {}
+  for (const h of fs.fragility_hotspots) {
+    const domId = resolveFileToRegistryDomain(h.path, registry, pressureZoneState)
+    const resolvedId = domId ? resolve(domId) : null
+    if (!resolvedId) continue
+    if (!domainHotspots[resolvedId]) domainHotspots[resolvedId] = []
+    domainHotspots[resolvedId].push(h)
+  }
+
+  if (Object.keys(domainHotspots).length === 0) return []
+
+  const allScores = fs.fragility_hotspots.map(h => h.fragility_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, hotspots] of Object.entries(domainHotspots)) {
+    const maxFrag = Math.max(...hotspots.map(h => h.fragility_score))
+    const hasHubFragility = hotspots.some(h => h.role_context === 'fragile_hub')
+    const severity = maxFrag >= p90 ? 'HIGH'
+      : maxFrag >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'ef-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'EXECUTION_FRAGILITY',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: [], files: hotspots.map(h => h.path) },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_hub_fragility: hasHubFragility,
+      topology_overlay: {
+        overlay_mode: 'FRAGILITY_HOTSPOT',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: hotspots.map(h => ({
+          signal_id: 'fragility-' + h.path.replace(/[/\\]/g, '-'),
+          signal_name: 'Fragility: ' + h.path.split('/').pop(),
+          severity,
+          type: 'fragility_hotspot',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.EXECUTION_FRAGILITY.map(i => ({
+        ...i,
+        condition_id: 'ef-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['fragility_review'],
+      contributing_features: ['execution_fragility'],
+      derivation_trace: hotspots.map(h => h.path).join(' + ') +
+        ' → fragility_surface [' + fs.cohesion_source + '] → EXECUTION_FRAGILITY on ' + domId,
+      fragility_evidence: {
+        hotspot_count: hotspots.length,
+        max_fragility: maxFrag,
+        has_hub_fragility: hasHubFragility,
+        cohesion_source: fs.cohesion_source,
+        hotspot_files: hotspots.slice(0, 5).map(h => ({
+          path: h.path,
+          fragility: h.fragility_score,
+          coupling: h.coupling,
+          cohesion: h.cohesion,
+          structural_role: h.structural_role,
+          role_context: h.role_context,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
 function ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry) {
   const resolve = buildDomainResolver(registry)
   const gapSignals = taggedSignals.filter(ts => ts.features.includes('domain_anchoring_gap'))
@@ -921,6 +1024,7 @@ function synthesize(fullReport) {
     ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState, topologyEdges, structuralEnrichment),
     ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
+    ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
@@ -983,6 +1087,7 @@ function synthesizeTeaser(fullReport) {
     ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState),
     ...ruleStructuralMassConcentration(taggedSignals, registry, null, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
+    ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 

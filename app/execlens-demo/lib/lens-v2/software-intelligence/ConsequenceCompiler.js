@@ -256,6 +256,18 @@ function mapCDCP(cond, registry) {
   return r
 }
 
+function mapEF(cond, registry) {
+  const r = []
+  r.push(makeAtomic('RESIL_DEF', cond, 'LOCAL', true, registry))
+  if (sevGte(cond.severity, 'ELEVATED')) {
+    r.push(makeAtomic('COORD_FRAG', cond, 'LOCAL', false, registry))
+  }
+  if (cond._has_hub_fragility) {
+    r.push(makeAtomic('DEP_AMP', cond, 'LOCAL', false, registry))
+  }
+  return r
+}
+
 function mapGCS(cond, registry) {
   if (cond.severity === 'NOMINAL') return []
   return [makeAtomic('GOV_GAP', cond, 'SYSTEMIC', true, registry)]
@@ -272,6 +284,7 @@ function mapCondition(cond, ctx, registry) {
     case 'PROPAGATION_ASYMMETRY': return mapPA(cond, registry)
     case 'STRUCTURAL_MASS_CONCENTRATION': return mapSMC(cond, ctx, registry)
     case 'CROSS_DOMAIN_COUPLING_PRESSURE': return mapCDCP(cond, registry)
+    case 'EXECUTION_FRAGILITY': return mapEF(cond, registry)
     case 'GOVERNANCE_COVERAGE_STATUS': return mapGCS(cond, registry)
     case 'COMPOUND_CONVERGENCE': return mapCC(cond, registry)
     default: return []
@@ -570,6 +583,11 @@ const COGNITION_SLICE_VOCABULARY = {
   CROSS_DOMAIN_COUPLING_PRESSURE: {
     executive_name: 'Cross-Domain Coupling',
     localize: (d) => `${d} exhibits cross-boundary coupling that constrains operational independence between domains.`,
+    is_dynamic: true,
+  },
+  EXECUTION_FRAGILITY: {
+    executive_name: 'Execution Fragility',
+    localize: (d) => `${d} shows structural fragility — localized weakness amplifies operational disruption beyond this region's apparent importance.`,
     is_dynamic: true,
   },
   COMPOUND_CONVERGENCE: { executive_name: null, localize: () => null, is_dynamic: false },
