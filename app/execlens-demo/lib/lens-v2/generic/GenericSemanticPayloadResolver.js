@@ -238,6 +238,133 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
     }
   }
 
+  // ─── Constriction Surface ─────────────────────────────
+  if (importEdges && importEdges.length > 0) {
+    const adj = {}
+    const radj = {}
+    const allNodes = new Set()
+    for (const e of importEdges) {
+      allNodes.add(e.source_path)
+      allNodes.add(e.target_path)
+      if (!adj[e.source_path]) adj[e.source_path] = new Set()
+      if (!adj[e.target_path]) adj[e.target_path] = new Set()
+      if (!radj[e.source_path]) radj[e.source_path] = new Set()
+      if (!radj[e.target_path]) radj[e.target_path] = new Set()
+      adj[e.source_path].add(e.target_path)
+      radj[e.target_path].add(e.source_path)
+    }
+
+    const undirAdj = {}
+    for (const n of allNodes) {
+      undirAdj[n] = new Set([...(adj[n] || []), ...(radj[n] || [])])
+    }
+
+    const disc = {}
+    const low = {}
+    const parent = {}
+    const articulationPoints = new Set()
+    let timer = 0
+    function dfsAP(u) {
+      let children = 0
+      disc[u] = low[u] = timer++
+      for (const v of undirAdj[u]) {
+        if (!(v in disc)) {
+          children++
+          parent[v] = u
+          dfsAP(v)
+          low[u] = Math.min(low[u], low[v])
+          if (!(u in parent) && children > 1) articulationPoints.add(u)
+          if (u in parent && low[v] >= disc[u]) articulationPoints.add(u)
+        } else if (v !== parent[u]) {
+          low[u] = Math.min(low[u], disc[v])
+        }
+      }
+    }
+    for (const n of allNodes) {
+      if (!(n in disc)) dfsAP(n)
+    }
+
+    const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+    const constrictionScored = []
+    for (const n of allNodes) {
+      const inDeg = radj[n] ? radj[n].size : 0
+      const outDeg = adj[n] ? adj[n].size : 0
+      const throughFlow = Math.min(inDeg, outDeg)
+      if (throughFlow < 2) continue
+      const isBridge = articulationPoints.has(n)
+      const constriction = throughFlow * (isBridge ? 3 : 1)
+      const ri = roleIndex[n] || {}
+      constrictionScored.push({
+        path: n,
+        constriction_score: constriction,
+        through_flow: throughFlow,
+        in_degree: inDeg,
+        out_degree: outDeg,
+        is_bridge: isBridge,
+        structural_role: ri.structural_role || null,
+        centrality_rank: ri.centrality_rank || null,
+        module_prefix: modOf(n),
+      })
+    }
+
+    const allConstrictions = constrictionScored.map(s => s.constriction_score).sort((a, b) => a - b)
+    const p75c = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length * 0.75)] : 0
+    const medianC = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length / 2)] : 0
+    const cThreshold = Math.max(p75c, medianC * 2)
+
+    const constrictionHotspots = constrictionScored
+      .filter(s => s.constriction_score > cThreshold || s.is_bridge)
+      .sort((a, b) => b.constriction_score - a.constriction_score)
+
+    const bridgeCount = constrictionHotspots.filter(s => s.is_bridge).length
+
+    enrichment.constriction_surface = {
+      constriction_hotspots: constrictionHotspots,
+      thresholds: { through_flow_min: 2, constriction_threshold: cThreshold },
+      constriction_count: constrictionHotspots.length,
+      bridge_count: bridgeCount,
+      articulation_point_count: articulationPoints.size,
+      total_nodes: allNodes.size,
+      constriction_source: 'IMPORT_EDGE_ANALYSIS',
+    }
+  } else if (ranking.length > 0) {
+    const constrictionScored = []
+    for (const n of ranking) {
+      if (n.false_positive_flags && n.false_positive_flags.length > 0) continue
+      const iin = n.import_in_degree || 0
+      const iout = n.import_out_degree || 0
+      const throughFlow = Math.min(iin, iout)
+      if (throughFlow < 2) continue
+      const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+      constrictionScored.push({
+        path: n.path,
+        constriction_score: throughFlow,
+        through_flow: throughFlow,
+        in_degree: iin,
+        out_degree: iout,
+        is_bridge: false,
+        structural_role: n.structural_role,
+        centrality_rank: n.centrality_rank,
+        module_prefix: modOf(n.path),
+      })
+    }
+    const allConstrictions = constrictionScored.map(s => s.constriction_score).sort((a, b) => a - b)
+    const p75c = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length * 0.75)] : 0
+    const constrictionHotspots = constrictionScored
+      .filter(s => s.constriction_score > p75c)
+      .sort((a, b) => b.constriction_score - a.constriction_score)
+
+    enrichment.constriction_surface = {
+      constriction_hotspots: constrictionHotspots,
+      thresholds: { through_flow_min: 2, constriction_threshold: p75c },
+      constriction_count: constrictionHotspots.length,
+      bridge_count: 0,
+      articulation_point_count: 0,
+      total_nodes: ranking.length,
+      constriction_source: 'DEGREE_RATIO_PROXY',
+    }
+  }
+
   return enrichment;
 }
 

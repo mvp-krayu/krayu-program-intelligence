@@ -168,6 +168,29 @@ const CONDITION_NODES = {
     runtime: null,
   },
 
+  EXECUTION_CONSTRICTION: {
+    id: 'EXECUTION_CONSTRICTION',
+    type: 'condition',
+
+    human_name: 'Structural throughput bottleneck',
+    what_it_means: 'Operational flow is forced through a narrow structural passage. This node sits on critical traversal paths between otherwise-independent regions, acting as a structural bridge that all traffic must cross.',
+    why_it_matters: 'When a single structural node is the only path between regions, it becomes a throughput ceiling. Adding more capacity (more developers, more parallel work) does not help because the constriction is topological, not capacity-based.',
+    operational_implication: 'Work in areas connected through this constriction point will queue and serialize regardless of team size. This is Brooks\'s Law expressed as topology.',
+    how_detected: 'Graph traversal analysis identified nodes with high through-flow (both inbound and outbound edges) that also serve as articulation points — structural bridges whose removal would disconnect regions of the import graph.',
+    what_to_look_for: 'Look for areas where parallelizing work does not increase throughput, or where changes in one region unexpectedly block work in a structurally distant region.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'OP_BOTTLENECK', role: 'defining' },
+      { ref: 'COORD_FRAG', role: 'conditional' },
+      { ref: 'DEP_AMP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
   COMPOUND_CONVERGENCE: {
     id: 'COMPOUND_CONVERGENCE',
     type: 'condition',
@@ -209,6 +232,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -233,6 +257,7 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -281,6 +306,7 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'DELIVERY_PRESSURE_CONCENTRATION', role: 'conditional' },
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'defining' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -467,6 +493,7 @@ const RULE_NODES = {
       { ref: 'STRUCTURAL_MASS_CONCENTRATION', role: 'governance' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'governance' },
       { ref: 'EXECUTION_FRAGILITY', role: 'governance' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'governance' },
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'governance' },
       { ref: 'COMPOUND_CONVERGENCE', role: 'governance' },
     ],

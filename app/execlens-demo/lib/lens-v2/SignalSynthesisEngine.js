@@ -74,6 +74,14 @@ const CONDITION_VOCABULARY = {
     topology_effect: 'Fragility hotspot emphasis with coupling/cohesion surface',
     governance: 'Structural confirmation required — evidence-bound',
   },
+  EXECUTION_CONSTRICTION: {
+    internal: 'EXECUTION_CONSTRICTION',
+    l2: 'Structural Throughput Constriction',
+    l3: 'Execution Constriction',
+    consequence: 'Operational flow is forced through a narrow structural passage — this node sits on critical traversal paths between otherwise-independent regions, creating a throughput ceiling that cannot be raised by adding capacity.',
+    topology_effect: 'Constriction point emphasis with bridge detection overlay',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
 }
 
 // ─── Severity ──────────────────────────────────────────────────────
@@ -123,6 +131,11 @@ const CONDITION_INTERVENTIONS = {
     { intervention_id: 'ef-inspect-hotspot', action_type: 'INSPECT', operator_label: 'Show fragility hotspot files', topology_mutation: 'Fragility hotspot files emphasized, absorptive files dimmed', panel_mutation: 'Fragility hotspot inventory with per-file coupling/cohesion metrics' },
     { intervention_id: 'ef-trace-coupling', action_type: 'TRACE', operator_label: 'Trace coupling exposure', topology_mutation: 'Import corridors from fragile files visualized', panel_mutation: 'Inbound/outbound dependency inventory for fragile files' },
     { intervention_id: 'ef-compare-resilience', action_type: 'COMPARE', operator_label: 'Compare fragile vs absorptive regions', topology_mutation: 'Bidirectional resilience overlay — fragile highlighted, absorptive dimmed', panel_mutation: 'Resilience distribution table by module' },
+  ],
+  EXECUTION_CONSTRICTION: [
+    { intervention_id: 'ec-inspect-bottleneck', action_type: 'INSPECT', operator_label: 'Show constriction points', topology_mutation: 'Constriction points emphasized, bridge nodes highlighted', panel_mutation: 'Constriction inventory with through-flow and bridge status per file' },
+    { intervention_id: 'ec-trace-paths', action_type: 'TRACE', operator_label: 'Trace traversal paths', topology_mutation: 'Critical path corridors from constriction point visualized', panel_mutation: 'Inbound/outbound path inventory showing regions connected through this node' },
+    { intervention_id: 'ec-compare-alternatives', action_type: 'COMPARE', operator_label: 'Assess alternative routes', topology_mutation: 'Bridge vs non-bridge constrictions compared', panel_mutation: 'Path redundancy assessment — bridge nodes vs high-flow nodes' },
   ],
 }
 
@@ -247,6 +260,7 @@ function buildDomainTargets(domainIds, registry, conditionType) {
     GOVERNANCE_COVERAGE_COMPLETE: 'anchored',
     COMPOUND_CONVERGENCE: 'convergence target',
     EXECUTION_FRAGILITY: 'fragility hotspot',
+    EXECUTION_CONSTRICTION: 'constriction point',
   }
   return (domainIds || []).map(id => {
     const resolved = resolveDomainDisplay(id, registry)
@@ -858,6 +872,97 @@ function ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, p
   return conditions
 }
 
+function ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const cs = structuralEnrichment && structuralEnrichment.constriction_surface
+  if (!cs || !cs.constriction_hotspots || cs.constriction_hotspots.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.EXECUTION_CONSTRICTION
+
+  const domainConstrictions = {}
+  for (const h of cs.constriction_hotspots) {
+    const domId = resolveFileToRegistryDomain(h.path, registry, pressureZoneState)
+    const resolvedId = domId ? resolve(domId) : null
+    if (!resolvedId) continue
+    if (!domainConstrictions[resolvedId]) domainConstrictions[resolvedId] = []
+    domainConstrictions[resolvedId].push(h)
+  }
+
+  if (Object.keys(domainConstrictions).length === 0) return []
+
+  const allScores = cs.constriction_hotspots.map(h => h.constriction_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, hotspots] of Object.entries(domainConstrictions)) {
+    const maxConstriction = Math.max(...hotspots.map(h => h.constriction_score))
+    const hasBridge = hotspots.some(h => h.is_bridge)
+    const severity = maxConstriction >= p90 ? 'HIGH'
+      : maxConstriction >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'ec-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'EXECUTION_CONSTRICTION',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: [], files: hotspots.map(h => h.path) },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_bridge_constriction: hasBridge,
+      topology_overlay: {
+        overlay_mode: 'CONSTRICTION_POINT',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: hotspots.map(h => ({
+          signal_id: 'constriction-' + h.path.replace(/[/\\]/g, '-'),
+          signal_name: (h.is_bridge ? 'Bridge: ' : 'Constriction: ') + h.path.split('/').pop(),
+          severity,
+          type: h.is_bridge ? 'bridge_constriction' : 'flow_constriction',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.EXECUTION_CONSTRICTION.map(i => ({
+        ...i,
+        condition_id: 'ec-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['constriction_review'],
+      contributing_features: ['execution_constriction'],
+      derivation_trace: hotspots.map(h => h.path).join(' + ') +
+        ' → constriction_surface [' + cs.constriction_source + '] → EXECUTION_CONSTRICTION on ' + domId,
+      constriction_evidence: {
+        hotspot_count: hotspots.length,
+        max_constriction: maxConstriction,
+        has_bridge: hasBridge,
+        bridge_count: hotspots.filter(h => h.is_bridge).length,
+        constriction_source: cs.constriction_source,
+        hotspot_files: hotspots.slice(0, 5).map(h => ({
+          path: h.path,
+          constriction: h.constriction_score,
+          through_flow: h.through_flow,
+          in_degree: h.in_degree,
+          out_degree: h.out_degree,
+          is_bridge: h.is_bridge,
+          structural_role: h.structural_role,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
 function ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry) {
   const resolve = buildDomainResolver(registry)
   const gapSignals = taggedSignals.filter(ts => ts.features.includes('domain_anchoring_gap'))
@@ -1025,6 +1130,7 @@ function synthesize(fullReport) {
     ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
@@ -1088,6 +1194,7 @@ function synthesizeTeaser(fullReport) {
     ...ruleStructuralMassConcentration(taggedSignals, registry, null, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
