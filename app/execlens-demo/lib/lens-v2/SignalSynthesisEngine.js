@@ -82,6 +82,14 @@ const CONDITION_VOCABULARY = {
     topology_effect: 'Constriction point emphasis with bridge detection overlay',
     governance: 'Structural confirmation required — evidence-bound',
   },
+  STRUCTURAL_BOUNDARY_DIVERGENCE: {
+    internal: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+    l2: 'Organizational-Structural Boundary Mismatch',
+    l3: 'Structural Boundary Divergence',
+    consequence: 'Declared organizational structure diverges from actual dependency structure — directory boundaries do not match import graph boundaries, creating governance gaps where ownership assumptions are structurally invalid.',
+    topology_effect: 'Boundary divergence overlay with cross-boundary import corridors',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
 }
 
 // ─── Severity ──────────────────────────────────────────────────────
@@ -136,6 +144,11 @@ const CONDITION_INTERVENTIONS = {
     { intervention_id: 'ec-inspect-bottleneck', action_type: 'INSPECT', operator_label: 'Show constriction points', topology_mutation: 'Constriction points emphasized, bridge nodes highlighted', panel_mutation: 'Constriction inventory with through-flow and bridge status per file' },
     { intervention_id: 'ec-trace-paths', action_type: 'TRACE', operator_label: 'Trace traversal paths', topology_mutation: 'Critical path corridors from constriction point visualized', panel_mutation: 'Inbound/outbound path inventory showing regions connected through this node' },
     { intervention_id: 'ec-compare-alternatives', action_type: 'COMPARE', operator_label: 'Assess alternative routes', topology_mutation: 'Bridge vs non-bridge constrictions compared', panel_mutation: 'Path redundancy assessment — bridge nodes vs high-flow nodes' },
+  ],
+  STRUCTURAL_BOUNDARY_DIVERGENCE: [
+    { intervention_id: 'sbd-inspect-divergence', action_type: 'INSPECT', operator_label: 'Show divergent modules', topology_mutation: 'Divergent modules emphasized, aligned modules dimmed', panel_mutation: 'Divergence inventory with cross-boundary ratio per module' },
+    { intervention_id: 'sbd-trace-boundaries', action_type: 'TRACE', operator_label: 'Trace cross-boundary imports', topology_mutation: 'Cross-boundary import corridors visualized', panel_mutation: 'Import inventory showing declared vs actual dependency paths' },
+    { intervention_id: 'sbd-compare-alignment', action_type: 'COMPARE', operator_label: 'Compare declared vs actual boundaries', topology_mutation: 'Aligned vs divergent modules contrasted', panel_mutation: 'Boundary alignment assessment by module' },
   ],
 }
 
@@ -261,6 +274,7 @@ function buildDomainTargets(domainIds, registry, conditionType) {
     COMPOUND_CONVERGENCE: 'convergence target',
     EXECUTION_FRAGILITY: 'fragility hotspot',
     EXECUTION_CONSTRICTION: 'constriction point',
+    STRUCTURAL_BOUNDARY_DIVERGENCE: 'boundary divergence',
   }
   return (domainIds || []).map(id => {
     const resolved = resolveDomainDisplay(id, registry)
@@ -963,6 +977,99 @@ function ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment
   return conditions
 }
 
+function ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const bd = structuralEnrichment && structuralEnrichment.boundary_divergence
+  if (!bd || !bd.divergent_modules || bd.divergent_modules.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.STRUCTURAL_BOUNDARY_DIVERGENCE
+
+  const domainDivergences = {}
+  for (const m of bd.divergent_modules) {
+    const domId = resolveFileToRegistryDomain(m.module_prefix, registry, pressureZoneState)
+    const resolvedId = domId ? resolve(domId) : null
+    if (!resolvedId) continue
+    if (!domainDivergences[resolvedId]) domainDivergences[resolvedId] = []
+    domainDivergences[resolvedId].push(m)
+  }
+
+  if (Object.keys(domainDivergences).length === 0) return []
+
+  const allScores = bd.divergent_modules.map(m => m.divergence_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, modules] of Object.entries(domainDivergences)) {
+    const maxDiv = Math.max(...modules.map(m => m.divergence_score))
+    const hasOrphaned = (bd.orphaned_modules || []).some(o => {
+      const oDomId = resolveFileToRegistryDomain(o.module_prefix, registry, pressureZoneState)
+      return oDomId && resolve(oDomId) === domId
+    })
+    const severity = maxDiv >= p90 ? 'HIGH'
+      : maxDiv >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'sbd-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: [], files: modules.flatMap(m => m.module_prefix ? [m.module_prefix] : []) },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_orphaned_modules: hasOrphaned,
+      topology_overlay: {
+        overlay_mode: 'BOUNDARY_DIVERGENCE',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: modules.map(m => ({
+          signal_id: 'divergence-' + m.module_prefix.replace(/[/\\]/g, '-'),
+          signal_name: 'Divergence: ' + m.module_prefix,
+          severity,
+          type: 'boundary_divergence',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.STRUCTURAL_BOUNDARY_DIVERGENCE.map(i => ({
+        ...i,
+        condition_id: 'sbd-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['boundary_divergence_review'],
+      contributing_features: ['structural_boundary_divergence'],
+      derivation_trace: modules.map(m => m.module_prefix).join(' + ') +
+        ' → boundary_divergence [' + bd.divergence_source + '] → STRUCTURAL_BOUNDARY_DIVERGENCE on ' + domId,
+      divergence_evidence: {
+        module_count: modules.length,
+        max_divergence: maxDiv,
+        has_orphaned: hasOrphaned,
+        system_divergence_index: bd.system_divergence_index,
+        divergence_source: bd.divergence_source,
+        divergent_modules: modules.slice(0, 5).map(m => ({
+          module_prefix: m.module_prefix,
+          divergence_score: m.divergence_score,
+          cross_boundary_ratio: m.cross_boundary_ratio,
+          file_count: m.file_count,
+          total_edges: m.total_edges,
+          is_orphaned: m.is_orphaned,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
 function ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry) {
   const resolve = buildDomainResolver(registry)
   const gapSignals = taggedSignals.filter(ts => ts.features.includes('domain_anchoring_gap'))
@@ -1131,6 +1238,7 @@ function synthesize(fullReport) {
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
@@ -1195,6 +1303,7 @@ function synthesizeTeaser(fullReport) {
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 

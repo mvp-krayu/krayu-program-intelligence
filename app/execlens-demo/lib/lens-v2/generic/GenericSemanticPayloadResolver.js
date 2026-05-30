@@ -363,6 +363,88 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
       constriction_source: 'DEGREE_RATIO_PROXY',
     }
   }
+
+    // ─── Boundary Divergence Surface ──────────────────────
+    if (importEdges && importEdges.length > 0) {
+      const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+
+      const modEdges = {}
+      const modFiles = {}
+      for (const e of importEdges) {
+        const srcMod = modOf(e.source_path)
+        const tgtMod = modOf(e.target_path)
+        if (!modEdges[srcMod]) modEdges[srcMod] = { out_total: 0, out_cross: 0, in_total: 0, in_cross: 0 }
+        if (!modEdges[tgtMod]) modEdges[tgtMod] = { out_total: 0, out_cross: 0, in_total: 0, in_cross: 0 }
+        if (!modFiles[srcMod]) modFiles[srcMod] = new Set()
+        if (!modFiles[tgtMod]) modFiles[tgtMod] = new Set()
+        modFiles[srcMod].add(e.source_path)
+        modFiles[tgtMod].add(e.target_path)
+        modEdges[srcMod].out_total++
+        modEdges[tgtMod].in_total++
+        if (srcMod !== tgtMod) {
+          modEdges[srcMod].out_cross++
+          modEdges[tgtMod].in_cross++
+        }
+      }
+
+      const divergentModules = []
+      const orphanedModules = []
+      for (const [mod, edges] of Object.entries(modEdges)) {
+        const totalEdges = edges.out_total + edges.in_total
+        if (totalEdges < 3) continue
+        const crossTotal = edges.out_cross + edges.in_cross
+        const crossRatio = crossTotal / totalEdges
+        const outCrossRatio = edges.out_total > 0 ? edges.out_cross / edges.out_total : 0
+        const inCrossRatio = edges.in_total > 0 ? edges.in_cross / edges.in_total : 0
+        const internalIn = edges.in_total - edges.in_cross
+        const fileCount = modFiles[mod] ? modFiles[mod].size : 0
+
+        if (internalIn === 0 && edges.in_total > 0 && fileCount >= 2) {
+          orphanedModules.push({
+            module_prefix: mod,
+            file_count: fileCount,
+            reason: 'Zero inbound edges from own scope — all consumers are external',
+          })
+        }
+
+        const divergenceScore = (outCrossRatio * 0.6 + inCrossRatio * 0.4) * Math.log2(Math.max(totalEdges, 2))
+
+        divergentModules.push({
+          module_prefix: mod,
+          divergence_score: Math.round(divergenceScore * 100) / 100,
+          cross_boundary_ratio: Math.round(crossRatio * 100) / 100,
+          out_cross_ratio: Math.round(outCrossRatio * 100) / 100,
+          in_cross_ratio: Math.round(inCrossRatio * 100) / 100,
+          file_count: fileCount,
+          total_edges: totalEdges,
+          is_orphaned: orphanedModules.some(o => o.module_prefix === mod),
+        })
+      }
+
+      divergentModules.sort((a, b) => b.divergence_score - a.divergence_score)
+
+      const allDivScores = divergentModules.map(d => d.divergence_score).sort((a, b) => a - b)
+      const p75d = allDivScores.length > 0 ? allDivScores[Math.floor(allDivScores.length * 0.75)] : 0
+      const medianD = allDivScores.length > 0 ? allDivScores[Math.floor(allDivScores.length / 2)] : 0
+      const dThreshold = Math.max(p75d, medianD * 1.5)
+
+      const hotspotModules = divergentModules.filter(d => d.divergence_score > dThreshold || d.is_orphaned)
+
+      const totalCross = Object.values(modEdges).reduce((s, e) => s + e.out_cross, 0)
+      const totalAll = Object.values(modEdges).reduce((s, e) => s + e.out_total, 0)
+      const systemDivergence = totalAll > 0 ? Math.round((totalCross / totalAll) * 100) / 100 : 0
+
+      enrichment.boundary_divergence = {
+        divergent_modules: hotspotModules,
+        orphaned_modules: orphanedModules,
+        system_divergence_index: systemDivergence,
+        thresholds: { min_edges: 3, divergence_threshold: Math.round(dThreshold * 100) / 100 },
+        divergent_count: hotspotModules.length,
+        orphaned_count: orphanedModules.length,
+        module_count: Object.keys(modEdges).length,
+        divergence_source: 'IMPORT_EDGE_ANALYSIS',
+      }
+    }
   }
 
   return enrichment;

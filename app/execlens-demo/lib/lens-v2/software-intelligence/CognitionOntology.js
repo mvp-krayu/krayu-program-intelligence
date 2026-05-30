@@ -191,6 +191,29 @@ const CONDITION_NODES = {
     runtime: null,
   },
 
+  STRUCTURAL_BOUNDARY_DIVERGENCE: {
+    id: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+    type: 'condition',
+
+    human_name: 'Structural boundary divergence',
+    what_it_means: 'The declared organizational structure — directory hierarchy, module boundaries, team ownership — does not match the actual dependency structure revealed by the import graph. Code that should be independent is coupled across boundaries; code grouped together may not interact at all.',
+    why_it_matters: 'When organizational boundaries diverge from structural reality, governance assumptions become invalid. Code ownership, review policies, and deployment boundaries are drawn around directories, but dependencies cross those lines. Changes in one team\'s area silently affect another team\'s code.',
+    operational_implication: 'Governance and ownership boundaries need realignment with actual structural dependencies. Conway\'s Law is operating in reverse — the architecture is reshaping around real coupling, not around declared organization.',
+    how_detected: 'Structural analysis compared directory-tree module boundaries against the import graph. Modules where a high proportion of edges cross declared boundaries are flagged as divergent. Orphaned modules — directories with files but no import edges — are separately identified.',
+    what_to_look_for: 'Look for modules where code reviews involve unexpected cross-team dependencies, where deployment of one module requires changes in another, or where CODEOWNERS rules don\'t match the actual blast radius of changes.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'GOV_GAP', role: 'defining' },
+      { ref: 'COORD_FRAG', role: 'conditional' },
+      { ref: 'PROP_EXP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
   COMPOUND_CONVERGENCE: {
     id: 'COMPOUND_CONVERGENCE',
     type: 'condition',
@@ -233,6 +256,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -352,6 +376,7 @@ const CONSEQUENCE_NODES = {
 
     upstream: [
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'defining' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'defining' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -374,6 +399,7 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'PROPAGATION_ASYMMETRY', role: 'defining' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'conditional' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'conditional' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -494,6 +520,7 @@ const RULE_NODES = {
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'governance' },
       { ref: 'EXECUTION_FRAGILITY', role: 'governance' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'governance' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'governance' },
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'governance' },
       { ref: 'COMPOUND_CONVERGENCE', role: 'governance' },
     ],
