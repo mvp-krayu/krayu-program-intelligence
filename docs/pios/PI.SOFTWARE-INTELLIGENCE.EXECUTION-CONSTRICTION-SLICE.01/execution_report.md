@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Stream ID | PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01 |
-| Classification | G2 (architecture-consuming — consumes locked behavioral inventory) |
+| Classification | G1 (architecture-mutating — new enrichment surface, condition type, consequence mappings, ontology node) |
 | Branch | `feature/runtime-demo` |
 | Baseline | `b110dd8` |
 | §5.5 | YES — new reusable code primitives |

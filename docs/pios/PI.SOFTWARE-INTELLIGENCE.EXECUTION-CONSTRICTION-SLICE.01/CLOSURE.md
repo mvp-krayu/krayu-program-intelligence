@@ -34,7 +34,7 @@ Implement Execution Constriction (N-2, Class A — Flow & Propagation) across th
 
 ## 6. Governance
 
-- Classification: G2 (architecture-consuming)
+- Classification: G1 (architecture-mutating — new enrichment surface, condition type, consequence mappings, ontology node)
 - No data mutation
 - No unauthorized computation
 - No interpretation beyond structural derivation
@@ -59,6 +59,29 @@ Implement Execution Constriction (N-2, Class A — Flow & Propagation) across th
 
 Ready for merge. Execution Constriction is the second ACCEPTED behavioral slice implemented. MVP-9 progress: 5 FOUNDATIONAL (existing) + 2 ACCEPTED implemented (Execution Fragility, Execution Constriction) + 2 ACCEPTED remaining (Coupling Inertia, Structural Boundary Divergence).
 
-## 10. Implementation Semantics
+## 10. Architecture Memory Propagation
+
+### Stream Classification: G1
+
+### Architecture Mutation Delta:
+
+| Mutation | Type | Detail |
+|----------|------|--------|
+| EXECUTION_CONSTRICTION condition type | NEW_CONCEPT | 10th condition type (9th internal), Class A behavioral slice |
+| constriction_surface enrichment surface | NEW_CONCEPT | Tarjan articulation point detection + through-flow scoring |
+| OP_BOTTLENECK ← EC (defining) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| COORD_FRAG ← EC (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| DEP_AMP ← EC (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| COORDINATION_SATURATION += EC | EXTENSION | Existing projection surface extended |
+| Projection Disposition: EC entry | EXTENSION | All 8 registries REQUIRED |
+
+### Vault Files Requiring Update:
+
+- `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` — SW-INTEL condition count, topology cognition language update
+- `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` — SignalSynthesisEngine description update
+
+### Propagation Status: DEFERRED → COMPLETE (corrected by PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01)
+
+## 11. Implementation Semantics
 
 See: IMPLEMENTATION_SEMANTICS.md

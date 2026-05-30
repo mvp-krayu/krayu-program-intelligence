@@ -1,0 +1,62 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01",
+  "baseline_commit": "0dc90da",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/CLOSURE.md",
+      "change_type": "MODIFIED",
+      "description": "G2→G1 classification correction, Section 10 Architecture Memory Propagation added, Section 11 renumbered",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/validation_log.json",
+      "change_type": "MODIFIED",
+      "description": "classification field: G2→G1",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/execution_report.md",
+      "change_type": "MODIFIED",
+      "description": "Classification field: G2→G1",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01/CLOSURE.md",
+      "change_type": "MODIFIED",
+      "description": "G2→G1 classification correction, Section 10 Architecture Memory Propagation added, Section 11 renumbered",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01/validation_log.json",
+      "change_type": "MODIFIED",
+      "description": "classification field: G2→G1",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01/execution_report.md",
+      "change_type": "MODIFIED",
+      "description": "Classification field: G2→G1",
+      "phase": "Classification Correction"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "change_type": "MODIFIED",
+      "description": "Date, condition count (8→11), slice inventory (3 IMPLEMENTED), ontology lineage (+EC/SBD/PDC/hygiene), evidence classification (+STRUCTURAL_ENRICHMENT_DERIVED), EF classification G2→G1",
+      "phase": "Vault Propagation"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "change_type": "MODIFIED",
+      "description": "SignalSynthesisEngine description (7→10 rules), EF classification G2→G1, governance streams table (+EC/SBD/PDC/hygiene)",
+      "phase": "Vault Propagation"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "change_type": "MODIFIED",
+      "description": "SignalSynthesisEngine (10 rules + 3 new entries), topology cognition (5→8 slices + 2 new categories), evidence classification (all 3 surfaces), SW-INTEL slice inventory (3 IMPLEMENTED)",
+      "phase": "Vault Propagation"
+    }
+  ],
+  "total_files_modified": 9,
+  "validators_changed": []
+}

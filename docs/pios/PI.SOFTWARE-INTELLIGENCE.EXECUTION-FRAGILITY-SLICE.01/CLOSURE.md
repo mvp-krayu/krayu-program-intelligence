@@ -48,7 +48,7 @@ Key validations:
 
 ## 6. Governance
 
-- Stream classification: G2 (architecture-consuming)
+- Stream classification: G1 (architecture-mutating — new enrichment surface, condition type, consequence mappings, ontology node)
 - No new consequence types introduced — maps to existing RESIL_DEF, COORD_FRAG, DEP_AMP
 - SYSTEMIC_OP_FRAG emergence delegated to §5.2 combination rules
 - No data mutation, no inference, no interpretation
@@ -72,6 +72,29 @@ All 8 pre-existing condition types produce identical results. CONDITION_VOCABULA
 
 Ready for commit on `feature/runtime-demo`.
 
-## 10. Implementation Semantics
+## 10. Architecture Memory Propagation
+
+### Stream Classification: G1
+
+### Architecture Mutation Delta:
+
+| Mutation | Type | Detail |
+|----------|------|--------|
+| EXECUTION_FRAGILITY condition type | NEW_CONCEPT | 9th condition type (8th internal), Class C behavioral slice |
+| fragility_surface enrichment surface | NEW_CONCEPT | Real cohesion from raw import edges, coupling * (1 - cohesion) scoring |
+| RESIL_DEF ← EF (defining) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| COORD_FRAG ← EF (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| DEP_AMP ← EF (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| STRUCTURAL_FRAGILITY cognition surface | NEW_CONCEPT | New projection surface in SURFACE_CONDITION_MAP |
+| Projection Disposition: EF entry | EXTENSION | All 8 registries REQUIRED |
+
+### Vault Files Requiring Update:
+
+- `docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md` — SW-INTEL condition count, topology cognition language update
+- `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` — SignalSynthesisEngine description update
+
+### Propagation Status: DEFERRED → COMPLETE (corrected by PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01)
+
+## 11. Implementation Semantics
 
 See: IMPLEMENTATION_SEMANTICS.md

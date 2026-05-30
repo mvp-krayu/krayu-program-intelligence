@@ -45,7 +45,7 @@
 
 | Module | Path | Role |
 |---|---|---|
-| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 7 primitive rules + 1 composite. Transforms signal families + structural enrichment into operational conditions with topology overlays |
+| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 10 primitive rules + 1 composite. 11 condition types (10 internal). Transforms signal families + structural enrichment into operational conditions with topology overlays |
 | ConsequenceCompiler | app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js | Consequence compilation — compile() + forBoardroom() + forBalanced(). 8 consequence types + 3 combination patterns. COGNITION_SLICE_VOCABULARY for BOARDROOM dynamics graph |
 | CognitionOntology | app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js | Static cognition ontology — CONDITION_NODES + CONSEQUENCE_NODES + RULE_NODES with upstream/downstream refs |
 | InvestigationVerifier | app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js | 5-step compilation chain verification — SECTION_4_RULES condition→consequence derivation validation |
@@ -242,8 +242,12 @@
 | PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01 | docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/ | G1 | COMPLETE |
 | PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01 | docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/ | G1 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/ | G1 | COMPLETE |
-| PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/ | G2 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/ | G1 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01/ | G2 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.PROJECTION-DISPOSITION-CONTRACT-DECISION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.PROJECTION-DISPOSITION-CONTRACT-DECISION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01/ | G1 | COMPLETE |
 
 ## Cross-References
 

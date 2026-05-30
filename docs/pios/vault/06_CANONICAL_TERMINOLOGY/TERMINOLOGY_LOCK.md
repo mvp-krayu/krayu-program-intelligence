@@ -732,7 +732,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 ### SignalSynthesisEngine
 
-**Definition:** The deterministic cognition compiler that transforms signal families (PSIG, DPSIG, ISIG) and structural enrichment into operational conditions with topology overlays. Contains 7 primitive rules and 1 composite rule. Each rule maps specific signal severity patterns or structural enrichment to a condition type with operator-facing cognition title, severity, topology overlay, evidence classification, and supporting signal IDs. The engine is deterministic — same inputs produce same conditions.
+**Definition:** The deterministic cognition compiler that transforms signal families (PSIG, DPSIG, ISIG) and structural enrichment into operational conditions with topology overlays. Contains 10 primitive rules and 1 composite rule. Each rule maps specific signal severity patterns or structural enrichment to a condition type with operator-facing cognition title, severity, topology overlay, evidence classification, and supporting signal IDs. The engine is deterministic — same inputs produce same conditions. 11 condition types total (10 internal — GOVERNANCE_COVERAGE_STATUS shares internal GCC/GCG).
 
 **Primitive rules:**
 - `ruleDeliveryPressureConcentration` → DELIVERY_PRESSURE_CONCENTRATION (from PSIG/pressure_zone_state)
@@ -741,12 +741,15 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 - `ruleImportPressureConcentration` → IMPORT_PRESSURE_CONCENTRATION (from ISIG import hub)
 - `ruleStructuralMassConcentration` → STRUCTURAL_MASS_CONCENTRATION (from DPSIG cluster metrics)
 - `ruleEntrypointStabilityRisk` → ENTRYPOINT_STABILITY_RISK (from ISIG entrypoint centrality)
-- `ruleExecutionFragility` → EXECUTION_FRAGILITY (from structuralEnrichment.fragility_surface — real cohesion from raw import edges, added 2026-05-30)
+- `ruleExecutionFragility` → EXECUTION_FRAGILITY (from structuralEnrichment.fragility_surface — real cohesion from raw import edges)
+- `ruleExecutionConstriction` → EXECUTION_CONSTRICTION (from structuralEnrichment.constriction_surface — Tarjan articulation points + through-flow scoring)
+- `ruleStructuralBoundaryDivergence` → STRUCTURAL_BOUNDARY_DIVERGENCE (from structuralEnrichment.boundary_divergence — cross-boundary import ratio analysis per module)
+- `ruleGovernanceCoverageStatus` → GOVERNANCE_COVERAGE_STATUS (from governed domain coverage analysis)
 
 **Composite rule:**
 - `ruleCompoundConvergence` → COMPOUND_CONVERGENCE (fires when ≥3 non-nominal primitives target same domain, escalates severity to CRITICAL)
 
-**Status:** CANONICAL — OPERATIONAL (2026-05-27, updated 2026-05-30 with ruleExecutionFragility). Deterministic against GENESIS specimen (run_blueedge_genesis_e2e_03).
+**Status:** CANONICAL — OPERATIONAL (2026-05-30). 10 primitive rules + 1 composite. 3 ACCEPTED behavioral slices implemented (EF, EC, SBD). Deterministic against GENESIS specimen (run_blueedge_genesis_e2e_03).
 
 **What it is NOT:** An AI model. A recommendation engine. A scoring system. SignalSynthesisEngine is a deterministic compiler — signals in, conditions out, no inference.
 
@@ -754,7 +757,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 ### Topology Cognition Language
 
-**Definition:** The 5-slice topology cognition language through which LENS projects operational conditions onto the structural topology. The language has three distinct cognition categories — mixing them is a category violation.
+**Definition:** The 8-slice topology cognition language through which LENS projects operational conditions onto the structural topology. The language has five distinct cognition categories — mixing them is a category violation.
 
 **Cognition categories:**
 
@@ -763,10 +766,12 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 | **CORRIDOR COGNITION** | Slice 1 (Dependency Choke Point), Slice 2 (Propagation Asymmetry) | Directional — paths, flows, corridors between domains | Arrows, upstream/downstream, source/target, blast radius |
 | **FIELD / STATE COGNITION** | Slice 3 (Pressure Zone), Slice 4 (Structural Mass) | Spatial — zones, mass, gravity, concentration within regions | Boundaries, emphasis, weight, composition, no corridors |
 | **FRAGILITY / RESILIENCE COGNITION** | Slice 5 (Execution Fragility) | Bidirectional — localized weakness vs absorptive resilience | Fragmented-ring glyph, #ff6b6b overlay, hotspot emphasis, coupling/cohesion surface |
+| **FLOW / CONSTRICTION COGNITION** | Slice 6 (Execution Constriction) | Throughput — narrow passage, bottleneck, articulation point | Hub glyph, #ffd700 overlay, constriction point emphasis, through-flow surface |
+| **DRIFT / INSTABILITY COGNITION** | Slice 7 (Structural Boundary Divergence) | Organizational — declared vs actual dependency structure | Spread glyph, #ff9e4a overlay, boundary alignment surface, cross-boundary ratio |
 
-**Load-bearing distinction:** Corridor cognition answers "what connects to what and how does impact flow?" Field cognition answers "where does structural weight or pressure concentrate?" Fragility cognition answers "where does localized structural weakness amplify operational disruption?" Drawing corridors for cluster gravity or zone boundaries for propagation asymmetry is a category violation.
+**Load-bearing distinction:** Corridor cognition answers "what connects to what and how does impact flow?" Field cognition answers "where does structural weight or pressure concentrate?" Fragility cognition answers "where does localized structural weakness amplify operational disruption?" Constriction cognition answers "where is operational flow forced through a narrow structural passage?" Drift cognition answers "where does declared organizational structure diverge from actual dependency structure?" Drawing corridors for cluster gravity or zone boundaries for propagation asymmetry is a category violation.
 
-**Status:** CANONICAL — OPERATIONAL (2026-05-27, updated 2026-05-30 with Execution Fragility slice). All 5 slices rendering with evidence-bound overlays.
+**Status:** CANONICAL — OPERATIONAL (2026-05-30). All 8 slices rendering with evidence-bound overlays (7 topology cognition slices + 1 governance coverage).
 
 **What it is NOT:** Decorative visualization. Dashboard charts. The topology cognition language projects structural conditions onto the topology with evidence classification — every overlay carries proof of its derivation origin.
 
@@ -779,10 +784,10 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 - **STRUCTURAL_CENTRALITY_DERIVED** — derived from code graph centrality metrics (40.3c)
 - **PRESSURE_ZONE_DERIVED** — derived from `pressure_zone_state` artifact (compound zone analysis)
 - **TOPOLOGY_METRIC_DERIVED** — derived from DPSIG topology distribution metrics (cluster node count ratios, fan asymmetry percentages)
-- **STRUCTURAL_ENRICHMENT_DERIVED** — derived from structural enrichment computation (fragility_surface from raw import edge analysis)
+- **STRUCTURAL_ENRICHMENT_DERIVED** — derived from structural enrichment computation (fragility_surface, constriction_surface, boundary_divergence from raw import edge analysis)
 - **MIXED** — composite conditions with contributing primitives from heterogeneous evidence origins
 
-**Status:** CANONICAL — OPERATIONAL (2026-05-27, updated 2026-05-30 with STRUCTURAL_ENRICHMENT_DERIVED).
+**Status:** CANONICAL — OPERATIONAL (2026-05-30). All 3 ACCEPTED behavioral slices use STRUCTURAL_ENRICHMENT_DERIVED.
 
 **Governance rule:** No visualization without evidence classification. If evidence is insufficient to support a topology behavior, the runtime downgrades or suppresses the projection — never fabricates. This is the evidence-bound cognition doctrine applied to topology projection.
 
@@ -864,7 +869,7 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Promotion lifecycle:** CANDIDATE → SPECIMEN → FOUNDATIONAL → COMPOSABLE → CERTIFIED → DEPRECATED. No skip-level promotion.
 
-**Status:** CANONICAL — governance doctrine defined (2026-05-28). Behavioral slice inventory locked (2026-05-30): MVP-9 across all 5 ontology classes. 5 FOUNDATIONAL (existing topology cognition slices + import pressure concentration). 4 ACCEPTED (Execution Fragility [Class C], Execution Constriction [Class A], Coupling Inertia [Class D], Structural Boundary Divergence [Class E]). 1 DEFERRED (Dependency Debt Accumulation — requires temporal evidence). All static-derivable.
+**Status:** CANONICAL — governance doctrine defined (2026-05-28). Behavioral slice inventory locked (2026-05-30): MVP-9 across all 5 ontology classes. 5 FOUNDATIONAL (existing topology cognition slices + import pressure concentration). 4 ACCEPTED: Execution Fragility [Class C — **IMPLEMENTED**], Execution Constriction [Class A — **IMPLEMENTED**], Coupling Inertia [Class D], Structural Boundary Divergence [Class E — **IMPLEMENTED**]. 3/4 implemented 2026-05-30. 1 remaining: Coupling Inertia. 1 DEFERRED (Dependency Debt Accumulation — requires temporal evidence). All static-derivable.
 
 **Governing rule (2026-05-30):** "The behavior is the slice. The graph metric is evidence." Every slice is defined by the operational behavior that emerges, not by the graph metric that detects it. A slice whose definition leads with a metric is not a slice — it is a signal.
 

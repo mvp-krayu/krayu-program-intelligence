@@ -1,6 +1,6 @@
 {
   "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01",
-  "classification": "G2",
+  "classification": "G1",
   "checks": [
     { "name": "constriction_surface_computed", "status": "PASS", "detail": "enrichment.constriction_surface added to deriveStructuralEnrichment() with Tarjan articulation point detection + through-flow scoring" },
     { "name": "condition_vocabulary_extended", "status": "PASS", "detail": "EXECUTION_CONSTRICTION added to CONDITION_VOCABULARY (10 entries total)" },

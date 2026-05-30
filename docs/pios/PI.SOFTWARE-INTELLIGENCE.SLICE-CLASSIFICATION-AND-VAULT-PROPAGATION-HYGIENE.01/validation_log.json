@@ -1,0 +1,17 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "ef_classification_corrected", "status": "PASS", "detail": "EF CLOSURE.md, validation_log.json, execution_report.md: G2 → G1" },
+    { "name": "ef_section_10_added", "status": "PASS", "detail": "Architecture Memory Propagation section added to EF CLOSURE.md, Implementation Semantics renumbered to §11" },
+    { "name": "ec_classification_corrected", "status": "PASS", "detail": "EC CLOSURE.md, validation_log.json, execution_report.md: G2 → G1" },
+    { "name": "ec_section_10_added", "status": "PASS", "detail": "Architecture Memory Propagation section added to EC CLOSURE.md, Implementation Semantics renumbered to §11" },
+    { "name": "sbd_classification_verified", "status": "PASS", "detail": "SBD already G1 (corrected during implementation session)" },
+    { "name": "vault_canonical_state_updated", "status": "PASS", "detail": "PIOS_CURRENT_CANONICAL_STATE.md: date, condition count, slice inventory, ontology lineage, evidence classification all current" },
+    { "name": "vault_canonical_paths_updated", "status": "PASS", "detail": "CURRENT_CANONICAL_PATHS.md: SignalSynthesisEngine description, EF classification, governance streams table all current" },
+    { "name": "vault_terminology_updated", "status": "PASS", "detail": "TERMINOLOGY_LOCK.md: SignalSynthesisEngine rules, topology cognition categories, evidence classification, slice inventory all current" },
+    { "name": "no_runtime_code_changes", "status": "PASS", "detail": "Zero runtime files modified — governance artifacts and vault only" },
+    { "name": "operational_notes_recorded", "status": "PASS", "detail": "Module-boundary heuristic, CLI synthesis gap, GCS duality documented in execution_report.md" }
+  ],
+  "result": "10/10 PASS"
+}

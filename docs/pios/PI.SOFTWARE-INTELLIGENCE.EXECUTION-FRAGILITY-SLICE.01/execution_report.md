@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Stream ID | PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01 |
-| Classification | G2 (architecture-consuming) |
+| Classification | G1 (architecture-mutating — new enrichment surface, condition type, consequence mappings, ontology node) |
 | Branch | `feature/runtime-demo` |
 | Baseline commit | `45d4b06` |
 | §5.5 triggered | YES — new reusable code primitives |
