@@ -7,10 +7,10 @@ import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
-import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS } from '../../../lib/lens-v2/SignalSynthesisEngine'
-import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
-import { investigate, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
-import { resolveNode, resolveConnections } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
+import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS } from '../../../lib/lens-v2/SignalSynthesisEngine'
+import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
+import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
+import { resolveNode, resolveConnections, CONDITION_NODES } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
 
 let _verificationCache = { result: null, timestamp: null, proofData: null }
@@ -7742,6 +7742,7 @@ function TopologyModal({ fullReport, onClose, correspondenceData, evidenceIntake
 }
 
 const VERIFICATION_STEP_NAMES = {
+  PROJECTION_DISPOSITION: 'Projection Disposition Contract',
   EVIDENCE_ANCHOR: 'Evidence Anchor Verification',
   DERIVATION_TRACE: 'Derivation Trace Replay',
   CONSEQUENCE_RULES: 'Consequence Rule Verification',
@@ -7769,6 +7770,11 @@ function summarizeStep(step, proofData) {
   if (step.verdict === 'FAIL') return `${fc} failure${fc !== 1 ? 's' : ''} detected`
   if (!proofData) return 'Passed'
   switch (step.name) {
+    case 'PROJECTION_DISPOSITION': {
+      const cc = step.condition_count || 0
+      const exempt = (step.results || []).reduce((n, r) => n + (r.exempt || []).length, 0)
+      return `${cc} condition types · ${cc - step.failures.length} complete · ${exempt} exempt`
+    }
     case 'EVIDENCE_ANCHOR': {
       const allCsqs = [...(proofData.consequences || []), ...(proofData.atomic_consequences || [])]
       let refCount = 0
@@ -8070,14 +8076,32 @@ function ReplayProof({ replay, proofData }) {
   )
 }
 
+function DispositionProof({ step }) {
+  if (!step.results || step.results.length === 0) return null
+  return (
+    <div className="verification-proof-table">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '2px 12px', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+        {step.results.map((r, i) => (
+          <Fragment key={i}>
+            <span style={{ color: r.verdict === 'PASS' ? '#64ffda' : '#ff6b6b' }}>{r.condition_type}</span>
+            <span style={{ color: r.verdict === 'PASS' ? 'var(--text-dim)' : '#ff6b6b' }}>
+              {r.verdict === 'PASS' ? 'COMPLETE' : `MISSING: ${r.missing.join(', ')}`}
+            </span>
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function StepProofContent({ step, proofData }) {
-  if (!proofData) return null
   switch (step.name) {
-    case 'EVIDENCE_ANCHOR': return <EvidenceAnchorProof proofData={proofData} />
-    case 'DERIVATION_TRACE': return <DerivationTraceProof proofData={proofData} />
-    case 'CONSEQUENCE_RULES': return <ConsequenceRulesProof proofData={proofData} />
-    case 'COMBINATION_PATTERNS': return <CombinationPatternsProof proofData={proofData} />
-    case 'COMPILATION_INTEGRITY': return <CompilationIntegrityProof proofData={proofData} />
+    case 'PROJECTION_DISPOSITION': return <DispositionProof step={step} />
+    case 'EVIDENCE_ANCHOR': return proofData ? <EvidenceAnchorProof proofData={proofData} /> : null
+    case 'DERIVATION_TRACE': return proofData ? <DerivationTraceProof proofData={proofData} /> : null
+    case 'CONSEQUENCE_RULES': return proofData ? <ConsequenceRulesProof proofData={proofData} /> : null
+    case 'COMBINATION_PATTERNS': return proofData ? <CombinationPatternsProof proofData={proofData} /> : null
+    case 'COMPILATION_INTEGRITY': return proofData ? <CompilationIntegrityProof proofData={proofData} /> : null
     default: return null
   }
 }
@@ -9087,9 +9111,21 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const handleVerificationInvoke = useCallback(() => {
     if (!verificationTargetReady || !consequenceResult || !synthesisResult || !fullReport) return
+    const dispositionResult = verifyProjectionDisposition({
+      conditionVocabulary: CONDITION_VOCABULARY,
+      conditionInterventions: CONDITION_INTERVENTIONS,
+      cognitionSliceVocabulary: COGNITION_SLICE_VOCABULARY,
+      mapConditionKeys: MAP_CONDITION_KEYS,
+      section4Rules: SECTION_4_RULES,
+      conditionNodes: CONDITION_NODES,
+      dynamicsGlyphType: DYNAMICS_GLYPH_TYPE,
+      surfaceConditionMap: SURFACE_CONDITION_MAP,
+    })
     const result = investigate(consequenceResult, synthesisResult, fullReport, {
       compileFn: (syn, rep) => compileConsequences(syn, rep),
     })
+    result.disposition = dispositionResult
+    result.steps = [dispositionResult, ...result.steps]
     const proofData = consequencesForInvestigation(consequenceResult, synthesisResult)
     const ts = new Date().toISOString()
     _verificationCache = { result, timestamp: ts, proofData }

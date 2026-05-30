@@ -572,6 +572,89 @@ function investigate(consequenceResult, synthesisResult, report, options) {
   }
 }
 
+// ─── Projection Disposition Contract ─────────────────
+
+const DISPOSITION = { REQUIRED: 'REQUIRED', EXEMPT: 'EXEMPT', DEFERRED: 'DEFERRED' }
+
+const PROJECTION_DISPOSITION_TABLE = {
+  DELIVERY_PRESSURE_CONCENTRATION:    { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+  DEPENDENCY_CHOKE_POINT:             { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+  PROPAGATION_ASYMMETRY:              { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+  STRUCTURAL_MASS_CONCENTRATION:      { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+  CROSS_DOMAIN_COUPLING_PRESSURE:     { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+  GOVERNANCE_COVERAGE_STATUS:         { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'EXEMPT',   SURFACE_CONDITION_MAP: 'REQUIRED' },
+  COMPOUND_CONVERGENCE:               { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'EXEMPT',   SURFACE_CONDITION_MAP: 'REQUIRED' },
+  EXECUTION_FRAGILITY:                { CONDITION_VOCABULARY: 'REQUIRED', CONDITION_INTERVENTIONS: 'REQUIRED', COGNITION_SLICE_VOCABULARY: 'REQUIRED', MAP_CONDITION: 'REQUIRED', SECTION_4_RULES: 'REQUIRED', CONDITION_NODES: 'REQUIRED', DYNAMICS_GLYPH_TYPE: 'REQUIRED', SURFACE_CONDITION_MAP: 'REQUIRED' },
+}
+
+const GLYPH_EXEMPT_REASONS = {
+  GOVERNANCE_COVERAGE_STATUS: 'Renders as coverage indicators (anchored/unanchored markers), not as a dynamics glyph actor',
+  COMPOUND_CONVERGENCE: 'Renders as compound overlay compositing multiple primitives, not as a single dynamics glyph',
+}
+
+function verifyProjectionDisposition(registries) {
+  const {
+    conditionVocabulary,
+    conditionInterventions,
+    cognitionSliceVocabulary,
+    mapConditionKeys,
+    section4Rules,
+    conditionNodes,
+    dynamicsGlyphType,
+    surfaceConditionMap,
+  } = registries
+
+  const internalTypes = new Set()
+  for (const v of Object.values(conditionVocabulary)) {
+    internalTypes.add(v.internal)
+  }
+
+  const surfaceMappedTypes = new Set()
+  for (const condTypes of Object.values(surfaceConditionMap)) {
+    for (const ct of condTypes) surfaceMappedTypes.add(ct)
+  }
+
+  const results = []
+  for (const ct of internalTypes) {
+    const disp = PROJECTION_DISPOSITION_TABLE[ct]
+    if (!disp) {
+      results.push({ condition_type: ct, verdict: 'FAIL', reason: 'No disposition entry — add to PROJECTION_DISPOSITION_TABLE', missing: ['DISPOSITION_TABLE'] })
+      continue
+    }
+
+    const missing = []
+
+    if (disp.CONDITION_INTERVENTIONS === 'REQUIRED' && !conditionInterventions[ct]) missing.push('CONDITION_INTERVENTIONS')
+    if (disp.COGNITION_SLICE_VOCABULARY === 'REQUIRED' && !cognitionSliceVocabulary[ct]) missing.push('COGNITION_SLICE_VOCABULARY')
+    if (disp.MAP_CONDITION === 'REQUIRED' && !mapConditionKeys.has(ct)) missing.push('MAP_CONDITION')
+    if (disp.SECTION_4_RULES === 'REQUIRED' && !section4Rules[ct]) missing.push('SECTION_4_RULES')
+    if (disp.CONDITION_NODES === 'REQUIRED' && !conditionNodes[ct]) missing.push('CONDITION_NODES')
+    if (disp.DYNAMICS_GLYPH_TYPE === 'REQUIRED' && !dynamicsGlyphType[ct]) missing.push('DYNAMICS_GLYPH_TYPE')
+    if (disp.SURFACE_CONDITION_MAP === 'REQUIRED' && !surfaceMappedTypes.has(ct)) missing.push('SURFACE_CONDITION_MAP')
+
+    const exempt = []
+    for (const [reg, status] of Object.entries(disp)) {
+      if (status === 'EXEMPT') exempt.push({ registry: reg, reason: GLYPH_EXEMPT_REASONS[ct] || 'Architecturally excluded' })
+    }
+
+    if (missing.length > 0) {
+      results.push({ condition_type: ct, verdict: 'FAIL', reason: `Missing from ${missing.length} required registries`, missing, exempt })
+    } else {
+      results.push({ condition_type: ct, verdict: 'PASS', reason: 'All required registries populated', missing: [], exempt })
+    }
+  }
+
+  const allPass = results.every(r => r.verdict === 'PASS')
+  return {
+    step: 0,
+    name: 'PROJECTION_DISPOSITION',
+    verdict: allPass ? 'PASS' : 'FAIL',
+    results,
+    failures: results.filter(r => r.verdict === 'FAIL'),
+    condition_count: internalTypes.size,
+  }
+}
+
 // ─── Exports ──────────────────────────────────────────
 
 module.exports = {
@@ -582,6 +665,9 @@ module.exports = {
   verifyCombinationPatterns,
   verifyCompilationIntegrity,
   verifyReplay,
+  verifyProjectionDisposition,
   SECTION_4_RULES,
   SECTION_5_2_PATTERNS,
+  PROJECTION_DISPOSITION_TABLE,
+  DISPOSITION,
 }
