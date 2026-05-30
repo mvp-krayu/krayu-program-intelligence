@@ -164,7 +164,15 @@ export default function LensDisclosureShell({
           />
         )
       case 'GovernanceRibbon':
-        return <GovernanceRibbon governance={governance} />
+        return (
+          <GovernanceRibbon
+            governance={governance}
+            persona={persona}
+            substrateBinding={substrateBinding}
+            qualifierClass={qualifierClass}
+            qualifierLabel={qualifierLabel}
+          />
+        )
       case 'SemanticTrustPostureZone':
         return (
           <SemanticTrustPostureZone

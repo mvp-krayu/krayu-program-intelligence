@@ -6049,12 +6049,13 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
     <div className="rep-field rep-field--operator">
       <RepModeTag
         label="Evidence lens"
-        sub="Analyst · structural substrate → conditions → signals → governance → lineage"
+        sub="Analyst · structural substrate → signals → conditions → governance → lineage"
         zones={[
           { id: 'Z1', name: 'Structural Substrate' },
-          { id: 'Z5', name: 'Signal Intelligence' },
-          { id: 'GA', name: 'Governance Audit' },
-          { id: 'Z7', name: 'Evidence Lineage' },
+          { id: 'Z3', name: 'Signal Intelligence' },
+          { id: 'Z4', name: 'Domain Cognition' },
+          { id: 'Z5', name: 'Governance State' },
+          { id: 'Z6', name: 'Evidence Lineage' },
         ]}
       />
 
@@ -6077,37 +6078,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
       )}
 
-      {swIntelSlot}
-
       <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
-
-      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
-
-      <div className="actor actor--evidence-trace">
-        <div className="actor-tag">
-          <span className="actor-code">ET</span>
-          <span className="actor-name">Evidence Trace · lineage</span>
-        </div>
-        <div className="actor-trace-lineage">
-          {[
-            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
-            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
-            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
-            { label: 'Run id', value: traceLinkage.run_id },
-          ].filter(r => r.value).map((row, i, arr) => (
-            <div key={row.label} className="actor-trace-step">
-              <div className="actor-trace-step-marker">
-                <span className="actor-trace-step-dot" />
-                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
-              </div>
-              <div className="actor-trace-step-meta">
-                <div className="actor-trace-step-label">{row.label}</div>
-                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {blocks && blocks.length > 0 && (
         <div className="actor actor--signal-evidence-inline">
@@ -6139,6 +6110,36 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           </div>
         </div>
       )}
+
+      {swIntelSlot}
+
+      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
+
+      <div className="actor actor--evidence-trace">
+        <div className="actor-tag">
+          <span className="actor-code">ET</span>
+          <span className="actor-name">Evidence Trace · lineage</span>
+        </div>
+        <div className="actor-trace-lineage">
+          {[
+            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
+            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
+            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
+            { label: 'Run id', value: traceLinkage.run_id },
+          ].filter(r => r.value).map((row, i, arr) => (
+            <div key={row.label} className="actor-trace-step">
+              <div className="actor-trace-step-marker">
+                <span className="actor-trace-step-dot" />
+                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
+              </div>
+              <div className="actor-trace-step-meta">
+                <div className="actor-trace-step-label">{row.label}</div>
+                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
     </div>

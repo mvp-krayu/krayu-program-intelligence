@@ -1,0 +1,30 @@
+{
+  "stream_id": "PI.OPERATOR.COGNITIVE-FLOW-RESEQUENCING.02",
+  "classification": "G2",
+  "timestamp": "2026-05-30",
+  "checks": [
+    { "id": "V-01", "name": "Signal Evidence moved to Phase 3 (after Signal Intelligence)", "result": "PASS", "evidence": "DOM order: SI → SE → GA → ET confirmed via Playwright evaluate" },
+    { "id": "V-02", "name": "SW-Intel slot moved to Phase 4 (after Signal Evidence)", "result": "PASS", "evidence": "swIntelSlot rendered between SE and GA in JSX" },
+    { "id": "V-03", "name": "RepModeTag sub text reflects new order", "result": "PASS", "evidence": "Updated to 'signals → conditions → governance → lineage'" },
+    { "id": "V-04", "name": "RepModeTag zones include Domain Cognition and Governance State", "result": "PASS", "evidence": "5 zone indicators: Structural Substrate, Signal Intelligence, Domain Cognition, Governance State, Evidence Lineage" },
+    { "id": "V-05", "name": "OPERATOR_DENSE tier allocation correct", "result": "PASS", "evidence": "tier0=DeclarationZone, tier1=GovernanceRibbon, tier2=IntelligenceField, suppressed=5 zones" },
+    { "id": "V-06", "name": "validateZoneCoverage passes for all personas", "result": "PASS", "evidence": "All 8 KNOWN_ZONES assigned in OPERATOR_DENSE (1+1+1+0+5=8)" },
+    { "id": "V-07", "name": "GovernanceRibbon posture strip renders for OPERATOR", "result": "PASS", "evidence": "6 posture fields visible: S-LEVEL, Q-CLASS, POSTURE, RECONCILIATION, QUALIFIER, BLOCKERS" },
+    { "id": "V-08", "name": "GovernanceRibbon invariants collapsed by default", "result": "PASS", "evidence": "Button shows '11 governance invariants · all pass ▾', no chips visible until clicked" },
+    { "id": "V-09", "name": "GovernanceRibbon invariants expand toggle works", "result": "PASS", "evidence": "Click expands 11 ✓ chips, caret flips to ▴, button shows [expanded]" },
+    { "id": "V-10", "name": "GovernanceRibbon non-OPERATOR renders unchanged", "result": "PASS", "evidence": "EXECUTIVE_DENSE shows 11 invariant chips only (no posture split)" },
+    { "id": "V-11", "name": "Posture fields degrade gracefully with missing data", "result": "PASS", "evidence": "S-LEVEL, POSTURE, RECONCILIATION show '—' when substrateBinding unavailable; no crash" },
+    { "id": "V-12", "name": "Q-CLASS renders from qualifierClass prop", "result": "PASS", "evidence": "Shows 'Q-03' from report payload" },
+    { "id": "V-13", "name": "QUALIFIER renders from qualifierLabel prop", "result": "PASS", "evidence": "Shows 'Semantic Continuity Only'" },
+    { "id": "V-14", "name": "BLOCKERS renders from debtVisibility", "result": "PASS", "evidence": "Shows 'none' (0 blocking)" },
+    { "id": "V-15", "name": "SQO outer zones suppressed for OPERATOR", "result": "PASS", "evidence": "SemanticTrustPostureZone, ReconciliationAwarenessZone, QualifierMandate, SQOIntelligenceZone not in DOM" },
+    { "id": "V-16", "name": "EvidenceDepthLayer suppressed for OPERATOR", "result": "PASS", "evidence": "Formally suppressed in DisclosureSequencingContract (was already returning null)" },
+    { "id": "V-17", "name": "EXECUTIVE_DENSE non-regression", "result": "PASS", "evidence": "Screenshot verified — identical rendering, all zones in original positions" },
+    { "id": "V-18", "name": "EXECUTIVE_BALANCED non-regression", "result": "PASS", "evidence": "Screenshot verified — GovernanceRibbon suppressed, all other zones unchanged" },
+    { "id": "V-19", "name": "BOARDROOM non-regression", "result": "PASS", "evidence": "Screenshot verified — projection view renders correctly, GovernanceRibbon suppressed" },
+    { "id": "V-20", "name": "Build passes", "result": "PASS", "evidence": "npx next build completes with zero errors" },
+    { "id": "V-21", "name": "No data mutation", "result": "PASS", "evidence": "No new data sources, no computation, no API calls" },
+    { "id": "V-22", "name": "No SQO behavior changes", "result": "PASS", "evidence": "SQO zones suppressed for OPERATOR only; all SQO logic unchanged" }
+  ],
+  "summary": "22/22 PASS"
+}
