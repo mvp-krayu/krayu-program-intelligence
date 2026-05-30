@@ -1,0 +1,26 @@
+{
+  "stream_id": "PI.VAULT.AMOPS-ALIGNMENT-RECONCILIATION.01",
+  "baseline_commit": "d7b5272",
+  "changes": [
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "change_type": "MODIFIED",
+      "description": "Updated SignalSynthesisEngine count (6→7 primitives, 8 condition types), topology cognition language (4→5 slices), commit list (+2), maturity table (Executive Consequence Semantics SPECIFIED→OPERATIONAL, behavioral slice implementation status), Ontology Git Lineage Status (+8 entries)",
+      "phase": "Vault Reconciliation"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "change_type": "MODIFIED",
+      "description": "Updated SignalSynthesisEngine definition (7 primitives, ruleExecutionFragility), Topology Cognition Language (5-slice, 3 categories), Evidence Classification (+STRUCTURAL_ENRICHMENT_DERIVED)",
+      "phase": "Vault Reconciliation"
+    },
+    {
+      "file": "docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md",
+      "change_type": "MODIFIED",
+      "description": "Added 3 SW-Intel modules (ConsequenceCompiler, CognitionOntology, InvestigationVerifier), updated SignalSynthesisEngine count, added 10 governance streams",
+      "phase": "Vault Reconciliation"
+    }
+  ],
+  "total_files_modified": 3,
+  "validators_changed": []
+}

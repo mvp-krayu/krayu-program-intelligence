@@ -1,0 +1,19 @@
+{
+  "stream_id": "PI.VAULT.AMOPS-ALIGNMENT-RECONCILIATION.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "lineage_entries_complete", "status": "PASS", "detail": "8 missing lineage entries added to Ontology Git Lineage Status" },
+    { "name": "signalsynthesisengine_count_aligned", "status": "PASS", "detail": "All 3 vault pages updated: 6→7 primitives, 7→8 condition types" },
+    { "name": "executive_consequence_maturity_corrected", "status": "PASS", "detail": "SPECIFIED_NOT_IMPLEMENTED → OPERATIONAL in maturity table" },
+    { "name": "execution_fragility_implementation_noted", "status": "PASS", "detail": "Behavioral slice inventory updated: 'Implementation pending' → first implementation complete" },
+    { "name": "topology_cognition_language_updated", "status": "PASS", "detail": "4-slice → 5-slice, 2 categories → 3 categories (FRAGILITY/RESILIENCE added)" },
+    { "name": "current_canonical_paths_modules_updated", "status": "PASS", "detail": "3 new SW-Intel modules added: ConsequenceCompiler, CognitionOntology, InvestigationVerifier" },
+    { "name": "current_canonical_paths_streams_updated", "status": "PASS", "detail": "10 governance streams added to CURRENT_CANONICAL_PATHS" },
+    { "name": "evidence_classification_extended", "status": "PASS", "detail": "STRUCTURAL_ENRICHMENT_DERIVED added to TERMINOLOGY_LOCK evidence classification" },
+    { "name": "commit_list_updated", "status": "PASS", "detail": "ae47337 and d5ee5c0 added to LENS v2 transition markers" },
+    { "name": "no_term_collision", "status": "PASS", "detail": "No new terms introduced — existing terms updated in-place" },
+    { "name": "vault_page_consistency", "status": "PASS", "detail": "SignalSynthesisEngine counts consistent across all 3 vault pages" },
+    { "name": "g1_propagation_gap_documented", "status": "PASS", "detail": "Behavioral slice reconciliation propagation gap on feature/runtime-demo documented — resolves on merge to main" }
+  ],
+  "result": "12/12 PASS"
+}
