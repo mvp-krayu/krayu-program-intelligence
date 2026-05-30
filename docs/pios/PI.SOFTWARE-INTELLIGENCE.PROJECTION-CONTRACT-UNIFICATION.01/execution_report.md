@@ -302,22 +302,69 @@ This guard should run in the same layer as `InvestigationVerifier` — call it *
 
 ---
 
-## Dead Code and Dead Metadata Inventory
+## SW-INTEL Projection Pathway Map (Corrected)
 
-| Item | Location | Status |
-|------|----------|--------|
-| `SURFACE_CONDITION_MAP` | SoftwareIntelligenceProjectionAdapter.js:18-26 | DEAD — declarative map that nothing reads for derivation |
-| `visible_in` on all CONDITION_NODES | CognitionOntology.js | DEAD — no rendering or validation code reads this field |
-| `STRUCTURAL_FRAGILITY: ['EXECUTION_FRAGILITY']` | SoftwareIntelligenceProjectionAdapter.js:25 | DEAD — no `deriveStructuralFragility()` function exists |
-| `SoftwareIntelligenceBalancedNarrative` | SoftwareIntelligenceField.jsx:457 | DEAD — imported but never rendered, superseded by `balancedBriefing` pipeline |
-| `forOperator()` | ConsequenceCompiler.js | DEAD — exported but never imported or called by any component |
-| `FRAGILITY_HOTSPOT: '#ff6b6b'` | StructuralTopologyZone.jsx | PARTIALLY DEAD — available but requires active surface selection to trigger overlay, which requires a surface that doesn't exist in DENSE/OPERATOR |
+**There are 4 independent SW-INTEL projection/consumption pathways, not 2 or 3.**
+
+| Path | Mechanism | Personas | Extensible? |
+|------|-----------|----------|-------------|
+| A | `forBoardroom()` → `cognition_slices` | BOARDROOM dynamics graph | YES — `is_dynamic` vocabulary gate |
+| B | `forBalanced()` → `composeBriefing()` | BALANCED narrative corridor | YES — consequence-driven |
+| C | `deriveProjection()` → `rawSurfaces` | DENSE/OPERATOR SW-INTEL surface panel | NO — hardcoded 6-function array |
+| D | `synthesize()` → conditions directly | DENSE condition cards (SynthesizedConditionSection) | YES — any condition renders |
+
+### Path D: Direct Condition Re-Synthesis in DENSE
+
+**Path D is why Execution Fragility appears in DENSE.**
+
+`SynthesizedConditionSection` (IntelligenceField.jsx line 5596) calls `synthesize(fullReport)` directly inside a `useMemo`. It does not receive conditions as a prop. It does not consume the projection adapter. It does not go through ConsequenceCompiler. The condition object IS the projection object — no transformation occurs between synthesis and rendering.
+
+**Call chain:**
+```
+DenseTopologyField (line 5760)
+  → SynthesizedConditionSection (line 5919)
+    → synthesize(fullReport)                    ← local re-synthesis
+      → result.active (severity !== 'NOMINAL')
+        → sortedActive.filter(!composite)       ← activePrimitives
+          → SynthesizedConditionEntry (line 5495)
+            → condition.operator_cognition_title  → "Execution Fragility"
+            → condition.severity                  → "HIGH"
+            → condition.operational_consequence   → consequence text
+            → condition.domain_targets            → "Frontend Application / DOMAIN-14"
+            → condition.topology_effect           → topology effect
+            → condition.governance_boundary       → "Structural only — advisory-bound"
+            → condition.guided_interventions      → 3 intervention buttons
+            → CONDITION_TO_SURFACES[type]         → "DRIVES: STRUCTURAL_FRAGILITY"
+```
+
+**Path D bypasses the projection adapter and consequence compiler entirely.** Conditions are rendered as first-class cognition objects. This is valid as condition-level cognition — each card shows the condition's structural evidence, topology effect, governance boundary, and interventions. But it is unsafe if treated as canonical projection because:
+
+1. No consequence posture is attached (conditions don't show their consequence impact)
+2. No projection disposition verification exists (any active condition renders, with no suppression mechanism)
+3. The re-synthesis duplicates computation (synthesize() is called twice — once in the parent IntelligenceField, once locally in SynthesizedConditionSection)
+
+### SURFACE_CONDITION_MAP Status (Corrected)
+
+`SURFACE_CONDITION_MAP` is **partially alive**, not fully dead.
+
+`CONDITION_TO_SURFACES` (IntelligenceField.jsx line 5475) inverts `SURFACE_CONDITION_MAP` to produce the "DRIVES:" labels on condition cards in Path D. When Execution Fragility renders in DENSE, it shows "DRIVES: STRUCTURAL_FRAGILITY" because `SURFACE_CONDITION_MAP.STRUCTURAL_FRAGILITY = ['EXECUTION_FRAGILITY']`.
+
+However, `STRUCTURAL_FRAGILITY` is currently a **forward reference** — it names a surface that has no derivation function. The label implies the condition feeds a cognition surface that doesn't exist in Path C's hardcoded array. The reference will become live only if `deriveStructuralFragility()` is implemented.
+
+| Item | Status |
+|------|--------|
+| `SURFACE_CONDITION_MAP` | PARTIALLY ALIVE — consumed by `CONDITION_TO_SURFACES` for DRIVES labels in Path D |
+| `STRUCTURAL_FRAGILITY: ['EXECUTION_FRAGILITY']` | FORWARD REFERENCE — names a surface that has no derivation function |
+| `visible_in` on CONDITION_NODES | DEAD — no rendering or validation code reads this field |
+| `SoftwareIntelligenceBalancedNarrative` | DEAD — imported but never rendered |
+| `forOperator()` | DEAD — exported but never called |
+| `FRAGILITY_HOTSPOT: '#ff6b6b'` | PARTIALLY DEAD — available but requires surface selection that doesn't exist in Path C |
 
 ---
 
 ## Hardcoded Projection Arrays That Block Extensibility
 
-**Primary blocker:**
+**Primary blocker (Path C only):**
 
 `SoftwareIntelligenceProjectionAdapter.js` lines 701-708:
 ```js
@@ -333,39 +380,73 @@ const rawSurfaces = [
 
 Every new slice requires: a new ~60-line derivation function + addition to this array. The function derives from raw `fullReport` data, not from conditions — duplicating logic that the condition engine already performs.
 
-**Secondary blocker:**
-
-`COGNITION_SLICE_VOCABULARY` in ConsequenceCompiler.js gates BOARDROOM entry via `is_dynamic: true`. This is extensible (add a vocabulary entry = enter BOARDROOM). But it only feeds BOARDROOM. BALANCED consumes consequences, not slices. DENSE/OPERATOR consume surfaces, not slices.
+**Path D has no blocker.** Any condition produced by `synthesize()` automatically renders in DENSE. This is both its strength (automatic extensibility) and its risk (no projection governance).
 
 ---
 
-## Architectural Recommendation
+## The Central Governance Question
 
-**Target state:** One canonical slice projection contract consumed by all four personas.
+A canonical projection contract must decide whether conditions are first-class projection objects or only inputs to consequence/surface projections.
+
+### Option A: Condition-First
+
+Conditions ARE the canonical cognition projection. Consequences are downstream enrichment.
 
 ```
-synthesize()
-  → conditions
-    → compile()
-      → consequences
-        → projectSlices()          ← NEW: canonical slice projection
-          → forBoardroom()         compresses into posture + dynamics graph
-          → forBalanced()          sequences into narrative corridor
-          → forDense()             full evidence cards
-          → forOperator()          operational cards + verification hooks
+synthesize() → conditions (canonical projection objects)
+  → DENSE renders conditions directly (Path D becomes canonical)
+  → OPERATOR renders conditions directly
+  → forBoardroom() compresses conditions into posture + dynamics graph
+  → forBalanced() sequences conditions into narrative corridor
+  → compile() produces consequences as enrichment layer, not projection layer
 ```
 
-**What `projectSlices()` replaces:**
-- The `cognition_slices` loop currently inside `forBoardroom()` (extract it)
-- The `rawSurfaces` array currently in `deriveProjection()` (delete it)
-- The `SURFACE_CONDITION_MAP` (derivation replaces declaration)
-- The `visible_in` field (projection disposition replaces aspiration)
+**Argument for:** Path D already works this way. Conditions carry evidence, interventions, topology effects, domain targets — they are complete cognition objects. The condition engine is extensible (add a rule function = new slice appears everywhere). This is the simplest unification.
 
-**What it preserves:**
-- `forBoardroom()` still produces posture-level compression for the cockpit
-- `forBalanced()` still sequences into narrative zones
-- The projection adapter still produces qualification decomposition (that's independent)
-- Each persona still renders differently — the canonical contract unifies the INPUT, not the OUTPUT
+**Argument against:** Consequences carry cross-condition interactions (combination patterns, escalation, posture synthesis). A condition-first model loses the consequence posture layer unless it's reattached.
+
+### Option B: Consequence-First
+
+Conditions are internal derivation objects. Consequences are the canonical projection.
+
+```
+synthesize() → conditions (internal)
+  → compile() → consequences (canonical projection objects)
+    → forBoardroom() compresses into posture
+    → forBalanced() sequences into narrative
+    → forDense() produces evidence cards
+    → forOperator() produces operational cards
+  Path D deleted or replaced by consequence rendering
+```
+
+**Argument for:** Consequences carry the full interaction model — combination patterns, escalation, cross-condition reinforcement. BOARDROOM and BALANCED already consume consequences. This is the richest projection.
+
+**Argument against:** Path D would need to be rewritten. The current DENSE condition cards (which carry interventions, topology effects, derivation traces) would lose that condition-level detail unless it's threaded through consequences. Conditions carry information that consequences do not (interventions, topology overlay specification, contributing features).
+
+### Option C: Dual-Layer (Condition + Consequence)
+
+Conditions are valid for structural/operational projection. Consequences are valid for executive/narrative projection.
+
+```
+synthesize() → conditions
+  → DENSE: conditions are first-class (structural cognition cards)
+  → OPERATOR: conditions are first-class (operational cognition cards)
+  → compile() → consequences
+    → BOARDROOM: consequence posture + condition-derived dynamics graph
+    → BALANCED: consequence narrative corridor
+```
+
+**Argument for:** This is closest to what already works. Path D (conditions in DENSE) is valid structural cognition. Path A (forBoardroom) and Path B (forBalanced) are valid executive/narrative projections. Each persona gets the projection layer appropriate to its audience: structural detail for DENSE/OPERATOR, consequence posture for BOARDROOM/BALANCED.
+
+**Argument against:** Two projection layers means two places where a new slice must be verified. Adds complexity to projection disposition verification (must check both layers). Risk of the two layers diverging again.
+
+### Recommendation
+
+**Option C is the honest architectural description of what exists.** The question is whether to formalize it as doctrine or treat it as technical debt to unify.
+
+If formalized: a new slice needs (1) a condition rule function (enters DENSE/OPERATOR via Path D automatically), (2) a COGNITION_SLICE_VOCABULARY entry with `is_dynamic: true` (enters BOARDROOM via Path A automatically), and (3) a consequence mapping (enters BALANCED via Path B automatically). Path C (rawSurfaces) becomes the surface-grouping layer for the SW-INTEL panel, which may or may not be needed per-condition.
+
+If treated as debt: unify into a single canonical object that carries both condition detail and consequence posture, consumed by all personas with persona-specific compression.
 
 ---
 
@@ -382,17 +463,16 @@ synthesize()
 
 ## Scope of Implementation Stream
 
-If approved, the implementation stream (PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.02) would:
+If approved, the implementation stream (PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.02) scope depends on which governance option is chosen:
 
-1. Extract `projectSlices()` from `forBoardroom()`'s cognition_slices loop
-2. Make `forBoardroom()` consume `projectSlices()` output
-3. Make `forBalanced()` consume `projectSlices()` output (replacing its internal condition iteration)
-4. Replace `rawSurfaces` in `deriveProjection()` with `projectSlices()` output
-5. Wire `forOperator()` into OPERATOR rendering (currently dead)
-6. Delete dead code: `SoftwareIntelligenceBalancedNarrative`, `SURFACE_CONDITION_MAP`, `visible_in`
-7. Add projection disposition verification guard
-8. Verify all 9 condition types have disposition in all 4 personas
+**Option A (condition-first):** Extract conditions as canonical projection objects. Wire all personas to consume them. Delete Path C's rawSurfaces. ~300 lines changed.
 
-**Estimated scope:** 6-8 files, ~200 lines changed, ~150 lines deleted (dead code removal).
+**Option B (consequence-first):** Rewrite Path D to consume consequences instead of conditions. Thread condition detail through consequence objects. Wire forOperator(). ~400 lines changed, highest risk.
 
-**Risk:** BALANCED's `composeBriefing()` (ZoneComposer) currently receives `forBalanced()` output which has a specific shape (primary_story + reinforcement_flow). The canonical projection must either preserve this shape or the ZoneComposer must be adapted. This is the highest-risk integration point.
+**Option C (dual-layer):** Formalize current architecture. Add projection disposition verification for both layers. Wire STRUCTURAL_FRAGILITY forward reference. Delete dead code only. ~150 lines changed, lowest risk.
+
+**Regardless of option chosen:**
+- Delete dead code: `SoftwareIntelligenceBalancedNarrative`, `visible_in`, `forOperator()` (unless wired)
+- Add projection disposition verification guard
+- Resolve STRUCTURAL_FRAGILITY forward reference
+- Verify all 9 condition types have disposition in all 4 personas
