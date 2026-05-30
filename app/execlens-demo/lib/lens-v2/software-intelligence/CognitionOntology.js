@@ -145,6 +145,29 @@ const CONDITION_NODES = {
     runtime: null,
   },
 
+  EXECUTION_FRAGILITY: {
+    id: 'EXECUTION_FRAGILITY',
+    type: 'condition',
+
+    human_name: 'Execution fragility',
+    what_it_means: 'A region of the codebase has high external coupling combined with low internal cohesion. This makes it structurally fragile — changes arrive from many directions, but the region lacks the internal integrity to absorb them without disrupting its dependents.',
+    why_it_matters: 'Fragile regions cause outsized damage not because they are large, but because they are structurally exposed. A small change in a fragile region can propagate disproportionate disruption because the region both receives many inbound change vectors and lacks the encapsulation to contain them.',
+    operational_implication: 'Changes touching this region carry elevated risk of unexpected downstream impact. The region\'s apparent simplicity masks its structural exposure.',
+    how_detected: 'Structural analysis of import edges identified files with disproportionately high coupling (fan-in + fan-out) combined with low cohesion (most edges cross module boundaries). This combination — not either metric alone — triggers the fragility classification.',
+    what_to_look_for: 'Look for regions where small changes cause surprisingly broad test failures, or where incident post-mortems consistently trace back to the same apparently minor components.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'RESIL_DEF', role: 'defining' },
+      { ref: 'COORD_FRAG', role: 'conditional' },
+      { ref: 'DEP_AMP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
   COMPOUND_CONVERGENCE: {
     id: 'COMPOUND_CONVERGENCE',
     type: 'condition',
@@ -185,6 +208,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'DELIVERY_PRESSURE_CONCENTRATION', role: 'defining' },
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'defining' },
+      { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -208,6 +232,7 @@ const CONSEQUENCE_NODES = {
 
     upstream: [
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'defining' },
+      { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -277,6 +302,7 @@ const CONSEQUENCE_NODES = {
 
     upstream: [
       { ref: 'STRUCTURAL_MASS_CONCENTRATION', role: 'defining' },
+      { ref: 'EXECUTION_FRAGILITY', role: 'defining' },
     ],
     downstream: [
       { ref: 'STRUCT_GRAVITY_WELL', role: 'contributor' },
@@ -440,6 +466,7 @@ const RULE_NODES = {
       { ref: 'PROPAGATION_ASYMMETRY', role: 'governance' },
       { ref: 'STRUCTURAL_MASS_CONCENTRATION', role: 'governance' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'governance' },
+      { ref: 'EXECUTION_FRAGILITY', role: 'governance' },
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'governance' },
       { ref: 'COMPOUND_CONVERGENCE', role: 'governance' },
     ],

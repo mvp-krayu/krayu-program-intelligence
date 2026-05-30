@@ -141,6 +141,7 @@ const DYNAMICS_GLYPH_TYPE = {
   PROPAGATION_ASYMMETRY: 'spread',
   STRUCTURAL_MASS_CONCENTRATION: 'gravity',
   CROSS_DOMAIN_COUPLING_PRESSURE: 'coupling',
+  EXECUTION_FRAGILITY: 'fragmented-ring',
 }
 
 function ConvergenceWeb({ slices, postureLabel, postureSeverity, primaryLocus }) {
@@ -293,7 +294,7 @@ function RepEvidenceState({ adapted, scope, compact }) {
   const chip = (adapted && adapted.qualifierChip) || {}
   return (
     <div className={`rep-evstate${compact ? ' rep-evstate--compact' : ''}`}>
-      <div className="rep-evstate-label">EVIDENCE STATE</div>
+      <div className="rep-evstate-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
       <div className="rep-evstate-readiness">{badge.state_label || '—'}</div>
       <div className="rep-evstate-coverage">
         {(scope && scope.grounding_label) || 'Partial Coverage'}
@@ -841,7 +842,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
       <div className="support-block">
-        <div className="support-label">EVIDENCE STATE</div>
+        <div className="support-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
         <div className="support-readiness">{badge.state_label || '—'}</div>
         <div className="support-coverage">
           {(scope && scope.grounding_label) || 'Partial Coverage'}
@@ -1168,7 +1169,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
 
       {fullReport && (
         <div className="support-block support-block--trail">
-          <div className="support-label">EVIDENCE RECORD</div>
+          <div className="support-label"><TermHint term="EVIDENCE RECORD">EVIDENCE RECORD</TermHint></div>
           {(exploredQueries.size > 0 || interrogationTrail.size > 0) && (
             <div className="trail-export-summary">
               {exploredQueries.size > 0 && <span className="trail-count">{exploredQueries.size} structural queries reviewed</span>}
@@ -6049,12 +6050,13 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
     <div className="rep-field rep-field--operator">
       <RepModeTag
         label="Evidence lens"
-        sub="Analyst · structural substrate → conditions → signals → governance → lineage"
+        sub="Analyst · structural substrate → signals → conditions → governance → lineage"
         zones={[
           { id: 'Z1', name: 'Structural Substrate' },
-          { id: 'Z5', name: 'Signal Intelligence' },
-          { id: 'GA', name: 'Governance Audit' },
-          { id: 'Z7', name: 'Evidence Lineage' },
+          { id: 'Z3', name: 'Signal Intelligence' },
+          { id: 'Z4', name: 'Domain Cognition' },
+          { id: 'Z5', name: 'Governance State' },
+          { id: 'Z6', name: 'Evidence Lineage' },
         ]}
       />
 
@@ -6077,37 +6079,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
       )}
 
-      {swIntelSlot}
-
       <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
-
-      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
-
-      <div className="actor actor--evidence-trace">
-        <div className="actor-tag">
-          <span className="actor-code">ET</span>
-          <span className="actor-name">Evidence Trace · lineage</span>
-        </div>
-        <div className="actor-trace-lineage">
-          {[
-            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
-            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
-            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
-            { label: 'Run id', value: traceLinkage.run_id },
-          ].filter(r => r.value).map((row, i, arr) => (
-            <div key={row.label} className="actor-trace-step">
-              <div className="actor-trace-step-marker">
-                <span className="actor-trace-step-dot" />
-                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
-              </div>
-              <div className="actor-trace-step-meta">
-                <div className="actor-trace-step-label">{row.label}</div>
-                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {blocks && blocks.length > 0 && (
         <div className="actor actor--signal-evidence-inline">
@@ -6139,6 +6111,36 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           </div>
         </div>
       )}
+
+      {swIntelSlot}
+
+      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
+
+      <div className="actor actor--evidence-trace">
+        <div className="actor-tag">
+          <span className="actor-code">ET</span>
+          <span className="actor-name">Evidence Trace · lineage</span>
+        </div>
+        <div className="actor-trace-lineage">
+          {[
+            { label: 'Evidence object hash', value: traceLinkage.evidence_object_hash },
+            { label: 'Derivation hash', value: traceLinkage.derivation_hash },
+            { label: 'Baseline anchor', value: traceLinkage.baseline_anchor },
+            { label: 'Run id', value: traceLinkage.run_id },
+          ].filter(r => r.value).map((row, i, arr) => (
+            <div key={row.label} className="actor-trace-step">
+              <div className="actor-trace-step-marker">
+                <span className="actor-trace-step-dot" />
+                {i < arr.length - 1 && <span className="actor-trace-step-edge" />}
+              </div>
+              <div className="actor-trace-step-meta">
+                <div className="actor-trace-step-label">{row.label}</div>
+                <div className="actor-trace-step-value" title={row.value}>{row.value}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
     </div>
@@ -6251,8 +6253,8 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         <table className="inv-gov-table">
           <tbody>
             <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val"><TermHint term={gl.s_level}>{gl.s_level}</TermHint></td></tr>
-            <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
-            <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
+            <tr><td className="inv-gov-key"><TermHint term="Provenance">Provenance</TermHint></td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
+            <tr><td className="inv-gov-key"><TermHint term="Authority ceiling">Authority ceiling</TermHint></td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
             <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
             {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
             <tr><td className="inv-gov-key">Last updated</td><td className="inv-gov-val">{gl.last_updated || '—'}</td></tr>
@@ -6288,15 +6290,15 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
           <div className="inv-gov-grid">
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.accepted}</span><span className="inv-gov-stat-label">Accepted</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{pc.disposition_counts.rejected}</span><span className="inv-gov-stat-label">Rejected</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--arb">{pc.disposition_counts.arbitrated}</span><span className="inv-gov-stat-label">Arbitrated</span></div>
-            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.contested}</span><span className="inv-gov-stat-label">Contested</span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.accepted}</span><span className="inv-gov-stat-label"><TermHint term="Accepted">Accepted</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--reject">{pc.disposition_counts.rejected}</span><span className="inv-gov-stat-label"><TermHint term="Rejected">Rejected</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val inv-gov-stat-val--arb">{pc.disposition_counts.arbitrated}</span><span className="inv-gov-stat-label"><TermHint term="Arbitrated">Arbitrated</TermHint></span></div>
+            <div className="inv-gov-stat"><span className="inv-gov-stat-val">{pc.disposition_counts.contested}</span><span className="inv-gov-stat-label"><TermHint term="Contested">Contested</TermHint></span></div>
           </div>
           <table className="inv-gov-table">
             <tbody>
               <tr><td className="inv-gov-key">Mean confidence</td><td className="inv-gov-val">{pc.mean_confidence.toFixed(4)}</td></tr>
-              <tr><td className="inv-gov-key">Friction rate</td><td className="inv-gov-val">{(pc.governance_friction_rate * 100).toFixed(2)}%</td></tr>
+              <tr><td className="inv-gov-key"><TermHint term="Friction rate">Friction rate</TermHint></td><td className="inv-gov-val">{(pc.governance_friction_rate * 100).toFixed(2)}%</td></tr>
               <tr><td className="inv-gov-key">Derivation path</td><td className="inv-gov-val">{pc.derivation_path || '—'}</td></tr>
               <tr><td className="inv-gov-key">Review status</td><td className="inv-gov-val">{pc.review_status || '—'}</td></tr>
               <tr><td className="inv-gov-key">Review completed by</td><td className="inv-gov-val">{pc.review_completed_by || '—'}</td></tr>

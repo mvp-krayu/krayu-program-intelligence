@@ -30,6 +30,11 @@ const SECTION_4_RULES = {
   GOVERNANCE_COVERAGE_STATUS: [
     { consequence_type: 'GOV_GAP', defining: true, conditional: true },
   ],
+  EXECUTION_FRAGILITY: [
+    { consequence_type: 'RESIL_DEF', defining: true, conditional: false },
+    { consequence_type: 'COORD_FRAG', defining: false, conditional: true },
+    { consequence_type: 'DEP_AMP', defining: false, conditional: true },
+  ],
   COMPOUND_CONVERGENCE: [
     { consequence_type: 'STAB_RISK', defining: true, conditional: false },
   ],

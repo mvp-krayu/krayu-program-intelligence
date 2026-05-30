@@ -1,0 +1,43 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01",
+  "classification": "G1",
+  "baseline_commit": "3cf76de",
+  "branch": "main",
+  "changes": [
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/BEHAVIORAL_SLICE_INVENTORY.md",
+      "action": "CREATED",
+      "scope": "Primary deliverable: locked behavioral slice inventory with 9 MVP slices across 5 ontology classes"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/execution_report.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/validation_log.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/file_changes.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md",
+      "action": "MODIFIED",
+      "scope": "G1 vault propagation: SW-INTEL updated to 9-slice behavioral cognition, ontology git lineage entry added, maturity table updated"
+    },
+    {
+      "file": "docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md",
+      "action": "MODIFIED",
+      "scope": "G1 vault propagation: SW-INTEL Consequence Slice entry updated with MVP-9, governing rule, 4 accepted slice definitions"
+    }
+  ]
+}

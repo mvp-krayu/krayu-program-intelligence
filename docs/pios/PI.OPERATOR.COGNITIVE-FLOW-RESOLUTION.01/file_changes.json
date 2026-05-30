@@ -1,0 +1,33 @@
+{
+  "stream_id": "PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01",
+  "classification": "G1",
+  "baseline_commit": "64ec729",
+  "branch": "feature/runtime-demo",
+  "changes": [
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01/OPERATOR_COGNITIVE_FLOW_RESOLUTION.md",
+      "action": "CREATED",
+      "scope": "Primary deliverable — cognitive flow resolution design document with 9 sections"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01/execution_report.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01/validation_log.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01/file_changes.json",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    },
+    {
+      "file": "docs/pios/PI.OPERATOR.COGNITIVE-FLOW-RESOLUTION.01/CLOSURE.md",
+      "action": "CREATED",
+      "scope": "Governance artifact"
+    }
+  ]
+}

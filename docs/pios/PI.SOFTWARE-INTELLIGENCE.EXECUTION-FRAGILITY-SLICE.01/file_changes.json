@@ -1,0 +1,73 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01",
+  "baseline_commit": "45d4b06",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "change_type": "MODIFIED",
+      "description": "Extended deriveStructuralEnrichment() to compute enrichment.fragility_surface from raw IMPORTS edges — real cohesion measurement per file, fragility = coupling * (1 - cohesion)",
+      "phase": "Phase 1 — Data Foundation",
+      "lines_added": 102,
+      "new_primitives": ["fragility_surface computation", "module_of() path grouping", "intra/inter-module edge classification"]
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_FRAGILITY to CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, buildDomainTargets roleMap. Added ruleExecutionFragility() function. Wired into synthesize() and synthesizeTeaser().",
+      "phase": "Phase 2 — Condition Engine",
+      "lines_added": 88,
+      "new_primitives": ["ruleExecutionFragility()"]
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "change_type": "MODIFIED",
+      "description": "Added mapEF() consequence mapping (RESIL_DEF defining, COORD_FRAG conditional, DEP_AMP conditional). Added mapCondition switch case. Added COGNITION_SLICE_VOCABULARY entry.",
+      "phase": "Phase 3 — Consequence Pipeline",
+      "lines_added": 20,
+      "new_primitives": ["mapEF()"]
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_FRAGILITY CONDITION_NODE with downstream refs. Added upstream refs on RESIL_DEF, COORD_FRAG, DEP_AMP consequence nodes and §4 rule node.",
+      "phase": "Phase 4 — Cognition Ontology",
+      "lines_added": 25
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_FRAGILITY entry to SECTION_4_RULES with 3 consequence type mappings.",
+      "phase": "Phase 5 — Investigation Verifier",
+      "lines_added": 5
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_FRAGILITY: 'fragmented-ring' to DYNAMICS_GLYPH_TYPE mapping.",
+      "phase": "Phase 6 — Visual Projection",
+      "lines_added": 1
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added FRAGILITY_HOTSPOT: '#ff6b6b' to COGNITION_OVERLAY_COLORS.",
+      "phase": "Phase 6 — Visual Projection",
+      "lines_added": 1
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_FRAGILITY: ['EXECUTION_FRAGILITY'] to SURFACE_CONDITION_MAP.",
+      "phase": "Phase 6 — Visual Projection",
+      "lines_added": 1
+    }
+  ],
+  "total_files_modified": 8,
+  "total_lines_added": 243,
+  "validators_changed": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "reason": "New SECTION_4_RULES entry for EXECUTION_FRAGILITY — additive, no existing rules modified"
+    }
+  ]
+}

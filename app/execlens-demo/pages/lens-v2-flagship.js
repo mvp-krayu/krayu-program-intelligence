@@ -8379,6 +8379,89 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .gov-back:hover { color: var(--state-color); }
 
+        /* ── Governance Ribbon — OPERATOR Posture Split ──────────────── */
+        .gov-ribbon--operator {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: 10px 48px 8px;
+        }
+        .gov-posture {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          flex-wrap: wrap;
+        }
+        .gov-posture .gov-label {
+          margin-right: 20px;
+        }
+        .gov-posture-fields {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px 20px;
+          flex: 1;
+        }
+        .gov-posture-field {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+        }
+        .gov-posture-label {
+          font-size: 7px;
+          color: #4a5570;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+        .gov-posture-value {
+          font-size: 11px;
+          font-family: 'Courier New', monospace;
+          color: #ccd6f6;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+        .gov-invariants {
+          margin-top: 4px;
+        }
+        .gov-invariants-toggle {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: none;
+          border: none;
+          padding: 3px 0;
+          cursor: pointer;
+          font-family: inherit;
+        }
+        .gov-invariants-summary {
+          font-size: 8px;
+          color: #4a5570;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          transition: color 0.15s;
+        }
+        .gov-invariants-toggle:hover .gov-invariants-summary {
+          color: #7a8aaa;
+        }
+        .gov-invariants-caret {
+          font-size: 8px;
+          color: #4a5570;
+          transition: color 0.15s;
+        }
+        .gov-invariants-toggle:hover .gov-invariants-caret {
+          color: #7a8aaa;
+        }
+        .gov-invariants-strip {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px 14px;
+          padding: 6px 0 2px;
+        }
+        .gov-ribbon--operator .gov-back {
+          margin-left: 0;
+          margin-top: 6px;
+          align-self: flex-start;
+        }
+
         /* ════════════════════════════════════════════════════════════════
          * DISCLOSURE SHELL — CINEMATIC VISUAL DOCTRINE
          * PI.LENS.V2.PHASE3.CINEMATIC-VISUAL-DOCTRINE.01

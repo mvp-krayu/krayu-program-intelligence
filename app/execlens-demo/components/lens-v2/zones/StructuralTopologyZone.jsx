@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { PRESSURE_META } from './constants'
+import { TermHint } from './OperatorReadingGuide'
 
 const LINEAGE_LABELS = {
   EXACT: 'EXACT',
@@ -35,16 +36,16 @@ function StructuralComposition({ topologySummary, isS1, structuralEnrichment }) 
         <div className="topo-composition-stats">
           <div className="topo-stat-card">
             <div className="topo-stat-value">{clusters}</div>
-            <div className="topo-stat-label">STRUCTURAL CLUSTERS</div>
+            <div className="topo-stat-label"><TermHint term="STRUCTURAL CLUSTERS">STRUCTURAL CLUSTERS</TermHint></div>
           </div>
           <div className="topo-stat-card">
             <div className="topo-stat-value">{enriched ? (ts.code_graph_file_count || total) : total}</div>
-            <div className="topo-stat-label">{enriched ? 'CODE GRAPH FILES' : 'STRUCTURAL DOMAINS'}</div>
+            <div className="topo-stat-label">{enriched ? <TermHint term="CODE GRAPH FILES">CODE GRAPH FILES</TermHint> : 'STRUCTURAL DOMAINS'}</div>
           </div>
           {enriched && ts.total_import_edges ? (
             <div className="topo-stat-card">
               <div className="topo-stat-value">{ts.total_import_edges.toLocaleString()}</div>
-              <div className="topo-stat-label">IMPORT EDGES</div>
+              <div className="topo-stat-label"><TermHint term="IMPORT EDGES">IMPORT EDGES</TermHint></div>
             </div>
           ) : (
             <div className="topo-stat-card">
@@ -55,7 +56,7 @@ function StructuralComposition({ topologySummary, isS1, structuralEnrichment }) 
           {enriched && ts.total_inheritance_edges ? (
             <div className="topo-stat-card">
               <div className="topo-stat-value">{ts.total_inheritance_edges.toLocaleString()}</div>
-              <div className="topo-stat-label">INHERITANCE EDGES</div>
+              <div className="topo-stat-label"><TermHint term="INHERITANCE EDGES">INHERITANCE EDGES</TermHint></div>
             </div>
           ) : null}
           {enriched && ts.total_classes ? (
@@ -103,10 +104,10 @@ export function StructuralSpinesPanel({ structuralEnrichment }) {
       {dual && (
         <div className="topo-spines-dual">
           <span className="topo-spines-dual-tag" style={{ borderColor: '#4a9eff' }}>
-            IMPORT AUTHORITY: {dual.import_dominant.path.split('/').slice(-2).join('/')} ({dual.import_dominant.import_in_degree})
+            <TermHint term="IMPORT AUTHORITY">IMPORT AUTHORITY</TermHint>: {dual.import_dominant.path.split('/').slice(-2).join('/')} ({dual.import_dominant.import_in_degree})
           </span>
           <span className="topo-spines-dual-tag" style={{ borderColor: '#64ffda' }}>
-            INHERITANCE AUTHORITY: {dual.inheritance_dominant.path.split('/').slice(-2).join('/')} ({dual.inheritance_dominant.inherits_in_degree})
+            <TermHint term="INHERITANCE AUTHORITY">INHERITANCE AUTHORITY</TermHint>: {dual.inheritance_dominant.path.split('/').slice(-2).join('/')} ({dual.inheritance_dominant.inherits_in_degree})
           </span>
         </div>
       )}
@@ -217,6 +218,7 @@ const COGNITION_OVERLAY_COLORS = {
   PRESSURE_ZONE: '#ff6b6b',
   EVIDENCE_GAP: '#5e6d8a',
   SW_INTEL_POSTURE: '#ff6b6b',
+  FRAGILITY_HOTSPOT: '#ff6b6b',
 }
 
 const ROLE_COLORS = {
@@ -730,10 +732,10 @@ function DomainCoverageGrid({ domains, onDomainClick, focusedDomain, isS1 }) {
                 <span className="topo-coverage-card-name">{d.business_label || d.domain_name}</span>
               </div>
               <div className="topo-coverage-card-meta">
-                {d.cluster_id}{d.dominant_dom_id ? ` · ${d.dominant_dom_id}` : ''}{isPZ ? ' · Zone Anchor' : ''}
+                {d.cluster_id}{d.dominant_dom_id ? ` · ${d.dominant_dom_id}` : ''}{isPZ ? <>{' · '}<TermHint term="Zone Anchor">Zone Anchor</TermHint></> : ''}
               </div>
               <div className="topo-coverage-card-lineage" style={{ color: lineageColor }}>
-                {lineageLabel}{d.confidence > 0 ? ` ${d.confidence.toFixed(2)}` : ''}
+                <TermHint term={lineageLabel}>{lineageLabel}</TermHint>{d.confidence > 0 ? ` ${d.confidence.toFixed(2)}` : ''}
               </div>
             </div>
           )
@@ -760,7 +762,7 @@ function DomainCoverageGrid({ domains, onDomainClick, focusedDomain, isS1 }) {
         {domains.some(d => d.zone_anchor) && (
           <span className="topo-coverage-legend-item">
             <span className="topo-coverage-dot" style={{ background: '#ffd700' }} />
-            Primary Pressure Zone
+            <TermHint term="Primary Pressure Zone">Primary Pressure Zone</TermHint>
           </span>
         )}
       </div>

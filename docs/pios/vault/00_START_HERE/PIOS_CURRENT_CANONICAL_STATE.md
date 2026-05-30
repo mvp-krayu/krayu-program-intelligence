@@ -37,7 +37,7 @@ Program Intelligence (category/discipline)
         │     ├── CEU Reconciliation Workflow (10 actions, review_mode governance, bidirectional obligation lineage)
         │     └── Reconciliation Loop
         ├── Marketplace (domain cognition module ecosystem)
-        │     ├── Software Intelligence (first module — OPERATIONAL: SignalSynthesisEngine + 4-slice topology cognition + commercial module gating + compilation chain locked 2026-05-29)
+        │     ├── Software Intelligence (first module — OPERATIONAL: SignalSynthesisEngine + 9-slice behavioral cognition [5 FOUNDATIONAL + 4 ACCEPTED 2026-05-30] + commercial module gating + compilation chain locked 2026-05-29)
         │     └── Module Registration (constitutionally specified, not yet implemented)
         └── Domain Cognition Modules (interpretation layers attached to PI Spine)
 ```
@@ -97,8 +97,8 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - Response depth hierarchy: MICRO, STANDARD, DEEP (5B.1+)
 - Governed evidence record export with structural topology capture, posture stability assessment, confidence envelope, and deterministic snapshot identity (Evidence Record Export)
 - Software Intelligence module with commercial gating (teaser when OFF, full cognition when ON) (SW-Intel)
-- SignalSynthesisEngine — deterministic cognition compiler producing 6 condition types from signal families (SW-Intel)
-- 4-slice MVP topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) with COMPOUND_CONVERGENCE composite (SW-Intel)
+- SignalSynthesisEngine — deterministic cognition compiler producing 8 condition types (7 primitive + 1 composite) from signal families and structural enrichment (SW-Intel)
+- 5-slice topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) + fragility/resilience cognition (EXECUTION_FRAGILITY) with COMPOUND_CONVERGENCE composite (SW-Intel)
 - Evidence-bound topology overlays with classification taxonomy (EVIDENCE_DERIVED, STRUCTURAL_CENTRALITY_DERIVED, PRESSURE_ZONE_DERIVED, TOPOLOGY_METRIC_DERIVED, MIXED) (SW-Intel)
 - Three-layer architecture separation: PI Core / Orchestration-Agentic Runtime / Domain Cognition (SW-Intel)
 
@@ -116,6 +116,8 @@ LENS v2 has materially transitioned from a static report surface to an interacti
 - e8ea654: propagation exposure corridor cognition slice
 - 7c04d84: Software Intelligence module commercial gating
 - 14d1faa: 4-slice MVP topology cognition language completion
+- ae47337: Execution Fragility slice — first implemented ACCEPTED behavioral slice (Class C)
+- d5ee5c0: projection contract unification assessment — 4-pathway split authority mapped
 
 ## Persona-Based Projection Doctrine
 
@@ -610,6 +612,15 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01 | G1 | Signal Synthesis Rulebook governance + SignalSynthesisEngine implementation. 6 primitive rules (DPC, DCP, PA, IPC, SMC, ESR) + 1 composite (CC). Three-layer architecture vocabulary (PI Core / Orchestration-Agentic Runtime / Domain Cognition). Evidence-bound topology cognition overlays. SW-Intel commercial module gating (teaser/full). Topology cognition Slices 1-2 (corridor cognition) | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.TOPOLOGY-COGNITION-COMPLETION.01 | G2 | Topology cognition Slices 3-4 (field/state cognition). Pressure zone rendering from pressure_zone_state artifact. Compound convergence decomposition with severity escalation. Cluster gravity with dpsigData wiring and spatial mass semantics. Evidence classification taxonomy (PRESSURE_ZONE_DERIVED, TOPOLOGY_METRIC_DERIVED, MIXED). No topology invention doctrine enforced | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01 | G1 | Executive consequence semantics constitutional definition. 8 atomic consequence classes (COORD_FRAG, DEP_AMP, DEL_EXP, OP_BOTTLENECK, RESIL_DEF, GOV_GAP, PROP_EXP, STAB_RISK). 3 named combination patterns (AMPLIFIED_DEP_FRAG, STRUCT_GRAVITY_WELL, SYSTEMIC_OP_FRAG). Consequence scope classification (LOCAL/REGIONAL/SYSTEMIC). Primitive-to-consequence mapping for all 7 SignalSynthesisEngine conditions. Confidence inheritance, escalation semantics, persona consumption contracts, module gating. GENESIS proof: 7 conditions → 4 consequence objects. Cross-persona semantic objects, not executive-only | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01 | G1 | Behavioral slice reconciliation — locked MVP-9 behavioral slice inventory. 11 candidates reconciled against 8-dimension behavior-first framework. 4 ACCEPTED (Execution Fragility [Class C — closes ontology gap], Execution Constriction [Class A], Coupling Inertia [Class D], Structural Boundary Divergence [Class E]). 1 DEFERRED (Dependency Debt Accumulation — temporal evidence required). 3 COLLAPSED (merged into surviving candidates). Governing rule: "The behavior is the slice. The graph metric is evidence." All 5 ontology classes now have primary static-derivable slices | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-COMPILER-IMPLEMENTATION.01 | G2 | ConsequenceCompiler operational implementation — compile(), forBoardroom(), forBalanced(). 8 consequence classes + 3 combination patterns. CognitionOntology (static condition/consequence/rule node graph). InvestigationVerifier (5-step verification protocol). GENESIS proof: 7 conditions → 4 consequence objects | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01 | G1 | Consequence slice taxonomy and governance doctrine — 5 ontology classes (A-E), maturity classes (FOUNDATIONAL/ADVANCED), 6-stage promotion lifecycle, 8-dimension behavior-first qualification framework. Vault propagated | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01 | G1 | Ontology-to-consequence compilation chain — transformation model, evidence loss inventory (6 items), compiler boundary rules, L2 truth generation ceiling. Mandatory baseline for INVESTIGATION verification | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01 | G2 | Assessment: current INVESTIGATION_DENSE is functionally OPERATOR (Verdict A). Behavioral mismatch: mission contract defines LOW agency / SYSTEM-ENFORCED, implementation has HIGH agency / OPERATOR-CONTROLLED | COMPLETE |
+| PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01 | G1 | 5 persona mission contracts locked — constitutional objectives, consumed/prohibited cognition, attention-control model, 16-field contract spec. Supersedes tagline model | COMPLETE |
+| PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01 | G1 | OPERATOR recognized as explicit 5th persona. INVESTIGATION constitutional but no certified implementation. Boundary definition locked. Vault propagated | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01 | G2 | First ACCEPTED behavioral slice implemented — Execution Fragility (Class C) across full pipeline: fragility_surface derivation (GenericSemanticPayloadResolver) → ruleExecutionFragility (SignalSynthesisEngine) → mapEF consequence mapping → CognitionOntology node → InvestigationVerifier → visual projection. 39 hotspots on BlueEdge (16% of 244 scored files). Real cohesion from raw import edges. Hub score-adjustment (not exclusion). 20/20 validation checks PASS | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01 | G2 | Assessment: 4 independent SW-INTEL projection pathways mapped (A: forBoardroom cognition_slices, B: forBalanced narrative, C: deriveProjection rawSurfaces, D: synthesize direct conditions in DENSE). Split projection authority identified. Dead code inventory. Governance question: condition-first vs consequence-first vs dual-layer. No implementation — assessment only | COMPLETE |
 
 ## Domain Cognition Module Architecture
 
@@ -642,12 +653,13 @@ Program Intelligence operates through domain cognition modules — replaceable i
 | Event-log-derived learning | OPERATIONAL (v1) — descriptive, read-only |
 | Domain Cognition Module pattern | PROVEN — architecture demonstrated by PR #16 |
 | Marketplace architecture | CONSTITUTIONALLY_DEFINED — module ecosystem defined |
-| SignalSynthesisEngine | **OPERATIONAL** — deterministic cognition compiler, 6 primitive rules + 1 composite. Produces conditions from PSIG/DPSIG/ISIG signal families against GENESIS specimen |
+| SignalSynthesisEngine | **OPERATIONAL** — deterministic cognition compiler, 7 primitive rules + 1 composite (ruleExecutionFragility added 2026-05-30). Produces 8 condition types from PSIG/DPSIG/ISIG signal families + structural enrichment against GENESIS specimen |
 | Software Intelligence module gating | **OPERATIONAL** — commercial toggle (teaser when OFF, full domain cognition when ON). `synthesizeTeaser()` / `synthesize()` separation |
 | 4-slice topology cognition language | **OPERATIONAL** — corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) + COMPOUND_CONVERGENCE composite. All evidence-bound with classification taxonomy |
+| 9-slice behavioral cognition inventory | **LOCKED** (2026-05-30) — 5 FOUNDATIONAL (existing topology slices + import pressure concentration) + 4 ACCEPTED (Execution Fragility [Class C — **IMPLEMENTED** ae47337], Execution Constriction [Class A], Coupling Inertia [Class D], Structural Boundary Divergence [Class E]). All behavior-first, all static-derivable. First implementation (Execution Fragility) complete 2026-05-30 |
 | Pressure-topology integration | **OPERATIONAL** — topology cognition overlays rendered in StructuralTopologyZone with condition-specific animation, evidence-bound corridor/zone/cluster visualization in IntelligenceField |
 | Persona-specific SW-Intel consumption | SPECIFIED_NOT_IMPLEMENTED — all personas receive same rendering |
-| Executive Consequence Semantics | SPECIFIED_NOT_IMPLEMENTED — 8 consequence classes, 3 combination patterns, consequence scope, persona consumption contracts. Semantic model locked. No runtime compiler. |
+| Executive Consequence Semantics | **OPERATIONAL** — ConsequenceCompiler.js implements compile(), forBoardroom(), forBalanced(). 8 consequence classes + 3 combination patterns + consequence scope. CognitionOntology.js (static cognition graph) + InvestigationVerifier.js (5-step verification). Compilation chain locked (2026-05-29). 4-pathway projection authority split identified (PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01) |
 | Prescriptive learning / operator modeling | DEFERRED — governance-sensitive (GAP-04) |
 | Graph-based progression intelligence | FUTURE — Phase 3 (GAP-08) |
 

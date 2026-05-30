@@ -45,7 +45,10 @@
 
 | Module | Path | Role |
 |---|---|---|
-| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 6 primitive rules + 1 composite. Transforms signal families into operational conditions with topology overlays |
+| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 7 primitive rules + 1 composite. Transforms signal families + structural enrichment into operational conditions with topology overlays |
+| ConsequenceCompiler | app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js | Consequence compilation — compile() + forBoardroom() + forBalanced(). 8 consequence types + 3 combination patterns. COGNITION_SLICE_VOCABULARY for BOARDROOM dynamics graph |
+| CognitionOntology | app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js | Static cognition ontology — CONDITION_NODES + CONSEQUENCE_NODES + RULE_NODES with upstream/downstream refs |
+| InvestigationVerifier | app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js | 5-step compilation chain verification — SECTION_4_RULES condition→consequence derivation validation |
 | SoftwareIntelligenceProjectionAdapter | app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js | Condition → LENS cognition state derivation (legend, overlay, teaser/full). `translateSignal()` for L3 signal titles. `deriveConditionCognitionState()` for topology overlay semantics. `synthesize()` / `synthesizeTeaser()` for module gating |
 | SoftwareIntelligenceField | app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx | SW-Intel condition rendering zone (full activation mode) |
 | OrchestrationGuidanceRuntime | app/execlens-demo/components/lens-v2/zones/OrchestrationGuidanceRuntime.jsx | Guided action orchestration (Layer 2 — Orchestration-Agentic Runtime) |
@@ -232,6 +235,15 @@
 | PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.DOMAIN-REASONING-MVP-DEFINITION.01/ | G1 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.TOPOLOGY-COGNITION-COMPLETION.01 | (runtime branch — no stream directory) | G2 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-SEMANTICS-DEFINITION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-COMPILER-IMPLEMENTATION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTIVE-CONSEQUENCE-COMPILER-IMPLEMENTATION.01/ | G2 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-TAXONOMY-AND-GOVERNANCE.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.INVESTIGATION-PERSONA-ASSESSMENT.01/ | G2 | COMPLETE |
+| PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01 | docs/pios/PI.PERSONA.MISSION-CONTRACTS-AND-COGNITIVE-OBJECTIVES.01/ | G1 | COMPLETE |
+| PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01 | docs/pios/PI.PERSONA.OPERATOR-AND-INVESTIGATION-BOUNDARY.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.BEHAVIORAL-SLICE-RECONCILIATION.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-FRAGILITY-SLICE.01/ | G2 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-UNIFICATION.01/ | G2 | COMPLETE |
 
 ## Cross-References
 

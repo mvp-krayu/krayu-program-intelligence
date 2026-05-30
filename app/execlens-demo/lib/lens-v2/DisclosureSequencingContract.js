@@ -58,9 +58,10 @@ const DISCLOSURE_TIERS = {
   },
   OPERATOR_DENSE: {
     tier0: ['DeclarationZone'],
-    tier1: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate'],
-    tier2: ['IntelligenceField', 'SQOIntelligenceZone', 'EvidenceDepthLayer', 'GovernanceRibbon'],
+    tier1: ['GovernanceRibbon'],
+    tier2: ['IntelligenceField'],
     tier3: [],
+    suppressed: ['SemanticTrustPostureZone', 'ReconciliationAwarenessZone', 'QualifierMandate', 'SQOIntelligenceZone', 'EvidenceDepthLayer'],
   },
   BOARDROOM: {
     tier0: ['DeclarationZone'],
