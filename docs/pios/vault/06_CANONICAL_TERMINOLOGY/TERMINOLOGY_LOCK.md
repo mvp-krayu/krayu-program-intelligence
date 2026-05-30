@@ -861,7 +861,15 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Promotion lifecycle:** CANDIDATE → SPECIMEN → FOUNDATIONAL → COMPOSABLE → CERTIFIED → DEPRECATED. No skip-level promotion.
 
-**Status:** CANONICAL — governance doctrine defined (2026-05-28). 5 foundational slices identified (mapped to existing topology cognition slices + import pressure concentration). Advanced slices at CANDIDATE status only.
+**Status:** CANONICAL — governance doctrine defined (2026-05-28). Behavioral slice inventory locked (2026-05-30): MVP-9 across all 5 ontology classes. 5 FOUNDATIONAL (existing topology cognition slices + import pressure concentration). 4 ACCEPTED (Execution Fragility [Class C], Execution Constriction [Class A], Coupling Inertia [Class D], Structural Boundary Divergence [Class E]). 1 DEFERRED (Dependency Debt Accumulation — requires temporal evidence). All static-derivable.
+
+**Governing rule (2026-05-30):** "The behavior is the slice. The graph metric is evidence." Every slice is defined by the operational behavior that emerges, not by the graph metric that detects it. A slice whose definition leads with a metric is not a slice — it is a signal.
+
+**Accepted behavioral slices (2026-05-30):**
+- **Execution Fragility** (Class C): Localized structural weakness amplifies operational disruption. Bidirectional resilience axis — fragile end (high coupling + low cohesion → disruption amplification) and absorptive end (low interface surface + high cohesion → disruption containment). First primary Class C slice.
+- **Execution Constriction** (Class A): Operational flow forced through narrow structural passage, creating throughput ceiling. Path centrality behavior distinct from dependency concentration (betweenness vs in-degree).
+- **Coupling Inertia** (Class D): Tightly-coupled module clusters resist independent evolution. Bidirectional coupling prevents independent change — velocity decays in proportion to cluster density. First primary Class D slice.
+- **Structural Boundary Divergence** (Class E): Declared organizational structure diverges from actual dependency structure. Names and locations lie about relationships. First static-derivable Class E slice.
 
 **What it is NOT:** A UI card. A prose paragraph. A persona-specific insight. A raw metric. A prompt-generated interpretation. Consequence slices are governed cognition objects, not rendering artifacts.
 
