@@ -236,10 +236,9 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
         cohesion_source: 'DEGREE_RATIO_PROXY',
       };
     }
-  }
 
-  // ─── Constriction Surface ─────────────────────────────
-  if (importEdges && importEdges.length > 0) {
+    // ─── Constriction Surface ─────────────────────────────
+    if (importEdges && importEdges.length > 0) {
     const adj = {}
     const radj = {}
     const allNodes = new Set()
@@ -363,6 +362,7 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
       total_nodes: ranking.length,
       constriction_source: 'DEGREE_RATIO_PROXY',
     }
+  }
   }
 
   return enrichment;
