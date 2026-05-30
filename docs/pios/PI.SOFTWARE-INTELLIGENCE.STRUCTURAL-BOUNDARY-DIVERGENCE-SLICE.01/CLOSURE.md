@@ -30,11 +30,15 @@ Implement Structural Boundary Divergence (N-4, Class E — Drift & Instability) 
 
 ## 5. Validation
 
-15/15 PASS — see validation_log.json
+15/16 PASS, 1 NOT_VALIDATED — see validation_log.json
+
+- CLI synthesis validation: NOT_VALIDATED (resolver requires runtime SSR context; `canonical_topology_40_4` unavailable in standalone invocation)
+- Runtime UI validation: PASS (LIVE binding, 652 elements, zero console errors)
+- Payload enrichment validation: PASS (boundary_divergence confirmed via `__NEXT_DATA__` inspection: 3 divergent modules, 1 orphaned, system divergence index 0.5)
 
 ## 6. Governance
 
-- Classification: G2 (architecture-consuming)
+- Classification: G1 (architecture-mutating — introduces new enrichment surface, condition type, consequence mappings, and ontology node)
 - No data mutation
 - No unauthorized computation
 - No interpretation beyond structural derivation
@@ -59,6 +63,31 @@ Implement Structural Boundary Divergence (N-4, Class E — Drift & Instability) 
 
 Ready for merge. Structural Boundary Divergence is the fourth ACCEPTED behavioral slice implemented. MVP-9 progress: 5 FOUNDATIONAL (existing) + 3 ACCEPTED implemented (Execution Fragility, Execution Constriction, Structural Boundary Divergence) + 1 ACCEPTED remaining (Coupling Inertia).
 
-## 10. Implementation Semantics
+## 10. Architecture Memory Propagation
+
+### Stream Classification: G1
+
+### Architecture Mutation Delta:
+
+| Mutation | Type | Detail |
+|----------|------|--------|
+| STRUCTURAL_BOUNDARY_DIVERGENCE condition type | NEW_CONCEPT | 11th condition type (10th internal), Class E behavioral slice |
+| boundary_divergence enrichment surface | NEW_CONCEPT | Cross-boundary import ratio analysis per module |
+| GOV_GAP ← SBD (defining) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| COORD_FRAG ← SBD (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| PROP_EXP ← SBD (conditional) | RELATIONSHIP_ADDITION | New upstream path to existing consequence |
+| BOUNDARY_ALIGNMENT cognition surface | NEW_CONCEPT | New projection surface in SURFACE_CONDITION_MAP |
+| Projection Disposition: SBD entry | EXTENSION | All 8 registries REQUIRED |
+
+### Vault Files Requiring Update:
+
+- `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/PIOS_CURRENT_CANONICAL_STATE.md` — SW-INTEL condition count: 10 → 11 (10 internal types)
+- `docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md` — if SW-INTEL condition inventory is tracked
+
+### Propagation Status: PENDING
+
+Vault propagation deferred — to be completed as part of batch vault update after remaining MVP-9 slice (Coupling Inertia) or as standalone propagation stream.
+
+## 11. Implementation Semantics
 
 See: IMPLEMENTATION_SEMANTICS.md

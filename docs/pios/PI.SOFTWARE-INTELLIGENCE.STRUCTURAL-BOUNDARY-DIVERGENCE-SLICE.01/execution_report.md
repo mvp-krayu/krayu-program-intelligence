@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Stream ID | PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01 |
-| Classification | G2 (architecture-consuming) |
+| Classification | G1 (architecture-mutating — new enrichment surface, condition type, consequence mappings, ontology node) |
 | Branch | feature/runtime-demo |
 | Baseline Commit | 2025c32 |
 | §5.5 Triggered | YES — new reusable code primitives |
@@ -70,9 +70,10 @@ Validated on BlueEdge specimen: 3 divergent modules detected out of 14, 1 orphan
 ## Verification
 
 - Build passes: YES
-- Runtime verification: LIVE binding, 652 elements, zero console errors
-- Enrichment verified: boundary_divergence present with 3 divergent modules on BlueEdge specimen
-- No RESOLVER_THREW errors
+- Runtime UI verification: LIVE binding, 652 elements, zero console errors
+- Enrichment verified: boundary_divergence present with 3 divergent modules on BlueEdge specimen (confirmed via `__NEXT_DATA__` inspection)
+- CLI synthesis validation: NOT_VALIDATED — resolver requires runtime SSR context (`canonical_topology_40_4` unavailable in standalone invocation)
+- No RESOLVER_THREW errors in runtime
 - Existing condition types: unchanged
 
 ## Governance Confirmation
