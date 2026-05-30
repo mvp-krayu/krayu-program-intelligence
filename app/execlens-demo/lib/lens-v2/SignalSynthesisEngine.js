@@ -90,6 +90,14 @@ const CONDITION_VOCABULARY = {
     topology_effect: 'Boundary divergence overlay with cross-boundary import corridors',
     governance: 'Structural confirmation required — evidence-bound',
   },
+  COUPLING_INERTIA: {
+    internal: 'COUPLING_INERTIA',
+    l2: 'Bidirectional Coupling Cluster Resistance',
+    l3: 'Coupling Inertia',
+    consequence: 'Tightly-coupled module clusters resist independent evolution — bidirectional import relationships structurally fuse modules into a single change unit, decaying development velocity in proportion to cluster density.',
+    topology_effect: 'Coupling cluster overlay with bidirectional edge emphasis',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
 }
 
 // ─── Severity ──────────────────────────────────────────────────────
@@ -149,6 +157,11 @@ const CONDITION_INTERVENTIONS = {
     { intervention_id: 'sbd-inspect-divergence', action_type: 'INSPECT', operator_label: 'Show divergent modules', topology_mutation: 'Divergent modules emphasized, aligned modules dimmed', panel_mutation: 'Divergence inventory with cross-boundary ratio per module' },
     { intervention_id: 'sbd-trace-boundaries', action_type: 'TRACE', operator_label: 'Trace cross-boundary imports', topology_mutation: 'Cross-boundary import corridors visualized', panel_mutation: 'Import inventory showing declared vs actual dependency paths' },
     { intervention_id: 'sbd-compare-alignment', action_type: 'COMPARE', operator_label: 'Compare declared vs actual boundaries', topology_mutation: 'Aligned vs divergent modules contrasted', panel_mutation: 'Boundary alignment assessment by module' },
+  ],
+  COUPLING_INERTIA: [
+    { intervention_id: 'ci-inspect-clusters', action_type: 'INSPECT', operator_label: 'Show coupling clusters', topology_mutation: 'Coupled module clusters emphasized, independent modules dimmed', panel_mutation: 'Cluster inventory with per-cluster density and inertia score' },
+    { intervention_id: 'ci-trace-coupling', action_type: 'TRACE', operator_label: 'Trace bidirectional dependencies', topology_mutation: 'Bidirectional import corridors within clusters visualized', panel_mutation: 'Bidirectional pair inventory with edge counts per direction' },
+    { intervention_id: 'ci-compare-independence', action_type: 'COMPARE', operator_label: 'Compare coupled vs independent regions', topology_mutation: 'Coupled clusters contrasted with independent modules', panel_mutation: 'Independence assessment — coupled vs decoupled module distribution' },
   ],
 }
 
@@ -275,6 +288,7 @@ function buildDomainTargets(domainIds, registry, conditionType) {
     EXECUTION_FRAGILITY: 'fragility hotspot',
     EXECUTION_CONSTRICTION: 'constriction point',
     STRUCTURAL_BOUNDARY_DIVERGENCE: 'boundary divergence',
+    COUPLING_INERTIA: 'coupling cluster',
   }
   return (domainIds || []).map(id => {
     const resolved = resolveDomainDisplay(id, registry)
@@ -1070,6 +1084,104 @@ function ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnr
   return conditions
 }
 
+function ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const ci = structuralEnrichment && structuralEnrichment.coupling_inertia
+  if (!ci || !ci.inertia_clusters || ci.inertia_clusters.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.COUPLING_INERTIA
+
+  const domainClusters = {}
+  for (const cluster of ci.inertia_clusters) {
+    const clusterDomains = new Set()
+    for (const modPrefix of cluster.modules) {
+      const domId = resolveFileToRegistryDomain(modPrefix, registry, pressureZoneState)
+      const resolvedId = domId ? resolve(domId) : null
+      if (resolvedId) clusterDomains.add(resolvedId)
+    }
+    for (const domId of clusterDomains) {
+      if (!domainClusters[domId]) domainClusters[domId] = []
+      domainClusters[domId].push(cluster)
+    }
+  }
+
+  if (Object.keys(domainClusters).length === 0) return []
+
+  const allScores = ci.inertia_clusters.map(c => c.inertia_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, clusters] of Object.entries(domainClusters)) {
+    const maxInertia = Math.max(...clusters.map(c => c.inertia_score))
+    const hasChokeInCluster = clusters.some(c => {
+      if (!structuralEnrichment.constriction_surface) return false
+      const chokeFiles = (structuralEnrichment.constriction_surface.constriction_hotspots || []).map(h => h.path)
+      return c.modules.some(m => chokeFiles.some(f => f.startsWith(m + '/')))
+    })
+    const severity = maxInertia >= p90 ? 'HIGH'
+      : maxInertia >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'ci-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'COUPLING_INERTIA',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: clusters.flatMap(c => c.modules), files: [] },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_choke_in_cluster: hasChokeInCluster,
+      topology_overlay: {
+        overlay_mode: 'COUPLING_CLUSTER',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: clusters.map(c => ({
+          signal_id: 'inertia-cluster-' + c.modules[0].replace(/[/\\]/g, '-'),
+          signal_name: 'Cluster: ' + c.modules.slice(0, 3).join(', ') + (c.modules.length > 3 ? ' +' + (c.modules.length - 3) : ''),
+          severity,
+          type: 'coupling_cluster',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.COUPLING_INERTIA.map(i => ({
+        ...i,
+        condition_id: 'ci-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['coupling_inertia_review'],
+      contributing_features: ['coupling_inertia'],
+      derivation_trace: clusters.map(c => c.modules.join('+')).join(' | ') +
+        ' → coupling_inertia [' + ci.inertia_source + '] → COUPLING_INERTIA on ' + domId,
+      inertia_evidence: {
+        cluster_count: clusters.length,
+        max_inertia: maxInertia,
+        has_choke_in_cluster: hasChokeInCluster,
+        system_coupling_index: ci.system_coupling_index,
+        inertia_source: ci.inertia_source,
+        clusters: clusters.slice(0, 3).map(c => ({
+          modules: c.modules,
+          module_count: c.module_count,
+          bidirectional_pairs: c.bidirectional_pairs,
+          density: c.density,
+          inertia_score: c.inertia_score,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
 function ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry) {
   const resolve = buildDomainResolver(registry)
   const gapSignals = taggedSignals.filter(ts => ts.features.includes('domain_anchoring_gap'))
@@ -1239,6 +1351,7 @@ function synthesize(fullReport) {
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
@@ -1304,6 +1417,7 @@ function synthesizeTeaser(fullReport) {
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 

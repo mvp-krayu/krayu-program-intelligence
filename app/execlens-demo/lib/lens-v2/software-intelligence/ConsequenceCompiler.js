@@ -292,6 +292,18 @@ function mapSBD(cond, registry) {
   return r
 }
 
+function mapCI(cond, registry) {
+  const r = []
+  r.push(makeAtomic('COORD_FRAG', cond, 'LOCAL', true, registry))
+  if (sevGte(cond.severity, 'ELEVATED')) {
+    r.push(makeAtomic('OP_BOTTLENECK', cond, 'LOCAL', false, registry))
+  }
+  if (cond._has_choke_in_cluster) {
+    r.push(makeAtomic('DEP_AMP', cond, 'LOCAL', false, registry))
+  }
+  return r
+}
+
 function mapGCS(cond, registry) {
   if (cond.severity === 'NOMINAL') return []
   return [makeAtomic('GOV_GAP', cond, 'SYSTEMIC', true, registry)]
@@ -311,6 +323,7 @@ function mapCondition(cond, ctx, registry) {
     case 'EXECUTION_FRAGILITY': return mapEF(cond, registry)
     case 'EXECUTION_CONSTRICTION': return mapEC(cond, registry)
     case 'STRUCTURAL_BOUNDARY_DIVERGENCE': return mapSBD(cond, registry)
+    case 'COUPLING_INERTIA': return mapCI(cond, registry)
     case 'GOVERNANCE_COVERAGE_STATUS': return mapGCS(cond, registry)
     case 'COMPOUND_CONVERGENCE': return mapCC(cond, registry)
     default: return []
@@ -626,6 +639,11 @@ const COGNITION_SLICE_VOCABULARY = {
     localize: (d) => `${d} shows structural boundary divergence — declared organizational structure does not match actual dependency structure.`,
     is_dynamic: true,
   },
+  COUPLING_INERTIA: {
+    executive_name: 'Coupling Inertia',
+    localize: (d) => `${d} contains tightly-coupled module clusters that resist independent evolution — bidirectional dependencies fuse modules into a single change unit.`,
+    is_dynamic: true,
+  },
   COMPOUND_CONVERGENCE: { executive_name: null, localize: () => null, is_dynamic: false },
   GOVERNANCE_COVERAGE_STATUS: { executive_name: null, localize: () => null, is_dynamic: false },
 }
@@ -937,5 +955,5 @@ module.exports = {
   forInvestigation,
   CONSEQUENCE_VOCABULARY,
   COGNITION_SLICE_VOCABULARY,
-  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE']),
+  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE']),
 }

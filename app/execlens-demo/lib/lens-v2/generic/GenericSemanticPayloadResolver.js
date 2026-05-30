@@ -445,6 +445,94 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
         divergence_source: 'IMPORT_EDGE_ANALYSIS',
       }
     }
+
+    // --- Coupling Inertia: bidirectional import clusters ---
+    if (importEdges && importEdges.length >= 6) {
+      const modOfCI = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+      const dirAdj = {}
+      for (const e of importEdges) {
+        const sm = modOfCI(e.source_path)
+        const tm = modOfCI(e.target_path)
+        if (sm === tm) continue
+        if (!dirAdj[sm]) dirAdj[sm] = {}
+        dirAdj[sm][tm] = (dirAdj[sm][tm] || 0) + 1
+      }
+
+      const biPairs = []
+      const biSet = new Set()
+      for (const a of Object.keys(dirAdj)) {
+        for (const b of Object.keys(dirAdj[a])) {
+          if (dirAdj[b] && dirAdj[b][a]) {
+            const key = [a, b].sort().join('|')
+            if (!biSet.has(key)) {
+              biSet.add(key)
+              biPairs.push({ a, b, ab: dirAdj[a][b], ba: dirAdj[b][a] })
+            }
+          }
+        }
+      }
+
+      if (biPairs.length > 0) {
+        const parent = {}
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x] } return x }
+        const union = (x, y) => { parent[find(x)] = find(y) }
+        const allMods = new Set()
+        for (const p of biPairs) { allMods.add(p.a); allMods.add(p.b) }
+        for (const m of allMods) parent[m] = m
+        for (const p of biPairs) union(p.a, p.b)
+
+        const clusters = {}
+        for (const m of allMods) {
+          const root = find(m)
+          if (!clusters[root]) clusters[root] = []
+          clusters[root].push(m)
+        }
+
+        const inertiaClusters = []
+        for (const members of Object.values(clusters)) {
+          if (members.length < 3) continue
+          const memberSet = new Set(members)
+          let intraEdges = 0
+          const pairsInCluster = []
+          for (const p of biPairs) {
+            if (memberSet.has(p.a) && memberSet.has(p.b)) {
+              intraEdges += p.ab + p.ba
+              pairsInCluster.push(p)
+            }
+          }
+          const possiblePairs = members.length * (members.length - 1)
+          const density = possiblePairs > 0 ? Math.round((pairsInCluster.length * 2 / possiblePairs) * 100) / 100 : 0
+          const inertiaScore = Math.round(density * members.length * Math.log2(Math.max(intraEdges, 2)) * 100) / 100
+          inertiaClusters.push({
+            modules: members.sort(),
+            module_count: members.length,
+            bidirectional_pairs: pairsInCluster.length,
+            intra_edge_count: intraEdges,
+            density,
+            inertia_score: inertiaScore,
+          })
+        }
+
+        inertiaClusters.sort((a, b) => b.inertia_score - a.inertia_score)
+
+        const allScores = inertiaClusters.map(c => c.inertia_score).sort((a, b) => a - b)
+        const ciMedian = allScores.length > 0 ? allScores[Math.floor(allScores.length / 2)] : 0
+
+        const coupledModCount = inertiaClusters.reduce((s, c) => s + c.module_count, 0)
+        const totalModCount = new Set(importEdges.flatMap(e => [modOfCI(e.source_path), modOfCI(e.target_path)])).size
+
+        enrichment.coupling_inertia = {
+          inertia_clusters: inertiaClusters,
+          system_coupling_index: totalModCount > 0 ? Math.round((coupledModCount / totalModCount) * 100) / 100 : 0,
+          thresholds: { min_cluster_size: 3, inertia_median: ciMedian },
+          cluster_count: inertiaClusters.length,
+          coupled_module_count: coupledModCount,
+          total_module_count: totalModCount,
+          bidirectional_pair_count: biPairs.length,
+          inertia_source: 'IMPORT_EDGE_ANALYSIS',
+        }
+      }
+    }
   }
 
   return enrichment;

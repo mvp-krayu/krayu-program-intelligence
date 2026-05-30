@@ -214,6 +214,29 @@ const CONDITION_NODES = {
     runtime: null,
   },
 
+  COUPLING_INERTIA: {
+    id: 'COUPLING_INERTIA',
+    type: 'condition',
+
+    human_name: 'Coupling inertia',
+    what_it_means: 'Tightly-coupled module clusters resist independent evolution. Bidirectional import relationships structurally fuse modules into a single change unit — changes to any member of the cluster require assessment of all other members.',
+    why_it_matters: 'Coupling inertia decays development velocity in proportion to cluster density. As clusters grow, the cost of any change compounds because bidirectional dependencies prevent isolating the blast radius. Teams cannot refactor, test, or deploy parts of the cluster independently.',
+    operational_implication: 'Development velocity through coupled clusters is inversely proportional to cluster size. The cluster behaves as a monolithic change unit regardless of organizational boundaries.',
+    how_detected: 'Structural analysis of import edges identified module pairs with bidirectional imports (A imports B AND B imports A). Union-find clustering grouped transitively connected bidirectional pairs into clusters. Clusters of 3+ modules with high density are flagged.',
+    what_to_look_for: 'Look for areas where refactoring one module forces cascading changes in others, where circular dependencies prevent clean extraction, or where test setups require initializing an entire cluster to test a single module.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'COORD_FRAG', role: 'defining' },
+      { ref: 'OP_BOTTLENECK', role: 'conditional' },
+      { ref: 'DEP_AMP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
   COMPOUND_CONVERGENCE: {
     id: 'COMPOUND_CONVERGENCE',
     type: 'condition',
@@ -257,6 +280,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
       { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'conditional' },
+      { ref: 'COUPLING_INERTIA', role: 'defining' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -282,6 +306,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
+      { ref: 'COUPLING_INERTIA', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -331,6 +356,7 @@ const CONSEQUENCE_NODES = {
       { ref: 'DELIVERY_PRESSURE_CONCENTRATION', role: 'conditional' },
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'defining' },
+      { ref: 'COUPLING_INERTIA', role: 'conditional' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -521,6 +547,7 @@ const RULE_NODES = {
       { ref: 'EXECUTION_FRAGILITY', role: 'governance' },
       { ref: 'EXECUTION_CONSTRICTION', role: 'governance' },
       { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'governance' },
+      { ref: 'COUPLING_INERTIA', role: 'governance' },
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'governance' },
       { ref: 'COMPOUND_CONVERGENCE', role: 'governance' },
     ],

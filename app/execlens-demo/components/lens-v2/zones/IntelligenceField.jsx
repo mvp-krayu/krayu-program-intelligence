@@ -144,6 +144,7 @@ const DYNAMICS_GLYPH_TYPE = {
   EXECUTION_FRAGILITY: 'fragmented-ring',
   EXECUTION_CONSTRICTION: 'hub',
   STRUCTURAL_BOUNDARY_DIVERGENCE: 'spread',
+  COUPLING_INERTIA: 'coupling',
 }
 
 function ConvergenceWeb({ slices, postureLabel, postureSeverity, primaryLocus }) {
