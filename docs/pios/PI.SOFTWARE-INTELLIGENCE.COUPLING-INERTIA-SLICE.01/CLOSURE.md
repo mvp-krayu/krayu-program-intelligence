@@ -95,9 +95,13 @@ CONDITION_VOCABULARY now contains 12 entries (11 internal condition types). Full
 
 ### Vault Files Updated:
 
-Vault propagation deferred — to be completed in a dedicated hygiene/propagation pass after implementation verification.
+| Vault File | Update |
+|---|---|
+| PIOS_CURRENT_CANONICAL_STATE.md | CI IMPLEMENTED status, 12 condition types, 9-slice topology cognition, 4/4 ACCEPTED, commit registry, ontology lineage |
+| TERMINOLOGY_LOCK.md | SSE 11 rules, 12 conditions, ruleCouplingInertia, 9-slice + coupling/inertia category, 4/4 ACCEPTED, evidence classification |
+| CURRENT_CANONICAL_PATHS.md | SSE 11 rules + 12 conditions, CI governance stream entry |
 
-### Propagation Status: DEFERRED
+### Propagation Status: COMPLETE
 
 ## 11. Implementation Semantics
 

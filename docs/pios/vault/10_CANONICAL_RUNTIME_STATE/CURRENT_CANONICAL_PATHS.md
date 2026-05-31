@@ -45,7 +45,7 @@
 
 | Module | Path | Role |
 |---|---|---|
-| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 10 primitive rules + 1 composite. 11 condition types (10 internal). Transforms signal families + structural enrichment into operational conditions with topology overlays |
+| SignalSynthesisEngine | app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js | Deterministic cognition compiler — 11 primitive rules + 1 composite. 12 condition types (11 internal). Transforms signal families + structural enrichment into operational conditions with topology overlays |
 | ConsequenceCompiler | app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js | Consequence compilation — compile() + forBoardroom() + forBalanced(). 8 consequence types + 3 combination patterns. COGNITION_SLICE_VOCABULARY for BOARDROOM dynamics graph |
 | CognitionOntology | app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js | Static cognition ontology — CONDITION_NODES + CONSEQUENCE_NODES + RULE_NODES with upstream/downstream refs |
 | InvestigationVerifier | app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js | 5-step compilation chain verification — SECTION_4_RULES condition→consequence derivation validation |
@@ -248,6 +248,7 @@
 | PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01/ | G1 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01/ | G1 | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01/ | G1 | COMPLETE |
+| PI.SOFTWARE-INTELLIGENCE.COUPLING-INERTIA-SLICE.01 | docs/pios/PI.SOFTWARE-INTELLIGENCE.COUPLING-INERTIA-SLICE.01/ | G1 | COMPLETE |
 
 ## Cross-References
 
