@@ -114,10 +114,14 @@ COMPLETE — all 6 deliverables produced, all 38 validation checks passed, gover
 - ProjectionConfig
 
 ### Vault Files Updated:
-- PENDING — vault propagation deferred to commit phase
+- docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md — 10 new terms added (PICP, PICR, PRE, CIP, L4, L5, Cognition Object, Materializer, Projection Family, ProjectionConfig)
+- docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md — date updated, hierarchy updated (L4 Cognition Assembly, L5 Projection Rendering), 3 streams added to ontology lineage
+- docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md — 3 streams added to governance streams table
 
 ### Propagation Verification:
-- PENDING — requires vault update
+- TERMINOLOGY_LOCK.md: 10 terms present — PASS
+- PIOS_CURRENT_CANONICAL_STATE.md: hierarchy + lineage updated — PASS
+- CURRENT_CANONICAL_PATHS.md: 3 streams registered — PASS
 
-### Propagation Status: PARTIAL
-Architectural concepts canonicalized. Terminology decisions locked. Vault propagation deferred pending operator approval of stream output.
+### Propagation Status: COMPLETE
+All architectural concepts propagated to vault. All 3 vault files updated.

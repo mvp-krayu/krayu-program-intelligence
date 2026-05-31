@@ -939,6 +939,86 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.ONTOLOGY-TO-CONSEQUENCE-COMPILATION-MODEL.01/ONTOLOGY_TO_CONSEQUENCE_COMPILATION_MODEL.md`
 
+### PICP (Program Intelligence Cognition Package)
+
+**Definition:** The canonical L4 runtime artifact — a deterministic, replayable, diffable, projection-independent package of structured cognition. Contains 9 cognition objects: structural_posture, tension_map, constraint_inventory, exposure_assessment, trajectory_assessment, decision_surface, absence_profile, competitive_intelligence, operational_ceiling. Produced by PICR from CIP. Consumed by PRE for audience-specific projection. The PICP exists BEFORE any audience decision — it is L4 cognition, not L5 rendering.
+
+**Status:** CANONICAL — canonicalized (2026-05-31). Renamed from ECP (Executive Cognition Package) because 0/9 objects are executive-specific and 4/8 projection families serve non-executive audiences.
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### PICR (Program Intelligence Cognition Runtime)
+
+**Definition:** The L4 runtime component that produces the PICP from CIP. Contains 9 materializers — pure functions, each producing one cognition object. ZERO interpretive authority. Deterministic: same CIP → same PICP.
+
+**Status:** CANONICAL — canonicalized (2026-05-31). Renamed from ECR (Executive Cognition Runtime) to match PICP rename.
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### PRE (Projection Rendering Engine)
+
+**Definition:** The L5 component that renders audience-specific deliverables from the PICP. Parameterized by ProjectionConfig (projection_type, audience, format, rendering_overrides). The ONLY component in the L4/L5 pipeline with interpretive authority (75.x bounded). Produces surfaces for 8 defined projection families.
+
+**Status:** CANONICAL — canonicalized (2026-05-31). Name retained from prior discovery (accurately describes function).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### CIP (Compiled Intelligence Package)
+
+**Definition:** The L0-L3 assembly consumed by PICR to produce the PICP. 6 inputs: fullReport, synthesisResult, consequenceResult, cognitionOntology, classRiskLabels, qualificationPackage. Represents the complete evidence base from which structured cognition is derived.
+
+**Status:** CANONICAL — canonicalized (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### L4 (Pipeline Cognition Layer)
+
+**Definition:** The pipeline layer that produces structured cognition from compiled intelligence. ZERO interpretive authority. Located between L3 (Consequences) and L5 (Projection) in the cognition pipeline. Different namespace from git_structure_contract L0-L8 (branch governance layers).
+
+**Status:** CANONICAL — canonicalized (2026-05-31). Pipeline layer designation, not branch governance layer.
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### L5 (Pipeline Projection Layer)
+
+**Definition:** The pipeline layer that produces audience-specific deliverables from the PICP. 75.x bounded interpretive authority. Consumes PICP + ProjectionConfig. Different namespace from git_structure_contract L0-L8 (branch governance layers).
+
+**Status:** CANONICAL — canonicalized (2026-05-31). Pipeline layer designation, not branch governance layer.
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### Cognition Object
+
+**Definition:** A structured L4 element within the PICP. 9 defined: structural_posture, tension_map, constraint_inventory, exposure_assessment, trajectory_assessment, decision_surface, absence_profile, competitive_intelligence, operational_ceiling. Each is produced by a single materializer from CIP inputs. Deterministic and audience-independent.
+
+**Status:** CANONICAL — canonicalized (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### Materializer
+
+**Definition:** A pure function within the PICR that produces one cognition object from CIP inputs. 9 materializers defined, one per cognition object. No interpretive authority. Deterministic: same CIP → same cognition object. Some materializers are parallelizable (structural_posture, tension_map, absence_profile have no cross-dependencies).
+
+**Status:** CANONICAL — canonicalized (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### Projection Family
+
+**Definition:** A named rendering configuration for the PRE. 8 defined: Report, Boardroom Briefing, Advisory Memo, M&A Assessment, Transformation Review, Portfolio Review, Executive Workshop, Investment Review. Each family parameterizes the PRE to produce a distinct audience-specific deliverable from the same PICP. Projection families are the L5 axis of the marketplace model.
+
+**Status:** CANONICAL — canonicalized (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_MARKETPLACE_STRATEGY.md`
+
+### ProjectionConfig
+
+**Definition:** The L5 parameterization schema that configures the PRE for a specific projection family rendering. 4 parameter groups: projection_type, audience, format, rendering_overrides. Determines how PICP cognition objects are selected, sequenced, compressed, and rendered for a specific audience surface.
+
+**Status:** CANONICAL — canonicalized (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
