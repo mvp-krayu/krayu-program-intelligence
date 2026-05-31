@@ -1,0 +1,56 @@
+{
+  "stream": "PI.PICP-STRATEGY-AND-CANONICALIZATION.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_STATE_AUDIT.md",
+      "action": "CREATED",
+      "purpose": "Phase 0 — git state, stream inventory, vault inventory, architecture inventory, drift assessment"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_TERMINOLOGY_RECONCILIATION.md",
+      "action": "CREATED",
+      "purpose": "Phase 1 — term-by-term evaluation. Central decision: ECP→PICP, ECR→PICR. 10 terms locked, 3 superseded"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md",
+      "action": "CREATED",
+      "purpose": "Phase 2 — L0-L5 pipeline model, PICP artifact spec, materializer architecture, PRE specification, layer authority model"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_MARKETPLACE_STRATEGY.md",
+      "action": "CREATED",
+      "purpose": "Phase 3 — marketplace entries are Domain Cognition Modules (L2-L4) + Projection Family access (L5). Two-axis commercial model"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CONSUMER_CONTRACT.md",
+      "action": "CREATED",
+      "purpose": "Phase 4 — what consumers receive (9 objects + metadata + provenance), may do (render/hide/compress/expand/reframe), may NOT do (create cognition, modify PICP, 13 prohibitions)"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_STRATEGIC_POSITIONING.md",
+      "action": "CREATED",
+      "purpose": "Phase 5 — Program Intelligence Cognition Platform. 'The cognition is the product. The surfaces are the medium.'"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "38-check validation log"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document with G1 architecture mutation delta"
+    }
+  ]
+}
