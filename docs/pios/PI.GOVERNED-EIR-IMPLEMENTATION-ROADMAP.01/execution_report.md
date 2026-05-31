@@ -274,3 +274,88 @@ picp
 - No projection: L4 output container, no L5 consumer rendering
 - No LENS modification: purely additive
 - SQO and Chronicle read from governed run artifacts (not inferred)
+
+---
+
+## Phase 3 — PRE (Consumer Projection Engine)
+
+### Files Created
+
+| # | File | LOC | Classification | Purpose |
+|---|------|-----|---------------|---------|
+| 1 | `lib/lens-v2/projection/PRECore.js` | 64 | DETERMINISTIC | PRE orchestrator: Zone A → Zone B → Zone C dispatch |
+| 2 | `lib/lens-v2/projection/ProjectionConfig.js` | 42 | DETERMINISTIC | Config schema validation and resolution |
+| 3 | `lib/lens-v2/projection/ZoneA.js` | 57 | DETERMINISTIC | Deterministic projection: PICP → consumer-ready sections |
+| 4 | `lib/lens-v2/projection/ZoneB.js` | 88 | GOVERNED_AI | Governed narrative interface: 75.x boundary, 13 prohibitions, disclosure wrapping |
+| 5 | `lib/lens-v2/projection/ZoneC.js` | 98 | QUALIFICATION | Qualification gate: SQO S-level authority ceiling enforcement |
+| 6 | `lib/lens-v2/projection/configs/eir.js` | 29 | DETERMINISTIC | EIR ProjectionConfig: 10 chapters, EXECUTIVE narrative |
+| 7 | `lib/lens-v2/projection/configs/boardroom.js` | 21 | DETERMINISTIC | BOARDROOM ProjectionConfig: 4 sections, EXECUTIVE narrative |
+| 8 | `lib/lens-v2/projection/configs/balanced.js` | 23 | DETERMINISTIC | BALANCED ProjectionConfig: 6 sections, OPERATIONAL narrative |
+| 9 | `lib/lens-v2/projection/configs/dense.js` | 25 | DETERMINISTIC | DENSE ProjectionConfig: 9 sections, STRUCTURAL narrative |
+| 10 | `lib/lens-v2/projection/configs/operator.js` | 24 | DETERMINISTIC | OPERATOR ProjectionConfig: 8 sections, MINIMAL narrative |
+| 11 | `lib/lens-v2/projection/configs/investigation.js` | 24 | DETERMINISTIC | INVESTIGATION ProjectionConfig: 8 sections, NONE narrative |
+
+All files in `app/execlens-demo/lib/lens-v2/projection/`. Zero existing LENS files modified.
+
+### Three-Zone Architecture
+
+```
+PRECore.project(picp, projectionConfig)
+    │
+    ├── Zone A: ZoneA.project(picp, config)         — DETERMINISTIC
+    │     └── Selects cognition objects per config
+    │     └── Applies section mapping
+    │     └── Returns { sections, excluded_sections, projection_summary }
+    │
+    ├── Zone B: ZoneB.narrate(zoneAOutput, config)   — GOVERNED_AI (75.x)
+    │     └── 13 absolute prohibitions enforced
+    │     └── Narrative slots with provider_type classification
+    │     └── Disclosure wrapping on all output
+    │     └── Returns { narratives, disclosures, governance }
+    │
+    └── Zone C: ZoneC.qualify(zoneBOutput, qualState) — QUALIFICATION
+          └── SQO S-level → authority ceiling map
+          └── S0: no projection. S1: structural only. S2: qualified+debt. S3: full.
+          └── Suppresses projections exceeding ceiling (not merely flags)
+          └── Returns { qualified_narratives, suppressed_narratives, governance }
+```
+
+### GENESIS Validation — All 6 Consumers
+
+| Consumer | Sections | Excluded | Qualified Narr. | Suppressed | Narrative Mode | S-level | Debt Disclosure |
+|----------|----------|----------|-----------------|------------|---------------|---------|-----------------|
+| EIR | 10 | 0 | 10 | 0 | EXECUTIVE | S2 | Required |
+| BOARDROOM | 4 | 0 | 4 | 0 | EXECUTIVE | S2 | Required |
+| BALANCED | 6 | 0 | 6 | 0 | OPERATIONAL | S2 | Required |
+| DENSE | 9 | 0 | 9 | 0 | STRUCTURAL | S2 | Required |
+| OPERATOR | 8 | 0 | 8 | 0 | MINIMAL | S2 | Required |
+| INVESTIGATION | 8 | 0 | 0 | 0 | NONE | S2 | Required |
+
+All consumers project through the same PRE core. INVESTIGATION correctly produces 0 narratives (narrative_mode=NONE). All S2 consumers carry debt disclosure (Q-03).
+
+### Consumer-Genericity Invariant Verified
+
+Hypothetical M&A consumer added with config-only (2 sections, EXECUTIVE narrative). Result: `ok: true`, 2 sections projected. Zero PRE core changes required. **Invariant holds.**
+
+### Closure Checks
+
+| # | Check | Result |
+|---|-------|--------|
+| 1 | All files parse | PASS — 11/11 require without error |
+| 2 | All 6 consumers project | PASS — all ok:true |
+| 3 | Zone A deterministic | PASS — section count matches config |
+| 4 | Zone B 13 prohibitions | PASS — all 13 prohibitions in constant |
+| 5 | Zone C authority ceiling | PASS — S2 = qualified with debt disclosure |
+| 6 | No AI | PASS — zero AI patterns in all files |
+| 7 | No LENS path modification | PASS — projection/ is purely additive |
+| 8 | Deterministic same-input test | PASS — EIR projection byte-identical across runs |
+| 9 | Consumer-genericity invariant | PASS — hypothetical consumer requires zero PRE core changes |
+
+### Governance Confirmation (Phase 3)
+
+- Zone A is deterministic: same PICP + same config → same sections
+- Zone B defines the governed AI interface but does not invoke AI — narrative slots are AWAITING_PROVIDER
+- Zone C enforces SQO authority ceiling — S0/S1/S2/S3 ceiling map is consumer-independent
+- 13 absolute prohibitions are constitutional constants, not per-consumer configuration
+- No existing LENS files modified
+- Consumer-genericity invariant verified: adding Consumer #3+ requires config only
