@@ -1,0 +1,46 @@
+{
+  "stream": "PI.COGNITION-ANATOMY.RECONCILIATION.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/PROGRAM_INTELLIGENCE_COGNITION_ANATOMY.md",
+      "action": "CREATED",
+      "purpose": "Complete canonical anatomy: 4 lineages, 3 dimensions, hierarchy, concept classification, center of gravity identification, collapse diagnosis"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/ARCHITECTURAL_CENTER_OF_GRAVITY.md",
+      "action": "CREATED",
+      "purpose": "Disappearance test across 7 candidates; Governed Cognition identified as center; practical sequencing implication"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/SPINE_DNA_CHRONICLE_NEURON_RECONCILIATION.md",
+      "action": "CREATED",
+      "purpose": "Per-concept reconciliation: Spine (constitutional, Stratum C), DNA (metaphor), Chronicle (constitutional, operational), Neuron (does not exist)"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/PICP_POSITIONING_IN_THE_STACK.md",
+      "action": "CREATED",
+      "purpose": "PICP as cognition packaging layer — pipeline position, runtime stratum position, anatomy position, correct sequencing"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "29-check validation log"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.COGNITION-ANATOMY.RECONCILIATION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document"
+    }
+  ]
+}
