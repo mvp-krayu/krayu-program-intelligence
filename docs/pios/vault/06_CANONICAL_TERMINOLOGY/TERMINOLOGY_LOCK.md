@@ -989,11 +989,27 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 ### Cognition Object
 
-**Definition:** A structured L4 element within the PICP. 9 defined: structural_posture, tension_map, constraint_inventory, exposure_assessment, trajectory_assessment, decision_surface, absence_profile, competitive_intelligence, operational_ceiling. Each is produced by a single materializer from CIP inputs. Deterministic and audience-independent.
+**Definition:** A deterministic, evidence-bound, audience-independent, projection-free structured artifact that answers a distinct cognitive question about a specimen's structural execution reality. Produced by a single PICR materializer from CIP inputs. Carries ZERO interpretive authority. PICP membership is determined by the Cognition Object Qualification Test (7 gates: Derivation, Evidence Binding, Audience Independence, Projection Freedom, Structural Novelty, Cognitive Question, Zero Authority). Current inventory: structural_posture, tension_map, constraint_inventory, exposure_assessment, trajectory_assessment, decision_surface, absence_profile, detection_boundary, operational_ceiling. Inventory evolves by gate admission, not fixed count.
 
-**Status:** CANONICAL — canonicalized (2026-05-31).
+**Status:** CANONICAL — constitutionally defined (2026-05-31). Constitutional definition supersedes initial canonicalization. competitive_intelligence reconstituted as detection_boundary (Gate 4 failure — projection-contaminated framing).
 
-**Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+**Source:** `docs/pios/PI.PICP-CONSTITUTION.01/COGNITION_OBJECT_CONSTITUTION.md`
+
+### Cognition Object Qualification Test
+
+**Definition:** The constitutional gate for PICP membership. 7 gates that every artifact must pass to qualify as a Cognition Object: (1) Derivation — deterministically derivable from CIP, (2) Evidence Binding — every field traces to governed L0-L3 source, (3) Audience Independence — no audience assumptions, (4) Projection Freedom — no rendering vocabulary or commercial framing, (5) Structural Novelty — produces understanding no existing object produces, (6) Cognitive Question — answers one distinct question about specimen structural reality, (7) Zero Authority — requires ZERO interpretive authority. Decision table: all 7 PASS = Cognition Object; Gate 4 fail = Reconstitution Candidate; Gate 5 fail = Derived View; Gate 3 fail = Projection Artifact; 5 or fewer = Not Cognition. Only modifiable by G1 stream.
+
+**Status:** CANONICAL — constitutionally defined (2026-05-31).
+
+**Source:** `docs/pios/PI.PICP-CONSTITUTION.01/COGNITION_OBJECT_QUALIFICATION_TEST.md`
+
+### detection_boundary
+
+**Definition:** Cognition object recording what aspects of a specimen's structural reality were previously unmeasurable and what measurement capability made them visible. Contains measurement frontier per condition type: measurement class, prior art measurement, measurement gap. Reconstituted from competitive_intelligence — same underlying data with projection-free framing. The competitive positioning ("what PI detects that others can't") belongs in PRE (L5), not PICR (L4).
+
+**Status:** CANONICAL — constitutionally defined (2026-05-31). Reconstituted from competitive_intelligence (Gate 4 failure on Projection Freedom).
+
+**Source:** `docs/pios/PI.PICP-CONSTITUTION.01/COGNITION_OBJECT_CONSTITUTION.md`
 
 ### Materializer
 
