@@ -61,6 +61,7 @@ export function composeBriefing(balancedProjection, synthesisResult, fullReport)
   return {
     valid: validation.valid,
     zones: { z1, z2, z3, z4, z5 },
+    ontology_groups: balancedProjection.ontology_groups || [],
     metadata: {
       primitive_count: allPrimitives.length,
       evidence_chain_count: allPrimitives.reduce(

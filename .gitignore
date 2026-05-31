@@ -38,3 +38,7 @@ docs/brain/
 /*.png
 /*.jpeg
 /*.jpg
+# Playwright snapshots
+snapshot-full.md
+# Claude Code local config
+.claude/

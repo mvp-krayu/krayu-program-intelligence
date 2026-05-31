@@ -3543,6 +3543,72 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.05em;
         }
 
+        /* ── BALANCED — Ontology Class Grouping ──────── */
+
+        .balanced-zone--class-awareness {
+          padding: 20px 0 24px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.25);
+          margin-bottom: 12px;
+        }
+        .balanced-class-strip {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+        .balanced-class-chip {
+          padding: 10px 12px;
+          background: rgba(18, 21, 31, 0.6);
+          border: 1px solid #1e2330;
+          border-left: 2px solid #4a9eff;
+        }
+        .balanced-class-chip-header {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 6px;
+        }
+        .balanced-class-chip-id {
+          font: 700 9px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.08em;
+          background: rgba(74, 158, 255, 0.08);
+          padding: 2px 5px;
+          border: 1px solid rgba(74, 158, 255, 0.15);
+        }
+        .balanced-class-chip-name {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .balanced-class-chip-count {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-left: auto;
+        }
+        .balanced-class-chip-question {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+          font-style: italic;
+        }
+        .balanced-class-descent {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .balanced-class-descent-count {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .balanced-class-descent-hint {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #4a9eff;
+          opacity: 0.6;
+          margin-left: auto;
+        }
+
         /* ── BALANCED — Zone 2: Pressure Synthesis (SECONDARY) ──────── */
         .balanced-zone--synthesis {
           padding: 28px 0 24px;
@@ -5338,6 +5404,145 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           color: #8a96b2;
           font-size: 10px;
+        }
+
+        /* ── Dense: Behavioral Class View ─── */
+        .actor--behavioral-class-view {
+          margin-top: 4px;
+          padding: 12px 0 8px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .dense-class-summary {
+          margin-bottom: 8px;
+        }
+        .dense-class-summary-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 6px;
+        }
+        .dense-class-summary-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 3px 8px;
+          background: rgba(26, 30, 43, 0.5);
+          border: 1px solid #1e2330;
+        }
+        .dense-class-summary-chip-id {
+          font: 700 8px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+        }
+        .dense-class-summary-chip-name {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #ccd6f6;
+        }
+        .dense-class-summary-chip-count {
+          font: 400 9px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .dense-class-summary-desc {
+          font: 400 10.5px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+        }
+        .dense-class-toggle {
+          background: none;
+          border: none;
+          font: 400 10px/1 'Courier New', monospace;
+          color: #4a9eff;
+          cursor: pointer;
+          padding: 4px 0;
+          letter-spacing: 0.02em;
+          opacity: 0.65;
+          transition: opacity 0.15s ease;
+          text-align: left;
+        }
+        .dense-class-toggle:hover { opacity: 1; }
+        .dense-class-inventory {
+          margin-top: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .dense-class-group {
+          padding-bottom: 12px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .dense-class-group:last-child { border-bottom: none; padding-bottom: 0; }
+        .dense-class-group-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 5px;
+        }
+        .dense-class-group-id {
+          font: 700 9px/1 'Courier New', monospace;
+          color: #4a9eff;
+          letter-spacing: 0.08em;
+          background: rgba(74, 158, 255, 0.08);
+          padding: 2px 6px;
+          border: 1px solid rgba(74, 158, 255, 0.15);
+        }
+        .dense-class-group-name {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          letter-spacing: 0.02em;
+        }
+        .dense-class-group-count {
+          font: 500 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-left: auto;
+        }
+        .dense-class-group-question {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #7a8aaa;
+          font-style: italic;
+          margin-bottom: 8px;
+          padding-left: 2px;
+        }
+        .dense-class-group-conditions {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .dense-class-condition {
+          padding: 7px 10px;
+          background: rgba(26, 30, 43, 0.5);
+          border-left: 2px solid #2a2f40;
+        }
+        .dense-class-condition[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
+        .dense-class-condition[data-severity="HIGH"] { border-left-color: #ff9e4a; }
+        .dense-class-condition[data-severity="ELEVATED"] { border-left-color: #ffd700; }
+        .dense-class-condition-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 3px;
+        }
+        .dense-class-condition-name {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .dense-class-condition-domain {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-left: auto;
+        }
+        .dense-class-condition-severity {
+          font: 600 9px/1 'Courier New', monospace;
+          letter-spacing: 0.06em;
+          padding: 1px 5px;
+          background: rgba(42, 47, 64, 0.4);
+        }
+        .dense-class-condition-severity[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .dense-class-condition-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .dense-class-condition-severity[data-severity="ELEVATED"] { color: #ffd700; }
+        .dense-class-condition-severity[data-severity="MODERATE"] { color: #ccd6f6; }
+        .dense-class-condition-meaning {
+          font: 400 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #8a94b0;
         }
 
         .actor--propagation-flow {
@@ -11542,6 +11747,175 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding: 8px 10px;
           background: rgba(26, 30, 43, 0.3);
           border-top: 1px solid rgba(42, 47, 64, 0.4);
+        }
+
+        /* ─── SW-Intel Posture Block (BOARDROOM) ─── */
+
+        .cockpit-sw-intel-themes {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: 14px;
+        }
+        .cockpit-sw-intel-theme {
+          padding: 10px 12px;
+          background: rgba(26, 30, 43, 0.5);
+          border-left: 2px solid #2a2f40;
+        }
+        .cockpit-sw-intel-theme[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
+        .cockpit-sw-intel-theme[data-severity="HIGH"] { border-left-color: #ff9e4a; }
+        .cockpit-sw-intel-theme[data-severity="ELEVATED"] { border-left-color: #ffd700; }
+        .cockpit-sw-intel-theme-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .cockpit-sw-intel-theme-label {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .cockpit-sw-intel-theme-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          margin-left: auto;
+          padding: 1px 5px;
+          background: rgba(42, 47, 64, 0.4);
+        }
+        .cockpit-sw-intel-theme-severity[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .cockpit-sw-intel-theme-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .cockpit-sw-intel-theme-severity[data-severity="ELEVATED"] { color: #ffd700; }
+        .cockpit-sw-intel-theme-severity[data-severity="MODERATE"] { color: #ccd6f6; }
+        .cockpit-sw-intel-theme-bar {
+          height: 4px;
+          background: rgba(42, 47, 64, 0.3);
+          margin-bottom: 6px;
+          overflow: hidden;
+        }
+        .cockpit-sw-intel-theme-bar-fill {
+          height: 100%;
+          transition: width 0.3s ease;
+        }
+        .cockpit-sw-intel-theme-bar-fill[data-severity="CRITICAL"] { background: rgba(255, 107, 107, 0.7); }
+        .cockpit-sw-intel-theme-bar-fill[data-severity="HIGH"] { background: rgba(255, 158, 74, 0.7); }
+        .cockpit-sw-intel-theme-bar-fill[data-severity="ELEVATED"] { background: rgba(255, 215, 0, 0.6); }
+        .cockpit-sw-intel-theme-bar-fill[data-severity="MODERATE"] { background: rgba(74, 158, 255, 0.5); }
+        .cockpit-sw-intel-theme-desc {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #8a94b0;
+          line-height: 1.4;
+        }
+        .cockpit-sw-intel-concentration {
+          padding: 10px 12px;
+          background: rgba(18, 21, 31, 0.4);
+          border: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .cockpit-sw-intel-concentration-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          color: #7a8aaa;
+          margin-bottom: 8px;
+        }
+        .cockpit-sw-intel-concentration-row {
+          display: grid;
+          grid-template-columns: 1fr 40px 100px;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 0;
+        }
+        .cockpit-sw-intel-concentration-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #ccd6f6;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .cockpit-sw-intel-concentration-weight {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #9aa0bc;
+          text-align: right;
+        }
+        .cockpit-sw-intel-concentration-bar {
+          height: 4px;
+          background: rgba(42, 47, 64, 0.3);
+          overflow: hidden;
+        }
+        .cockpit-sw-intel-concentration-bar-fill {
+          height: 100%;
+          background: rgba(74, 158, 255, 0.55);
+          transition: width 0.3s ease;
+        }
+        .cockpit-sw-intel-posture-detail {
+          margin-top: 12px;
+        }
+
+        .cockpit-sw-intel-posture-block {
+          margin-top: 2px;
+        }
+        .cockpit-sw-intel-posture-narrative {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 13px;
+          color: #bcc6e0;
+          line-height: 1.65;
+          margin-bottom: 14px;
+        }
+        .cockpit-sw-intel-posture-domains {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding-top: 10px;
+          border-top: 1px solid rgba(42, 47, 64, 0.35);
+        }
+        .cockpit-sw-intel-posture-domain {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          min-width: 0;
+        }
+        .cockpit-sw-intel-posture-domain-name {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+          flex-shrink: 0;
+        }
+        .cockpit-sw-intel-posture-domain-weight {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #7a8aaa;
+          margin-left: auto;
+          white-space: nowrap;
+        }
+        .cockpit-sw-intel-posture-disclosure {
+          margin-top: 12px;
+          padding-top: 10px;
+          border-top: 1px solid rgba(42, 47, 64, 0.35);
+        }
+        .cockpit-sw-intel-posture-disclosure-toggle {
+          background: none;
+          border: none;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a9eff;
+          cursor: pointer;
+          padding: 0;
+          letter-spacing: 0.02em;
+          opacity: 0.7;
+          transition: opacity 0.15s ease;
+        }
+        .cockpit-sw-intel-posture-disclosure-toggle:hover {
+          opacity: 1;
         }
 
         /* ─── Operational Confidence ─── */

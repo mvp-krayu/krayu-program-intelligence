@@ -1,6 +1,6 @@
 # PiOS Current Canonical State
 
-> **This page reflects the system's canonical state as of 2026-05-30.**
+> **This page reflects the system's canonical state as of 2026-05-31.**
 
 ---
 
@@ -20,8 +20,10 @@ Program Intelligence (category/discipline)
   └── GEIOS (operating architecture — governed substrate, never exposed)
         ├── PiOS (computational substrate)
         │     ├── Ingestion (L1: 40.x)
-        │     ├── Core Derivation (L2-L4: 40.x, 41.x)
-        │     └── Activation (L5: 43.x, 44.x)
+        │     ├── Core Derivation (L2-L3: 40.x, 41.x)
+        │     ├── Cognition Assembly (L4: PICR → PICP — 9 cognition objects, ZERO interpretive authority)
+        │     ├── Projection Rendering (L5: PRE → surfaces — 8 projection families, 75.x bounded authority)
+        │     └── Activation (43.x, 44.x)
         ├── LENS (projection surface — visible executive shell)
         │     ├── Cognitive Projection (5-persona — OPERATOR recognized 2026-05-29, mission contracts locked 2026-05-29)
         │     ├── Guided Investigation (5A/5B)
@@ -630,6 +632,9 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01 | G1 | Fourth ACCEPTED behavioral slice — Structural Boundary Divergence (Class E) across full pipeline: boundary_divergence (cross-boundary import ratio analysis) → ruleStructuralBoundaryDivergence → mapSBD consequence mapping → CognitionOntology node → visual projection. 15/16 PASS, 1 NOT_VALIDATED (CLI synthesis) | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.SLICE-CLASSIFICATION-AND-VAULT-PROPAGATION-HYGIENE.01 | G1 | Classification hygiene — corrected G2→G1 for EF/EC/SBD, vault propagation for all 3 implemented ACCEPTED slices, operational notes | COMPLETE |
 | PI.SOFTWARE-INTELLIGENCE.COUPLING-INERTIA-SLICE.01 | G1 | Fourth ACCEPTED behavioral slice — Coupling Inertia (Class D) across full pipeline: coupling_inertia (union-find bidirectional cluster detection + density scoring) → ruleCouplingInertia → mapCI consequence mapping → CognitionOntology node → visual projection. 18/18 PASS | COMPLETE |
+| PI.EXECUTIVE-INTELLIGENCE-REPORT-COMPILER.01 | G1 | Forensic analysis of executive report composition — 55% deterministic pipeline / 20% templateable narrative / 25% apparent consulting craft. Proved most of the report is already automated. Discovery of T1-T6 taxonomy and CF-1–CF-7 cognition functions. Established that the "25% gap" is the architectural frontier | COMPLETE |
+| PI.EXECUTIVE-COGNITION-RUNTIME.01 | G1 | 77% of "consulting craft" (T7) is latent PI cognition never formalized — only 6% is genuine rendering. Corrected composition to 55/20/19/6. Discovered ECP (9 cognition objects), ECR (9 materializers), PRE (projection rendering engine). Central insight: "executive intelligence is a runtime layer, not a document format." EIC superseded by ECR+PRE | COMPLETE |
+| PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | G1 | PICP canonicalization — ECP→PICP, ECR→PICR rename (0/9 objects executive-specific, 4/8 families non-executive). L0-L5 pipeline model. Two-axis marketplace (modules × projections). Consumer contract (9 objects, governed permissions, 13 prohibitions). Strategic positioning: Program Intelligence Cognition Platform. 38/38 PASS | COMPLETE |
 
 ## Domain Cognition Module Architecture
 

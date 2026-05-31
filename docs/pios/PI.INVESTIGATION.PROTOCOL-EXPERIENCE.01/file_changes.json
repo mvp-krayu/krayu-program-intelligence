@@ -1,0 +1,26 @@
+{
+  "stream_id": "PI.INVESTIGATION.PROTOCOL-EXPERIENCE.01",
+  "changes": [
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "Added investigate import, module-level _verificationCache, verification state/handlers in IntelligenceField, VerificationCorridor + VerificationStepCard components, verification prop threading through RepresentationField to OPERATOR branch"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/SoftwareIntelligenceField.jsx",
+      "action": "MODIFIED",
+      "description": "Added VERIFY button and verification badge to SoftwareIntelligenceOperatorView header, target-gated entry, VERDICT_LABELS map"
+    },
+    {
+      "file": "app/execlens-demo/pages/lens-v2-flagship.js",
+      "action": "MODIFIED",
+      "description": "Added CSS for verification corridor overlay, verdict card, step cards, failure entries, replay card, verification badge, VERIFY button — all using semantic data-verdict attribute selectors"
+    }
+  ],
+  "summary": {
+    "total_files": 3,
+    "modified": 3,
+    "created": 0,
+    "deleted": 0
+  }
+}
