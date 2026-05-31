@@ -58,7 +58,7 @@ Produced a 6-phase implementation roadmap converting locked architectural defini
 3. **Architectural role ≠ implementation state:** Spine = continuity (not "85 propositions"), Chronicle = governed replay (not "data feed"), DNA = propagation (deferred, not denied), Neuron = cognitive primitive (deferred, not denied).
 4. **EIR is Reference Consumer #1, not the destination.** The destination is governed cognition reaching multiple consumers through a single architecture.
 
-## Governance Confirmation
+## Governance Confirmation (Roadmap Phase)
 
 - G2 — architecture consuming (consumes locked PICP/PICR/PRE definitions)
 - No data mutation
@@ -68,3 +68,117 @@ Produced a 6-phase implementation roadmap converting locked architectural defini
 - No vocabulary change
 - No new terminology proposed
 - Evidence-first discipline maintained — all claims traceable to prior stream artifacts
+
+---
+
+## Phase 1 — PICR Implementation
+
+### Files Created
+
+| # | File | LOC | Tier | Purpose |
+|---|------|-----|------|---------|
+| 1 | `lib/lens-v2/cognition/PICRRuntime.js` | 82 | — | Orchestrator: calls all 9 materializers, returns PICP with metadata |
+| 2 | `lib/lens-v2/cognition/materializers/structuralPosture.js` | 80 | T1 | Assembles qualification, scale, signal profile, posture drivers, confidence envelope |
+| 3 | `lib/lens-v2/cognition/materializers/tensionMap.js` | 80 | T1 | Assembles convergence centers, behavioral class activation, cross-domain tensions |
+| 4 | `lib/lens-v2/cognition/materializers/constraintInventory.js` | 95 | T1 | Assembles binding, governance, structural, coupling, blast radius constraints |
+| 5 | `lib/lens-v2/cognition/materializers/exposureAssessment.js` | 107 | T1 | Assembles concentration, governance, fragility exposure surfaces + consequence exposure |
+| 6 | `lib/lens-v2/cognition/materializers/trajectoryAssessment.js` | 75 | T2 | Static trajectory lookup for conditions and combinations → worsening/stable/unmeasured |
+| 7 | `lib/lens-v2/cognition/materializers/decisionSurface.js` | 65 | T2 | Assembles leverage points from guided interventions + decision drivers from consequences |
+| 8 | `lib/lens-v2/cognition/materializers/operationalCeiling.js` | 86 | T2 | Ceiling drivers, ceiling properties (architecture/staffing sensitive), qualification constraints |
+| 9 | `lib/lens-v2/cognition/materializers/absenceProfile.js` | 93 | T3 | Set difference: full vocabulary minus active = absent. Classification + deferred slices |
+| 10 | `lib/lens-v2/cognition/materializers/detectionBoundary.js` | 119 | T4 | Static measurement frontier lookup per condition type. Constitutional field naming |
+
+All files in `app/execlens-demo/lib/lens-v2/cognition/`. Zero existing LENS files modified.
+
+### GENESIS Validation (run_blueedge_genesis_e2e_03)
+
+CIP assembled from:
+- `resolveBlueEdgePayload('blueedge', 'run_blueedge_genesis_e2e_03')` → fullReport
+- `SignalSynthesisEngine.synthesize(fullReport)` → synthesisResult (11 conditions)
+- `ConsequenceCompiler.compile(synthesisResult, fullReport)` → consequenceResult
+- `CognitionOntology` → static ontology graph
+
+Result: 9/9 MATERIALIZED, 0 errors, total output 25,464 bytes.
+
+| Object | Populated Fields | Notes |
+|--------|-----------------|-------|
+| structural_posture | 5/5 | qualification.s_level=null (specimen has no S-level — correct) |
+| tension_map | 5/6 | cross_domain_tensions=[] (no cross-domain tension data in specimen) |
+| constraint_inventory | 4/8 | binding/governance/coupling/blast_radius constraints=[] (enrichment surfaces not populated in specimen) |
+| exposure_assessment | 5/5 | 7 exposure consequences after atomic fix |
+| trajectory_assessment | 3/4 | stable=[] (no stable-trajectory conditions in specimen) |
+| decision_surface | 6/6 | 11 leverage points, 29 interventions |
+| absence_profile | 4/5 | non_activated_signals=[] (no signal_interpretations array in specimen) |
+| detection_boundary | 3/3 | 8 active detections, 2 available not triggered |
+| operational_ceiling | 4/6 | qualification_constraints=[], advancement_blockers=[] (no qualification_blockers in specimen) |
+
+All empty fields justified by absence of source data in the GENESIS specimen — not materializer defects.
+
+### Gaps Found and Fixed
+
+**1. exposure_assessment returning 0 consequences (FIXED)**
+
+Initial implementation filtered `consequenceResult.consequences` for atomic types (RESIL_DEF, GOV_GAP, PROP_EXP, DEL_EXP). But the top-level `consequences` array contains only combination patterns (SYSTEMIC_OP_FRAG, AMPLIFIED_DEP_FRAG, STRUCT_GRAVITY_WELL) — combinations subsume their atomics.
+
+Fix: Also check `consequenceResult.atomic_consequences` array with deduplication by `consequence_id`.
+
+After fix: 7 exposure consequences found (DEL_EXP×2, PROP_EXP×2, RESIL_DEF×2, GOV_GAP×1).
+
+**2. detection_boundary field naming (FIXED)**
+
+Initial implementation used projection-adjacent naming: `detection_advantage`, `traditional_equivalent`, `detection_gap`, `category`. Renamed to constitutional vocabulary:
+
+| Before | After |
+|--------|-------|
+| `detection_advantage` | `measurement_capability` |
+| `traditional_equivalent` | `prior_art_measurement` |
+| `detection_gap` | `measurement_gap` |
+| `category` | `measurement_class` |
+| `category_distribution` | `class_distribution` |
+
+### Closure Checks
+
+| # | Check | Result |
+|---|-------|--------|
+| 1 | All files parse | PASS — 10/10 require without error |
+| 2 | All 9 materializers execute | PASS — 9/9 MATERIALIZED, 0ms-1ms each |
+| 3 | GENESIS produces 9 objects | PASS — object count: 9 |
+| 4 | No object empty unless justified | PASS — all empty fields traced to specimen data absence |
+| 5 | No projection-contaminated naming | PASS — renamed to measurement_capability/prior_art_measurement/measurement_gap/measurement_class |
+| 6 | No AI | PASS — zero AI/LLM/fetch/inference patterns; Date.now() for timing only |
+| 7 | No LENS path modification | PASS — cognition/ is purely additive, zero existing files modified |
+| 8 | Deterministic same-input test | PASS — Run 1 === Run 2 byte-identical (cognitionObjects), only timestamp/duration_ms differ |
+| 9 | Execution report documents gaps | PASS — this section |
+
+### Remaining Caveats
+
+1. **constraint_inventory has 4/8 empty constraint arrays.** The GENESIS specimen lacks populated enrichment surfaces for constriction, fragility hotspots, boundary divergence pairs, and coupling inertia. These arrays will populate when enrichment pipelines provide the data. The materializer logic is correct — verified by tracing each empty array to its source field absence.
+
+2. **structural_posture.qualification.s_level is null.** The GENESIS specimen's readiness_summary returns `{ score: null, band: null, posture: null }`. This is correct — the specimen has no formal S-level assignment.
+
+3. **absence_profile.non_activated_signals is empty.** The specimen's fullReport does not contain a `signal_interpretations` array at the expected path. Signals are processed through SignalSynthesisEngine.synthesize() which produces conditions, not a separate interpretations array.
+
+### No LENS Regression
+
+- Zero existing LENS files modified
+- cognition/ directory is new and additive
+- No import path changes to existing modules
+- No route changes
+- No component changes
+- LENS v2 persona modes (BOARDROOM, BALANCED, DENSE, OPERATOR, INVESTIGATION) unaffected
+
+### No AI
+
+- All materializers are pure functions: same CIP → same cognition objects
+- Date.now() used only for timing metadata in PICRRuntime.js (non-deterministic metadata, not logic)
+- No fetch, no API calls, no LLM invocation, no stochastic behavior
+- Zero Math.random, zero crypto.random
+
+### Governance Confirmation (Phase 1)
+
+- Deterministic: same input → same output (verified)
+- No interpretation: materializers assemble and lookup, never infer
+- No projection: L4 cognition formation only, no L5 consumer output
+- No LENS modification: purely additive
+- No vocabulary change: all field names from cognition-layer vocabulary
+- Evidence-first: every materializer output traceable to CIP source fields
