@@ -182,3 +182,95 @@ Initial implementation used projection-adjacent naming: `detection_advantage`, `
 - No LENS modification: purely additive
 - No vocabulary change: all field names from cognition-layer vocabulary
 - Evidence-first: every materializer output traceable to CIP source fields
+
+---
+
+## Phase 2 — PICP (Cognition Package)
+
+### Files Created
+
+| # | File | LOC | Classification | Purpose |
+|---|------|-----|---------------|---------|
+| 1 | `lib/lens-v2/cognition/PICPSchema.js` | 52 | DETERMINISTIC | Schema definition: 9 required object IDs, validation function, schema version |
+| 2 | `lib/lens-v2/cognition/PICPProducer.js` | 84 | DETERMINISTIC | Producer: assembles CIP, runs PICR, wraps in PICP container with SQO/Chronicle metadata |
+
+All files in `app/execlens-demo/lib/lens-v2/cognition/`. Zero existing LENS files modified. Zero Phase 1 files modified.
+
+### PICP Structure
+
+```
+picp
+├── metadata
+│   ├── schema_version: "1.0.0"
+│   ├── pipeline_run_id: String
+│   ├── client_id: String
+│   ├── specimen_id: String
+│   ├── timestamp: ISO8601
+│   ├── qualification_state
+│   │   ├── s_level: "S0"|"S1"|"S2"|"S3"|null
+│   │   ├── q_class: "Q-01"|"Q-02"|"Q-03"|"Q-04"|null
+│   │   ├── authority_ceiling: String|null
+│   │   └── provenance: String|null
+│   ├── chronicle_certification
+│   │   ├── status: "CERTIFIED"|"UNCERTIFIED"
+│   │   ├── check_count: Number
+│   │   └── pass_count: Number
+│   ├── materialization (from PICR)
+│   └── validation { valid, errors }
+└── cognition_objects
+    ├── structural_posture
+    ├── tension_map
+    ├── constraint_inventory
+    ├── exposure_assessment
+    ├── trajectory_assessment
+    ├── decision_surface
+    ├── absence_profile
+    ├── detection_boundary
+    └── operational_ceiling
+```
+
+### GENESIS Validation (run_blueedge_genesis_e2e_03)
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1.0.0 |
+| pipeline_run_id | run_blueedge_genesis_e2e_03 |
+| client_id | blueedge |
+| qualification_state.s_level | S2 |
+| qualification_state.q_class | Q-03 |
+| qualification_state.authority_ceiling | L3 |
+| qualification_state.provenance | GOVERNED_LIFECYCLE |
+| chronicle_certification.status | CERTIFIED |
+| chronicle_certification.check_count | 62 |
+| chronicle_certification.pass_count | 62 |
+| cognition_objects count | 9 |
+| validation.valid | true |
+| Total PICP bytes | 26,203 |
+
+### Data Sources
+
+- **SQO qualification_state** — read from `clients/{client}/psee/runs/{run}/sqo/promotion_state.json`
+- **Chronicle certification** — read from `clients/{client}/psee/runs/{run}/chronicle/chronicle_certification.json`
+- **Q-class** — from fullReport.qualifier_summary.qualifier_class (computed by Q-class derivation rules)
+- **Cognition objects** — from PICR materializers (Phase 1)
+
+### Closure Checks
+
+| # | Check | Result |
+|---|-------|--------|
+| 1 | All files parse | PASS — 2/2 require without error |
+| 2 | GENESIS produces valid PICP | PASS — validation.valid=true, 0 errors |
+| 3 | SQO state populated | PASS — S2, L3, GOVERNED_LIFECYCLE |
+| 4 | Chronicle certification populated | PASS — CERTIFIED, 62/62 |
+| 5 | 9 cognition objects present | PASS — all 9 from Phase 1 |
+| 6 | No AI | PASS — zero AI patterns |
+| 7 | No LENS path modification | PASS — purely additive |
+| 8 | Deterministic same-input test | PASS — cognition_objects byte-identical across runs |
+
+### Governance Confirmation (Phase 2)
+
+- Deterministic: same input → same PICP (except timestamp)
+- No interpretation: container wrapping only
+- No projection: L4 output container, no L5 consumer rendering
+- No LENS modification: purely additive
+- SQO and Chronicle read from governed run artifacts (not inferred)
