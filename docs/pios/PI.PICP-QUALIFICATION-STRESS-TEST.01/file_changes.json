@@ -1,0 +1,31 @@
+{
+  "stream": "PI.PICP-QUALIFICATION-STRESS-TEST.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "path": "docs/pios/PI.PICP-QUALIFICATION-STRESS-TEST.01/QUALIFICATION_STRESS_TEST.md",
+      "action": "CREATED",
+      "purpose": "6-candidate stress test of 7-gate qualification model — 1 PASS (reinforcement_flow_map), 5 FAIL (3 distinct failure modes)"
+    },
+    {
+      "path": "docs/pios/PI.PICP-QUALIFICATION-STRESS-TEST.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.PICP-QUALIFICATION-STRESS-TEST.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "23-check validation log"
+    },
+    {
+      "path": "docs/pios/PI.PICP-QUALIFICATION-STRESS-TEST.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.PICP-QUALIFICATION-STRESS-TEST.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document"
+    }
+  ]
+}
