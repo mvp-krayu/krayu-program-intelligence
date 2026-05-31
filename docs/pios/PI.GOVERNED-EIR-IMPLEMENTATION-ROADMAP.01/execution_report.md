@@ -359,3 +359,80 @@ Hypothetical M&A consumer added with config-only (2 sections, EXECUTIVE narrativ
 - 13 absolute prohibitions are constitutional constants, not per-consumer configuration
 - No existing LENS files modified
 - Consumer-genericity invariant verified: adding Consumer #3+ requires config only
+
+---
+
+## Phase 4 — First Consumer Proof (EIR)
+
+### Files Created
+
+| # | File | LOC | Classification | Purpose |
+|---|------|-----|---------------|---------|
+| 1 | `lib/lens-v2/consumers/eir/EIRAdapter.js` | 205 | DETERMINISTIC | Transforms PRE projection into 10 EIR chapters with 4-part findings |
+| 2 | `lib/lens-v2/consumers/eir/EIRRenderer.js` | 188 | DETERMINISTIC | Renders adapted EIR to self-contained HTML with governance metadata |
+
+All files in `app/execlens-demo/lib/lens-v2/consumers/eir/`. Zero PRE core changes. Zero existing LENS files modified.
+
+### End-to-End Proof: CIP → PICR → PICP → PRE → EIR
+
+```
+resolveBlueEdgePayload() → fullReport
+SignalSynthesisEngine.synthesize() → synthesisResult
+ConsequenceCompiler.compile() → consequenceResult
+PICPProducer.produce() → PICP (S2/Q-03/CERTIFIED 62/62)
+PRECore.project(picp, eirConfig) → PRE projection (10 sections, 10 qualified narratives)
+EIRAdapter.adapt(picp) → 10 chapters, 39 findings
+EIRRenderer.render(picp) → 35,246 bytes self-contained HTML
+```
+
+### GENESIS Validation — EIR Chapter Inventory
+
+| Ch | Chapter | Findings | Primary Object | Notes |
+|----|---------|----------|----------------|-------|
+| 1 | Executive Posture | 3 | structural_posture | Qualification, render state, confidence envelope |
+| 2 | Structural Tensions | 2 | tension_map | Convergence centers |
+| 3 | Exposure Profile | 5 | exposure_assessment | Consequence exposure (DEL_EXP, PROP_EXP, RESIL_DEF, GOV_GAP) |
+| 4 | Decision Landscape | 5 | decision_surface | Leverage points with guided interventions |
+| 5 | Trajectory | 5 | trajectory_assessment | Worsening vectors |
+| 6 | Operational Constraints | 5 | constraint_inventory | Structural constraints |
+| 7 | Absence Analysis | 1 | absence_profile | Coverage summary |
+| 8 | Risk Stratification | 5 | exposure_assessment | Consequence exposure (secondary view) |
+| 9 | Decision Surface | 5 | decision_surface | Leverage points (secondary view) |
+| 10 | Appendices | 3 | structural_posture | Qualification + render state + confidence |
+
+Total: 39 findings across 10 chapters. All findings use 4-part structure: Observed → Matters → Operational Implication → Leadership Implication.
+
+### Consumer-Genericity Invariant
+
+- PRE core files (PRECore.js, ZoneA.js, ZoneB.js, ZoneC.js, ProjectionConfig.js): **ZERO changes**
+- EIR is Reference Consumer #1 — consumes through config + adapter only
+- Architecture proven: adding Consumer #2 (LENS) requires zero PRE core changes
+
+### Gaps Found and Fixed
+
+**1. posture_drivers shape mismatch (FIXED)**
+
+Initial adapter treated `structural_posture.posture_drivers` as an array of conditions. Actual shape is `{ readiness_score, readiness_band, render_state }` — an object. Fixed to extract findings from the object fields and confidence_envelope instead.
+
+### Closure Checks
+
+| # | Check | Result |
+|---|-------|--------|
+| 1 | All files parse | PASS — 2/2 |
+| 2 | End-to-end produces valid EIR | PASS — 10 chapters, 39 findings, 35KB HTML |
+| 3 | 4-part finding structure | PASS — OBSERVED, MATTERS, OPERATIONAL IMPLICATION present |
+| 4 | Governance metadata in HTML | PASS — meta tags for governance, pipeline-run, s-level, q-class |
+| 5 | No projection contamination | PASS — zero "you should" / "recommend" / "action item" |
+| 6 | No AI | PASS — zero AI patterns |
+| 7 | PRE core unchanged | PASS — zero PRE core modifications (consumer-genericity holds) |
+| 8 | Deterministic | PASS — HTML byte-identical across runs (excluding timestamp) |
+| 9 | Debt disclosure present | PASS — S2/Q-03 debt disclosure on all chapters |
+
+### Governance Confirmation (Phase 4)
+
+- EIR is a consumer, not an architecture component — consumes through PRE via eirConfig
+- PRE core unchanged — consumer-genericity invariant verified
+- All findings trace to cognition objects (evidence-first)
+- Leadership Implication slots are null — Zone B narrative providers not yet connected (AWAITING_PROVIDER)
+- Debt disclosure enforced at S2/Q-03 per Zone C authority ceiling
+- No AI in adapter or renderer — deterministic assembly and HTML generation
