@@ -1,0 +1,23 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "boundary_divergence_computed", "status": "PASS", "detail": "enrichment.boundary_divergence added to deriveStructuralEnrichment() with cross-boundary import ratio analysis per module" },
+    { "name": "condition_vocabulary_extended", "status": "PASS", "detail": "STRUCTURAL_BOUNDARY_DIVERGENCE added to CONDITION_VOCABULARY (11 entries total, 10 internal types)" },
+    { "name": "condition_interventions_extended", "status": "PASS", "detail": "3 interventions: inspect-divergence, trace-boundaries, compare-alignment" },
+    { "name": "rule_engine_function_added", "status": "PASS", "detail": "ruleStructuralBoundaryDivergence() derives from boundary_divergence, groups by domain, produces standard 17-field condition" },
+    { "name": "synthesize_includes_sbd", "status": "PASS", "detail": "Both synthesize() and synthesizeTeaser() include ruleStructuralBoundaryDivergence in primitives array" },
+    { "name": "consequence_mapping_correct", "status": "PASS", "detail": "mapSBD: GOV_GAP (defining), COORD_FRAG (conditional >= ELEVATED), PROP_EXP (conditional >= HIGH)" },
+    { "name": "cognition_slice_added", "status": "PASS", "detail": "COGNITION_SLICE_VOCABULARY extended with STRUCTURAL_BOUNDARY_DIVERGENCE (is_dynamic: true)" },
+    { "name": "ontology_node_added", "status": "PASS", "detail": "CONDITION_NODES extended, upstream refs on GOV_GAP/COORD_FRAG/PROP_EXP updated, §4 RULE_NODES updated" },
+    { "name": "section_4_rules_added", "status": "PASS", "detail": "SECTION_4_RULES extended with STRUCTURAL_BOUNDARY_DIVERGENCE verification entry" },
+    { "name": "disposition_table_updated", "status": "PASS", "detail": "PROJECTION_DISPOSITION_TABLE extended — all 8 registries REQUIRED for STRUCTURAL_BOUNDARY_DIVERGENCE" },
+    { "name": "visual_projection_complete", "status": "PASS", "detail": "DYNAMICS_GLYPH_TYPE (+spread), COGNITION_OVERLAY_COLORS (+BOUNDARY_DIVERGENCE #ff9e4a), SURFACE_CONDITION_MAP (+BOUNDARY_ALIGNMENT)" },
+    { "name": "build_passes", "status": "PASS", "detail": "next build completes without errors" },
+    { "name": "runtime_ui_healthy", "status": "PASS", "detail": "LIVE binding, 652 elements, zero console errors, enrichment produces 3 divergent modules on BlueEdge via __NEXT_DATA__ inspection" },
+    { "name": "cli_synthesis_validation", "status": "NOT_VALIDATED", "detail": "CLI synthesis test failed — resolver requires runtime context (canonical_topology_40_4 unavailable outside SSR). Synthesis pipeline was validated indirectly through runtime UI (zero errors, LIVE binding) and payload enrichment inspection, but not through direct CLI invocation" },
+    { "name": "no_term_collision", "status": "PASS", "detail": "No new locked terms — uses existing TERMINOLOGY_LOCK vocabulary" },
+    { "name": "existing_conditions_unchanged", "status": "PASS", "detail": "All 10 existing condition types retain identical registration and behavior" }
+  ],
+  "result": "15/16 PASS, 1 NOT_VALIDATED (CLI synthesis — resolver context dependency)"
+}

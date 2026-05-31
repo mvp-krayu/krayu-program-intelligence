@@ -168,6 +168,75 @@ const CONDITION_NODES = {
     runtime: null,
   },
 
+  EXECUTION_CONSTRICTION: {
+    id: 'EXECUTION_CONSTRICTION',
+    type: 'condition',
+
+    human_name: 'Structural throughput bottleneck',
+    what_it_means: 'Operational flow is forced through a narrow structural passage. This node sits on critical traversal paths between otherwise-independent regions, acting as a structural bridge that all traffic must cross.',
+    why_it_matters: 'When a single structural node is the only path between regions, it becomes a throughput ceiling. Adding more capacity (more developers, more parallel work) does not help because the constriction is topological, not capacity-based.',
+    operational_implication: 'Work in areas connected through this constriction point will queue and serialize regardless of team size. This is Brooks\'s Law expressed as topology.',
+    how_detected: 'Graph traversal analysis identified nodes with high through-flow (both inbound and outbound edges) that also serve as articulation points — structural bridges whose removal would disconnect regions of the import graph.',
+    what_to_look_for: 'Look for areas where parallelizing work does not increase throughput, or where changes in one region unexpectedly block work in a structurally distant region.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'OP_BOTTLENECK', role: 'defining' },
+      { ref: 'COORD_FRAG', role: 'conditional' },
+      { ref: 'DEP_AMP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
+  STRUCTURAL_BOUNDARY_DIVERGENCE: {
+    id: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+    type: 'condition',
+
+    human_name: 'Structural boundary divergence',
+    what_it_means: 'The declared organizational structure — directory hierarchy, module boundaries, team ownership — does not match the actual dependency structure revealed by the import graph. Code that should be independent is coupled across boundaries; code grouped together may not interact at all.',
+    why_it_matters: 'When organizational boundaries diverge from structural reality, governance assumptions become invalid. Code ownership, review policies, and deployment boundaries are drawn around directories, but dependencies cross those lines. Changes in one team\'s area silently affect another team\'s code.',
+    operational_implication: 'Governance and ownership boundaries need realignment with actual structural dependencies. Conway\'s Law is operating in reverse — the architecture is reshaping around real coupling, not around declared organization.',
+    how_detected: 'Structural analysis compared directory-tree module boundaries against the import graph. Modules where a high proportion of edges cross declared boundaries are flagged as divergent. Orphaned modules — directories with files but no import edges — are separately identified.',
+    what_to_look_for: 'Look for modules where code reviews involve unexpected cross-team dependencies, where deployment of one module requires changes in another, or where CODEOWNERS rules don\'t match the actual blast radius of changes.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'GOV_GAP', role: 'defining' },
+      { ref: 'COORD_FRAG', role: 'conditional' },
+      { ref: 'PROP_EXP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
+  COUPLING_INERTIA: {
+    id: 'COUPLING_INERTIA',
+    type: 'condition',
+
+    human_name: 'Coupling inertia',
+    what_it_means: 'Tightly-coupled module clusters resist independent evolution. Bidirectional import relationships structurally fuse modules into a single change unit — changes to any member of the cluster require assessment of all other members.',
+    why_it_matters: 'Coupling inertia decays development velocity in proportion to cluster density. As clusters grow, the cost of any change compounds because bidirectional dependencies prevent isolating the blast radius. Teams cannot refactor, test, or deploy parts of the cluster independently.',
+    operational_implication: 'Development velocity through coupled clusters is inversely proportional to cluster size. The cluster behaves as a monolithic change unit regardless of organizational boundaries.',
+    how_detected: 'Structural analysis of import edges identified module pairs with bidirectional imports (A imports B AND B imports A). Union-find clustering grouped transitively connected bidirectional pairs into clusters. Clusters of 3+ modules with high density are flagged.',
+    what_to_look_for: 'Look for areas where refactoring one module forces cascading changes in others, where circular dependencies prevent clean extraction, or where test setups require initializing an entire cluster to test a single module.',
+
+    upstream: [],
+    downstream: [
+      { ref: 'COORD_FRAG', role: 'defining' },
+      { ref: 'OP_BOTTLENECK', role: 'conditional' },
+      { ref: 'DEP_AMP', role: 'conditional' },
+    ],
+    visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
+    verification_scope: ['step_2'],
+    related_rules: ['§4'],
+    runtime: null,
+  },
+
   COMPOUND_CONVERGENCE: {
     id: 'COMPOUND_CONVERGENCE',
     type: 'condition',
@@ -209,6 +278,9 @@ const CONSEQUENCE_NODES = {
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'conditional' },
+      { ref: 'COUPLING_INERTIA', role: 'defining' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -233,6 +305,8 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'defining' },
       { ref: 'EXECUTION_FRAGILITY', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'conditional' },
+      { ref: 'COUPLING_INERTIA', role: 'conditional' },
     ],
     downstream: [
       { ref: 'AMPLIFIED_DEP_FRAG', role: 'contributor' },
@@ -281,6 +355,8 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'DELIVERY_PRESSURE_CONCENTRATION', role: 'conditional' },
       { ref: 'DEPENDENCY_CHOKE_POINT', role: 'conditional' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'defining' },
+      { ref: 'COUPLING_INERTIA', role: 'conditional' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -326,6 +402,7 @@ const CONSEQUENCE_NODES = {
 
     upstream: [
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'defining' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'defining' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -348,6 +425,7 @@ const CONSEQUENCE_NODES = {
     upstream: [
       { ref: 'PROPAGATION_ASYMMETRY', role: 'defining' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'conditional' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'conditional' },
     ],
     downstream: [],
     visible_in: ['BOARDROOM', 'BALANCED', 'DENSE', 'OPERATOR'],
@@ -467,6 +545,9 @@ const RULE_NODES = {
       { ref: 'STRUCTURAL_MASS_CONCENTRATION', role: 'governance' },
       { ref: 'CROSS_DOMAIN_COUPLING_PRESSURE', role: 'governance' },
       { ref: 'EXECUTION_FRAGILITY', role: 'governance' },
+      { ref: 'EXECUTION_CONSTRICTION', role: 'governance' },
+      { ref: 'STRUCTURAL_BOUNDARY_DIVERGENCE', role: 'governance' },
+      { ref: 'COUPLING_INERTIA', role: 'governance' },
       { ref: 'GOVERNANCE_COVERAGE_STATUS', role: 'governance' },
       { ref: 'COMPOUND_CONVERGENCE', role: 'governance' },
     ],

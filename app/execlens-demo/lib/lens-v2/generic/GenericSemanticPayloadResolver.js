@@ -236,6 +236,303 @@ function deriveStructuralEnrichment(codeGraphData, centralityData, canonicalTopo
         cohesion_source: 'DEGREE_RATIO_PROXY',
       };
     }
+
+    // ─── Constriction Surface ─────────────────────────────
+    if (importEdges && importEdges.length > 0) {
+    const adj = {}
+    const radj = {}
+    const allNodes = new Set()
+    for (const e of importEdges) {
+      allNodes.add(e.source_path)
+      allNodes.add(e.target_path)
+      if (!adj[e.source_path]) adj[e.source_path] = new Set()
+      if (!adj[e.target_path]) adj[e.target_path] = new Set()
+      if (!radj[e.source_path]) radj[e.source_path] = new Set()
+      if (!radj[e.target_path]) radj[e.target_path] = new Set()
+      adj[e.source_path].add(e.target_path)
+      radj[e.target_path].add(e.source_path)
+    }
+
+    const undirAdj = {}
+    for (const n of allNodes) {
+      undirAdj[n] = new Set([...(adj[n] || []), ...(radj[n] || [])])
+    }
+
+    const disc = {}
+    const low = {}
+    const parent = {}
+    const articulationPoints = new Set()
+    let timer = 0
+    function dfsAP(u) {
+      let children = 0
+      disc[u] = low[u] = timer++
+      for (const v of undirAdj[u]) {
+        if (!(v in disc)) {
+          children++
+          parent[v] = u
+          dfsAP(v)
+          low[u] = Math.min(low[u], low[v])
+          if (!(u in parent) && children > 1) articulationPoints.add(u)
+          if (u in parent && low[v] >= disc[u]) articulationPoints.add(u)
+        } else if (v !== parent[u]) {
+          low[u] = Math.min(low[u], disc[v])
+        }
+      }
+    }
+    for (const n of allNodes) {
+      if (!(n in disc)) dfsAP(n)
+    }
+
+    const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+    const constrictionScored = []
+    for (const n of allNodes) {
+      const inDeg = radj[n] ? radj[n].size : 0
+      const outDeg = adj[n] ? adj[n].size : 0
+      const throughFlow = Math.min(inDeg, outDeg)
+      if (throughFlow < 2) continue
+      const isBridge = articulationPoints.has(n)
+      const constriction = throughFlow * (isBridge ? 3 : 1)
+      const ri = roleIndex[n] || {}
+      constrictionScored.push({
+        path: n,
+        constriction_score: constriction,
+        through_flow: throughFlow,
+        in_degree: inDeg,
+        out_degree: outDeg,
+        is_bridge: isBridge,
+        structural_role: ri.structural_role || null,
+        centrality_rank: ri.centrality_rank || null,
+        module_prefix: modOf(n),
+      })
+    }
+
+    const allConstrictions = constrictionScored.map(s => s.constriction_score).sort((a, b) => a - b)
+    const p75c = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length * 0.75)] : 0
+    const medianC = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length / 2)] : 0
+    const cThreshold = Math.max(p75c, medianC * 2)
+
+    const constrictionHotspots = constrictionScored
+      .filter(s => s.constriction_score > cThreshold || s.is_bridge)
+      .sort((a, b) => b.constriction_score - a.constriction_score)
+
+    const bridgeCount = constrictionHotspots.filter(s => s.is_bridge).length
+
+    enrichment.constriction_surface = {
+      constriction_hotspots: constrictionHotspots,
+      thresholds: { through_flow_min: 2, constriction_threshold: cThreshold },
+      constriction_count: constrictionHotspots.length,
+      bridge_count: bridgeCount,
+      articulation_point_count: articulationPoints.size,
+      total_nodes: allNodes.size,
+      constriction_source: 'IMPORT_EDGE_ANALYSIS',
+    }
+  } else if (ranking.length > 0) {
+    const constrictionScored = []
+    for (const n of ranking) {
+      if (n.false_positive_flags && n.false_positive_flags.length > 0) continue
+      const iin = n.import_in_degree || 0
+      const iout = n.import_out_degree || 0
+      const throughFlow = Math.min(iin, iout)
+      if (throughFlow < 2) continue
+      const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+      constrictionScored.push({
+        path: n.path,
+        constriction_score: throughFlow,
+        through_flow: throughFlow,
+        in_degree: iin,
+        out_degree: iout,
+        is_bridge: false,
+        structural_role: n.structural_role,
+        centrality_rank: n.centrality_rank,
+        module_prefix: modOf(n.path),
+      })
+    }
+    const allConstrictions = constrictionScored.map(s => s.constriction_score).sort((a, b) => a - b)
+    const p75c = allConstrictions.length > 0 ? allConstrictions[Math.floor(allConstrictions.length * 0.75)] : 0
+    const constrictionHotspots = constrictionScored
+      .filter(s => s.constriction_score > p75c)
+      .sort((a, b) => b.constriction_score - a.constriction_score)
+
+    enrichment.constriction_surface = {
+      constriction_hotspots: constrictionHotspots,
+      thresholds: { through_flow_min: 2, constriction_threshold: p75c },
+      constriction_count: constrictionHotspots.length,
+      bridge_count: 0,
+      articulation_point_count: 0,
+      total_nodes: ranking.length,
+      constriction_source: 'DEGREE_RATIO_PROXY',
+    }
+  }
+
+    // ─── Boundary Divergence Surface ──────────────────────
+    if (importEdges && importEdges.length > 0) {
+      const modOf = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+
+      const modEdges = {}
+      const modFiles = {}
+      for (const e of importEdges) {
+        const srcMod = modOf(e.source_path)
+        const tgtMod = modOf(e.target_path)
+        if (!modEdges[srcMod]) modEdges[srcMod] = { out_total: 0, out_cross: 0, in_total: 0, in_cross: 0 }
+        if (!modEdges[tgtMod]) modEdges[tgtMod] = { out_total: 0, out_cross: 0, in_total: 0, in_cross: 0 }
+        if (!modFiles[srcMod]) modFiles[srcMod] = new Set()
+        if (!modFiles[tgtMod]) modFiles[tgtMod] = new Set()
+        modFiles[srcMod].add(e.source_path)
+        modFiles[tgtMod].add(e.target_path)
+        modEdges[srcMod].out_total++
+        modEdges[tgtMod].in_total++
+        if (srcMod !== tgtMod) {
+          modEdges[srcMod].out_cross++
+          modEdges[tgtMod].in_cross++
+        }
+      }
+
+      const divergentModules = []
+      const orphanedModules = []
+      for (const [mod, edges] of Object.entries(modEdges)) {
+        const totalEdges = edges.out_total + edges.in_total
+        if (totalEdges < 3) continue
+        const crossTotal = edges.out_cross + edges.in_cross
+        const crossRatio = crossTotal / totalEdges
+        const outCrossRatio = edges.out_total > 0 ? edges.out_cross / edges.out_total : 0
+        const inCrossRatio = edges.in_total > 0 ? edges.in_cross / edges.in_total : 0
+        const internalIn = edges.in_total - edges.in_cross
+        const fileCount = modFiles[mod] ? modFiles[mod].size : 0
+
+        if (internalIn === 0 && edges.in_total > 0 && fileCount >= 2) {
+          orphanedModules.push({
+            module_prefix: mod,
+            file_count: fileCount,
+            reason: 'Zero inbound edges from own scope — all consumers are external',
+          })
+        }
+
+        const divergenceScore = (outCrossRatio * 0.6 + inCrossRatio * 0.4) * Math.log2(Math.max(totalEdges, 2))
+
+        divergentModules.push({
+          module_prefix: mod,
+          divergence_score: Math.round(divergenceScore * 100) / 100,
+          cross_boundary_ratio: Math.round(crossRatio * 100) / 100,
+          out_cross_ratio: Math.round(outCrossRatio * 100) / 100,
+          in_cross_ratio: Math.round(inCrossRatio * 100) / 100,
+          file_count: fileCount,
+          total_edges: totalEdges,
+          is_orphaned: orphanedModules.some(o => o.module_prefix === mod),
+        })
+      }
+
+      divergentModules.sort((a, b) => b.divergence_score - a.divergence_score)
+
+      const allDivScores = divergentModules.map(d => d.divergence_score).sort((a, b) => a - b)
+      const p75d = allDivScores.length > 0 ? allDivScores[Math.floor(allDivScores.length * 0.75)] : 0
+      const medianD = allDivScores.length > 0 ? allDivScores[Math.floor(allDivScores.length / 2)] : 0
+      const dThreshold = Math.max(p75d, medianD * 1.5)
+
+      const hotspotModules = divergentModules.filter(d => d.divergence_score > dThreshold || d.is_orphaned)
+
+      const totalCross = Object.values(modEdges).reduce((s, e) => s + e.out_cross, 0)
+      const totalAll = Object.values(modEdges).reduce((s, e) => s + e.out_total, 0)
+      const systemDivergence = totalAll > 0 ? Math.round((totalCross / totalAll) * 100) / 100 : 0
+
+      enrichment.boundary_divergence = {
+        divergent_modules: hotspotModules,
+        orphaned_modules: orphanedModules,
+        system_divergence_index: systemDivergence,
+        thresholds: { min_edges: 3, divergence_threshold: Math.round(dThreshold * 100) / 100 },
+        divergent_count: hotspotModules.length,
+        orphaned_count: orphanedModules.length,
+        module_count: Object.keys(modEdges).length,
+        divergence_source: 'IMPORT_EDGE_ANALYSIS',
+      }
+    }
+
+    // --- Coupling Inertia: bidirectional import clusters ---
+    if (importEdges && importEdges.length >= 6) {
+      const modOfCI = (p) => { const s = p.split('/'); return s.length >= 2 ? s[0] + '/' + s[1] : s[0]; }
+      const dirAdj = {}
+      for (const e of importEdges) {
+        const sm = modOfCI(e.source_path)
+        const tm = modOfCI(e.target_path)
+        if (sm === tm) continue
+        if (!dirAdj[sm]) dirAdj[sm] = {}
+        dirAdj[sm][tm] = (dirAdj[sm][tm] || 0) + 1
+      }
+
+      const biPairs = []
+      const biSet = new Set()
+      for (const a of Object.keys(dirAdj)) {
+        for (const b of Object.keys(dirAdj[a])) {
+          if (dirAdj[b] && dirAdj[b][a]) {
+            const key = [a, b].sort().join('|')
+            if (!biSet.has(key)) {
+              biSet.add(key)
+              biPairs.push({ a, b, ab: dirAdj[a][b], ba: dirAdj[b][a] })
+            }
+          }
+        }
+      }
+
+      if (biPairs.length > 0) {
+        const parent = {}
+        const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x] } return x }
+        const union = (x, y) => { parent[find(x)] = find(y) }
+        const allMods = new Set()
+        for (const p of biPairs) { allMods.add(p.a); allMods.add(p.b) }
+        for (const m of allMods) parent[m] = m
+        for (const p of biPairs) union(p.a, p.b)
+
+        const clusters = {}
+        for (const m of allMods) {
+          const root = find(m)
+          if (!clusters[root]) clusters[root] = []
+          clusters[root].push(m)
+        }
+
+        const inertiaClusters = []
+        for (const members of Object.values(clusters)) {
+          if (members.length < 3) continue
+          const memberSet = new Set(members)
+          let intraEdges = 0
+          const pairsInCluster = []
+          for (const p of biPairs) {
+            if (memberSet.has(p.a) && memberSet.has(p.b)) {
+              intraEdges += p.ab + p.ba
+              pairsInCluster.push(p)
+            }
+          }
+          const possiblePairs = members.length * (members.length - 1)
+          const density = possiblePairs > 0 ? Math.round((pairsInCluster.length * 2 / possiblePairs) * 100) / 100 : 0
+          const inertiaScore = Math.round(density * members.length * Math.log2(Math.max(intraEdges, 2)) * 100) / 100
+          inertiaClusters.push({
+            modules: members.sort(),
+            module_count: members.length,
+            bidirectional_pairs: pairsInCluster.length,
+            intra_edge_count: intraEdges,
+            density,
+            inertia_score: inertiaScore,
+          })
+        }
+
+        inertiaClusters.sort((a, b) => b.inertia_score - a.inertia_score)
+
+        const allScores = inertiaClusters.map(c => c.inertia_score).sort((a, b) => a - b)
+        const ciMedian = allScores.length > 0 ? allScores[Math.floor(allScores.length / 2)] : 0
+
+        const coupledModCount = inertiaClusters.reduce((s, c) => s + c.module_count, 0)
+        const totalModCount = new Set(importEdges.flatMap(e => [modOfCI(e.source_path), modOfCI(e.target_path)])).size
+
+        enrichment.coupling_inertia = {
+          inertia_clusters: inertiaClusters,
+          system_coupling_index: totalModCount > 0 ? Math.round((coupledModCount / totalModCount) * 100) / 100 : 0,
+          thresholds: { min_cluster_size: 3, inertia_median: ciMedian },
+          cluster_count: inertiaClusters.length,
+          coupled_module_count: coupledModCount,
+          total_module_count: totalModCount,
+          bidirectional_pair_count: biPairs.length,
+          inertia_source: 'IMPORT_EDGE_ANALYSIS',
+        }
+      }
+    }
   }
 
   return enrichment;

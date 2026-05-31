@@ -1,0 +1,59 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.COUPLING-INERTIA-SLICE.01",
+  "baseline_commit": "5263e37",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "change_type": "MODIFIED",
+      "description": "Added enrichment.coupling_inertia computation with union-find bidirectional cluster detection, density scoring, and system coupling index",
+      "phase": "Phase 1 — Data Foundation"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js",
+      "change_type": "MODIFIED",
+      "description": "Added COUPLING_INERTIA to CONDITION_VOCABULARY, CONDITION_INTERVENTIONS (3 interventions), roleMap, ruleCouplingInertia() function, synthesize() and synthesizeTeaser() primitives arrays",
+      "phase": "Phase 2 — Condition Engine"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "change_type": "MODIFIED",
+      "description": "Added mapCI() function (COORD_FRAG defining, OP_BOTTLENECK conditional, DEP_AMP conditional), mapCondition switch case, COGNITION_SLICE_VOCABULARY entry, MAP_CONDITION_KEYS entry",
+      "phase": "Phase 3 — Consequence Pipeline"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js",
+      "change_type": "MODIFIED",
+      "description": "Added COUPLING_INERTIA CONDITION_NODE with downstream refs, upstream refs on COORD_FRAG (defining), DEP_AMP (conditional), OP_BOTTLENECK (conditional), §4 RULE_NODES (governance)",
+      "phase": "Phase 4 — Cognition Ontology"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "change_type": "MODIFIED",
+      "description": "Added COUPLING_INERTIA to SECTION_4_RULES (3 consequence derivation rules) and PROJECTION_DISPOSITION_TABLE (all 8 registries REQUIRED)",
+      "phase": "Phase 5 — Investigation Verifier"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added COUPLING_INERTIA: 'coupling' to DYNAMICS_GLYPH_TYPE",
+      "phase": "Phase 6 — Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added COUPLING_CLUSTER: '#b794f4' to COGNITION_OVERLAY_COLORS",
+      "phase": "Phase 6 — Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_COUPLING: ['COUPLING_INERTIA'] to SURFACE_CONDITION_MAP",
+      "phase": "Phase 6 — Visual Projection"
+    }
+  ],
+  "total_files_modified": 8,
+  "validators_changed": [
+    "SECTION_4_RULES",
+    "PROJECTION_DISPOSITION_TABLE"
+  ]
+}

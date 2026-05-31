@@ -1,0 +1,25 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.COUPLING-INERTIA-SLICE.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "enrichment_surface_added", "status": "PASS", "detail": "coupling_inertia enrichment added to deriveStructuralEnrichment() with union-find clustering, density scoring, and system coupling index" },
+    { "name": "condition_vocabulary_added", "status": "PASS", "detail": "COUPLING_INERTIA added to CONDITION_VOCABULARY with l2/l3/consequence/topology_effect/governance fields" },
+    { "name": "condition_interventions_added", "status": "PASS", "detail": "3 interventions: ci-inspect-clusters (INSPECT), ci-trace-coupling (TRACE), ci-compare-independence (COMPARE)" },
+    { "name": "rule_function_added", "status": "PASS", "detail": "ruleCouplingInertia() added — derives from structuralEnrichment.coupling_inertia, groups by domain, standard 17-field shape + inertia_evidence" },
+    { "name": "synthesize_wired", "status": "PASS", "detail": "ruleCouplingInertia wired into both synthesize() and synthesizeTeaser() primitives arrays" },
+    { "name": "consequence_mapping_added", "status": "PASS", "detail": "mapCI() → COORD_FRAG (defining), OP_BOTTLENECK (conditional >= ELEVATED), DEP_AMP (conditional _has_choke_in_cluster)" },
+    { "name": "cognition_slice_vocabulary_added", "status": "PASS", "detail": "COUPLING_INERTIA entry with executive_name and domain-localized narrative" },
+    { "name": "map_condition_keys_updated", "status": "PASS", "detail": "COUPLING_INERTIA added to MAP_CONDITION_KEYS Set" },
+    { "name": "ontology_node_added", "status": "PASS", "detail": "CONDITION_NODES.COUPLING_INERTIA with downstream COORD_FRAG/OP_BOTTLENECK/DEP_AMP, visible in all 4 personas" },
+    { "name": "ontology_upstream_refs_added", "status": "PASS", "detail": "COORD_FRAG (defining), DEP_AMP (conditional), OP_BOTTLENECK (conditional), §4 (governance) — all upstream refs added" },
+    { "name": "section_4_rules_added", "status": "PASS", "detail": "COUPLING_INERTIA entry in SECTION_4_RULES with 3 consequence derivation rules" },
+    { "name": "projection_disposition_added", "status": "PASS", "detail": "COUPLING_INERTIA added to PROJECTION_DISPOSITION_TABLE — all 8 registries REQUIRED" },
+    { "name": "dynamics_glyph_type_added", "status": "PASS", "detail": "COUPLING_INERTIA: 'coupling' glyph type in IntelligenceField.jsx" },
+    { "name": "cognition_overlay_color_added", "status": "PASS", "detail": "COUPLING_CLUSTER: '#b794f4' in StructuralTopologyZone.jsx" },
+    { "name": "surface_condition_map_added", "status": "PASS", "detail": "STRUCTURAL_COUPLING: ['COUPLING_INERTIA'] in SoftwareIntelligenceProjectionAdapter.js" },
+    { "name": "build_passes", "status": "PASS", "detail": "next build completes with zero errors" },
+    { "name": "no_regression_existing_conditions", "status": "PASS", "detail": "All existing condition types, consequence mappings, and ontology nodes unchanged — additive changes only" },
+    { "name": "8_registry_contract_satisfied", "status": "PASS", "detail": "All 8 Projection Disposition registries populated: CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, COGNITION_SLICE_VOCABULARY, MAP_CONDITION, SECTION_4_RULES, CONDITION_NODES, DYNAMICS_GLYPH_TYPE, SURFACE_CONDITION_MAP" }
+  ],
+  "result": "18/18 PASS"
+}

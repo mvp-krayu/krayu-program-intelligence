@@ -1,0 +1,17 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-DECISION.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "decision_locked", "status": "PASS", "detail": "Dual-Layer Projection Model (Option C) locked — conditions for structural personas, consequences for executive personas" },
+    { "name": "registry_audit_complete", "status": "PASS", "detail": "8 registries audited across 6 files — all 8 internal condition types have entries in all REQUIRED registries" },
+    { "name": "disposition_table_defined", "status": "PASS", "detail": "PROJECTION_DISPOSITION_TABLE with 8 condition types × 8 registries — 2 EXEMPT entries documented with justification" },
+    { "name": "verifier_implemented", "status": "PASS", "detail": "verifyProjectionDisposition() added to InvestigationVerifier.js — step_0 in investigation pipeline" },
+    { "name": "verifier_wired", "status": "PASS", "detail": "IntelligenceField.jsx invokes verifyProjectionDisposition() alongside investigate() — results render as PROJECTION_DISPOSITION step" },
+    { "name": "exports_extended", "status": "PASS", "detail": "ConsequenceCompiler exports COGNITION_SLICE_VOCABULARY and MAP_CONDITION_KEYS; CognitionOntology exports CONDITION_NODES; InvestigationVerifier exports verifyProjectionDisposition and PROJECTION_DISPOSITION_TABLE" },
+    { "name": "build_passes", "status": "PASS", "detail": "next build completes without errors — all pages compiled successfully" },
+    { "name": "no_term_collision", "status": "PASS", "detail": "No new locked terms — Projection Disposition is internal implementation concept" },
+    { "name": "path_c_gap_registered", "status": "PASS", "detail": "rawSurfaces hardcoded gap documented — STRUCTURAL_FRAGILITY has SURFACE_CONDITION_MAP entry but no derivation function" },
+    { "name": "exempt_justifications_documented", "status": "PASS", "detail": "GOVERNANCE_COVERAGE_STATUS × GLYPH and COMPOUND_CONVERGENCE × GLYPH have architectural justifications in GLYPH_EXEMPT_REASONS" }
+  ],
+  "result": "10/10 PASS"
+}

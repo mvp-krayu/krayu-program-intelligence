@@ -1,0 +1,21 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01",
+  "classification": "G1",
+  "checks": [
+    { "name": "constriction_surface_computed", "status": "PASS", "detail": "enrichment.constriction_surface added to deriveStructuralEnrichment() with Tarjan articulation point detection + through-flow scoring" },
+    { "name": "condition_vocabulary_extended", "status": "PASS", "detail": "EXECUTION_CONSTRICTION added to CONDITION_VOCABULARY (10 entries total)" },
+    { "name": "condition_interventions_extended", "status": "PASS", "detail": "3 interventions: inspect-bottleneck, trace-paths, compare-alternatives" },
+    { "name": "rule_engine_function_added", "status": "PASS", "detail": "ruleExecutionConstriction() derives from constriction_surface, groups by domain, produces standard 17-field condition" },
+    { "name": "synthesize_includes_constriction", "status": "PASS", "detail": "Both synthesize() and synthesizeTeaser() include ruleExecutionConstriction in primitives array" },
+    { "name": "consequence_mapping_correct", "status": "PASS", "detail": "mapEC: OP_BOTTLENECK (defining), COORD_FRAG (conditional >= ELEVATED), DEP_AMP (conditional on bridge)" },
+    { "name": "cognition_slice_added", "status": "PASS", "detail": "COGNITION_SLICE_VOCABULARY extended with EXECUTION_CONSTRICTION (is_dynamic: true)" },
+    { "name": "ontology_node_added", "status": "PASS", "detail": "CONDITION_NODES extended, upstream refs on OP_BOTTLENECK/COORD_FRAG/DEP_AMP updated, §4 RULE_NODES updated" },
+    { "name": "section_4_rules_added", "status": "PASS", "detail": "SECTION_4_RULES extended with EXECUTION_CONSTRICTION verification entry" },
+    { "name": "disposition_table_updated", "status": "PASS", "detail": "PROJECTION_DISPOSITION_TABLE extended — all 8 registries REQUIRED for EXECUTION_CONSTRICTION" },
+    { "name": "visual_projection_complete", "status": "PASS", "detail": "DYNAMICS_GLYPH_TYPE (+hub), COGNITION_OVERLAY_COLORS (+CONSTRICTION_POINT #ffd700), SURFACE_CONDITION_MAP (COORDINATION_SATURATION += EC)" },
+    { "name": "build_passes", "status": "PASS", "detail": "next build completes without errors" },
+    { "name": "no_term_collision", "status": "PASS", "detail": "No new locked terms — uses existing TERMINOLOGY_LOCK vocabulary" },
+    { "name": "existing_conditions_unchanged", "status": "PASS", "detail": "All 9 existing condition types retain identical registration and behavior" }
+  ],
+  "result": "14/14 PASS"
+}

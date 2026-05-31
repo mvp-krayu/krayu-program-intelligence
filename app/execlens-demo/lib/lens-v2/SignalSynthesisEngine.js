@@ -74,6 +74,30 @@ const CONDITION_VOCABULARY = {
     topology_effect: 'Fragility hotspot emphasis with coupling/cohesion surface',
     governance: 'Structural confirmation required — evidence-bound',
   },
+  EXECUTION_CONSTRICTION: {
+    internal: 'EXECUTION_CONSTRICTION',
+    l2: 'Structural Throughput Constriction',
+    l3: 'Execution Constriction',
+    consequence: 'Operational flow is forced through a narrow structural passage — this node sits on critical traversal paths between otherwise-independent regions, creating a throughput ceiling that cannot be raised by adding capacity.',
+    topology_effect: 'Constriction point emphasis with bridge detection overlay',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
+  STRUCTURAL_BOUNDARY_DIVERGENCE: {
+    internal: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+    l2: 'Organizational-Structural Boundary Mismatch',
+    l3: 'Structural Boundary Divergence',
+    consequence: 'Declared organizational structure diverges from actual dependency structure — directory boundaries do not match import graph boundaries, creating governance gaps where ownership assumptions are structurally invalid.',
+    topology_effect: 'Boundary divergence overlay with cross-boundary import corridors',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
+  COUPLING_INERTIA: {
+    internal: 'COUPLING_INERTIA',
+    l2: 'Bidirectional Coupling Cluster Resistance',
+    l3: 'Coupling Inertia',
+    consequence: 'Tightly-coupled module clusters resist independent evolution — bidirectional import relationships structurally fuse modules into a single change unit, decaying development velocity in proportion to cluster density.',
+    topology_effect: 'Coupling cluster overlay with bidirectional edge emphasis',
+    governance: 'Structural confirmation required — evidence-bound',
+  },
 }
 
 // ─── Severity ──────────────────────────────────────────────────────
@@ -123,6 +147,21 @@ const CONDITION_INTERVENTIONS = {
     { intervention_id: 'ef-inspect-hotspot', action_type: 'INSPECT', operator_label: 'Show fragility hotspot files', topology_mutation: 'Fragility hotspot files emphasized, absorptive files dimmed', panel_mutation: 'Fragility hotspot inventory with per-file coupling/cohesion metrics' },
     { intervention_id: 'ef-trace-coupling', action_type: 'TRACE', operator_label: 'Trace coupling exposure', topology_mutation: 'Import corridors from fragile files visualized', panel_mutation: 'Inbound/outbound dependency inventory for fragile files' },
     { intervention_id: 'ef-compare-resilience', action_type: 'COMPARE', operator_label: 'Compare fragile vs absorptive regions', topology_mutation: 'Bidirectional resilience overlay — fragile highlighted, absorptive dimmed', panel_mutation: 'Resilience distribution table by module' },
+  ],
+  EXECUTION_CONSTRICTION: [
+    { intervention_id: 'ec-inspect-bottleneck', action_type: 'INSPECT', operator_label: 'Show constriction points', topology_mutation: 'Constriction points emphasized, bridge nodes highlighted', panel_mutation: 'Constriction inventory with through-flow and bridge status per file' },
+    { intervention_id: 'ec-trace-paths', action_type: 'TRACE', operator_label: 'Trace traversal paths', topology_mutation: 'Critical path corridors from constriction point visualized', panel_mutation: 'Inbound/outbound path inventory showing regions connected through this node' },
+    { intervention_id: 'ec-compare-alternatives', action_type: 'COMPARE', operator_label: 'Assess alternative routes', topology_mutation: 'Bridge vs non-bridge constrictions compared', panel_mutation: 'Path redundancy assessment — bridge nodes vs high-flow nodes' },
+  ],
+  STRUCTURAL_BOUNDARY_DIVERGENCE: [
+    { intervention_id: 'sbd-inspect-divergence', action_type: 'INSPECT', operator_label: 'Show divergent modules', topology_mutation: 'Divergent modules emphasized, aligned modules dimmed', panel_mutation: 'Divergence inventory with cross-boundary ratio per module' },
+    { intervention_id: 'sbd-trace-boundaries', action_type: 'TRACE', operator_label: 'Trace cross-boundary imports', topology_mutation: 'Cross-boundary import corridors visualized', panel_mutation: 'Import inventory showing declared vs actual dependency paths' },
+    { intervention_id: 'sbd-compare-alignment', action_type: 'COMPARE', operator_label: 'Compare declared vs actual boundaries', topology_mutation: 'Aligned vs divergent modules contrasted', panel_mutation: 'Boundary alignment assessment by module' },
+  ],
+  COUPLING_INERTIA: [
+    { intervention_id: 'ci-inspect-clusters', action_type: 'INSPECT', operator_label: 'Show coupling clusters', topology_mutation: 'Coupled module clusters emphasized, independent modules dimmed', panel_mutation: 'Cluster inventory with per-cluster density and inertia score' },
+    { intervention_id: 'ci-trace-coupling', action_type: 'TRACE', operator_label: 'Trace bidirectional dependencies', topology_mutation: 'Bidirectional import corridors within clusters visualized', panel_mutation: 'Bidirectional pair inventory with edge counts per direction' },
+    { intervention_id: 'ci-compare-independence', action_type: 'COMPARE', operator_label: 'Compare coupled vs independent regions', topology_mutation: 'Coupled clusters contrasted with independent modules', panel_mutation: 'Independence assessment — coupled vs decoupled module distribution' },
   ],
 }
 
@@ -247,6 +286,9 @@ function buildDomainTargets(domainIds, registry, conditionType) {
     GOVERNANCE_COVERAGE_COMPLETE: 'anchored',
     COMPOUND_CONVERGENCE: 'convergence target',
     EXECUTION_FRAGILITY: 'fragility hotspot',
+    EXECUTION_CONSTRICTION: 'constriction point',
+    STRUCTURAL_BOUNDARY_DIVERGENCE: 'boundary divergence',
+    COUPLING_INERTIA: 'coupling cluster',
   }
   return (domainIds || []).map(id => {
     const resolved = resolveDomainDisplay(id, registry)
@@ -858,6 +900,288 @@ function ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, p
   return conditions
 }
 
+function ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const cs = structuralEnrichment && structuralEnrichment.constriction_surface
+  if (!cs || !cs.constriction_hotspots || cs.constriction_hotspots.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.EXECUTION_CONSTRICTION
+
+  const domainConstrictions = {}
+  for (const h of cs.constriction_hotspots) {
+    const domId = resolveFileToRegistryDomain(h.path, registry, pressureZoneState)
+    const resolvedId = domId ? resolve(domId) : null
+    if (!resolvedId) continue
+    if (!domainConstrictions[resolvedId]) domainConstrictions[resolvedId] = []
+    domainConstrictions[resolvedId].push(h)
+  }
+
+  if (Object.keys(domainConstrictions).length === 0) return []
+
+  const allScores = cs.constriction_hotspots.map(h => h.constriction_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, hotspots] of Object.entries(domainConstrictions)) {
+    const maxConstriction = Math.max(...hotspots.map(h => h.constriction_score))
+    const hasBridge = hotspots.some(h => h.is_bridge)
+    const severity = maxConstriction >= p90 ? 'HIGH'
+      : maxConstriction >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'ec-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'EXECUTION_CONSTRICTION',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: [], files: hotspots.map(h => h.path) },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_bridge_constriction: hasBridge,
+      topology_overlay: {
+        overlay_mode: 'CONSTRICTION_POINT',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: hotspots.map(h => ({
+          signal_id: 'constriction-' + h.path.replace(/[/\\]/g, '-'),
+          signal_name: (h.is_bridge ? 'Bridge: ' : 'Constriction: ') + h.path.split('/').pop(),
+          severity,
+          type: h.is_bridge ? 'bridge_constriction' : 'flow_constriction',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.EXECUTION_CONSTRICTION.map(i => ({
+        ...i,
+        condition_id: 'ec-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['constriction_review'],
+      contributing_features: ['execution_constriction'],
+      derivation_trace: hotspots.map(h => h.path).join(' + ') +
+        ' → constriction_surface [' + cs.constriction_source + '] → EXECUTION_CONSTRICTION on ' + domId,
+      constriction_evidence: {
+        hotspot_count: hotspots.length,
+        max_constriction: maxConstriction,
+        has_bridge: hasBridge,
+        bridge_count: hotspots.filter(h => h.is_bridge).length,
+        constriction_source: cs.constriction_source,
+        hotspot_files: hotspots.slice(0, 5).map(h => ({
+          path: h.path,
+          constriction: h.constriction_score,
+          through_flow: h.through_flow,
+          in_degree: h.in_degree,
+          out_degree: h.out_degree,
+          is_bridge: h.is_bridge,
+          structural_role: h.structural_role,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
+function ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const bd = structuralEnrichment && structuralEnrichment.boundary_divergence
+  if (!bd || !bd.divergent_modules || bd.divergent_modules.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.STRUCTURAL_BOUNDARY_DIVERGENCE
+
+  const domainDivergences = {}
+  for (const m of bd.divergent_modules) {
+    const domId = resolveFileToRegistryDomain(m.module_prefix, registry, pressureZoneState)
+    const resolvedId = domId ? resolve(domId) : null
+    if (!resolvedId) continue
+    if (!domainDivergences[resolvedId]) domainDivergences[resolvedId] = []
+    domainDivergences[resolvedId].push(m)
+  }
+
+  if (Object.keys(domainDivergences).length === 0) return []
+
+  const allScores = bd.divergent_modules.map(m => m.divergence_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, modules] of Object.entries(domainDivergences)) {
+    const maxDiv = Math.max(...modules.map(m => m.divergence_score))
+    const hasOrphaned = (bd.orphaned_modules || []).some(o => {
+      const oDomId = resolveFileToRegistryDomain(o.module_prefix, registry, pressureZoneState)
+      return oDomId && resolve(oDomId) === domId
+    })
+    const severity = maxDiv >= p90 ? 'HIGH'
+      : maxDiv >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'sbd-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'STRUCTURAL_BOUNDARY_DIVERGENCE',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: [], files: modules.flatMap(m => m.module_prefix ? [m.module_prefix] : []) },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_orphaned_modules: hasOrphaned,
+      topology_overlay: {
+        overlay_mode: 'BOUNDARY_DIVERGENCE',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: modules.map(m => ({
+          signal_id: 'divergence-' + m.module_prefix.replace(/[/\\]/g, '-'),
+          signal_name: 'Divergence: ' + m.module_prefix,
+          severity,
+          type: 'boundary_divergence',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.STRUCTURAL_BOUNDARY_DIVERGENCE.map(i => ({
+        ...i,
+        condition_id: 'sbd-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['boundary_divergence_review'],
+      contributing_features: ['structural_boundary_divergence'],
+      derivation_trace: modules.map(m => m.module_prefix).join(' + ') +
+        ' → boundary_divergence [' + bd.divergence_source + '] → STRUCTURAL_BOUNDARY_DIVERGENCE on ' + domId,
+      divergence_evidence: {
+        module_count: modules.length,
+        max_divergence: maxDiv,
+        has_orphaned: hasOrphaned,
+        system_divergence_index: bd.system_divergence_index,
+        divergence_source: bd.divergence_source,
+        divergent_modules: modules.slice(0, 5).map(m => ({
+          module_prefix: m.module_prefix,
+          divergence_score: m.divergence_score,
+          cross_boundary_ratio: m.cross_boundary_ratio,
+          file_count: m.file_count,
+          total_edges: m.total_edges,
+          is_orphaned: m.is_orphaned,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
+function ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState) {
+  const ci = structuralEnrichment && structuralEnrichment.coupling_inertia
+  if (!ci || !ci.inertia_clusters || ci.inertia_clusters.length === 0) return []
+
+  const resolve = buildDomainResolver(registry)
+  const domainIdSet = new Set((registry || []).map(d => d.domain_id))
+  const vocab = CONDITION_VOCABULARY.COUPLING_INERTIA
+
+  const domainClusters = {}
+  for (const cluster of ci.inertia_clusters) {
+    const clusterDomains = new Set()
+    for (const modPrefix of cluster.modules) {
+      const domId = resolveFileToRegistryDomain(modPrefix, registry, pressureZoneState)
+      const resolvedId = domId ? resolve(domId) : null
+      if (resolvedId) clusterDomains.add(resolvedId)
+    }
+    for (const domId of clusterDomains) {
+      if (!domainClusters[domId]) domainClusters[domId] = []
+      domainClusters[domId].push(cluster)
+    }
+  }
+
+  if (Object.keys(domainClusters).length === 0) return []
+
+  const allScores = ci.inertia_clusters.map(c => c.inertia_score).sort((a, b) => a - b)
+  const p90 = allScores[Math.floor(allScores.length * 0.9)] || 0
+  const medianScore = allScores[Math.floor(allScores.length / 2)] || 0
+
+  const conditions = []
+  for (const [domId, clusters] of Object.entries(domainClusters)) {
+    const maxInertia = Math.max(...clusters.map(c => c.inertia_score))
+    const hasChokeInCluster = clusters.some(c => {
+      if (!structuralEnrichment.constriction_surface) return false
+      const chokeFiles = (structuralEnrichment.constriction_surface.constriction_hotspots || []).map(h => h.path)
+      return c.modules.some(m => chokeFiles.some(f => f.startsWith(m + '/')))
+    })
+    const severity = maxInertia >= p90 ? 'HIGH'
+      : maxInertia >= medianScore * 3 ? 'ELEVATED'
+      : 'MODERATE'
+    const emphasisIds = [domId]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    conditions.push({
+      condition_id: 'ci-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      condition_type: 'COUPLING_INERTIA',
+      internal_condition_id: vocab.internal,
+      technical_semantic_label: vocab.l2,
+      operator_cognition_title: vocab.l3,
+      operational_consequence: vocab.consequence,
+      governance_boundary: 'STRUCTURAL_ONLY',
+      topology_effect: vocab.topology_effect,
+      severity,
+      supporting_signal_ids: [],
+      shared_topology_targets: { domains: emphasisIds, clusters: clusters.flatMap(c => c.modules), files: [] },
+      pressure_zone_ids: [],
+      evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED',
+      _has_choke_in_cluster: hasChokeInCluster,
+      topology_overlay: {
+        overlay_mode: 'COUPLING_CLUSTER',
+        emphasis_domains: emphasisIds,
+        dim_domains: dimIds,
+        advisory_zones: [],
+        signal_overlays: clusters.map(c => ({
+          signal_id: 'inertia-cluster-' + c.modules[0].replace(/[/\\]/g, '-'),
+          signal_name: 'Cluster: ' + c.modules.slice(0, 3).join(', ') + (c.modules.length > 3 ? ' +' + (c.modules.length - 3) : ''),
+          severity,
+          type: 'coupling_cluster',
+        })),
+        corridor_paths: [],
+      },
+      guided_interventions: CONDITION_INTERVENTIONS.COUPLING_INERTIA.map(i => ({
+        ...i,
+        condition_id: 'ci-' + domId.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      })),
+      orchestration_hooks: ['coupling_inertia_review'],
+      contributing_features: ['coupling_inertia'],
+      derivation_trace: clusters.map(c => c.modules.join('+')).join(' | ') +
+        ' → coupling_inertia [' + ci.inertia_source + '] → COUPLING_INERTIA on ' + domId,
+      inertia_evidence: {
+        cluster_count: clusters.length,
+        max_inertia: maxInertia,
+        has_choke_in_cluster: hasChokeInCluster,
+        system_coupling_index: ci.system_coupling_index,
+        inertia_source: ci.inertia_source,
+        clusters: clusters.slice(0, 3).map(c => ({
+          modules: c.modules,
+          module_count: c.module_count,
+          bidirectional_pairs: c.bidirectional_pairs,
+          density: c.density,
+          inertia_score: c.inertia_score,
+        })),
+      },
+    })
+  }
+
+  return conditions
+}
+
 function ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry) {
   const resolve = buildDomainResolver(registry)
   const gapSignals = taggedSignals.filter(ts => ts.features.includes('domain_anchoring_gap'))
@@ -1025,6 +1349,9 @@ function synthesize(fullReport) {
     ...ruleStructuralMassConcentration(taggedSignals, registry, dpsigData, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 
@@ -1088,6 +1415,9 @@ function synthesizeTeaser(fullReport) {
     ...ruleStructuralMassConcentration(taggedSignals, registry, null, pressureZoneState),
     ...ruleCrossDomainCouplingPressure(taggedSignals, registry, structuralEnrichment),
     ...ruleExecutionFragility(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleExecutionConstriction(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleStructuralBoundaryDivergence(taggedSignals, registry, structuralEnrichment, pressureZoneState),
+    ...ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
 

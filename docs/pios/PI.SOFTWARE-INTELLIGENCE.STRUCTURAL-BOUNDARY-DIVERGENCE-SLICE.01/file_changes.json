@@ -1,0 +1,56 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.STRUCTURAL-BOUNDARY-DIVERGENCE-SLICE.01",
+  "baseline_commit": "2025c32",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "change_type": "MODIFIED",
+      "description": "Added boundary_divergence computation to deriveStructuralEnrichment() — cross-boundary import ratio analysis, orphaned module detection, system divergence index.",
+      "phase": "Data Foundation"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_BOUNDARY_DIVERGENCE to CONDITION_VOCABULARY and CONDITION_INTERVENTIONS. Added roleMap entry. Added ruleStructuralBoundaryDivergence() function. Extended synthesize() and synthesizeTeaser() primitives arrays.",
+      "phase": "Condition Engine"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "change_type": "MODIFIED",
+      "description": "Added mapSBD() function, mapCondition switch case, COGNITION_SLICE_VOCABULARY entry, MAP_CONDITION_KEYS extension.",
+      "phase": "Consequence Pipeline"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_BOUNDARY_DIVERGENCE to CONDITION_NODES. Updated upstream refs on GOV_GAP (defining), COORD_FRAG (conditional), PROP_EXP (conditional). Updated §4 RULE_NODES upstream.",
+      "phase": "Cognition Ontology"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_BOUNDARY_DIVERGENCE to SECTION_4_RULES and PROJECTION_DISPOSITION_TABLE.",
+      "phase": "Investigation Verifier"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_BOUNDARY_DIVERGENCE to DYNAMICS_GLYPH_TYPE (spread glyph).",
+      "phase": "Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added BOUNDARY_DIVERGENCE to COGNITION_OVERLAY_COLORS (#ff9e4a orange).",
+      "phase": "Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "change_type": "MODIFIED",
+      "description": "Added STRUCTURAL_BOUNDARY_DIVERGENCE to BOUNDARY_ALIGNMENT surface in SURFACE_CONDITION_MAP.",
+      "phase": "Visual Projection"
+    }
+  ],
+  "total_files_modified": 8,
+  "validators_changed": []
+}

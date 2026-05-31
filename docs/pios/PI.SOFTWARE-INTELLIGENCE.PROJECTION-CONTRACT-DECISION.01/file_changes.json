@@ -1,0 +1,26 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.PROJECTION-CONTRACT-DECISION.01",
+  "baseline_commit": "e231d68",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "change_type": "MODIFIED",
+      "description": "Added PROJECTION_DISPOSITION_TABLE, GLYPH_EXEMPT_REASONS, verifyProjectionDisposition() function. Extended exports with verifyProjectionDisposition, PROJECTION_DISPOSITION_TABLE, DISPOSITION.",
+      "phase": "Verification Implementation"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "change_type": "MODIFIED",
+      "description": "Extended exports with COGNITION_SLICE_VOCABULARY and MAP_CONDITION_KEYS (static Set of mapCondition switch cases).",
+      "phase": "Export Extension"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "change_type": "MODIFIED",
+      "description": "Extended imports (CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS, CONDITION_NODES, verifyProjectionDisposition). Added disposition verification to handleVerificationInvoke. Added PROJECTION_DISPOSITION to VERIFICATION_STEP_NAMES. Added disposition summarization to summarizeStep. Added DispositionProof component and PROJECTION_DISPOSITION case to StepProofContent.",
+      "phase": "Runtime Integration"
+    }
+  ],
+  "total_files_modified": 3,
+  "validators_changed": []
+}

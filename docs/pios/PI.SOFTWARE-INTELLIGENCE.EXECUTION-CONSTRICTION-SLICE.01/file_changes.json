@@ -1,0 +1,56 @@
+{
+  "stream_id": "PI.SOFTWARE-INTELLIGENCE.EXECUTION-CONSTRICTION-SLICE.01",
+  "baseline_commit": "b110dd8",
+  "changes": [
+    {
+      "file": "app/execlens-demo/lib/lens-v2/generic/GenericSemanticPayloadResolver.js",
+      "change_type": "MODIFIED",
+      "description": "Added constriction_surface computation to deriveStructuralEnrichment() — Tarjan articulation point detection, through-flow scoring, bridge multiplier. Primary path from import edges, fallback from degree-ratio proxy.",
+      "phase": "Data Foundation"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SignalSynthesisEngine.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_CONSTRICTION to CONDITION_VOCABULARY and CONDITION_INTERVENTIONS. Added roleMap entry. Added ruleExecutionConstriction() function. Extended synthesize() and synthesizeTeaser() primitives arrays.",
+      "phase": "Condition Engine"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/ConsequenceCompiler.js",
+      "change_type": "MODIFIED",
+      "description": "Added mapEC() function, mapCondition switch case, COGNITION_SLICE_VOCABULARY entry, MAP_CONDITION_KEYS extension.",
+      "phase": "Consequence Pipeline"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/CognitionOntology.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_CONSTRICTION to CONDITION_NODES. Updated upstream refs on OP_BOTTLENECK (defining), COORD_FRAG (conditional), DEP_AMP (conditional). Updated §4 RULE_NODES upstream.",
+      "phase": "Cognition Ontology"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/software-intelligence/InvestigationVerifier.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_CONSTRICTION to SECTION_4_RULES and PROJECTION_DISPOSITION_TABLE.",
+      "phase": "Investigation Verifier"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/IntelligenceField.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_CONSTRICTION to DYNAMICS_GLYPH_TYPE (hub glyph).",
+      "phase": "Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/components/lens-v2/zones/StructuralTopologyZone.jsx",
+      "change_type": "MODIFIED",
+      "description": "Added CONSTRICTION_POINT to COGNITION_OVERLAY_COLORS (#ffd700 amber).",
+      "phase": "Visual Projection"
+    },
+    {
+      "file": "app/execlens-demo/lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js",
+      "change_type": "MODIFIED",
+      "description": "Added EXECUTION_CONSTRICTION to COORDINATION_SATURATION surface in SURFACE_CONDITION_MAP.",
+      "phase": "Visual Projection"
+    }
+  ],
+  "total_files_modified": 8,
+  "validators_changed": []
+}
