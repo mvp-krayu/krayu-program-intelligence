@@ -79,13 +79,17 @@ COMPLETE — constitutional definition locked, qualification test operational, 9
 - Cognition Object Qualification Test
 
 ### Vault Files Updated:
-- PENDING — vault propagation deferred to commit phase
+- docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md — Cognition Object definition updated to constitutional definition, Cognition Object Qualification Test added, detection_boundary added
+- docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md — PI.PICP-CONSTITUTION.01 added to ontology lineage
+- docs/pios/vault/10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS.md — PI.PICP-CONSTITUTION.01 added to governance streams table
 
 ### Propagation Verification:
-- PENDING — requires vault update
+- TERMINOLOGY_LOCK.md: 3 terms updated/added — PASS
+- PIOS_CURRENT_CANONICAL_STATE.md: stream registered — PASS
+- CURRENT_CANONICAL_PATHS.md: stream registered — PASS
 
-### Propagation Status: PARTIAL
-Constitutional concepts defined. Qualification test locked. Reconstitution decided. Vault propagation deferred pending operator approval.
+### Propagation Status: COMPLETE
+All constitutional concepts propagated to vault.
 
 ---
 
