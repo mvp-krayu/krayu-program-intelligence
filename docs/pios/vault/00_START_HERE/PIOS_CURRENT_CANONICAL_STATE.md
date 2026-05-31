@@ -181,6 +181,45 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 
 **Investigative authority** is the new middle layer introduced by Phase 5 roadmap. It permits surfacing connected domains via topology edges, exposing pressure zones via structural adjacency, traversing evidence lineage, presenting temporal deltas. It does NOT permit inference, recommendation, prioritization, or prediction.
 
+## Cognition Anatomy
+
+**Stream:** PI.COGNITION-ANATOMY.RECONCILIATION.01 (COMPLETE — 2026-05-31)
+**Classification:** G1 — Architecture Defining
+
+The canonical cognition anatomy reconciles four independent discovery lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution) into a single hierarchical model.
+
+**Center of gravity:** GOVERNED COGNITION (22 cognitive functions × 5 cognition strata). Everything else in the architecture serves it.
+
+**Three dimensions of PI cognition:**
+- **Cognitive Function** — what the system DOES (22 functions in 5 strata)
+- **Temporal Continuity** — what the system REMEMBERS (Spine, Chronicle, Certification)
+- **Structured Packaging** — what the system DELIVERS (CIP → PICR → PICP → PRE)
+
+**Four satellite systems** orbit Governed Cognition:
+- **Temporal Continuity** — Spine (8 object classes) + Chronicle — gives cognition memory
+- **Packaged Cognition** — PICP (9 objects) — gives cognition portability
+- **Qualified Cognition** — SQO (S0→S3) + Certification + Revalidation — gives cognition authority
+- **Projected Cognition** — PRE × 5 Personas × 8 Projection Families — gives cognition audience reach
+
+**PICP repositioned:** From implicit "center of architecture" to explicit "cognition packaging layer" — one of four satellite systems serving Governed Cognition. PICP is an artifact PRODUCED BY the architecture, not the architecture itself.
+
+**Concept reconciliation:**
+- Spine: CONSTITUTIONAL — Stratum C temporal continuity substrate. NOT orphaned by PICP
+- Chronicle: CONSTITUTIONAL — governance replay mechanism. OPERATIONAL
+- DNA: METAPHOR — do NOT constitutionalize
+- Neuron: DOES NOT EXIST — no architectural standing
+
+**Consumer-generic cognition consumption architecture** (established by PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01):
+```
+CIP → PICR → PICP → PRE → Consumer
+                            ├── EIR (Reference Consumer #1)
+                            ├── LENS (Reference Consumer #2 — 5 persona projections)
+                            └── Marketplace consumers (#3+)
+```
+Consumer-genericity invariant: PRE core must not change when adding a new consumer. Only ProjectionConfig and consumer-specific rendering adapters may change.
+
+See [[../08_EXECUTION_RUNTIME/COGNITION_ANATOMY]] for full anatomy hierarchy, concept classifications, and discovery lineage.
+
 ## Current Runtime Surfaces
 
 | Surface | Location | Purpose | Status |
@@ -636,6 +675,10 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.EXECUTIVE-COGNITION-RUNTIME.01 | G1 | 77% of "consulting craft" (T7) is latent PI cognition never formalized — only 6% is genuine rendering. Corrected composition to 55/20/19/6. Discovered ECP (9 cognition objects), ECR (9 materializers), PRE (projection rendering engine). Central insight: "executive intelligence is a runtime layer, not a document format." EIC superseded by ECR+PRE | COMPLETE |
 | PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | G1 | PICP canonicalization — ECP→PICP, ECR→PICR rename (0/9 objects executive-specific, 4/8 families non-executive). L0-L5 pipeline model. Two-axis marketplace (modules × projections). Consumer contract (9 objects, governed permissions, 13 prohibitions). Strategic positioning: Program Intelligence Cognition Platform. 38/38 PASS | COMPLETE |
 | PI.PICP-CONSTITUTION.01 | G1 | Cognition Object constitutional definition — 7-gate qualification test for PICP membership (Derivation, Evidence Binding, Audience Independence, Projection Freedom, Structural Novelty, Cognitive Question, Zero Authority). 9-candidate audit: 8 unconditional PASS, 1 reconstitution (competitive_intelligence → detection_boundary — Gate 4 failure). Immutability, versioning, governance locked. Gate governs admission, not fixed population count. 32/32 PASS | COMPLETE |
+| PI.PICP-QUALIFICATION-STRESS-TEST.01 | G2 | PICP qualification stress test — 6 candidates tested against 7-gate qualification. 1 PASS (detection_boundary reconstitution), 5 FAIL. 3 rejection patterns discovered. Gate discriminates effectively | COMPLETE |
+| PI.PICP-CONSUMPTION-BASELINE-MAP.01 | G2 | PICP consumption baseline map — 9 object source-of-truth with line-level references, 4 formalization tiers (T1-T4), 6 de facto consumers identified in LENS, 8/9 objects already sourced. PICP is formalization not construction. 29/29 PASS | COMPLETE |
+| PI.COGNITION-ANATOMY.RECONCILIATION.01 | G1 | Constitutional reconciliation of 4 cognition lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution). Center of gravity = Governed Cognition (22 functions × 5 strata). Three dimensions (Cognitive Function, Temporal Continuity, Structured Packaging). Four satellites (Temporal, Packaged, Qualified, Projected). PICP repositioned to packaging satellite. DNA = metaphor. Neuron = does not exist. Architectural altitude restored. 29/29 PASS | COMPLETE |
+| PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01 | G2 | 6-phase implementation roadmap for consumer-generic cognition consumption architecture (CIP → PICR → PICP → PRE → Consumer). EIR = Reference Consumer #1, LENS = #2, Marketplace = #3+. Consumer-genericity invariant: PRE core must not change when adding new consumer. ~80% deterministic, ~14% governed AI (PRE Zone B), ~6% qualification. 25 files, ~2,370 LOC. 33/33 PASS | COMPLETE |
 
 ## Domain Cognition Module Architecture
 
