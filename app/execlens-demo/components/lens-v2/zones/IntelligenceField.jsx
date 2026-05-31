@@ -5300,6 +5300,29 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         </div>
       )}
 
+      {/* Z3b — SW-INTEL Behavioral Class Awareness (compact strip — detail lives in DENSE) */}
+      {swEnhanced && balancedBriefing.ontology_groups && balancedBriefing.ontology_groups.length > 0 && (
+        <div className="balanced-zone balanced-zone--class-awareness">
+          <div className="balanced-sw-enhancement-tag-inline">SW-INTEL · BEHAVIORAL DYNAMICS</div>
+          <div className="balanced-class-strip">
+            {balancedBriefing.ontology_groups.map(grp => (
+              <div key={grp.class_id} className="balanced-class-chip">
+                <div className="balanced-class-chip-header">
+                  <span className="balanced-class-chip-id">{grp.class_id}</span>
+                  <span className="balanced-class-chip-name">{grp.class_name}</span>
+                  <span className="balanced-class-chip-count">{grp.conditions.length}</span>
+                </div>
+                <div className="balanced-class-chip-question">{grp.class_question}</div>
+              </div>
+            ))}
+          </div>
+          <div className="balanced-class-descent">
+            <span className="balanced-class-descent-count">{balancedBriefing.ontology_groups.reduce((s, g) => s + g.conditions.length, 0)} conditions across {balancedBriefing.ontology_groups.length} behavioral classes</span>
+            <span className="balanced-class-descent-hint">Inspect individual dynamics in DENSE</span>
+          </div>
+        </div>
+      )}
+
       {/* Z4 — Confidence Boundary (enhanced when SW-INTEL active) */}
       <div className="balanced-zone balanced-zone--confidence">
         <div className="balanced-confidence-label">Confidence Boundary</div>
@@ -5760,7 +5783,63 @@ function DenseGovernanceZone({ fullReport }) {
   )
 }
 
-function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser, consequenceTeaser }) {
+function DenseBehavioralClassView({ ontologyGroups }) {
+  const [expanded, setExpanded] = useState(false)
+  const totalConditions = ontologyGroups.reduce((s, g) => s + g.conditions.length, 0)
+  const classNames = ontologyGroups.map(g => g.class_name)
+
+  return (
+    <div className="actor actor--behavioral-class-view" data-zone-key="behavioralClassView">
+      <div className="actor-tag">
+        <span className="actor-code">BC</span>
+        <span className="actor-name">Behavioral Class View · {ontologyGroups.length} classes · {totalConditions} conditions</span>
+      </div>
+      <div className="dense-class-summary">
+        <div className="dense-class-summary-chips">
+          {ontologyGroups.map(g => (
+            <span key={g.class_id} className="dense-class-summary-chip">
+              <span className="dense-class-summary-chip-id">{g.class_id}</span>
+              <span className="dense-class-summary-chip-name">{g.class_name}</span>
+              <span className="dense-class-summary-chip-count">{g.conditions.length}</span>
+            </span>
+          ))}
+        </div>
+        <div className="dense-class-summary-desc">Conditions above reorganized by behavioral pattern — {classNames.join(', ')}.</div>
+      </div>
+      <button className="dense-class-toggle" type="button" onClick={() => setExpanded(v => !v)}>
+        {expanded ? '▾ Collapse behavioral class grouping' : '▸ Expand class-grouped detail'}
+      </button>
+      {expanded && (
+        <div className="dense-class-inventory">
+          {ontologyGroups.map(grp => (
+            <div key={grp.class_id} className="dense-class-group">
+              <div className="dense-class-group-header">
+                <span className="dense-class-group-id">CLASS {grp.class_id}</span>
+                <span className="dense-class-group-name">{grp.class_name}</span>
+                <span className="dense-class-group-count">{grp.conditions.length}</span>
+              </div>
+              <div className="dense-class-group-question">{grp.class_question}</div>
+              <div className="dense-class-group-conditions">
+                {grp.conditions.map(cond => (
+                  <div key={`${cond.condition_type}--${cond.domain}`} className="dense-class-condition" data-severity={cond.severity}>
+                    <div className="dense-class-condition-head">
+                      <span className="dense-class-condition-name">{cond.executive_name}</span>
+                      <span className="dense-class-condition-domain">{cond.domain}</span>
+                      <span className="dense-class-condition-severity" data-severity={cond.severity}>{cond.severity}</span>
+                    </div>
+                    <div className="dense-class-condition-meaning">{cond.operational_meaning}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onZoneChange, cognitionOverlay, onPressureZoneClick, activePressureZone, activeConditionId, onConditionSelect, onConditionIntervention, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
@@ -5920,6 +5999,10 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       )}
 
       <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
+
+      {swIntelActive && balancedBriefing && balancedBriefing.ontology_groups && balancedBriefing.ontology_groups.length > 0 && (
+        <DenseBehavioralClassView ontologyGroups={balancedBriefing.ontology_groups} />
+      )}
 
       {!isS1 && (origin || passthrough || receiver) && (
         <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
@@ -8339,6 +8422,7 @@ function BoardroomStructuralPosture({ fullReport }) {
 function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
+  const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
 
@@ -8502,33 +8586,76 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         )}
 
-        {swIntelActive && consequencePosture && consequencePosture.cognition_slices.length > 0 && (() => {
+        {swIntelActive && consequencePosture && consequencePosture.executive_synthesis && (() => {
           const cp = consequencePosture
+          const narratives = cp.domain_narratives || []
           return (
             <div className="cockpit-sw-intel-spine">
               <div className="cockpit-sw-intel-spine-header">
                 <span className="cockpit-sw-intel-spine-badge">SW-INTEL</span>
-                <span className="cockpit-sw-intel-spine-count">{cp.cognition_slices.length} software dynamics detected</span>
                 <span className="cockpit-sw-intel-spine-posture" data-severity={cp.posture_severity}>{cp.posture_label}</span>
               </div>
-              <ConvergenceWeb slices={cp.cognition_slices} postureLabel={cp.posture_label} postureSeverity={cp.posture_severity} primaryLocus={cp.primary_locus} />
-              <div className="cockpit-sw-intel-slices">
-                {cp.cognition_slices.map((slice, i) => (
-                  <div key={slice.condition_type} className="cockpit-sw-intel-slice" data-severity={slice.severity}>
-                    <div className="cockpit-sw-intel-slice-body">
-                      <div className="cockpit-sw-intel-slice-head">
-                        <span className="cockpit-sw-intel-slice-name">{slice.executive_name}</span>
-                        <span className="cockpit-sw-intel-slice-domain">{slice.domain}</span>
-                        <span className="cockpit-sw-intel-slice-confidence" data-confidence={slice.confidence}>{slice.confidence_label}</span>
+
+              <div className="cockpit-sw-intel-posture-block">
+                <div className="cockpit-sw-intel-posture-narrative">{cp.executive_synthesis}</div>
+                {narratives.length > 0 && (
+                  <div className="cockpit-sw-intel-posture-domains">
+                    {narratives.map(n => (
+                      <div key={n.domain} className="cockpit-sw-intel-posture-domain">
+                        <span className="cockpit-sw-intel-posture-domain-name">{n.domain}</span>
+                        <span className="cockpit-sw-intel-posture-domain-weight">{n.consequence_count} consequence dimension{n.consequence_count !== 1 ? 's' : ''} · {n.condition_count} condition{n.condition_count !== 1 ? 's' : ''}</span>
                       </div>
-                      <div className="cockpit-sw-intel-slice-meaning">{slice.operational_meaning}</div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
+                {cp.consequence_themes && cp.consequence_themes.length > 0 && (() => {
+                  const themes = cp.consequence_themes
+                  const domains = cp.domain_concentration || []
+                  const maxWeight = Math.max(...themes.map(t => t.source_count), 1)
+                  return (
+                    <div className="cockpit-sw-intel-posture-disclosure">
+                      <button className="cockpit-sw-intel-posture-disclosure-toggle" type="button" onClick={() => setConvergenceWebOpen(v => !v)}>
+                        {convergenceWebOpen ? '▾ Hide consequence breakdown' : '▸ Show consequence breakdown'}
+                      </button>
+                      {convergenceWebOpen && (
+                        <div className="cockpit-sw-intel-posture-detail">
+                          <div className="cockpit-sw-intel-themes">
+                            {themes.map(theme => {
+                              const barPct = Math.max(20, Math.round((theme.source_count / maxWeight) * 100))
+                              return (
+                                <div key={theme.theme_id} className="cockpit-sw-intel-theme" data-severity={theme.severity}>
+                                  <div className="cockpit-sw-intel-theme-head">
+                                    <span className="cockpit-sw-intel-theme-label">{theme.theme_label}</span>
+                                    <span className="cockpit-sw-intel-theme-severity" data-severity={theme.severity}>{theme.severity}</span>
+                                  </div>
+                                  <div className="cockpit-sw-intel-theme-bar">
+                                    <div className="cockpit-sw-intel-theme-bar-fill" data-severity={theme.severity} style={{ width: `${barPct}%` }} />
+                                  </div>
+                                  <div className="cockpit-sw-intel-theme-desc">{theme.description}</div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                          {domains.length > 0 && (
+                            <div className="cockpit-sw-intel-concentration">
+                              <div className="cockpit-sw-intel-concentration-label">DOMAIN CONCENTRATION</div>
+                              {domains.map(d => (
+                                <div key={d.domain} className="cockpit-sw-intel-concentration-row">
+                                  <span className="cockpit-sw-intel-concentration-domain">{d.domain}</span>
+                                  <span className="cockpit-sw-intel-concentration-weight">{Math.round(d.weight * 100)}%</span>
+                                  <div className="cockpit-sw-intel-concentration-bar">
+                                    <div className="cockpit-sw-intel-concentration-bar-fill" style={{ width: `${Math.round(d.weight * 100)}%` }} />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })()}
               </div>
-              {cp.combined_synthesis && (
-                <div className="cockpit-sw-intel-synthesis">{cp.combined_synthesis}</div>
-              )}
             </div>
           )
         })()}
@@ -8977,7 +9104,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   return (
     <>
-      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
+      <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} />
       )}

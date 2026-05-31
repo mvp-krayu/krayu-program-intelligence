@@ -671,6 +671,21 @@ function resolveConnections(labelId) {
   }
 }
 
+// ─── Ontology Class (A–E behavioral classification) ──
+
+const CONDITION_ONTOLOGY_CLASS = {
+  PROPAGATION_ASYMMETRY:           { class_id: 'A', class_name: 'Flow & Propagation', class_question: 'Where is operational flow concentrating or propagating beyond expected boundaries?' },
+  EXECUTION_CONSTRICTION:          { class_id: 'A', class_name: 'Flow & Propagation', class_question: 'Where is operational flow concentrating or propagating beyond expected boundaries?' },
+  DEPENDENCY_CHOKE_POINT:          { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  DELIVERY_PRESSURE_CONCENTRATION: { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  STRUCTURAL_MASS_CONCENTRATION:   { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  IMPORT_PRESSURE_CONCENTRATION:   { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  EXECUTION_FRAGILITY:             { class_id: 'C', class_name: 'Fragility & Resilience', class_question: 'Where does the structure lack resilience against change?' },
+  CROSS_DOMAIN_COUPLING_PRESSURE:  { class_id: 'D', class_name: 'Reinforcement & Accumulation', class_question: 'Where are coupling patterns reinforcing structural rigidity?' },
+  COUPLING_INERTIA:                { class_id: 'D', class_name: 'Reinforcement & Accumulation', class_question: 'Where are coupling patterns reinforcing structural rigidity?' },
+  STRUCTURAL_BOUNDARY_DIVERGENCE:  { class_id: 'E', class_name: 'Drift & Instability', class_question: 'Where is structural drift undermining operational predictability?' },
+}
+
 // ─── Exports ─────────────────────────────────────────
 
 module.exports = {
@@ -679,6 +694,7 @@ module.exports = {
   COMBINATION_NODES,
   RULE_NODES,
   ALL_NODES,
+  CONDITION_ONTOLOGY_CLASS,
   resolveNode,
   resolveConnections,
 }

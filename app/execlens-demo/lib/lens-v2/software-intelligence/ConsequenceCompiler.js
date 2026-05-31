@@ -1,4 +1,5 @@
 const { SEVERITY_RANK, resolveDomainDisplay } = require('../SignalSynthesisEngine')
+const { CONDITION_ONTOLOGY_CLASS } = require('./CognitionOntology')
 
 // ─── Constants ─────────────────────────────────────────
 
@@ -656,6 +657,108 @@ const CONFIDENCE_EXECUTIVE = {
 
 // ─── Persona: BOARDROOM (§10.1) ────────────────────────
 
+const CLASS_RISK_LABEL = {
+  A:    'flow convergence — delivery pressure concentrates here',
+  B:    'structural concentration — disproportionate mass and dependency',
+  C:    'structural fragility — changes break more than they should',
+  D:    'coupling rigidity — tightly coupled modules resist independent change',
+  E:    'structural drift — coupling patterns are shifting in ways that undermine operational predictability',
+  AB:   'flow pressure on a concentrated structure — a bottleneck region that everything flows through',
+  AC:   'flow pressure compounding fragility — delivery pressure hits a structurally weak region',
+  AD:   'flow pressure locked by coupling — delivery converges on rigidly coupled modules',
+  AE:   'flow pressure on a drifting structure — delivery converges on a region losing structural predictability',
+  BC:   'concentrated and fragile — high-mass region that is also structurally brittle',
+  BD:   'concentrated and rigidly coupled — high-mass region locked by bidirectional dependencies',
+  BE:   'concentrated and drifting — high-mass region with shifting coupling patterns',
+  CD:   'fragile and rigidly coupled — weak structure reinforced by coupling that prevents restructuring',
+  CE:   'fragile and drifting — weak structure with unstable coupling that compounds unpredictability',
+  DE:   'rigid yet drifting — tightly coupled modules showing structural instability',
+  ABC:  'flow, concentration, and fragility converging — a gravity well that is also brittle',
+  ABD:  'flow, concentration, and coupling converging — everything flows through a rigidly locked region',
+  ABE:  'flow, concentration, and drift converging — a bottleneck region losing structural predictability',
+  ACD:  'flow, fragility, and coupling converging — delivery pressure hits fragile coupled modules',
+  ACE:  'flow, fragility, and drift converging — delivery pressure hits a fragile region that is also unstable',
+  ADE:  'flow, coupling, and drift converging — delivery locked by rigid coupling in a drifting region',
+  BCD:  'concentration, fragility, and coupling converging — the heaviest region is also the most brittle and the hardest to change',
+  BCE:  'concentration, fragility, and drift converging — a heavy brittle region with unstable coupling',
+  BDE:  'concentration, coupling, and drift converging — a rigid mass region losing structural predictability',
+  CDE:  'fragility, coupling, and drift converging — fragile rigid structure that is also drifting',
+  ABCD: 'all four risk dimensions converging — flow, mass, fragility, and coupling stack up in one region',
+  ABCE: 'flow, concentration, fragility, and drift converging — a brittle gravity well that is also unstable',
+  ABDE: 'flow, concentration, coupling, and drift converging — a rigid bottleneck losing predictability',
+  ACDE: 'flow, fragility, coupling, and drift converging — delivery pressure on a fragile drifting rigid region',
+  BCDE: 'concentration, fragility, coupling, and drift converging — structural risk across all defensive axes',
+  ABCDE: 'all five risk dimensions converging — flow, mass, fragility, coupling, and drift stack up in one region',
+}
+
+function deriveDomainRiskProfile(conditionTypes) {
+  const classSet = new Set()
+  for (const ct of conditionTypes) {
+    const ont = CONDITION_ONTOLOGY_CLASS[ct]
+    if (ont) classSet.add(ont.class_id)
+  }
+  const classKey = ['A', 'B', 'C', 'D', 'E'].filter(c => classSet.has(c)).join('')
+  const riskLabel = CLASS_RISK_LABEL[classKey] || 'structural stress is present'
+
+  if (classSet.size >= 3) return { shape: 'gravity_well', label: riskLabel, classes: classKey }
+  if (classSet.size === 2) {
+    if (classSet.has('C') && classSet.has('B')) return { shape: 'fragile_concentrated', label: riskLabel, classes: classKey }
+    if (classSet.has('C')) return { shape: 'fragile_compound', label: riskLabel, classes: classKey }
+    if (classSet.has('A') && classSet.has('B')) return { shape: 'pressure_concentration', label: riskLabel, classes: classKey }
+    return { shape: 'compound', label: riskLabel, classes: classKey }
+  }
+  if (classSet.has('C')) return { shape: 'fragile', label: riskLabel, classes: classKey }
+  if (classSet.has('A')) return { shape: 'flow_pressure', label: riskLabel, classes: classKey }
+  if (classSet.has('B')) return { shape: 'concentration', label: riskLabel, classes: classKey }
+  if (classSet.has('D')) return { shape: 'rigidity', label: riskLabel, classes: classKey }
+  return { shape: 'stress', label: riskLabel, classes: classKey }
+}
+
+function synthesizeBoardroomNarrative(domainConcentration, slices) {
+  if (!domainConcentration || domainConcentration.length === 0) return { domain_narratives: [], executive_synthesis: null }
+
+  const domainConditionTypes = {}
+  for (const slice of slices) {
+    const d = slice.domain || 'System-wide'
+    if (!domainConditionTypes[d]) domainConditionTypes[d] = []
+    domainConditionTypes[d].push(slice.condition_type)
+  }
+
+  const narratives = domainConcentration
+    .filter(d => d.condition_count > 0)
+    .map(d => {
+      const condTypes = domainConditionTypes[d.domain] || []
+      const risk = deriveDomainRiskProfile(condTypes)
+      return {
+        domain: d.domain,
+        condition_count: d.condition_count,
+        weight: d.weight,
+        consequence_count: d.consequence_types.length,
+        risk_shape: risk.shape,
+        risk_label: risk.label,
+        classes: risk.classes,
+      }
+    })
+
+  let synthesis = null
+  if (narratives.length === 1) {
+    const a = narratives[0]
+    const verb = a.risk_shape === 'gravity_well' ? 'is your structural gravity well' : 'concentrates structural risk'
+    synthesis = `${a.domain} ${verb} — ${a.risk_label}.`
+  } else if (narratives.length === 2) {
+    const a = narratives[0], b = narratives[1]
+    const aVerb = a.risk_shape === 'gravity_well' ? 'is your structural gravity well'
+      : a.risk_shape === 'pressure_concentration' ? 'is a structural bottleneck'
+      : 'concentrates structural risk'
+    synthesis = `${a.domain} ${aVerb} — ${a.risk_label}. ${b.domain} has a separate problem: ${b.risk_label}. These are distinct operational risks with different remediation shapes.`
+  } else {
+    const a = narratives[0]
+    synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. ${narratives.length - 1} other region${narratives.length - 1 > 1 ? 's' : ''} show independent structural stress.`
+  }
+
+  return { domain_narratives: narratives, executive_synthesis: synthesis }
+}
+
 function derivePostureLabel(consequences, hasSystemic) {
   if (consequences.length === 0) return 'Nominal'
   if (hasSystemic) return 'Systemic Operational Fragility'
@@ -713,6 +816,61 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     ? `This dynamic indicates ${postureLabel} in ${primaryLocus}.${confidenceSuffix}`
     : null
 
+  const consequenceThemes = []
+  const themeMap = {}
+  for (const csq of csqs) {
+    const tid = csq.consequence_type_id
+    if (!themeMap[tid]) {
+      const vocab = CONSEQUENCE_VOCABULARY[tid]
+      themeMap[tid] = {
+        theme_id: tid,
+        theme_label: vocab ? vocab.operator_consequence_title : tid,
+        description: vocab ? vocab.operational_implication : '',
+        severity: csq.severity,
+        scope: csq.consequence_scope,
+        source_count: (csq.source_conditions || []).length,
+        is_combination: !!csq.combination_pattern,
+      }
+    } else {
+      themeMap[tid].source_count += (csq.source_conditions || []).length
+      if ((SEVERITY_RANK[csq.severity] || 0) > (SEVERITY_RANK[themeMap[tid].severity] || 0)) {
+        themeMap[tid].severity = csq.severity
+      }
+    }
+  }
+  for (const tid of Object.keys(themeMap)) {
+    consequenceThemes.push(themeMap[tid])
+  }
+  consequenceThemes.sort((a, b) => (SEVERITY_RANK[b.severity] || 0) - (SEVERITY_RANK[a.severity] || 0))
+
+  const CONDITION_CONSEQUENCE_MAP = {
+    DELIVERY_PRESSURE_CONCENTRATION: ['COORD_FRAG', 'DEL_EXP', 'OP_BOTTLENECK'],
+    DEPENDENCY_CHOKE_POINT: ['DEP_AMP', 'COORD_FRAG', 'OP_BOTTLENECK'],
+    PROPAGATION_ASYMMETRY: ['PROP_EXP', 'DEL_EXP'],
+    STRUCTURAL_MASS_CONCENTRATION: ['RESIL_DEF', 'STAB_RISK'],
+    CROSS_DOMAIN_COUPLING_PRESSURE: ['COORD_FRAG', 'PROP_EXP'],
+    EXECUTION_FRAGILITY: ['RESIL_DEF', 'COORD_FRAG', 'DEP_AMP'],
+    EXECUTION_CONSTRICTION: ['OP_BOTTLENECK', 'COORD_FRAG', 'DEP_AMP'],
+    STRUCTURAL_BOUNDARY_DIVERGENCE: ['GOV_GAP', 'COORD_FRAG', 'PROP_EXP'],
+    COUPLING_INERTIA: ['COORD_FRAG', 'OP_BOTTLENECK', 'DEP_AMP'],
+  }
+  const domainBuckets = {}
+  for (const slice of slices) {
+    const d = slice.domain || 'System-wide'
+    if (!domainBuckets[d]) {
+      domainBuckets[d] = { domain: d, condition_count: 0, consequence_types: new Set() }
+    }
+    domainBuckets[d].condition_count++
+    const csqTypes = CONDITION_CONSEQUENCE_MAP[slice.condition_type] || []
+    for (const ct of csqTypes) domainBuckets[d].consequence_types.add(ct)
+  }
+  const totalConditions = slices.length || 1
+  const domainConcentration = Object.values(domainBuckets)
+    .map(b => ({ domain: b.domain, condition_count: b.condition_count, weight: b.condition_count / totalConditions, consequence_types: [...b.consequence_types] }))
+    .sort((a, b) => b.weight - a.weight)
+
+  const { domain_narratives, executive_synthesis } = synthesizeBoardroomNarrative(domainConcentration, slices)
+
   return {
     posture_label: postureLabel,
     posture_severity: csqs[0].severity,
@@ -724,6 +882,10 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     overall_confidence: overallConfidence,
     overall_confidence_label: CONFIDENCE_EXECUTIVE[overallConfidence] || overallConfidence,
     cognition_slices: slices,
+    consequence_themes: consequenceThemes,
+    domain_concentration: domainConcentration,
+    domain_narratives,
+    executive_synthesis,
     combined_synthesis: combinedSynthesis,
   }
 }
@@ -863,6 +1025,42 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
     }
   })
 
+  const ontologyGroups = []
+  const classMap = {}
+  if (synthesisResult && synthesisResult.conditions) {
+    for (const cond of synthesisResult.conditions) {
+      if (cond.severity === 'NOMINAL') continue
+      const ontClass = CONDITION_ONTOLOGY_CLASS[cond.condition_type]
+      if (!ontClass) continue
+      const cid = ontClass.class_id
+      if (!classMap[cid]) {
+        classMap[cid] = {
+          class_id: ontClass.class_id,
+          class_name: ontClass.class_name,
+          class_question: ontClass.class_question,
+          conditions: [],
+        }
+      }
+      const vocab = COGNITION_SLICE_VOCABULARY[cond.condition_type]
+      const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
+      const domainDisplay = domains.length > 0
+        ? resolveDomainDisplay(domains[0], registry).display_name
+        : 'System-wide'
+      classMap[cid].conditions.push({
+        condition_type: cond.condition_type,
+        executive_name: vocab ? vocab.executive_name : cond.condition_type,
+        domain: domainDisplay,
+        severity: cond.severity,
+        operational_meaning: vocab ? vocab.localize(domainDisplay) : '',
+        confidence: cond.governance_boundary,
+        confidence_label: CONFIDENCE_EXECUTIVE[cond.governance_boundary] || cond.governance_boundary,
+      })
+    }
+  }
+  for (const cid of ['A', 'B', 'C', 'D', 'E']) {
+    if (classMap[cid]) ontologyGroups.push(classMap[cid])
+  }
+
   return {
     posture_label: postureLabel,
     posture_severity: csqs[0].severity,
@@ -877,6 +1075,7 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
     primary_story: primaryStory,
     reinforcement_flow: reinforcementFlow,
     confidence_sentence: deriveBalancedConfidenceSentence(overallConfidence, primaryLocus),
+    ontology_groups: ontologyGroups,
   }
 }
 
