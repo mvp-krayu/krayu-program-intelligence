@@ -1,0 +1,36 @@
+{
+  "stream": "PI.PICP-CONSTITUTION.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/COGNITION_OBJECT_CONSTITUTION.md",
+      "action": "CREATED",
+      "purpose": "Constitutional definition of Cognition Object — 7 properties, exclusions, 9-candidate audit, immutability/versioning/governance, competitive_intelligence reconstitution"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/COGNITION_OBJECT_QUALIFICATION_TEST.md",
+      "action": "CREATED",
+      "purpose": "7-gate qualification test for PICP membership — constitutional gate for future cognition object proposals"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "32-check validation log"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSTITUTION.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document with G1 architecture mutation delta"
+    }
+  ]
+}
