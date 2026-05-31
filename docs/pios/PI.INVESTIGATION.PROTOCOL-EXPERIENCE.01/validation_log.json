@@ -1,0 +1,37 @@
+{
+  "stream_id": "PI.INVESTIGATION.PROTOCOL-EXPERIENCE.01",
+  "classification": "G2",
+  "timestamp": "2026-05-29T00:00:00Z",
+  "checks": [
+    { "name": "build_passes", "description": "npx next build succeeds", "result": "PASS" },
+    { "name": "verify_button_visible", "description": "VERIFY button visible in OPERATOR + SW-Intel active", "result": "PASS" },
+    { "name": "verify_button_gated", "description": "VERIFY disabled without valid verification target", "result": "PASS" },
+    { "name": "corridor_opens", "description": "Click VERIFY opens verification corridor modal", "result": "PASS" },
+    { "name": "verdict_rendered", "description": "Overall verdict card renders VERIFIED", "result": "PASS" },
+    { "name": "step_1_rendered", "description": "Evidence Anchor Verification renders PASS", "result": "PASS" },
+    { "name": "step_2_rendered", "description": "Derivation Trace Replay renders PASS", "result": "PASS" },
+    { "name": "step_3_rendered", "description": "Consequence Rule Verification renders PASS", "result": "PASS" },
+    { "name": "step_4_rendered", "description": "Combination Pattern Verification renders PASS", "result": "PASS" },
+    { "name": "step_5_rendered", "description": "Compilation Integrity renders PASS", "result": "PASS" },
+    { "name": "replay_rendered", "description": "Replay card renders MATCH with 0 divergences", "result": "PASS" },
+    { "name": "escape_closes", "description": "Escape key closes corridor", "result": "PASS" },
+    { "name": "badge_persists", "description": "Verification badge visible after corridor close", "result": "PASS" },
+    { "name": "badge_reopen", "description": "Badge click reopens corridor without re-computation", "result": "PASS" },
+    { "name": "persona_roundtrip", "description": "Badge persists across OPERATOR→DENSE→OPERATOR switch", "result": "PASS" },
+    { "name": "boardroom_clean", "description": "No VERIFY button or badge in BOARDROOM", "result": "PASS" },
+    { "name": "balanced_clean", "description": "No VERIFY button or badge in BALANCED", "result": "PASS" },
+    { "name": "dense_clean", "description": "No VERIFY button or badge in DENSE", "result": "PASS" },
+    { "name": "semantic_verdict_classes", "description": "All verdicts use data-verdict attribute selectors, no inline hex", "result": "PASS" },
+    { "name": "no_selector_entry", "description": "INVESTIGATION not in persona selector", "result": "PASS" },
+    { "name": "no_route_created", "description": "No INVESTIGATION route added", "result": "PASS" },
+    { "name": "compiler_unchanged", "description": "ConsequenceCompiler semantics unchanged", "result": "PASS" },
+    { "name": "verifier_unchanged", "description": "InvestigationVerifier read-only consumption", "result": "PASS" },
+    { "name": "no_console_errors", "description": "No console errors on page load or verification", "result": "PASS" }
+  ],
+  "summary": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0,
+    "result": "PASS"
+  }
+}
