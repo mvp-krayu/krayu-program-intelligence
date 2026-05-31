@@ -1,0 +1,41 @@
+{
+  "stream": "PI.PICP-CONSUMPTION-BASELINE-MAP.01",
+  "classification": "G2",
+  "timestamp": "2026-05-31T18:00:00Z",
+  "checks": [
+    { "name": "preflight_contract_loaded", "status": "PASS" },
+    { "name": "preflight_branch_authorized", "status": "PASS" },
+    { "name": "preflight_canonical_state_loaded", "status": "PASS" },
+    { "name": "preflight_terminology_loaded", "status": "PASS" },
+    { "name": "prior_stream_constitution_loaded", "status": "PASS", "detail": "COGNITION_OBJECT_CONSTITUTION.md and COGNITION_OBJECT_QUALIFICATION_TEST.md consumed" },
+    { "name": "prior_stream_object_model_loaded", "status": "PASS", "detail": "EXECUTIVE_COGNITION_OBJECT_MODEL.md consumed — 9 object schemas" },
+    { "name": "prior_stream_forensic_analysis_loaded", "status": "PASS", "detail": "REPORT_COMPILER_FORENSIC_ANALYSIS.md consumed — T1-T7 transformation taxonomy" },
+    { "name": "runtime_code_traced_resolver", "status": "PASS", "detail": "GenericSemanticPayloadResolver.js — resolveSemanticPayload(), deriveStructuralEnrichment(), all project*() functions traced" },
+    { "name": "runtime_code_traced_synthesis", "status": "PASS", "detail": "SignalSynthesisEngine.js — CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, synthesize(), synthesizeTeaser() traced" },
+    { "name": "runtime_code_traced_consequence", "status": "PASS", "detail": "ConsequenceCompiler.js — compile(), forBoardroom(), forBalanced(), forOperator(), forInvestigation() traced" },
+    { "name": "source_of_truth_classified_all_9", "status": "PASS", "detail": "8×A (LENS), 1×B (EIR lineage), 0×C, 0×D" },
+    { "name": "structural_posture_source_verified", "status": "PASS", "detail": "A — data across 6 resolver output fields (readiness_summary, qualifier_summary, topology_summary, header_block, governance_lifecycle, proposition_corpus)" },
+    { "name": "tension_map_source_verified", "status": "PASS", "detail": "A — COMPOUND_CONVERGENCE conditions + CognitionOntology behavioral class activation" },
+    { "name": "constraint_inventory_source_verified", "status": "PASS", "detail": "A — 4 structuralEnrichment surfaces + corresponding synthesis conditions" },
+    { "name": "exposure_assessment_source_verified", "status": "PASS", "detail": "A — 8 consequence types + 3 combination patterns from ConsequenceCompiler" },
+    { "name": "trajectory_assessment_source_verified", "status": "PASS", "detail": "A — data present in combination patterns (trajectory-as-property), classification not implemented" },
+    { "name": "decision_surface_source_verified", "status": "PASS", "detail": "A — CONDITION_INTERVENTIONS (3 per type) + severity; effort_scope not formalized" },
+    { "name": "absence_profile_source_verified", "status": "PASS", "detail": "A — implicit in synthesize() active/suppressed filtering (line 1370-1371)" },
+    { "name": "detection_boundary_source_verified", "status": "PASS", "detail": "B — measurement frontier information only in EIR Chapter 8 narrative" },
+    { "name": "operational_ceiling_source_verified", "status": "PASS", "detail": "A — forBoardroom() posture + consequence_themes + combination patterns" },
+    { "name": "persona_consumption_matrix_complete", "status": "PASS", "detail": "9 objects × 5 personas = 45 cells classified (EXPLICIT/PARTIAL/INDIRECT/ABSENT/PLANNED)" },
+    { "name": "hidden_cognition_identified", "status": "PASS", "detail": "3 instances: trajectory in combination patterns, absence in filtering, detection frontier in vocabulary structure" },
+    { "name": "de_facto_consumers_identified", "status": "PASS", "detail": "6 existing consumers: forBoardroom, forBalanced, IntelligenceField, StructuralTopologyZone, InvestigationVerifier, ProjectionAdapter" },
+    { "name": "formalization_gap_classified", "status": "PASS", "detail": "4 tiers: T1 assembly (4 objects), T2 assembly+lookup (3 objects), T3 authoring (1 object), T4 rule formalization (1 object)" },
+    { "name": "no_code_changes", "status": "PASS" },
+    { "name": "no_data_mutation", "status": "PASS" },
+    { "name": "no_picp_membership_change", "status": "PASS" },
+    { "name": "artifact_discipline_all_outputs_filed", "status": "PASS" }
+  ],
+  "summary": {
+    "total": 27,
+    "pass": 27,
+    "fail": 0
+  },
+  "verdict": "VALID"
+}

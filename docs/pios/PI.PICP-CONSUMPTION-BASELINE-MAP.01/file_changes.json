@@ -1,0 +1,31 @@
+{
+  "stream": "PI.PICP-CONSUMPTION-BASELINE-MAP.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "path": "docs/pios/PI.PICP-CONSUMPTION-BASELINE-MAP.01/CONSUMPTION_BASELINE_MAP.md",
+      "action": "CREATED",
+      "purpose": "9-object source-of-truth classification, per-object LENS trace, persona consumption matrix, formalization gap analysis, smallest architectural path"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSUMPTION-BASELINE-MAP.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSUMPTION-BASELINE-MAP.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "27-check validation log"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSUMPTION-BASELINE-MAP.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.PICP-CONSUMPTION-BASELINE-MAP.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document"
+    }
+  ]
+}
