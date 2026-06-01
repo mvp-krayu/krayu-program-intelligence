@@ -6,6 +6,7 @@
 const PRECore = require('../../projection/PRECore')
 const eirConfig = require('../../projection/configs/eir')
 const { synthesize } = require('./ExecutiveIntelligenceSynthesis')
+const { generateChapterGraphics } = require('./EIRGraphics')
 
 function adapt(picp, context) {
   const projection = PRECore.project(picp, eirConfig)
@@ -18,6 +19,8 @@ function adapt(picp, context) {
     return { ok: false, error: 'Executive intelligence synthesis failed' }
   }
 
+  const graphics = generateChapterGraphics(picp, context || {})
+
   const chapters = synthesis.chapters.map(ch => ({
     chapter_id: ch.chapter_id,
     chapter_label: ch.chapter_label,
@@ -26,6 +29,7 @@ function adapt(picp, context) {
     evidence_sources: (ch.evidence_objects || []).map(id => ({ object_id: id, role: 'primary' })),
     narrative: { status: 'ZONE_B_AWAITING_PROVIDER' },
     finding_count: ch.findings.length,
+    graphic: graphics[ch.chapter_id] || null,
   }))
 
   const metadata = buildReportMetadata(picp, projection)
