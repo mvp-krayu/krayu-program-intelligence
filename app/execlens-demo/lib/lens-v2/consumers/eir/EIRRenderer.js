@@ -29,6 +29,7 @@ function renderHTML(report) {
   <meta name="pipeline-run" content="${esc(report.metadata.pipeline_run_id || '')}">
   <meta name="s-level" content="${esc(report.metadata.s_level || '')}">
   <meta name="q-class" content="${esc(report.metadata.q_class || '')}">
+  <meta name="narrative-status" content="${esc(report.metadata.narrative_status || '')}">
   <title>${esc(report.title)}</title>
   <style>${STYLES}</style>
 </head>
@@ -46,7 +47,7 @@ function renderHTML(report) {
     ${chapters}
   </main>
   <section class="appendix">
-    <h2 class="chapter-title">Appendix</h2>
+    <h2 class="appendix-heading">Appendix</h2>
     ${appendix}
   </section>
   <footer class="report-footer">
@@ -69,9 +70,6 @@ function renderTOC(chapters) {
 
 function renderChapter(chapter) {
   const findings = chapter.findings.map(f => renderFinding(f)).join('\n')
-  const narrativeStatus = chapter.narrative
-    ? `<div class="narrative-status">${esc(chapter.narrative.status)}</div>`
-    : ''
   const debtDisclosure = chapter.narrative && chapter.narrative.debt_disclosure
     ? `<div class="debt-disclosure">Qualification: ${esc(chapter.narrative.debt_disclosure.ceiling_label || '')} (${esc(chapter.narrative.debt_disclosure.q_class || '')})</div>`
     : ''
@@ -82,7 +80,6 @@ function renderChapter(chapter) {
       ${esc(chapter.chapter_label)}
     </h2>
     ${debtDisclosure}
-    ${narrativeStatus}
     <div class="findings">
       ${findings || '<div class="no-findings">No findings derived from structural evidence.</div>'}
     </div>
@@ -93,23 +90,34 @@ function renderChapter(chapter) {
 }
 
 function renderFinding(finding) {
-  return `<div class="finding" id="${esc(finding.finding_id)}">
-    <div class="finding-part finding-observed">
+  const parts = []
+
+  parts.push(`<div class="finding-part finding-observed">
       <div class="finding-label">OBSERVED</div>
       <div class="finding-content">${esc(finding.observed || '')}</div>
-    </div>
-    <div class="finding-part finding-matters">
-      <div class="finding-label">MATTERS</div>
+    </div>`)
+
+  parts.push(`<div class="finding-part finding-matters">
+      <div class="finding-label">WHY IT MATTERS</div>
       <div class="finding-content">${esc(finding.matters || '')}</div>
-    </div>
-    ${finding.operational_implication ? `<div class="finding-part finding-operational">
+    </div>`)
+
+  if (finding.operational_implication) {
+    parts.push(`<div class="finding-part finding-operational">
       <div class="finding-label">OPERATIONAL IMPLICATION</div>
       <div class="finding-content">${esc(finding.operational_implication)}</div>
-    </div>` : ''}
-    ${finding.leadership_implication ? `<div class="finding-part finding-leadership">
+    </div>`)
+  }
+
+  if (finding.leadership_implication) {
+    parts.push(`<div class="finding-part finding-leadership">
       <div class="finding-label">LEADERSHIP IMPLICATION</div>
       <div class="finding-content">${esc(finding.leadership_implication)}</div>
-    </div>` : ''}
+    </div>`)
+  }
+
+  return `<div class="finding" id="${esc(finding.finding_id)}">
+    ${parts.join('\n    ')}
   </div>`
 }
 
@@ -127,7 +135,7 @@ function renderGovernance(governance, disclosures) {
   return `<div class="governance-block">
     <div class="governance-title">GOVERNANCE</div>
     <div class="governance-item">Authority ceiling: ${esc(gov.authority_ceiling || '—')}</div>
-    <div class="governance-item">Narrative allowed: ${gov.narrative_allowed ? 'YES' : 'NO'}</div>
+    <div class="governance-item">Narrative: Zone B provider not connected — findings are structural only, no interpretive narrative</div>
     <div class="governance-item">Prohibitions enforced: ${gov.prohibitions_enforced || 0}</div>
     <div class="governance-item">Qualified: ${gov.qualified_count || 0} | Suppressed: ${gov.suppressed_count || 0}</div>
     ${gov.requires_debt_disclosure ? '<div class="governance-item governance-debt">Debt disclosure required (Q-class constraint)</div>' : ''}
@@ -137,15 +145,26 @@ function renderGovernance(governance, disclosures) {
 function renderAppendix(appendix) {
   if (!appendix) return ''
   const objects = (appendix.object_inventory || []).map(o =>
-    `<tr><td>${esc(o.object_id)}</td><td>${o.field_count}</td></tr>`
+    `<tr><td>${esc(o.object_id)}</td><td>${o.field_count}</td><td>${o.populated_arrays}/${o.total_arrays}</td></tr>`
   ).join('\n')
+
+  const summary = appendix.projection_summary || {}
+  const gov = appendix.governance || {}
 
   return `<div class="appendix-section">
     <h3>Cognition Object Inventory</h3>
     <table class="appendix-table">
-      <thead><tr><th>Object ID</th><th>Fields</th></tr></thead>
+      <thead><tr><th>Object ID</th><th>Fields</th><th>Populated Arrays</th></tr></thead>
       <tbody>${objects}</tbody>
     </table>
+  </div>
+  <div class="appendix-section">
+    <h3>Projection Summary</h3>
+    <div class="appendix-detail">S-Level: ${esc(summary.s_level || '—')}</div>
+    <div class="appendix-detail">Q-Class: ${esc(summary.q_class || '—')}</div>
+    <div class="appendix-detail">Narrative Mode: ${esc(summary.narrative_mode || '—')}</div>
+    <div class="appendix-detail">Section Count: ${summary.section_count || 0}</div>
+    <div class="appendix-detail">Authority Ceiling: ${esc(gov.authority_ceiling || '—')}</div>
   </div>`
 }
 
@@ -181,13 +200,16 @@ const STYLES = `
   .finding-operational .finding-label { color: #64ffda; }
   .finding-leadership .finding-label { color: #ff9e4a; }
   .evidence-trace { font-size: 11px; color: #7a8aaa; margin-top: 8px; border-top: 1px solid #1e2330; padding-top: 8px; }
-  .narrative-status { font-size: 11px; color: #7a8aaa; margin-bottom: 8px; }
   .debt-disclosure { font-size: 11px; color: #ffd700; margin-bottom: 8px; padding: 4px 8px; border: 1px solid #ffd70033; background: #ffd70008; }
   .no-findings { font-size: 13px; color: #7a8aaa; font-style: italic; }
   .appendix { border-top: 1px solid #2a2f40; padding-top: 24px; margin-top: 40px; }
+  .appendix-heading { font-size: 18px; color: #ccd6f6; margin-bottom: 16px; }
+  .appendix-section { margin-bottom: 24px; }
+  .appendix-section h3 { font-size: 14px; color: #7a8aaa; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
   .appendix-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .appendix-table th { text-align: left; color: #7a8aaa; border-bottom: 1px solid #2a2f40; padding: 4px 8px; }
   .appendix-table td { padding: 4px 8px; border-bottom: 1px solid #1e2330; }
+  .appendix-detail { font-size: 12px; color: #ccd6f6; margin-bottom: 4px; }
   .report-footer { border-top: 1px solid #2a2f40; padding-top: 24px; margin-top: 40px; }
   .governance-block { background: #12151f; border: 1px solid #1e2330; padding: 16px; margin-bottom: 16px; }
   .governance-title { font-size: 12px; letter-spacing: 2px; color: #7a8aaa; margin-bottom: 8px; }
