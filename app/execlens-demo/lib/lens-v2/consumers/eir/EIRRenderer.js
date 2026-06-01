@@ -4,8 +4,8 @@
 
 const { adapt } = require('./EIRAdapter')
 
-function render(picp) {
-  const adapted = adapt(picp)
+function render(picp, context) {
+  const adapted = adapt(picp, context)
   if (!adapted.ok) {
     return { ok: false, error: adapted.error }
   }
@@ -135,7 +135,9 @@ function renderGovernance(governance, disclosures) {
   return `<div class="governance-block">
     <div class="governance-title">GOVERNANCE</div>
     <div class="governance-item">Authority ceiling: ${esc(gov.authority_ceiling || '—')}</div>
-    <div class="governance-item">Narrative: Zone B provider not connected — findings are structural only, no interpretive narrative</div>
+    <div class="governance-item">Zone B provider not connected</div>
+    <div class="governance-item">Deterministic executive synthesis active</div>
+    <div class="governance-item">No free-form AI narrative generated</div>
     <div class="governance-item">Prohibitions enforced: ${gov.prohibitions_enforced || 0}</div>
     <div class="governance-item">Qualified: ${gov.qualified_count || 0} | Suppressed: ${gov.suppressed_count || 0}</div>
     ${gov.requires_debt_disclosure ? '<div class="governance-item governance-debt">Debt disclosure required (Q-class constraint)</div>' : ''}

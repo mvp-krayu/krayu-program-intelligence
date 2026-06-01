@@ -1,46 +1,32 @@
-// EIR Adapter — assembles EIR chapter structure from PRE projection and executive synthesis.
-// Deterministic: same PICP → same report structure.
+// EIR Adapter — assembles EIR report from synthesis narrative chapters + PRE governance.
+// Deterministic: same PICP + same context → same report structure.
 // Reference Consumer #1 — first proof of consumer-generic architecture.
+// Synthesis provides narrative arc. PRE provides governance/qualification validation.
 
 const PRECore = require('../../projection/PRECore')
 const eirConfig = require('../../projection/configs/eir')
 const { synthesize } = require('./ExecutiveIntelligenceSynthesis')
 
-const OBJECT_TO_THEME = {
-  structural_posture: 'posture',
-  tension_map: 'tension',
-  exposure_assessment: 'exposure',
-  trajectory_assessment: 'trajectory',
-  constraint_inventory: 'constraints',
-  decision_surface: 'decisions',
-  absence_profile: 'absence',
-  operational_ceiling: 'ceiling',
-}
-
-function adapt(picp) {
+function adapt(picp, context) {
   const projection = PRECore.project(picp, eirConfig)
   if (!projection.ok) {
     return { ok: false, error: projection.error, validation_errors: projection.validation_errors }
   }
 
-  const synthesis = synthesize(picp)
+  const synthesis = synthesize(picp, context || {})
   if (!synthesis.ok) {
     return { ok: false, error: 'Executive intelligence synthesis failed' }
   }
 
-  const chapters = projection.projection.sections.map(section => {
-    const theme = OBJECT_TO_THEME[section.primary_object_id]
-    const block = (theme && synthesis.chapters[theme]) || { findings: [] }
-    return {
-      chapter_id: section.section_id,
-      chapter_label: section.section_label,
-      sequence: section.sequence,
-      findings: block.findings,
-      evidence_sources: section.evidence_sources,
-      narrative: resolveNarrative(section, projection.projection.qualified_narratives),
-      finding_count: block.findings.length,
-    }
-  })
+  const chapters = synthesis.chapters.map(ch => ({
+    chapter_id: ch.chapter_id,
+    chapter_label: ch.chapter_label,
+    sequence: ch.sequence,
+    findings: ch.findings,
+    evidence_sources: (ch.evidence_objects || []).map(id => ({ object_id: id, role: 'primary' })),
+    narrative: { status: 'ZONE_B_AWAITING_PROVIDER' },
+    finding_count: ch.findings.length,
+  }))
 
   const metadata = buildReportMetadata(picp, projection)
 
@@ -51,21 +37,10 @@ function adapt(picp) {
       subtitle: metadata.client_id + ' — ' + metadata.specimen_id,
       metadata,
       chapters,
-      appendix: buildAppendix(picp, projection),
+      appendix: buildAppendix(picp, projection, chapters),
       governance: projection.governance,
       disclosures: projection.disclosures,
     },
-  }
-}
-
-function resolveNarrative(section, qualifiedNarratives) {
-  const match = (qualifiedNarratives || []).find(n => n.section_id === section.section_id)
-  if (!match) return { status: 'NO_NARRATIVE', slot: null }
-  return {
-    status: match.narrative_slot ? match.narrative_slot.status : 'RESOLVED',
-    slot: match.narrative_slot || null,
-    disclosure: match.disclosure || null,
-    debt_disclosure: match.debt_disclosure || null,
   }
 }
 
@@ -79,13 +54,13 @@ function buildReportMetadata(picp, projection) {
     generated_at: new Date().toISOString(),
     s_level: projection.projection_summary.s_level,
     q_class: projection.projection_summary.q_class,
-    chapter_count: projection.projection.sections.length,
+    chapter_count: 9,
     narrative_mode: projection.projection_summary.narrative_mode,
     narrative_status: 'ZONE_B_AWAITING_PROVIDER',
   }
 }
 
-function buildAppendix(picp, projection) {
+function buildAppendix(picp, projection, chapters) {
   const objects = picp.cognition_objects || {}
   const objectInventory = Object.keys(objects).map(id => {
     const obj = objects[id] || {}
@@ -99,9 +74,13 @@ function buildAppendix(picp, projection) {
     }
   })
 
+  const ps = Object.assign({}, projection.projection_summary, {
+    section_count: (chapters || []).length,
+  })
+
   return {
     object_inventory: objectInventory,
-    projection_summary: projection.projection_summary,
+    projection_summary: ps,
     governance: projection.governance,
   }
 }

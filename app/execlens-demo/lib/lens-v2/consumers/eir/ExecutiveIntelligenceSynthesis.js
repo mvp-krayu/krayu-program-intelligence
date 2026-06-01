@@ -1,6 +1,7 @@
 // Executive Intelligence Synthesis — Consumer Intelligence Module for EIR.
-// Reads all 9 PICP cognition objects and produces cross-object executive conclusions.
-// Deterministic: same PICP → same synthesis. No AI participation.
+// Reads all 9 PICP cognition objects + specimen grounding context to produce
+// narrative-arc executive chapters with named entities and per-condition deep dives.
+// Deterministic: same PICP + same context → same synthesis. No AI participation.
 // This produces a Consumer Intelligence Artifact, NOT a cognition object.
 
 const SEVERITY_RANK = { CRITICAL: 5, HIGH: 4, ELEVATED: 3, MODERATE: 2, LOW: 1, NOMINAL: 0 }
@@ -61,42 +62,62 @@ const CONSEQUENCE_LABEL = {
   STAB_RISK: 'Stability Risk',
 }
 
-const CONSTRAINT_LABEL = {
-  STRUCTURAL_FRAGILITY: 'structural fragility',
-  THROUGHPUT_CEILING: 'throughput ceiling',
-  GOVERNANCE_MISALIGNMENT: 'governance misalignment',
-  COUPLING_RIGIDITY: 'coupling rigidity',
-  BLAST_RADIUS: 'blast radius',
+const CONDITION_LABEL = {
+  DELIVERY_PRESSURE_CONCENTRATION: 'Delivery Pressure Concentration',
+  DEPENDENCY_CHOKE_POINT: 'Dependency Amplification',
+  PROPAGATION_ASYMMETRY: 'Propagation Exposure',
+  STRUCTURAL_MASS_CONCENTRATION: 'Structural Mass Concentration',
+  CROSS_DOMAIN_COUPLING_PRESSURE: 'Cross-Domain Coupling Pressure',
+  EXECUTION_FRAGILITY: 'Execution Fragility',
+  EXECUTION_CONSTRICTION: 'Execution Constriction',
+  STRUCTURAL_BOUNDARY_DIVERGENCE: 'Structural Boundary Divergence',
+  COUPLING_INERTIA: 'Coupling Inertia',
+  COMPOUND_CONVERGENCE: 'Compound Convergence',
+  GOVERNANCE_COVERAGE_STATUS: 'Governance Coverage',
 }
 
-function synthesize(picp) {
+
+// --- Main entry ---
+
+function synthesize(picp, context) {
   const objects = picp.cognition_objects || {}
+  const ctx = context || {}
 
   const posture = objects.structural_posture || {}
   const tension = objects.tension_map || {}
   const constraints = objects.constraint_inventory || {}
   const exposure = objects.exposure_assessment || {}
   const trajectory = objects.trajectory_assessment || {}
-  const decision = objects.decision_surface || {}
   const absence = objects.absence_profile || {}
   const detection = objects.detection_boundary || {}
   const ceiling = objects.operational_ceiling || {}
+
+  // S-level may be in PICP metadata rather than structural_posture (materializer uses readiness.posture)
+  const metaQual = (picp.metadata || {}).qualification_state || {}
+  if (!posture.qualification) posture.qualification = {}
+  if (!posture.qualification.s_level && metaQual.s_level) {
+    posture.qualification.s_level = metaQual.s_level
+  }
+  if (!posture.qualification.q_class && metaQual.q_class) {
+    posture.qualification.q_class = metaQual.q_class
+  }
 
   const dominant = identifyDominantPattern(posture, tension, ceiling, exposure)
 
   return {
     ok: true,
     executive_posture: dominant,
-    chapters: {
-      posture: synthesizePosture(posture, ceiling, dominant),
-      tension: synthesizeTensions(tension, constraints, dominant),
-      exposure: synthesizeExposure(exposure, detection),
-      trajectory: synthesizeTrajectory(trajectory),
-      constraints: synthesizeConstraints(constraints, ceiling),
-      decisions: synthesizeDecisions(decision, trajectory),
-      absence: synthesizeAbsence(absence, detection),
-      ceiling: synthesizeCeiling(ceiling, constraints),
-    },
+    chapters: [
+      synthesizeExecutiveBrief(posture, tension, ceiling, exposure, dominant, ctx),
+      synthesizeProgramOverview(posture, ctx),
+      synthesizeStructuralStory(tension, ctx),
+      synthesizePIFindings(tension, detection, ctx),
+      synthesizeSWIntelligence(tension, absence, dominant),
+      synthesizeRiskLandscape(exposure, tension, ceiling, ctx),
+      synthesizeOperationalCeiling(ceiling, constraints, ctx),
+      synthesizeDetectionBoundary(detection),
+      synthesizeVerdict(posture, tension, ceiling, dominant, ctx),
+    ],
   }
 }
 
@@ -133,399 +154,813 @@ function identifyDominantPattern(posture, tension, ceiling, exposure) {
 }
 
 
-// --- Chapter synthesis functions ---
-// Each returns { findings: Finding[], evidence_objects: string[] }
-// Finding shape: { finding_id, observed, matters, operational_implication }
+// --- Chapter 1: Executive Brief ---
 
-function synthesizePosture(posture, ceiling, dominant) {
+function synthesizeExecutiveBrief(posture, tension, ceiling, exposure, dominant, ctx) {
+  const findings = []
   const q = posture.qualification || {}
-  const s = posture.scale || {}
-  const env = posture.confidence_envelope || {}
+  const scale = ctx.scale || {}
+  const centers = tension.convergence_centers || []
   const cs = ceiling.posture_statement || {}
   const cf = ceiling.ceiling_factors || {}
-  const findings = []
+  const clientName = ctx.client_name || 'This program'
 
-  const scaleDesc = (s.total_nodes || 0) + ' structural nodes across ' + (s.cluster_count || 0) + ' clusters'
-  const importDesc = s.import_relationships ? ' with ' + s.import_relationships + ' import relationships' : ''
-  const classDesc = dominant.class_count > 0
-    ? dominant.class_count + ' of 5 behavioral risk classes simultaneously active'
-    : 'No behavioral risk classes activated'
+  // Finding 1: Headline discovery
+  let headline = clientName + ' is a ' + commaNum(scale.file_count || 0) + '-file software program organized across ' +
+    (scale.semantic_domain_count || 0) + ' semantic business domains and ' + (scale.cluster_count || 0) + ' structural clusters, ' +
+    'with ' + commaNum(scale.total_import_edges || 0) + ' import relationships and ' +
+    commaNum(scale.total_classes || 0) + ' class definitions.'
+
+  if (centers.length > 0) {
+    headline += ' ' + clientName + ' has ' + centers.length + ' distinct structural pressure center' +
+      (centers.length !== 1 ? 's' : '') + ' — '
+    const parts = centers.map(c => {
+      const domains = (c.domains || []).map(d => domainName(d, ctx)).join(' and ')
+      return 'one in ' + (domains || 'an unresolved region')
+    })
+    headline += parts.join(', and ') + '.'
+
+    for (const center of centers) {
+      const domains = (center.domains || []).map(d => domainName(d, ctx)).join(' and ')
+      const types = (center.contributing_condition_types || []).map(t => condLabel(t))
+      headline += ' ' + (domains || 'Unknown region') + ': ' + center.contributing_count +
+        ' independent structural conditions converge (' + types.join(', ') + ') at ' + center.severity + ' severity.'
+    }
+  }
 
   findings.push({
-    finding_id: 'synthesis_executive_posture',
-    observed: 'Qualification ' + (q.q_class || 'undetermined') +
-      (q.q_label ? ' (' + q.q_label + ')' : '') +
-      ' across ' + scaleDesc + importDesc + '. ' +
-      classDesc +
-      (dominant.risk_label ? ' — composite pattern: ' + dominant.risk_label : '') + '.' +
-      (cs.ceiling_exists
-        ? ' Operational ceiling present, driven by ' + (cf.consequence_count || 0) + ' consequences (' + (cf.systemic_count || 0) + ' systemic).'
-        : ''),
+    finding_id: 'executive_headline',
+    observed: headline,
     matters: dominant.class_count >= 3
-      ? 'Multi-class behavioral convergence means structural conditions reinforce each other across dimensions — this is a single compounding structural pattern, not a collection of independent issues.'
+      ? dominant.class_count + ' of 5 behavioral risk classes simultaneously active' +
+        (dominant.risk_label ? ' — ' + dominant.risk_label : '') +
+        '. Multi-class convergence means structural conditions reinforce each other across dimensions. This is a single compounding structural pattern, not a collection of independent issues.'
       : dominant.class_count >= 1
         ? 'Active behavioral classes indicate structural stress patterns constraining operational capacity.'
         : 'No active behavioral risk classes — structural health across measured dimensions.',
     operational_implication: cs.ceiling_exists
-      ? (cf.critical_convergence
-        ? 'Critical convergence present — structurally reinforced ceiling that cannot be resolved through isolated intervention.'
-        : 'No critical convergence — ceiling is addressable through targeted structural intervention.')
-      : 'No formal operational ceiling constrains current structural capacity.',
+      ? 'Operational ceiling present, driven by ' + (cf.consequence_count || 0) + ' consequences (' +
+        (cf.systemic_count || 0) + ' systemic).' +
+        (cf.critical_convergence ? ' Critical convergence — structurally reinforced ceiling that cannot be resolved through isolated intervention.' : '')
+      : null,
+    leadership_implication: centers.length > 0
+      ? 'These are not minor code quality issues. They are structural execution constraints that directly affect delivery speed, coordination cost, and operational resilience. They persist regardless of team composition, sprint planning, or process changes.'
+      : null,
   })
 
-  if (env.semantic_continuity || env.evidence_availability) {
+  // Finding 2: What leadership should understand immediately
+  const points = []
+  if (cs.ceiling_exists) {
+    points.push('Delivery speed is structurally constrained. Adding developers will not proportionally increase throughput. The program has topological bottlenecks that create throughput ceilings independent of staffing.')
+  }
+  if (centers.length > 0) {
+    const regionNames = centers.map(c => (c.domains || []).map(d => domainName(d, ctx)).join(' and '))
+    points.push(regionNames.join(' and ') + ' concentrate disproportionate risk. Operational resilience depends disproportionately on the stability of these regions.')
+  }
+  if ((ctx.divergence || {}).pair_count > 0) {
+    points.push('Organizational boundaries do not match structural reality. Governance assumptions — code ownership, review policies, deployment boundaries — are drawn around directories, but dependencies cross those lines.')
+  }
+  if (dominant.class_count >= 3) {
+    points.push('These findings are structural, not circumstantial. They persist regardless of team composition, sprint planning, or process changes. They require architectural intervention, not process adjustment.')
+  }
+
+  if (points.length > 0) {
     findings.push({
-      finding_id: 'synthesis_confidence_basis',
-      observed: 'Evidence basis: semantic continuity ' + (env.semantic_continuity || 'unknown') +
-        ', evidence availability ' + (env.evidence_availability || 'unknown') +
-        '. Governance verdict: ' + (env.governance_verdict || 'unknown') + '.',
-      matters: 'The confidence envelope bounds the reliability of all projections in this report.',
-      operational_implication: null,
+      finding_id: 'executive_leadership_summary',
+      observed: 'What leadership should understand immediately: ' + points.map((p, i) => (i + 1) + '. ' + p).join(' '),
+      matters: 'These structural constraints define the program\'s operational ceiling. Without architectural intervention, they will persist and compound over successive operational cycles.',
     })
   }
 
-  return { findings, evidence_objects: ['structural_posture', 'operational_ceiling', 'tension_map'] }
+  // Finding 3: Qualification posture
+  const env = posture.confidence_envelope || {}
+  findings.push({
+    finding_id: 'executive_qualification',
+    observed: 'Overall operational posture: ' + (q.s_level || 'undetermined') +
+      (q.q_class ? ' ' + q.q_class : '') +
+      (q.q_label ? ' (' + q.q_label + ')' : '') +
+      '. ' + dominant.total_active_conditions + ' structural conditions across ' +
+      dominant.class_count + ' behavioral classes' +
+      (dominant.convergence_count > 0 ? ', ' + dominant.convergence_count + ' compound convergence event' + (dominant.convergence_count !== 1 ? 's' : '') : '') +
+      '.' +
+      (env.governance_verdict ? ' Governance verdict: ' + env.governance_verdict + '.' : ''),
+    matters: 'Same structural inputs produce the same findings. All conclusions in this report are deterministically derived from the import topology.',
+  })
+
+  return {
+    chapter_id: 'executive_brief',
+    chapter_label: 'Executive Brief',
+    sequence: 1,
+    findings,
+    evidence_objects: ['structural_posture', 'tension_map', 'operational_ceiling', 'exposure_assessment'],
+  }
 }
 
-function synthesizeTensions(tension, constraints, dominant) {
-  const centers = tension.convergence_centers || []
-  const classActivation = tension.behavioral_class_activation || []
-  const totalConstraints = constraints.total_count || 0
-  const constraintTypes = constraints.by_type || {}
+
+// --- Chapter 2: Program Overview ---
+
+function synthesizeProgramOverview(posture, ctx) {
+  const scale = ctx.scale || {}
+  const clientName = ctx.client_name || 'The program'
   const findings = []
 
-  if (centers.length > 0) {
-    const allDomains = new Set()
-    const allTypes = new Set()
-    let maxSev = 'MODERATE'
-    for (const c of centers) {
-      for (const d of (c.domains || [])) allDomains.add(d)
-      for (const t of (c.contributing_condition_types || [])) allTypes.add(t)
-      if (SEVERITY_RANK[c.severity] > SEVERITY_RANK[maxSev]) maxSev = c.severity
-    }
+  findings.push({
+    finding_id: 'overview_scale',
+    observed: 'Structural scale: ' + commaNum(scale.file_count || 0) + ' source files analyzed, ' +
+      commaNum(scale.total_import_edges || 0) + ' import relationships mapped, ' +
+      commaNum(scale.total_classes || 0) + ' class definitions, ' +
+      commaNum(scale.total_functions || 0) + ' function definitions. ' +
+      'Organized across ' + (scale.semantic_domain_count || 0) + ' semantic business domains and ' +
+      (scale.cluster_count || 0) + ' structural clusters.',
+    matters: 'Scale determines the analysis depth. The import graph — ' + commaNum(scale.total_import_edges || 0) +
+      ' relationships across ' + commaNum(scale.file_count || 0) + ' files — is the structural foundation for all findings in this report.',
+  })
 
-    const constraintSummary = Object.entries(constraintTypes)
-      .filter(([, v]) => v > 0)
-      .map(([k, v]) => v + ' ' + (CONSTRAINT_LABEL[k] || k.toLowerCase()))
-      .join(', ')
-
-    findings.push({
-      finding_id: 'synthesis_convergence_pattern',
-      observed: centers.length + ' structural convergence center' + (centers.length !== 1 ? 's' : '') +
-        ' at up to ' + maxSev + ' severity, spanning ' + allDomains.size +
-        ' domain' + (allDomains.size !== 1 ? 's' : '') + '. ' +
-        allTypes.size + ' distinct condition types contribute, activating ' +
-        dominant.class_count + ' behavioral classes' +
-        (dominant.risk_label ? ' — composite: ' + dominant.risk_label : '') + '.',
-      matters: 'Convergence means these conditions reinforce each other — intervention in one dimension encounters resistance from the others. The structural tension is self-reinforcing.',
-      operational_implication: totalConstraints > 0
-        ? totalConstraints + ' structural constraints compound these tensions (' + constraintSummary + ').'
-        : null,
-    })
+  return {
+    chapter_id: 'program_overview',
+    chapter_label: 'Program Overview',
+    sequence: 2,
+    findings,
+    evidence_objects: ['structural_posture'],
   }
-
-  if (classActivation.length > 0) {
-    const top = classActivation[0]
-    findings.push({
-      finding_id: 'synthesis_behavioral_dominance',
-      observed: classActivation.length + ' behavioral classes active: ' +
-        classActivation.map(a =>
-          a.class_name + ' (' + a.class_id + ', ' + a.condition_count + ' conditions, peak ' + a.max_severity + ')'
-        ).join('; ') + '.',
-      matters: 'Dominant class: ' + top.class_name + '. ' + (CLASS_QUESTION[top.class_id] || ''),
-      operational_implication: classActivation.length >= 4
-        ? 'With ' + classActivation.length + ' of 5 classes active, structural stress spans nearly all measurable dimensions.'
-        : null,
-    })
-  }
-
-  if (centers.length === 0 && classActivation.length === 0) {
-    findings.push({
-      finding_id: 'synthesis_tension_absent',
-      observed: 'No convergence centers or behavioral class activation detected.',
-      matters: 'Absence of convergence is positive structural evidence.',
-      operational_implication: null,
-    })
-  }
-
-  return { findings, evidence_objects: ['tension_map', 'constraint_inventory'] }
 }
 
-function synthesizeExposure(exposure, detection) {
+
+// --- Chapter 3: The Structural Execution Story ---
+
+function synthesizeStructuralStory(tension, ctx) {
+  const findings = []
+  const constriction = ctx.constriction || {}
+  const fragility = ctx.fragility || {}
+  const divergence = ctx.divergence || {}
+  const centers = tension.convergence_centers || []
+  const scale = ctx.scale || {}
+
+  // Topology baseline — always present
+  const centerCount = centers.length
+  const condCount = tension.active_condition_count || 0
+  let baseline = 'The structural topology spans ' + commaNum(scale.file_count || 0) + ' files across ' +
+    (scale.semantic_domain_count || 0) + ' semantic domains and ' + (scale.cluster_count || 0) + ' structural clusters.'
+  if (centerCount > 0) {
+    baseline += ' Program Intelligence identified ' + centerCount + ' convergence center' + (centerCount !== 1 ? 's' : '') +
+      ' — structural regions where multiple independent conditions co-locate.'
+    const names = centers.map(c => (c.domains || []).map(d => domainName(d, ctx)).join(' and '))
+    if (names.length > 0) baseline += ' Primary convergence: ' + names.join('; ') + '.'
+  }
+  if (condCount > 0) {
+    baseline += ' ' + condCount + ' structural conditions above NOMINAL severity shape the execution landscape.'
+  }
+  findings.push({
+    finding_id: 'story_topology_baseline',
+    observed: baseline,
+    matters: 'This topology — not org charts, not sprint velocity, not test coverage — is where delivery capacity is structurally determined.',
+  })
+
+  // How work flows — constriction
+  if ((constriction.bridge_count || 0) > 0 || (constriction.articulation_count || 0) > 0) {
+    let observed = 'Program Intelligence identified ' + (constriction.bridge_count || 0) +
+      ' structural bridge nodes and ' + (constriction.articulation_count || 0) + ' articulation points' +
+      ' — files that serve as the only connection path between otherwise-independent regions of the import graph.'
+    const tops = (constriction.top_points || []).filter(p => p.file && p.file !== 'unknown')
+    if (tops.length > 0) {
+      observed += ' The constriction is most severe at ' + tops[0].file +
+        ' (through-flow ' + tops[0].through_flow +
+        (tops[0].components_if_removed > 0 ? ', ' + tops[0].components_if_removed + ' components isolated if removed' : '') + ').'
+      if (tops.length > 1) {
+        observed += ' Additional constriction points: ' + tops.slice(1, 3).map(p => p.file + ' (through-flow ' + p.through_flow + ')').join(', ') + '.'
+      }
+    }
+    findings.push({
+      finding_id: 'story_how_work_flows',
+      observed,
+      matters: 'Bridge nodes are execution constriction points — narrow structural passages where all traffic between two regions must flow. When work touches a bridge node, it serializes. Two teams working on opposite sides cannot proceed in parallel.',
+      operational_implication: 'Adding more developers does not help at constriction points. The bottleneck is in the graph, not in the headcount.',
+    })
+  }
+
+  // Where resilience weakens — fragility
+  if ((fragility.hotspot_count || 0) > 0) {
+    let observed = fragility.hotspot_count + ' structural fragility hotspot' + (fragility.hotspot_count !== 1 ? 's' : '') + ' identified — ' +
+      'files with high external coupling combined with low internal cohesion.'
+    const tops = (fragility.top_hotspots || []).filter(h => h.file)
+    if (tops.length > 0) {
+      observed += ' ' + tops.map(h =>
+        h.file + ' (fragility score ' + h.score + ', ' + h.inbound + ' inbound, ' + h.outbound + ' outbound)'
+      ).join('; ') + '.'
+    }
+    findings.push({
+      finding_id: 'story_where_resilience_weakens',
+      observed,
+      matters: 'Fragile components amplify disruption. A change to a well-encapsulated module stays contained. A change to a fragile component propagates in unpredictable directions, because the component\'s connections span the system rather than staying within a bounded context.',
+      operational_implication: 'Changes touching fragile components carry elevated risk of unexpected downstream impact. The region\'s apparent simplicity masks its structural exposure.',
+    })
+  }
+
+  // Where coordination becomes difficult — divergence
+  if ((divergence.pair_count || 0) > 0) {
+    let observed = divergence.pair_count + ' structural boundary divergence pair' + (divergence.pair_count !== 1 ? 's' : '') + ' detected — ' +
+      'modules whose declared organizational structure diverges from their actual dependency structure.'
+    const tops = (divergence.top_pairs || [])
+    if (tops.length > 0) {
+      observed += ' ' + tops.map(p =>
+        domainName(p.source, ctx) + ' → ' + domainName(p.target, ctx) +
+        ' (' + p.imports + ' cross-boundary imports, ' + Math.round((p.ratio || 0) * 100) + '% cross-boundary ratio)'
+      ).join('; ') + '.'
+    }
+    findings.push({
+      finding_id: 'story_where_coordination_breaks',
+      observed,
+      matters: 'When organizational boundaries diverge from structural reality, governance assumptions become invalid. Code ownership policies assigned by directory do not reflect actual coupling. Teams working in different directories are, in structural reality, working on the same interconnected system.',
+      operational_implication: 'Governance and ownership boundaries need realignment with actual structural dependencies.',
+    })
+  }
+
+  return {
+    chapter_id: 'structural_story',
+    chapter_label: 'Structural Topology',
+    sequence: 3,
+    findings,
+    evidence_objects: ['structural_posture', 'tension_map'],
+  }
+}
+
+
+// --- Chapter 4: Program Intelligence Findings (per-condition deep dives) ---
+
+function synthesizePIFindings(tension, detection, ctx) {
+  const conditions = ctx.conditions || []
+  const frontier = detection.measurement_frontier || []
+  const centers = tension.convergence_centers || []
+  const constriction = ctx.constriction || {}
+  const fragility = ctx.fragility || {}
+  const divergence = ctx.divergence || {}
+
+  // Group non-convergence conditions by type
+  const byType = {}
+  for (const c of conditions) {
+    if (c.condition_type === 'COMPOUND_CONVERGENCE') continue
+    if (!byType[c.condition_type]) byType[c.condition_type] = []
+    byType[c.condition_type].push(c)
+  }
+
+  // Sort by max severity descending
+  const sorted = Object.entries(byType).sort((a, b) => {
+    const maxA = a[1].reduce((m, c) => Math.max(m, SEVERITY_RANK[c.severity] || 0), 0)
+    const maxB = b[1].reduce((m, c) => Math.max(m, SEVERITY_RANK[c.severity] || 0), 0)
+    return maxB - maxA
+  })
+
+  const findings = []
+
+  // Landscape preamble — summarize condition distribution before per-type detail
+  const totalTypes = sorted.length
+  const totalInstances = conditions.filter(c => c.condition_type !== 'COMPOUND_CONVERGENCE').length
+  const sevCounts = {}
+  for (const c of conditions) {
+    if (c.condition_type === 'COMPOUND_CONVERGENCE') continue
+    sevCounts[c.severity] = (sevCounts[c.severity] || 0) + 1
+  }
+  const sevParts = Object.entries(sevCounts)
+    .sort((a, b) => (SEVERITY_RANK[b[0]] || 0) - (SEVERITY_RANK[a[0]] || 0))
+    .map(([sev, count]) => count + ' ' + sev)
+  if (totalTypes > 0) {
+    findings.push({
+      finding_id: 'finding_landscape',
+      observed: totalInstances + ' structural condition' + (totalInstances !== 1 ? 's' : '') + ' across ' +
+        totalTypes + ' condition type' + (totalTypes !== 1 ? 's' : '') +
+        (sevParts.length > 0 ? ': ' + sevParts.join(', ') : '') + '.' +
+        (centers.length > 0 ? ' ' + centers.length + ' compound convergence event' + (centers.length !== 1 ? 's' : '') + ' where multiple conditions co-locate.' : ''),
+      matters: 'The following findings detail each structural condition individually. Compound convergence findings at the end of this chapter reveal where individual conditions interact.',
+    })
+  }
+
+  for (const [type, instances] of sorted) {
+    const allDomains = []
+    const allFiles = []
+    let maxSev = 'NOMINAL'
+    for (const inst of instances) {
+      for (const d of (inst.domains || [])) { if (!allDomains.includes(d)) allDomains.push(d) }
+      for (const f of (inst.files || [])) { if (!allFiles.includes(f)) allFiles.push(f) }
+      if ((SEVERITY_RANK[inst.severity] || 0) > (SEVERITY_RANK[maxSev] || 0)) maxSev = inst.severity
+    }
+
+    const domainNames = allDomains.map(d => domainName(d, ctx))
+    const gap = frontier.find(f => f.condition_type === type)
+
+    findings.push(buildConditionFinding(type, maxSev, domainNames, allFiles, gap, constriction, fragility, divergence, ctx))
+  }
+
+  // Convergence center findings (highest severity — listed last for narrative climax)
+  for (const center of centers) {
+    const domains = (center.domains || []).map(d => domainName(d, ctx)).join(' and ')
+    const types = (center.contributing_condition_types || []).map(t => condLabel(t))
+    const classes = (center.behavioral_classes || [])
+    const classKey = classes.join('')
+
+    let observed = 'Compound Convergence at ' + (domains || 'unknown region') + ' (' + center.severity + '): ' +
+      center.contributing_count + ' independent structural conditions converge on a single region — ' +
+      types.join(', ') + '. Each condition was triggered by independent evidence. Their co-location is a structural pattern, not a coincidence.'
+    if (classes.length > 0) {
+      observed += ' Behavioral classes ' + classes.join(', ') + ' active' +
+        (CLASS_RISK_LABEL[classKey] ? ': ' + CLASS_RISK_LABEL[classKey] : '') + '.'
+    }
+
+    findings.push({
+      finding_id: 'finding_convergence_' + (center.domains || []).join('_').toLowerCase(),
+      observed,
+      matters: 'Individual structural conditions can be managed in isolation. But when ' + center.contributing_count +
+        ' conditions stack in the same region, they interact in ways that make the overall situation qualitatively worse than the sum of parts. ' +
+        'A dependency choke point inside a pressure zone inside a structurally dominant cluster creates a compounding effect — a structural gravity well that attracts more mass, more pressure, and more risk over time.',
+      operational_implication: 'This region requires fundamentally different treatment from the rest of the program. It is not merely an area with issues — it is where ' +
+        center.contributing_count + ' independent risk vectors amplify each other.',
+      leadership_implication: 'This is the finding that would be most difficult to produce through traditional analysis. Individual developers know that certain areas are hard to work with. But no traditional review reveals that ' +
+        center.contributing_count + ' independent structural risk factors are converging on the same point — because traditional reviews assess one dimension at a time.',
+    })
+  }
+
+  if (findings.length === 0) {
+    findings.push({
+      finding_id: 'finding_none',
+      observed: 'No structural conditions above NOMINAL severity detected.',
+      matters: 'Positive structural evidence — the program does not exhibit the structural patterns that Program Intelligence measures.',
+    })
+  }
+
+  return {
+    chapter_id: 'pi_findings',
+    chapter_label: 'Program Intelligence Findings',
+    sequence: 4,
+    findings,
+    evidence_objects: ['tension_map', 'detection_boundary', 'structural_posture', 'constraint_inventory'],
+  }
+}
+
+function buildConditionFinding(type, severity, domainNames, files, gap, constriction, fragility, divergence, ctx) {
+  const label = condLabel(type)
+  const domainStr = domainNames.length > 0 ? domainNames.join(' and ') : null
+
+  let observed = label + ' at ' + severity + ' severity'
+  if (domainStr) observed += ' in ' + domainStr
+  observed += '.'
+
+  // Type-specific structural enrichment
+  switch (type) {
+    case 'EXECUTION_CONSTRICTION': {
+      const bc = constriction.bridge_count || 0
+      const ac = constriction.articulation_count || 0
+      if (bc > 0 || ac > 0) {
+        observed += ' ' + bc + ' bridge nodes and ' + ac + ' articulation points identified.'
+      }
+      const tops = (constriction.top_points || []).filter(p => p.file && p.file !== 'unknown')
+      if (tops.length > 0) {
+        observed += ' Highest constriction: ' + tops[0].file + ' (through-flow ' + tops[0].through_flow + ').'
+      }
+      if (files.length > 0 && !observed.includes(files[0])) {
+        observed += ' Condition anchored at: ' + files.slice(0, 3).join(', ') + '.'
+      }
+      break
+    }
+    case 'EXECUTION_FRAGILITY': {
+      const hc = fragility.hotspot_count || 0
+      if (hc > 0) observed += ' ' + hc + ' fragility hotspot' + (hc !== 1 ? 's' : '') + ' detected.'
+      const tops = (fragility.top_hotspots || []).filter(h => h.file)
+      if (tops.length > 0) {
+        observed += ' ' + tops[0].file + ' (fragility score ' + tops[0].score + ', ' + tops[0].inbound + ' inbound dependencies, cohesion ' +
+          (tops[0].outbound > 0 && tops[0].inbound > 0 ? (tops[0].outbound / (tops[0].inbound + tops[0].outbound)).toFixed(2) : 'low') + ').'
+      }
+      break
+    }
+    case 'STRUCTURAL_BOUNDARY_DIVERGENCE': {
+      const pc = divergence.pair_count || 0
+      if (pc > 0) observed += ' ' + pc + ' divergent boundary pair' + (pc !== 1 ? 's' : '') + ' detected.'
+      const tops = (divergence.top_pairs || [])
+      if (tops.length > 0) {
+        const p = tops[0]
+        observed += ' Highest divergence: ' + domainName(p.source, ctx) + ' → ' + domainName(p.target, ctx) +
+          ' (' + Math.round((p.ratio || 0) * 100) + '% cross-boundary, ' + p.imports + ' cross-boundary imports).'
+      }
+      break
+    }
+    case 'DEPENDENCY_CHOKE_POINT': {
+      if (files.length > 0) {
+        observed += ' Primary choke point: ' + files[0] + '. This component concentrates inbound import dependencies far beyond the system mean.'
+      }
+      break
+    }
+    case 'PROPAGATION_ASYMMETRY': {
+      if (files.length > 0) {
+        observed += ' Primary propagation source: ' + files[0] + '. Outbound dependency surface exceeds the system mean by an order of magnitude.'
+      }
+      break
+    }
+    case 'STRUCTURAL_MASS_CONCENTRATION': {
+      observed += ' One structural region carries a disproportionate share of the program\'s total structural mass — nodes, edges, and dependency weight.'
+      break
+    }
+    case 'DELIVERY_PRESSURE_CONCENTRATION': {
+      observed += ' Delivery pressure — the concentration of operational flow — converges on a single structural region.'
+      break
+    }
+    case 'CROSS_DOMAIN_COUPLING_PRESSURE': {
+      observed += ' Structural coupling crosses domain boundaries that different teams may own independently.'
+      if (files.length > 0) {
+        observed += ' Coupling anchor: ' + files.slice(0, 2).join(', ') + '.'
+      }
+      break
+    }
+    case 'COUPLING_INERTIA': {
+      observed += ' Bidirectional import relationships create tightly-coupled clusters of modules that cannot evolve independently.'
+      break
+    }
+    default: {
+      if (files.length > 0 && files.length <= 3) {
+        observed += ' Evidence files: ' + files.join(', ') + '.'
+      }
+    }
+  }
+
+  // Matters: structural consequence framing + measurement gap
+  const MATTERS = {
+    EXECUTION_CONSTRICTION: 'Constriction creates throughput ceilings invisible in conventional analysis. A project manager looking at velocity metrics sees slowdowns but cannot attribute them to topology. A team lead sees merge conflicts but cannot see that they are caused by structural bridges, not by poor coordination.',
+    EXECUTION_FRAGILITY: 'Fragile components are disproportionately responsible for escaped defects. A change to a fragile file has an unpredictable blast radius because the file\'s connections span the system. Standard impact analysis based on directory proximity underestimates the true scope. This is distinct from a dependency choke point — fragility is about coupling topology, not concentration.',
+    DEPENDENCY_CHOKE_POINT: 'Dependency amplification means that the true cost of changes to this component is systematically underestimated. A seemingly simple type modification — adding a field, changing a validation rule, adjusting a default — cascades to all dependent files. Comprehensive testing would need to cover every consumer context; in practice, testing covers a fraction, and the remainder becomes latent regression risk.',
+    PROPAGATION_ASYMMETRY: 'When a component\'s outbound dependency surface is many times the average, its blast radius exceeds structural locality. Changes can theoretically affect all downstream files — and those files may in turn have their own downstream consumers. The propagation chain can reach deeply into the application.',
+    STRUCTURAL_MASS_CONCENTRATION: 'Structural mass concentration creates a gravity well. As more functionality accretes around the dominant region, delivery exposure increases, and the cost of eventual restructuring grows. Without intervention, this region will continue to accumulate mass and risk at an accelerating rate.',
+    CROSS_DOMAIN_COUPLING_PRESSURE: 'Cross-domain coupling means changes that appear internal to one domain cascade across domain boundaries. Module registration, dependency injection, or configuration changes propagate across boundaries that different teams may own independently.',
+    STRUCTURAL_BOUNDARY_DIVERGENCE: 'When organizational boundaries diverge from structural reality, governance assumptions become invalid. Code ownership policies assigned by directory do not reflect actual coupling. Review policies scoped to a single directory miss cross-boundary dependencies. Deployment boundaries drawn around modules are wider than assumed.',
+    COUPLING_INERTIA: 'Coupling inertia decays development velocity in proportion to cluster density. The cluster behaves as a monolithic change unit regardless of organizational boundaries. Refactoring one module forces cascading changes in others. Circular dependencies prevent clean extraction.',
+    DELIVERY_PRESSURE_CONCENTRATION: 'Pressure concentration means operational flow converges on a region that already carries disproportionate structural weight. The pressure is not distributed — it has a center of gravity.',
+    GOVERNANCE_COVERAGE_STATUS: 'Ungoverned structural surface means governance assumptions have blind spots that no amount of process improvement can close without structural realignment.',
+  }
+
+  let matters = MATTERS[type] || 'Structural condition affecting operational capacity.'
+  if (gap && gap.measurement_gap) {
+    matters += ' Detection boundary: ' + gap.measurement_gap
+  }
+
+  const OPERATIONAL = {
+    EXECUTION_CONSTRICTION: 'Throughput through constriction points cannot be increased by adding capacity. The only resolution is architectural — creating alternative paths that reduce the topological dependency on single bridge nodes.',
+    EXECUTION_FRAGILITY: 'Changes touching fragile regions carry elevated risk of unexpected downstream impact. The region\'s apparent simplicity masks its structural exposure.',
+    DEPENDENCY_CHOKE_POINT: 'Change impact assessment in the affected layer consistently underestimates the actual blast radius.',
+    PROPAGATION_ASYMMETRY: 'Routine changes in high fan-out regions may require broader review and testing than their apparent scope suggests.',
+    STRUCTURAL_MASS_CONCENTRATION: 'Without intervention, this region will continue to accumulate mass and risk at an accelerating rate.',
+    CROSS_DOMAIN_COUPLING_PRESSURE: 'What appears to be an internal change can affect testing requirements and deployment sequencing across teams.',
+    STRUCTURAL_BOUNDARY_DIVERGENCE: 'Governance and ownership boundaries need realignment with actual structural dependencies. Teams working in different directories are, in structural reality, working on the same interconnected system.',
+    COUPLING_INERTIA: 'Development velocity through coupled clusters is inversely proportional to cluster size.',
+    DELIVERY_PRESSURE_CONCENTRATION: 'Operational stress on this region is self-reinforcing — the structural weight that created the pressure also attracts more pressure.',
+  }
+
+  const LEADERSHIP = {
+    EXECUTION_CONSTRICTION: 'If teams report that parallel work keeps colliding despite good planning, the cause may be structural rather than organizational. Narrow passages in the topology force serialization regardless of coordination quality.',
+    EXECUTION_FRAGILITY: 'If incident post-mortems consistently trace back to the same apparently minor components, the cause is structural fragility, not developer error.',
+    DEPENDENCY_CHOKE_POINT: 'If seemingly minor changes to shared types cause surprising regressions in distant features, the cause is dependency amplification concentrated at a structural hub.',
+    PROPAGATION_ASYMMETRY: 'When changes cause unexpected side effects in seemingly unrelated features, the cause may be asymmetric propagation from a high fan-out entry point.',
+    STRUCTURAL_BOUNDARY_DIVERGENCE: 'If teams report unexpected cross-team dependencies, or if deployment of one module requires changes in another, the cause is structural boundary divergence — the organizational chart does not match the dependency graph.',
+    COUPLING_INERTIA: 'If teams report that everything is connected to everything in certain areas, they are observing coupling inertia — bidirectional dependencies that structurally fuse modules into single change units.',
+  }
+
+  return {
+    finding_id: 'finding_' + type.toLowerCase(),
+    observed,
+    matters,
+    operational_implication: OPERATIONAL[type] || null,
+    leadership_implication: LEADERSHIP[type] || null,
+  }
+}
+
+
+// --- Chapter 5: Software Intelligence Assessment ---
+
+function synthesizeSWIntelligence(tension, absence, dominant) {
+  const classActivation = tension.behavioral_class_activation || []
+  const findings = []
+
+  if (classActivation.length > 0) {
+    // Finding 1: Per-class activation
+    let observed = 'Program Intelligence organizes structural findings into five behavioral cognition classes. ' +
+      classActivation.length + ' of 5 classes active in this specimen: '
+    observed += classActivation.map(a =>
+      'Class ' + a.class_id + ' — ' + a.class_name + ': ' + a.condition_count +
+      ' condition' + (a.condition_count !== 1 ? 's' : '') + ', peak ' + a.max_severity
+    ).join('. ') + '.'
+
+    const top = classActivation[0]
+    findings.push({
+      finding_id: 'sw_intel_class_activation',
+      observed,
+      matters: 'Dominant class: ' + top.class_name + '. ' + (CLASS_QUESTION[top.class_id] || '') +
+        (classActivation.length >= 4
+          ? ' With ' + classActivation.length + ' of 5 classes active, structural stress spans nearly all measurable dimensions.'
+          : classActivation.length >= 2
+            ? ' The distribution across ' + classActivation.length + ' classes reveals the primary structural stress axes.'
+            : ''),
+    })
+
+    // Finding 2: Combined risk profile
+    if (dominant.risk_label) {
+      findings.push({
+        finding_id: 'sw_intel_combined_profile',
+        observed: 'Combined behavioral class activation: ' + dominant.class_key + '. ' +
+          'Risk profile: ' + dominant.risk_label + '.',
+        matters: classActivation.length >= 3
+          ? 'This combination means structural conditions reinforce each other across dimensions. Intervention in one dimension encounters resistance from the others. The structural tension is self-reinforcing.'
+          : 'Behavioral class pattern identifies the primary structural stress axis.',
+      })
+    }
+  }
+
+  // Finding 3: Absence analysis
+  const summary = (absence || {}).coverage_summary || {}
+  const unmeasured = (absence || {}).unmeasured_capabilities || []
+  if (summary.total_condition_types) {
+    const active = summary.active_count || 0
+    const total = summary.total_condition_types || 1
+    const notTriggered = summary.not_activated_count || 0
+
+    findings.push({
+      finding_id: 'sw_intel_absence',
+      observed: active + ' of ' + total + ' condition types activated (' + Math.round((active / total) * 100) + '% detection rate). ' +
+        (summary.suppressed_count || 0) + ' suppressed, ' +
+        notTriggered + ' evaluated but not triggered, ' +
+        (summary.unmeasured_count || 0) + ' not yet measurable.' +
+        (notTriggered > 0 ? ' Conditions not triggered represent positive structural evidence — the program does not exhibit those patterns.' : ''),
+      matters: 'Absence analysis is structural intelligence. What the system can detect but did not find is positive evidence of health in those dimensions.' +
+        (unmeasured.length > 0 ? ' Unmeasured capabilities require temporal evidence (multiple analysis runs over time) that is not yet available for this specimen.' : ''),
+      operational_implication: unmeasured.length > 0
+        ? 'Detection gaps: ' + unmeasured.map(u => (u.capability || '').replace(/_/g, ' ').toLowerCase()).join(', ') + '.'
+        : null,
+    })
+  }
+
+  return {
+    chapter_id: 'sw_intelligence',
+    chapter_label: 'Software Intelligence Assessment',
+    sequence: 5,
+    findings,
+    evidence_objects: ['tension_map', 'absence_profile'],
+  }
+}
+
+
+// --- Chapter 6: Execution Risk Landscape ---
+
+function synthesizeRiskLandscape(exposure, tension, ceiling, ctx) {
   const consequences = exposure.consequence_exposure || []
+  const centers = tension.convergence_centers || []
+  const drivers = ceiling.ceiling_drivers || []
+  const findings = []
+
+  // Localized risks
+  const localized = consequences.filter(c => c.scope === 'LOCAL' || c.scope === 'REGIONAL')
+  if (localized.length > 0) {
+    const parts = localized.map(c => {
+      let text = labelConsequence(c.consequence_type) + ' (' + c.severity + ', ' + c.scope + ')'
+      if (c.locus) text += ' at ' + c.locus
+      return text
+    })
+    findings.push({
+      finding_id: 'risk_localized',
+      observed: 'Localized and regional risk: ' + parts.join('; ') + '.',
+      matters: 'Localized risks are contained to specific structural regions. Targeted intervention is feasible — the blast radius of remediation is bounded.',
+    })
+  }
+
+  // Systemic risks
+  const systemic = consequences.filter(c => c.scope === 'SYSTEMIC')
+  if (systemic.length > 0) {
+    const parts = systemic.map(c => {
+      let text = labelConsequence(c.consequence_type) + ' (' + c.severity + ')'
+      if (c.locus) text += ' at ' + c.locus
+      return text
+    })
+    findings.push({
+      finding_id: 'risk_systemic',
+      observed: 'Systemic risk: ' + parts.join('; ') + '.',
+      matters: 'Systemic risk affects the entire program. These structural vulnerabilities cannot be addressed through localized fixes — they require architectural intervention that addresses the underlying topology.',
+    })
+  }
+
+  // Emergent risk — reinforcement between convergence centers
+  if (centers.length >= 2) {
+    const centerDescs = centers.map(c => (c.domains || []).map(d => domainName(d, ctx)).join(' and '))
+    findings.push({
+      finding_id: 'risk_emergent',
+      observed: 'Reinforcement between convergence centers: ' + centerDescs.join(' and ') +
+        ' are connected through structural propagation paths. Pressure originating in one center propagates to the other, which is already under separate structural stress. The two centers are not independent — they form a coupled risk pair.',
+      matters: 'When convergence centers are structurally connected, conditions in one region amplify conditions in the other. This creates emergent risk that is greater than the sum of the individual convergence patterns.',
+    })
+  }
+
+  if (findings.length === 0) {
+    findings.push({
+      finding_id: 'risk_minimal',
+      observed: 'No significant structural risk concentration detected.',
+      matters: 'Positive structural evidence — operational risk is distributed rather than concentrated.',
+    })
+  }
+
+  return {
+    chapter_id: 'risk_landscape',
+    chapter_label: 'Execution Risk Landscape',
+    sequence: 6,
+    findings,
+    evidence_objects: ['exposure_assessment', 'tension_map', 'operational_ceiling'],
+  }
+}
+
+
+// --- Chapter 7: Operational Ceiling ---
+
+function synthesizeOperationalCeiling(ceiling, constraints, ctx) {
+  const ps = ceiling.posture_statement || {}
+  const cf = ceiling.ceiling_factors || {}
+  const drivers = ceiling.ceiling_drivers || []
+  const cp = ceiling.ceiling_properties || {}
+  const blockers = ceiling.advancement_blockers || []
+  const totalConstraints = constraints.total_count || 0
+  const byType = constraints.by_type || {}
+  const findings = []
+
+  // Ceiling assessment with locus names
+  let observed = 'Operational ceiling: ' + (ps.ceiling_exists ? 'PRESENT' : 'ABSENT') +
+    '. Qualification: ' + (ps.qualification_class || 'undetermined') +
+    '. ' + (cf.consequence_count || 0) + ' consequences (' + (cf.systemic_count || 0) + ' systemic' +
+    (cf.combination_patterns > 0 ? ', ' + cf.combination_patterns + ' combination patterns' : '') + ').' +
+    (cf.critical_convergence ? ' Critical convergence detected.' : '')
+
+  if (drivers.length > 0) {
+    observed += ' Ceiling drivers: ' + drivers.map(d => {
+      let text = labelConsequence(d.consequence_type) + ' (' + d.severity + ', ' + d.scope + ')'
+      if (d.locus) text += ' at ' + d.locus
+      return text
+    }).join('; ') + '.'
+  }
+
+  findings.push({
+    finding_id: 'ceiling_assessment',
+    observed,
+    matters: ps.ceiling_exists
+      ? (cf.critical_convergence
+        ? 'Structurally reinforced ceiling — multiple consequence types converge at critical severity. Cannot be resolved through isolated intervention; requires coordinated structural remediation across the convergence center.'
+        : 'Addressable ceiling — no critical convergence. Targeted intervention at dominant drivers can lift the ceiling incrementally.')
+      : 'No formal operational ceiling constrains current structural capacity.',
+    operational_implication: [
+      cp.architecture_sensitive ? 'Architecture-sensitive: remediation requires architectural change, not process optimization.' : null,
+      cp.staffing_sensitive ? 'Staffing-sensitive: delivery patterns contribute to constraint severity.' : null,
+    ].filter(Boolean).join(' ') || null,
+  })
+
+  // Constraint breakdown
+  if (totalConstraints > 0) {
+    const activeTypes = Object.entries(byType).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
+    findings.push({
+      finding_id: 'ceiling_constraints',
+      observed: totalConstraints + ' structural constraints across ' + activeTypes.length +
+        (activeTypes.length === 1 ? ' category' : ' categories') + ': ' +
+        activeTypes.map(([k, v]) => k.replace(/_/g, ' ').toLowerCase() + ' (' + v + ')').join(', ') + '.',
+      matters: 'Structural constraints are the mechanisms that enforce the operational ceiling — the specific conditions that limit what can be achieved without architectural intervention.',
+    })
+  }
+
+  // Advancement blockers
+  if (blockers.length > 0) {
+    findings.push({
+      finding_id: 'ceiling_blockers',
+      observed: blockers.length + ' advancement blocker' + (blockers.length !== 1 ? 's' : '') +
+        ' require resolution before qualification advancement.' +
+        (blockers.length <= 5 ? ' ' + blockers.map(b => (b.description || b.blocker_id || 'unspecified')).join('; ') + '.' : ''),
+      matters: 'Advancement blockers are specific structural or governance conditions that must be addressed before the program can qualify for the next operational state.',
+    })
+  }
+
+  return {
+    chapter_id: 'operational_ceiling',
+    chapter_label: 'Operational Ceiling',
+    sequence: 7,
+    findings,
+    evidence_objects: ['operational_ceiling', 'constraint_inventory'],
+  }
+}
+
+
+// --- Chapter 8: What Traditional Analysis Cannot Discover ---
+
+function synthesizeDetectionBoundary(detection) {
   const frontier = detection.measurement_frontier || []
   const novelty = detection.detection_novelty || {}
   const findings = []
 
-  if (consequences.length > 0) {
-    const byScope = {}
-    for (const c of consequences) {
-      const scope = c.scope || 'LOCAL'
-      if (!byScope[scope]) byScope[scope] = []
-      byScope[scope].push(c)
-    }
-
-    const scopeParts = []
-    if (byScope.SYSTEMIC) scopeParts.push(byScope.SYSTEMIC.length + ' systemic (' + byScope.SYSTEMIC.map(c => labelConsequence(c.consequence_type)).join(', ') + ')')
-    if (byScope.REGIONAL) scopeParts.push(byScope.REGIONAL.length + ' regional')
-    if (byScope.LOCAL) scopeParts.push(byScope.LOCAL.length + ' localized')
-
-    const maxSev = consequences.reduce((max, c) =>
-      SEVERITY_RANK[c.severity] > SEVERITY_RANK[max] ? c.severity : max, 'MODERATE')
-
+  // Per-condition detection boundary
+  for (const det of frontier) {
     findings.push({
-      finding_id: 'synthesis_exposure_profile',
-      observed: consequences.length + ' structural exposure consequences at up to ' + maxSev +
-        ' severity: ' + scopeParts.join(', ') + '.',
-      matters: exposure.has_systemic_exposure
-        ? 'Systemic exposure means structural vulnerabilities affect the entire system — remediation requires architectural intervention, not localized fixes.'
-        : 'Exposure is contained to specific regions — targeted intervention is feasible.',
-      operational_implication: frontier.length > 0
-        ? frontier.length + ' of these exposures were detected through structural analysis that traditional tools cannot perform.'
+      finding_id: 'detection_' + det.condition_type.toLowerCase(),
+      observed: condLabel(det.condition_type) + ': ' + (det.measurement_capability || 'Structural detection capability.'),
+      matters: det.measurement_gap || 'Traditional tools cannot detect this structural condition.',
+      operational_implication: det.prior_art_measurement
+        ? 'Traditional approach: ' + det.prior_art_measurement + '. Program Intelligence detects the structural cause, not the symptom.'
         : null,
-    })
-  } else {
-    findings.push({
-      finding_id: 'synthesis_exposure_absent',
-      observed: 'No structural exposure consequences detected.',
-      matters: 'Absence of exposure is positive structural evidence.',
-      operational_implication: null,
     })
   }
 
-  if (frontier.length > 0) {
-    const classes = {}
-    for (const d of frontier) classes[d.measurement_class] = (classes[d.measurement_class] || 0) + 1
-
+  // Summary
+  if (novelty.active_count || novelty.total_detection_types) {
     findings.push({
-      finding_id: 'synthesis_detection_novelty',
+      finding_id: 'detection_summary',
       observed: (novelty.active_count || 0) + ' of ' + (novelty.total_detection_types || 0) +
-        ' detection capabilities triggered. Classes: ' +
-        Object.entries(classes).map(([c, n]) => c.replace(/_/g, ' ').toLowerCase() + ' (' + n + ')').join(', ') + '.',
-      matters: 'Each triggered detection reveals a structural condition invisible to traditional engineering tools.',
-      operational_implication: (novelty.available_count || 0) > 0
-        ? novelty.available_count + ' detection capabilities available but not triggered — structural health in those dimensions.'
-        : null,
-    })
-  }
-
-  return { findings, evidence_objects: ['exposure_assessment', 'detection_boundary'] }
-}
-
-function synthesizeTrajectory(trajectory) {
-  const worsening = trajectory.worsening || []
-  const summary = trajectory.summary || {}
-  const unmeasured = trajectory.unmeasured || []
-  const findings = []
-
-  if (worsening.length > 0) {
-    const combos = worsening.filter(w => w.source_type === 'combination')
-    const conds = worsening.filter(w => w.source_type === 'condition')
-    const maxSev = worsening.reduce((max, w) =>
-      SEVERITY_RANK[w.severity] > SEVERITY_RANK[max] ? w.severity : max, 'MODERATE')
-    const reasons = [...new Set(worsening.map(w => w.reason))]
-    const comboLabels = [...new Set(combos.map(c => labelConsequence(c.pattern)))]
-
-    findings.push({
-      finding_id: 'synthesis_trajectory_pattern',
-      observed: worsening.length + ' worsening vector' + (worsening.length !== 1 ? 's' : '') +
-        ' at up to ' + maxSev + ' severity' +
-        (combos.length > 0
-          ? ' — ' + combos.length + ' from combination patterns (' +
-            comboLabels.join(', ') +
-            '), ' + conds.length + ' from individual conditions'
-          : '') + '.',
-      matters: reasons[0] + (reasons.length > 1 ? ' Additionally: ' + reasons.slice(1).join('. ') : ''),
-      operational_implication: 'Dominant trajectory: ' + (summary.dominant_trajectory || 'INSUFFICIENT_DATA') +
-        '. Without intervention, these vectors compound over successive operational cycles.' +
-        (unmeasured.length > 0
-          ? ' ' + unmeasured.length + ' dimensions not yet measurable (require temporal evidence).'
+        ' detection capabilities triggered in this specimen.' +
+        ((novelty.available_count || 0) > 0
+          ? ' ' + novelty.available_count + ' detection capabilities available but not triggered — structural health in those dimensions.'
           : ''),
-    })
-  } else {
-    findings.push({
-      finding_id: 'synthesis_trajectory_stable',
-      observed: 'No worsening trajectories. ' + (summary.stable_count || 0) + ' stable, ' +
-        (summary.unmeasured_count || 0) + ' unmeasured dimensions.',
-      matters: summary.dominant_trajectory === 'INSUFFICIENT_DATA'
-        ? 'Trajectory projection requires run-over-run evidence not yet available for this specimen.'
-        : 'Stable trajectory — current structural conditions are not self-reinforcing.',
-      operational_implication: unmeasured.length > 0
-        ? 'Unmeasured: ' + unmeasured.map(u => u.dimension.replace(/_/g, ' ').toLowerCase()).join(', ') + '.'
-        : null,
+      matters: 'Each triggered detection reveals a structural condition that is invisible to traditional engineering tools — code review, complexity analysis, performance testing, and architectural diagrams each examine one dimension at a time. Program Intelligence combines these dimensions to detect convergence patterns that no single-dimension analysis can reveal.',
     })
   }
 
-  return { findings, evidence_objects: ['trajectory_assessment', 'structural_posture'] }
+  return {
+    chapter_id: 'detection_boundary',
+    chapter_label: 'What Traditional Analysis Cannot Discover',
+    sequence: 8,
+    findings,
+    evidence_objects: ['detection_boundary'],
+  }
 }
 
-function synthesizeConstraints(constraints, ceiling) {
-  const totalCount = constraints.total_count || 0
-  const byType = constraints.by_type || {}
-  const cp = ceiling.ceiling_properties || {}
+
+// --- Chapter 9: Executive Verdict ---
+
+function synthesizeVerdict(posture, tension, ceiling, dominant, ctx) {
+  const q = posture.qualification || {}
+  const centers = tension.convergence_centers || []
   const cs = ceiling.posture_statement || {}
+  const clientName = ctx.client_name || 'This program'
   const findings = []
 
-  if (totalCount > 0) {
-    const activeTypes = Object.entries(byType).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
-    const all = [
-      ...(constraints.structural_constraints || []),
-      ...(constraints.binding_constraints || []),
-      ...(constraints.governance_constraints || []),
-      ...(constraints.coupling_constraints || []),
-      ...(constraints.blast_radius_constraints || []),
-    ]
-    const maxSev = all.reduce((max, c) =>
-      SEVERITY_RANK[c.severity] > SEVERITY_RANK[max] ? c.severity : max, 'MODERATE')
+  let verdict = clientName + ' is a qualified, functional software program'
+  if (q.s_level || q.q_class) {
+    verdict += ' at ' + (q.s_level || '') + (q.q_class ? ' ' + q.q_class : '') +
+      (q.q_label ? ' (' + q.q_label + ')' : '')
+  }
+  verdict += '. The structural intelligence is evidence-bound, deterministically reproducible, and architecturally grounded.'
 
-    findings.push({
-      finding_id: 'synthesis_constraint_profile',
-      observed: totalCount + ' operational constraints across ' + activeTypes.length +
-        (activeTypes.length === 1 ? ' category' : ' categories') + ' at up to ' + maxSev + ' severity. ' +
-        activeTypes.map(([k, v]) => (CONSTRAINT_LABEL[k] || k.toLowerCase()) + ': ' + v).join(', ') + '.',
-      matters: cs.ceiling_exists
-        ? 'These constraints enforce the operational ceiling — the structural mechanisms limiting what can be achieved without architectural intervention.'
-        : 'Constraints present but insufficient to produce a formal operational ceiling.',
-      operational_implication: [
-        cp.architecture_sensitive ? 'Architecture-sensitive: remediation requires architectural change, not process optimization.' : null,
-        cp.staffing_sensitive ? 'Staffing-sensitive: delivery patterns contribute to constraint severity.' : null,
-      ].filter(Boolean).join(' ') || null,
-    })
-  } else {
-    findings.push({
-      finding_id: 'synthesis_constraint_absent',
-      observed: 'No structural constraints detected.',
-      matters: 'Positive structural evidence — no throughput ceilings, fragility hotspots, or coupling rigidity.',
-      operational_implication: constraints.enrichment_available === false
-        ? 'Structural enrichment data not available — constraint detection requires code graph enrichment.'
-        : null,
-    })
+  if (centers.length > 0) {
+    verdict += ' Beneath this qualified surface, Program Intelligence discovered ' + centers.length +
+      ' structural gravity center' + (centers.length !== 1 ? 's' : '') + ' that define the operational ceiling.'
+
+    for (const center of centers) {
+      const domains = (center.domains || []).map(d => domainName(d, ctx)).join(' and ')
+      const types = (center.contributing_condition_types || []).map(t => condLabel(t))
+      verdict += ' ' + (domains || 'Unknown region') + ': ' + center.contributing_count +
+        ' conditions converging (' + types.join(', ') + ') at ' + center.severity + '.'
+    }
   }
 
-  return { findings, evidence_objects: ['constraint_inventory', 'operational_ceiling'] }
-}
-
-function synthesizeDecisions(decision, trajectory) {
-  const leverage = decision.leverage_points || []
-  const drivers = decision.decision_drivers || []
-  const urgency = decision.decision_urgency || {}
-  const worsening = trajectory.worsening || []
-  const findings = []
-
-  if (leverage.length > 0) {
-    const worseningTypes = new Set(worsening.map(w => w.condition_type || w.pattern))
-    const aligned = leverage.filter(l => worseningTypes.has(l.condition_type))
-    const totalInt = leverage.reduce((sum, l) => sum + (l.intervention_count || 0), 0)
-    const maxSev = leverage.reduce((max, l) =>
-      SEVERITY_RANK[l.severity] > SEVERITY_RANK[max] ? l.severity : max, 'MODERATE')
-
-    findings.push({
-      finding_id: 'synthesis_decision_landscape',
-      observed: leverage.length + ' structural leverage point' + (leverage.length !== 1 ? 's' : '') +
-        ' with ' + totalInt + ' guided interventions at up to ' + maxSev + ' severity.' +
-        (aligned.length > 0
-          ? ' ' + aligned.length + ' align with worsening trajectories — intervention addresses both current severity and trajectory.'
-          : ''),
-      matters: urgency.has_critical || urgency.has_systemic
-        ? 'Decision urgency elevated: ' +
-          [urgency.has_critical ? 'critical conditions present' : null,
-           urgency.has_systemic ? 'systemic consequences active' : null,
-           urgency.convergence_count > 0 ? urgency.convergence_count + ' convergence zone(s)' : null]
-            .filter(Boolean).join(', ') + '.'
-        : 'Leverage points represent locations where intervention produces maximum structural impact.',
-      operational_implication: drivers.length > 0
-        ? drivers.length + ' decision drivers at ' +
-          [...new Set(drivers.map(d => d.scope))].join('/') + ' scope.'
-        : null,
-    })
-  } else {
-    findings.push({
-      finding_id: 'synthesis_decision_absent',
-      observed: 'No structural leverage points with guided interventions identified.',
-      matters: 'Guided interventions require conditions with defined intervention protocols.',
-      operational_implication: null,
-    })
+  if (cs.ceiling_exists) {
+    verdict += ' ' + clientName + ' works — but its capacity to evolve, absorb change, and deliver at increasing velocity has a structural limit.' +
+      ' The teams are likely already experiencing this limit as persistent friction — merge conflicts in shared layers, broader-than-expected blast radii from simple changes, coordination overhead that seems disproportionate to the work being done.'
   }
 
-  return { findings, evidence_objects: ['decision_surface', 'trajectory_assessment'] }
-}
-
-function synthesizeAbsence(absence, detection) {
-  const summary = absence.coverage_summary || {}
-  const unmeasured = absence.unmeasured_capabilities || []
-  const untriggered = detection.available_not_triggered || []
-  const novelty = detection.detection_novelty || {}
-  const findings = []
-
-  const active = summary.active_count || 0
-  const total = summary.total_condition_types || 1
-  const ratio = Math.round((active / total) * 100)
+  verdict += ' Program Intelligence makes this friction visible, measurable, and addressable.'
 
   findings.push({
-    finding_id: 'synthesis_absence_intelligence',
-    observed: active + ' of ' + (summary.total_condition_types || 0) +
-      ' condition types activated (' + ratio + '% detection rate). ' +
-      (summary.suppressed_count || 0) + ' suppressed, ' +
-      (summary.not_activated_count || 0) + ' evaluated but not triggered, ' +
-      (summary.unmeasured_count || 0) + ' not yet measurable.',
-    matters: 'Absence analysis is structural intelligence — what the system can detect but did not find is positive evidence.' +
-      (untriggered.length > 0
-        ? ' ' + untriggered.length + ' detection capabilities available but not triggered — healthy structural dimensions.'
-        : ''),
-    operational_implication: unmeasured.length > 0
-      ? 'Detection gaps: ' + unmeasured.map(u => u.capability.replace(/_/g, ' ').toLowerCase()).join(', ') + '.'
+    finding_id: 'verdict',
+    observed: verdict,
+    matters: 'These are not quality defects. They are structural execution constraints that persist regardless of team composition, process maturity, or sprint planning. They create throughput ceilings that cannot be raised by adding capacity.',
+    operational_implication: cs.ceiling_exists
+      ? 'Certain kinds of change — the kinds that touch shared layers or cross module boundaries — are structurally more expensive than they appear. This is a topological constraint, not an organizational one.'
+      : null,
+    leadership_implication: dominant.class_count >= 3
+      ? 'The structural intelligence produced by this analysis would be extremely difficult — and in some cases impossible — to discover through traditional code review, architectural assessment, or quality audit.'
       : null,
   })
 
-  return { findings, evidence_objects: ['absence_profile', 'detection_boundary'] }
-}
-
-function synthesizeCeiling(ceiling, constraints) {
-  const ps = ceiling.posture_statement || {}
-  const cf = ceiling.ceiling_factors || {}
-  const drivers = ceiling.ceiling_drivers || []
-  const blockers = ceiling.advancement_blockers || []
-  const findings = []
-
-  findings.push({
-    finding_id: 'synthesis_ceiling_assessment',
-    observed: 'Operational ceiling: ' + (ps.ceiling_exists ? 'PRESENT' : 'ABSENT') +
-      '. Qualification: ' + (ps.qualification_class || 'undetermined') +
-      '. ' + (cf.consequence_count || 0) + ' consequences (' + (cf.systemic_count || 0) + ' systemic' +
-      (cf.combination_patterns > 0 ? ', ' + cf.combination_patterns + ' combination patterns' : '') + ').' +
-      (cf.critical_convergence ? ' Critical convergence detected.' : ''),
-    matters: ps.ceiling_exists
-      ? (cf.critical_convergence
-        ? 'Structurally reinforced ceiling — multiple consequence types converge at critical severity. Cannot be resolved through isolated intervention; requires coordinated structural remediation.'
-        : 'Addressable ceiling — no critical convergence. Targeted intervention at dominant drivers can lift the ceiling incrementally.')
-      : 'No formal operational ceiling — structural conditions do not currently constrain operational capacity.',
-    operational_implication: drivers.length > 0
-      ? 'Ceiling drivers: ' + deduplicateDriverLabels(drivers.slice(0, 5)) + '.' +
-        (blockers.length > 0 ? ' ' + blockers.length + ' advancement blocker(s) require resolution.' : '')
-      : null,
-  })
-
-  return { findings, evidence_objects: ['operational_ceiling', 'constraint_inventory'] }
+  return {
+    chapter_id: 'executive_verdict',
+    chapter_label: 'Executive Verdict',
+    sequence: 9,
+    findings,
+    evidence_objects: ['structural_posture', 'tension_map', 'operational_ceiling'],
+  }
 }
 
 
 // --- Helpers ---
 
+function domainName(id, ctx) {
+  if (!id) return null
+  const labels = (ctx && ctx.domainLabels) || {}
+  return labels[id] || id.replace(/^DOMAIN-/, 'Domain ')
+}
+
+function condLabel(type) {
+  return CONDITION_LABEL[type] || (type || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function commaNum(n) {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
 function labelConsequence(type) {
   return CONSEQUENCE_LABEL[type] ||
     (type || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-}
-
-function deduplicateDriverLabels(drivers) {
-  const seen = new Set()
-  const parts = []
-  for (const d of drivers) {
-    const key = d.consequence_type + ':' + d.severity + ':' + d.scope
-    if (seen.has(key)) continue
-    seen.add(key)
-    parts.push(labelConsequence(d.consequence_type) + ' (' + d.severity + ', ' + d.scope + ')')
-  }
-  return parts.join('; ')
 }
 
 module.exports = { synthesize }
