@@ -8,7 +8,7 @@
 
 ### What category are we entering?
 
-**Structural Execution Intelligence.**
+**Structural Intelligence.**
 
 Not project management. Not code analysis. Not AI insights. Not devops tooling.
 
@@ -22,7 +22,7 @@ There is a gap between planning representation and execution reality. Every orga
 - Technical debt that cannot be located, sized, or attributed
 - Execution bottlenecks invisible to every existing tool
 
-**Signäl creates the category of Structural Execution Intelligence** — governed, evidence-derived structural truth about program execution that no existing tool, dashboard, or consultant can reveal.
+**Signäl creates the category of Structural Intelligence** — governed, evidence-derived structural truth about program execution that no existing tool, dashboard, or consultant can reveal.
 
 ### Why not "Program Intelligence"?
 
@@ -30,9 +30,9 @@ Program Intelligence is the broader discipline. It's the right category name for
 
 **"Program Intelligence" is abstract.** A CTO hears it and thinks: "So... another PMO dashboard?"
 
-**"Structural Execution Intelligence" is concrete.** A CTO hears it and thinks: "What do you mean by structural? Show me."
+**"Structural Intelligence" is concrete.** A CTO hears it and thinks: "What do you mean by structural? Show me."
 
-The conversation starter is structural execution intelligence. The category destination is Program Intelligence. The first product leads with the concrete, not the abstract.
+The conversation starter is Structural Intelligence. The category destination is Program Intelligence. The first product leads with the concrete, not the abstract.
 
 ---
 

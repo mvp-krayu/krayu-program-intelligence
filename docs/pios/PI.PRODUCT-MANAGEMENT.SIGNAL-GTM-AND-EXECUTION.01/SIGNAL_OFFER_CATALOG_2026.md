@@ -6,7 +6,7 @@
 > - SA-1 (without Software Intelligence) eliminated — SW-INTEL always included
 > - 4 cognitive modes (not 5) — Investigation Protocol within OPERATOR
 > - "Structural Verdict" replaces "EIR" throughout
-> - Category: Software Intelligence (wedge) → Structural Execution Intelligence (product)
+> - Category: Software Intelligence (wedge) → Structural Intelligence (product category)
 
 ---
 
