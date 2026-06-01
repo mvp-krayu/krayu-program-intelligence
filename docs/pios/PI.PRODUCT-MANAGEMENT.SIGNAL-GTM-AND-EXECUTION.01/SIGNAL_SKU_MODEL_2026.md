@@ -38,15 +38,24 @@ Customer → buys → SKU
 ```
 COMMERCIAL WEDGE          Software Intelligence
                           "What your code structure means for execution."
+                          First domain module. First commercial exploit.
+                          NOT the doctrine, NOT the platform, NOT the category.
 
-PRODUCT CATEGORY          Structural Execution Intelligence
+PRODUCT CATEGORY          Structural Intelligence
                           "Governed structural truth about program execution."
 
 PLATFORM CATEGORY         Program Intelligence
                           "The discipline of governed structural execution assessment."
 ```
 
-Source: CATEGORY_POSITIONING_DECISION.md (LOCKED)
+Source: CATEGORY_NAME_FINAL_ASSESSMENT.md (LOCKED)
+
+**Expansion invariant:** Future domain modules fit the same structure:
+- Software Intelligence → Structural Intelligence about software execution
+- M&A Intelligence → Structural Intelligence about acquisition targets
+- Portfolio Intelligence → Structural Intelligence about portfolio composition
+- PM Intelligence → Structural Intelligence about program delivery
+- Organizational Intelligence → Structural Intelligence about organizational execution
 
 ---
 
