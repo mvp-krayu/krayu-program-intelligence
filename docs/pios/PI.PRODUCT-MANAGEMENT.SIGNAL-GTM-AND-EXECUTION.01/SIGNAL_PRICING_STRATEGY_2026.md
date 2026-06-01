@@ -91,24 +91,29 @@ A "program" is defined as: a bounded execution scope with its own structural top
 | **Tiered fixed** | 2-3 fixed prices based on rough program size (S/M/L) | Simple with some fairness. "Small program, medium program, large program." | Where are the boundaries? A "medium" program that's structurally complex may be underpriced. |
 | **Value-based** | Price based on the buyer's context (PE deal value, program budget, modernization budget) | Maximizes revenue per engagement. | Requires deep discovery before quoting. Feels consultative. Hard to publish. |
 
-### Decision: Tiered Fixed with Published Anchors
+### Decision: Single Fixed Fee — MARKET VALIDATION REQUIRED for Tiering
 
-**Two published tiers with a large-program custom quote:**
+**Launch with one price. One offer. One conversation.**
 
-| Tier | Scope Indicator | Pricing Model |
-|------|----------------|---------------|
-| **Standard** | Programs up to ~500 files, ~50 dependency nodes | Fixed published fee |
-| **Complex** | Programs with 500-5,000 files, 50-500 dependency nodes | Fixed published fee (premium over Standard) |
-| **Enterprise-scale** | Programs >5,000 files or multi-repository topologies | Custom quote (scoping call required) |
+The first 10 customers will buy "Structural Assessment" — not "Structural Assessment Standard" or "Structural Assessment Complex." The customer does not know their dependency node count, topology size, or structural complexity. They know: "We have a platform."
 
-**Why tiered fixed wins:**
+**Launch model:**
 
-1. Publishable. A website or sales sheet can show pricing without requiring a call. This reduces friction for the first conversation.
-2. Fair. A small Node.js API should not cost the same as a 10,000-file enterprise monolith.
-3. Simple. Two published tiers + "call us for large programs" is immediately understandable.
-4. The structural complexity of analysis IS correlated with program size, even if imperfectly. Structural topology reconstruction, signal synthesis, and consequence compilation scale with evidence volume.
+| Tier | Pricing Model |
+|------|---------------|
+| **Structural Assessment** | Fixed published fee — one price, one offer |
+| **Enterprise-scale** (>5,000 files or multi-repository) | Custom quote (scoping call required) |
 
-**Scoping mechanism:** The evidence intake (P0-3) determines which tier applies. Not the customer's self-assessment. Signäl determines structural scope from the evidence, not from the buyer's description.
+**Why single price for launch:**
+
+1. Simplest possible first conversation. No tier selection. No scoping questions. "This is what it costs."
+2. The customer cannot self-assess structural complexity. Introducing tiers before the market understands the product creates confusion, not fairness.
+3. Early-stage pricing should optimize for deal velocity, not price discrimination.
+4. Market feedback from the first 10 engagements will reveal whether tiering is needed and where the natural boundaries are.
+
+**Future tiering (MARKET VALIDATION REQUIRED):** If early engagements reveal that small programs are overpriced or large programs are underpriced, introduce Standard/Complex tiers based on observed structural complexity patterns. The tier boundaries should come from operational data, not from assumptions about file counts.
+
+**Scoping mechanism:** For enterprise-scale programs (obvious from the evidence intake — multi-repository, >5,000 files), a custom quote is appropriate. For everything else: one price.
 
 ---
 
@@ -236,7 +241,7 @@ These are included, never unbundled:
 
 | Capability | Why It's Included |
 |-----------|------------------|
-| **Software Intelligence** | SW-INTEL is the product, not an add-on. SA-1 without SW-INTEL was eliminated. Every engagement includes full Software Intelligence activation. Pricing SW-INTEL separately would re-create the SA-1 problem. |
+| **Software Intelligence** | SW-INTEL is the default intelligence activation included in every assessment. SA-1 without SW-INTEL was eliminated. Every engagement includes full Software Intelligence activation. Pricing SW-INTEL separately would re-create the SA-1 problem. |
 | **Advisory session** | The advisory walkthrough is part of the engagement (Strategic Decision 2). Never charged separately for SA/SA-DD. |
 | **Structural Verdict** | The 9-chapter Verdict is a core SA deliverable. Not an add-on report. |
 | **Evidence Record** | The governed evidence snapshot is included in every engagement. Not a premium artifact. |
