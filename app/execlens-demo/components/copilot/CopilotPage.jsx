@@ -15,6 +15,8 @@ export default function CopilotPage({ client, runId }) {
   const [contextOpen, setContextOpen] = useState(false)
   const abortRef = useRef(null)
 
+  const [assembling, setAssembling] = useState(false)
+
   const handleSubmit = useCallback(async ({ message, audience }) => {
     setMessages(prev => [...prev, {
       role: 'user',
@@ -23,6 +25,7 @@ export default function CopilotPage({ client, runId }) {
     }])
 
     setStreaming(true)
+    setAssembling(true)
     setStreamingContent('')
     setStreamingMeta(null)
 
@@ -83,6 +86,7 @@ export default function CopilotPage({ client, runId }) {
               setContextLevel(event.contextLevel ?? contextLevel)
               if (event.availableDomains) setAvailableDomains(event.availableDomains)
             } else if (event.type === 'delta') {
+              setAssembling(false)
               fullContent += event.text
               setStreamingContent(fullContent)
             } else if (event.type === 'done') {
@@ -113,10 +117,15 @@ export default function CopilotPage({ client, runId }) {
       }])
     } finally {
       setStreaming(false)
+      setAssembling(false)
       setStreamingContent('')
       setStreamingMeta(null)
     }
   }, [messages, client, runId, contextLevel])
+
+  const handleExampleClick = useCallback(({ text, audience }) => {
+    handleSubmit({ message: text, audience: audience || undefined })
+  }, [handleSubmit])
 
   return (
     <div className="copilot-root">
@@ -132,6 +141,8 @@ export default function CopilotPage({ client, runId }) {
             messages={messages}
             streamingContent={streamingContent}
             streamingMeta={streamingMeta}
+            assembling={assembling}
+            onExampleClick={handleExampleClick}
           />
         </div>
 

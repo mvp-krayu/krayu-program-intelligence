@@ -12143,15 +12143,46 @@ a.topo-chip:hover {
   gap: 6px;
 }
 
-.copilot-empty-examples span {
+.copilot-example-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  padding: 10px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.copilot-example-btn:hover {
+  border-color: var(--accent-dim);
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.copilot-example-text {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--text-dim);
-  padding: 8px 14px;
-  border: 1px solid var(--border-dim);
-  border-radius: 2px;
-  cursor: default;
-  text-align: left;
+}
+
+.copilot-example-btn:hover .copilot-example-text {
+  color: var(--text);
+}
+
+.copilot-example-audience {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.copilot-example-btn:hover .copilot-example-audience {
+  color: var(--accent);
 }
 
 /* --- Messages --- */
@@ -12187,8 +12218,10 @@ a.topo-chip:hover {
   font-size: 15px;
   color: var(--text);
   line-height: 1.6;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-dim);
+  padding: 10px 16px;
+  background: var(--bg-card-deep);
+  border-left: 2px solid var(--accent-dim);
+  border-radius: 0 2px 2px 0;
   white-space: pre-wrap;
 }
 
@@ -12258,8 +12291,11 @@ a.topo-chip:hover {
 .copilot-msg-result table {
   width: 100%;
   border-collapse: collapse;
-  margin: 12px 0;
+  margin: 16px 0;
   font-size: 12px;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 .copilot-msg-result th {
@@ -12269,8 +12305,9 @@ a.topo-chip:hover {
   letter-spacing: 0.06em;
   color: var(--text-dim);
   text-align: left;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
+  background: var(--bg-card-deep);
   font-weight: 500;
 }
 
@@ -12278,9 +12315,17 @@ a.topo-chip:hover {
   font-family: var(--font-ui);
   font-size: 12px;
   color: var(--text);
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border-dim);
   vertical-align: top;
+}
+
+.copilot-msg-result tr:last-child td {
+  border-bottom: none;
+}
+
+.copilot-msg-result tr:hover td {
+  background: rgba(74, 158, 255, 0.02);
 }
 
 .copilot-msg-result code {
@@ -12367,6 +12412,35 @@ a.topo-chip:hover {
 .copilot-usage {
   font-family: var(--font-mono);
   font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --- Assembling Indicator --- */
+
+.copilot-assembling {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.copilot-assembling-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: copilot-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes copilot-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.copilot-assembling-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--text-muted);
   letter-spacing: 0.02em;
 }

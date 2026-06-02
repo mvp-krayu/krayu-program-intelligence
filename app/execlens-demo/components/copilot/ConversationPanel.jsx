@@ -2,6 +2,13 @@ import { useRef, useEffect } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+const EXAMPLES = [
+  { text: 'Explain the structural posture', audience: 'CTO / VP Engineering' },
+  { text: 'Draft a board briefing from this verdict', audience: 'Board of Directors' },
+  { text: 'Compare PI to static analysis tools', audience: '' },
+  { text: 'Which architectural runways does this verdict imply?', audience: 'Chief Architect' },
+]
+
 function ModeBadge({ mode }) {
   return (
     <span className="copilot-mode-badge" data-mode={mode}>
@@ -59,16 +66,27 @@ function SystemMessage({ content, mode, validation, usage, streaming }) {
   )
 }
 
-export default function ConversationPanel({ messages, streamingContent, streamingMeta }) {
+function AssemblingIndicator() {
+  return (
+    <div className="copilot-msg copilot-msg-system">
+      <div className="copilot-assembling">
+        <span className="copilot-assembling-dot" />
+        <span className="copilot-assembling-text">Assembling context and transforming...</span>
+      </div>
+    </div>
+  )
+}
+
+export default function ConversationPanel({ messages, streamingContent, streamingMeta, assembling, onExampleClick }) {
   const endRef = useRef(null)
 
   useEffect(() => {
     if (endRef.current) {
       endRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [messages, streamingContent])
+  }, [messages, streamingContent, assembling])
 
-  if (messages.length === 0 && !streamingContent) {
+  if (messages.length === 0 && !streamingContent && !assembling) {
     return (
       <div className="copilot-conversation copilot-empty">
         <div className="copilot-empty-state">
@@ -77,10 +95,16 @@ export default function ConversationPanel({ messages, streamingContent, streamin
             Describe what you need. Specify an audience to shape the projection.
           </p>
           <div className="copilot-empty-examples">
-            <span>Explain the structural posture</span>
-            <span>Draft a board briefing from this verdict</span>
-            <span>Compare PI to static analysis tools</span>
-            <span>Which architectural runways does this verdict imply?</span>
+            {EXAMPLES.map((ex, i) => (
+              <button
+                key={i}
+                className="copilot-example-btn"
+                onClick={() => onExampleClick && onExampleClick(ex)}
+              >
+                <span className="copilot-example-text">{ex.text}</span>
+                {ex.audience && <span className="copilot-example-audience">{ex.audience}</span>}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -103,6 +127,8 @@ export default function ConversationPanel({ messages, streamingContent, streamin
           />
         )
       })}
+
+      {assembling && !streamingContent && <AssemblingIndicator />}
 
       {streamingContent && (
         <SystemMessage
