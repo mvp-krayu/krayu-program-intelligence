@@ -1,13 +1,36 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
 const { assemble, formatContextForPrompt } = require('./PIContextAssembler');
 const { resolveMode, getModeConfig } = require('./ModeOrchestrator');
 const { validate } = require('./ProhibitionValidator');
 const { routeIntent } = require('./topic-router');
 
-const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
+const DEFAULT_MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 4096;
+
+function loadEnvLocal() {
+  if (process.env.ANTHROPIC_API_KEY) return;
+  const envPath = path.resolve(__dirname, '../../.env.local');
+  try {
+    const content = fs.readFileSync(envPath, 'utf-8');
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eqIndex = trimmed.indexOf('=');
+      if (eqIndex === -1) continue;
+      const key = trimmed.slice(0, eqIndex).trim();
+      const value = trimmed.slice(eqIndex + 1).trim();
+      if (!process.env[key]) {
+        process.env[key] = value;
+      }
+    }
+  } catch {}
+}
+
+loadEnvLocal();
 
 function createClient() {
   const apiKey = process.env.ANTHROPIC_API_KEY;
