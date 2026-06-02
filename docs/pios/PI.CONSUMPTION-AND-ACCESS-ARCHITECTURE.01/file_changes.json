@@ -1,0 +1,42 @@
+{
+  "stream_id": "PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/CONSUMPTION_AND_ACCESS_ARCHITECTURE.md",
+      "action": "CREATE",
+      "commit": "d10d851",
+      "purpose": "Full 14-section doctrine-down consumption and access architecture — three-surface model, 4 consumption maturity levels, workspace lifecycle, hosting strategy, governance boundaries"
+    },
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/CONSUMPTION_ARCHITECTURE_BASELINE.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Frozen baseline — two consumption surfaces, customer LENS model, operator Co-Pilot, three-surface architecture, consumption maturity levels, hosting maturity model, governance boundaries, SKU readiness"
+    },
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/execution_report.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/validation_log.json",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Validation log"
+    },
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/file_changes.json",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/CLOSURE.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Stream closure document"
+    }
+  ]
+}

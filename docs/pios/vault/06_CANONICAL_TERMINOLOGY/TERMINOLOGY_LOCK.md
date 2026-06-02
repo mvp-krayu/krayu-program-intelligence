@@ -1035,6 +1035,63 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
 
+### PI Co-Pilot
+
+**Definition:** The universal intelligence interaction surface for Program Intelligence. An operator cognition surface that interrogates the full PI knowledge graph (7 domains: Doctrine, Commercial, Runtime, Vault, Specimen, Verdict, Publishing) from a single surface. Progressively contextual — always useful, increasingly rich as more knowledge becomes available.
+
+**Progressive Context Model:** Level 0 (doctrine+commercial, no specimen required) → Level 1 (+specimen) → Level 2 (+verdict) → Level 3 (+publishing assets). The continuity — same surface from "What is PI?" through "Generate a Board Pack" — IS the product.
+
+**Interaction Hierarchy:** 3 tiers, 9 modes. Understand (Query/Explore/Explain), Curate (Compare/Curate/Challenge), Publish (Visualize/Package/Position).
+
+**Status:** CANONICAL — conceptual model frozen (2026-06-02). Implementation pending.
+
+**What it is NOT:** Customer-facing. A consulting platform. A qualification engine. A pipeline operator. A replacement for LENS. A replacement for Assessment Package. A generic chatbot with PI docs. A copilot in the AI assistant sense.
+
+**Source:** `docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/PI_COPILOT_CONCEPTUAL_BASELINE.md`
+
+### Consumption Artifact
+
+**Definition:** Audience-specific intelligence output produced by the PI Co-Pilot's Curate tier from governed verdict data. Replaces "audience-specific narrative" because the output includes more than text. Same verdict, different consumption.
+
+**Examples:** Investment Committee Brief, Board Summary, CTO Summary, Acquisition Risk Summary, Executive Summary, Operational Risk Summary, Transformation Summary, board pack, executive one-pager, slide deck, graphic narrative.
+
+**Status:** CANONICAL — terminology frozen (2026-06-02).
+
+**What it is NOT:** A new verdict. A modified finding. A replacement for the Assessment Package. Consumption artifacts are derivative — they transform governed intelligence into audience-adapted format without changing what is said.
+
+### Operator Cognition Surface
+
+**Definition:** An architectural category for the PI Co-Pilot. Distinguishes the Co-Pilot from a "feature" — a feature ships small and iterates; an operator cognition surface needs its role in the ecosystem defined first. The assembled operational context (progressive, pre-loaded, knowledge-graph-backed) is the moat — not retrieval.
+
+**Status:** CANONICAL — architectural concept frozen (2026-06-02).
+
+**What it is NOT:** Feature thinking. A chatbot. An AI assistant. The distinction is categorical: the progressive context continuity IS the product.
+
+### Three-Surface Architecture
+
+**Definition:** The consumption architecture nesting model. Customer ⊂ Operator ⊂ Platform. No surface may access data from a surface that does not contain it. Customer receives LENS (SKU-gated) and Assessment Package. Operator receives full LENS + PI Co-Pilot + pipeline/SQO visibility. Platform contains all intelligence production infrastructure.
+
+**Status:** CANONICAL — architecture frozen (2026-06-02).
+
+**Source:** `docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/CONSUMPTION_ARCHITECTURE_BASELINE.md`
+
+### Consumption Maturity Level
+
+**Definition:** The 4-level model describing how customers access Program Intelligence output. Each level builds on the previous. No level requires the next.
+
+- Level 0 — Export Only: No identity, operator-local, SA
+- Level 1 — Guided Access: Workspace token, single hosted instance, SA-DD
+- Level 2 — Self-Service: Named users, persistent hosted workspace, SC
+- Level 3 — Platform: Role-based identity, dedicated tenant, SE
+
+**Status:** CANONICAL — architecture frozen (2026-06-02).
+
+### PIOperationalContext
+
+**Definition:** The assembled context object that carries PI knowledge graph data at each progressive context level. Named in the PI Co-Pilot conceptual model but not yet schema-defined. Contains doctrine, commercial, runtime, vault (Level 0), plus specimen data (Level 1), plus verdict data (Level 2), plus publishing assets (Level 3).
+
+**Status:** CANONICAL (named) / PENDING (schema). The schema definition is the load-bearing design decision before Co-Pilot implementation.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

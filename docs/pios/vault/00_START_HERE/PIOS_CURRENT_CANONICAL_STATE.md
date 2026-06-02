@@ -220,6 +220,56 @@ Consumer-genericity invariant: PRE core must not change when adding a new consum
 
 See [[../08_EXECUTION_RUNTIME/COGNITION_ANATOMY]] for full anatomy hierarchy, concept classifications, and discovery lineage.
 
+## Consumption Architecture (Frozen 2026-06-02)
+
+**Authority:** PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01, PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01
+
+### Three-Surface Architecture
+
+```
+Customer ⊂ Operator ⊂ Platform
+```
+
+| Surface | Who | Purpose |
+|---------|-----|---------|
+| **Customer Consumption Surface (LENS)** | Customer (buyer, deal team, IC, board) | Experience structural reality through governed cognitive projection |
+| **Operator Interaction Surface (PI Co-Pilot)** | Operator (advisor, founder, certified partner) | Interrogate PI knowledge graph; produce consumption artifacts |
+| **Platform Surface** | System | CIP → PICR → PICP → PRE, Pipeline, SQO, Vault, Governance |
+
+Nesting rule: no surface may access data from a surface that does not contain it.
+
+### PI Co-Pilot (Frozen 2026-06-02)
+
+Universal intelligence interaction surface for Program Intelligence. Operator-only. NOT a feature — an operator cognition surface. Progressive context continuity IS the product.
+
+**Progressive Context Model:**
+- Level 0: Doctrine + Commercial + Vault + Runtime (no specimen required)
+- Level 1: + Specimen (topology, signals, findings, qualification)
+- Level 2: + Verdict (9-chapter content, posture, operational ceiling)
+- Level 3: + Publishing assets (previously generated consumption artifacts)
+
+**Interaction Hierarchy:** 3 tiers, 9 modes:
+- Understand: Query (L0+), Explore (L0+), Explain (L0+)
+- Curate: Compare (L0+), Curate (L0+ — source material changes per level, not the capability), Challenge (L1+)
+- Publish: Visualize (L2+), Package (L2+), Position (L0+)
+
+**PI Knowledge Graph:** 7 interrogable domains: Doctrine, Commercial, Runtime, Vault, Specimen, Verdict, Publishing
+
+**Constitutional invariant:** Co-Pilot never creates intelligence. Never changes findings, evidence, or qualification. Interrogates, explains, curates, and packages what exists.
+
+**Routes:** `/copilot` (Level 0), `/lens/{client}/{run}/copilot` (Level 1/2)
+
+**Implementation readiness:** SA delivery READY NOW (0 LOC). SA-DD hosting READY TO BUILD (~550 LOC). Co-Pilot Level 0 READY TO BUILD (~400 LOC, one design decision pending).
+
+### Consumption Maturity Levels
+
+| Level | Name | Identity | Hosting | SKU |
+|-------|------|----------|---------|-----|
+| 0 | Export Only | None | Operator-local | SA |
+| 1 | Guided Access | Workspace token | Single hosted instance | SA-DD |
+| 2 | Self-Service | Named users | Persistent hosted workspace | SC |
+| 3 | Platform | Role-based identity | Dedicated tenant | SE |
+
 ## Current Runtime Surfaces
 
 | Surface | Location | Purpose | Status |
