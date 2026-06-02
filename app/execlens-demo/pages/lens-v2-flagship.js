@@ -7103,6 +7103,39 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-top: 1px solid rgba(74, 158, 255, 0.08);
         }
 
+        /* ── Structural Assessment Export ── */
+        .support-block--assessment {
+          border-top: 1px solid #2a2f40;
+          padding-top: 8px;
+        }
+        .support-assessment-sub {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+          margin-top: 2px;
+          line-height: 1.4;
+        }
+        .assessment-export-trigger {
+          margin-top: 8px;
+          padding: 8px 12px;
+          background: rgba(74, 158, 255, 0.08);
+          border: 1px solid #4a9eff;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: background 0.15s ease, color 0.15s ease;
+          width: 100%;
+          text-align: center;
+        }
+        .assessment-export-trigger:hover {
+          background: rgba(74, 158, 255, 0.16);
+          color: #ccd6f6;
+        }
+
         /* ── Evidence Record Export ─── */
         .support-block--trail {
           border-top: 1px solid #2a2f40;

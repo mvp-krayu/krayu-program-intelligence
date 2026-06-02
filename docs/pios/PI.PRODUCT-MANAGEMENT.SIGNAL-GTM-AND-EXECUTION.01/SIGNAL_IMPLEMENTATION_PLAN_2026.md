@@ -19,116 +19,95 @@
 
 ## P0 — First SA Sale (Target: 2 weeks)
 
-### P0-1: Score Projection to BOARDROOM
+### ~~P0-1: Score Projection to BOARDROOM~~ — DROPPED
 
 | Field | Value |
 |-------|-------|
-| **What** | Project `readiness_summary.score` to BOARDROOM posture panel as a governed readiness metric. |
-| **Why** | Score exists in substrate (`structuralPosture.js:63`) and renders in INVESTIGATION evidence export (`InterrogationTrailBuilder.js:487`). Not projected to the executive surface. Visible gap in product screenshots. |
-| **Files** | `BoardroomProjectionCompiler.js` — add score to posture projection output. BOARDROOM rendering component — add score display to posture panel. |
-| **Effort** | 2 hours |
-| **Dependencies** | None |
-| **Owner** | Engineering |
-| **Acceptance** | Score visible in BOARDROOM posture panel. Respects disclosure tier gating. Does not appear as vanity metric — labeled as "Structural Readiness" with governance framing. |
+| **Status** | **DROPPED** |
+| **Reason** | Contradicts GTM Decision D9 (no numeric scores on BOARDROOM) and Product Language Decision D2 (governed ceiling posture with driver attribution replaces numeric score). The governed posture (PROCEED / INVESTIGATE / ESCALATE) with structural driver attribution IS the executive surface. |
+| **Dropped** | 2026-06-02 |
 
-### P0-2: Structural Verdict End-to-End Verification
+### ~~P0-2: Assessment Package Export~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | Verify that the Structural Verdict (EIR) renders completely for BlueEdge genesis_e2e_03. All 9 chapters populated. All findings have 4 fields. No empty sections. |
-| **Why** | The Structural Verdict is the primary Tier 1 deliverable. It must render perfectly before the first customer engagement. |
-| **Files** | `ExecutiveIntelligenceSynthesis.js` — verify chapter generation. Evidence pathway from substrate to rendered output. |
-| **Effort** | 2 hours |
-| **Dependencies** | None |
-| **Owner** | Engineering |
-| **Acceptance** | 9 chapters render with content. Each named finding has observed/matters/operational_implication/leadership_implication. No empty or placeholder sections. Output is presentable to a CTO. |
+| **Status** | **COMPLETE** |
+| **What was built** | Full Assessment Package export: single "EXPORT STRUCTURAL ASSESSMENT" button producing self-contained governed HTML through the complete cognition pipeline (CIP → PICR → PICP → PRE → consumer output). Three-part document: Structural Verdict (chapters + findings), Structural Topology (embedded SVG), Evidence Record (posture + confidence + governance boundary). |
+| **Files created** | `AssessmentPackageBuilder.js` (~1030 LOC), `PICRRuntime.js`, `PRECore.js` (3-zone projection), `ZoneA/B/C.js`, `ProjectionConfig.js`, 6 consumer configs, `LENSAdapter.js`, `ConsumerGenericityVerifier.js`, `EIRGroundingContext.js`, `ExecutiveIntelligenceSynthesis.js`, `EIRGraphics.js` |
+| **Scope exceeded P0-2** | Original P0-2 was "verify Structural Verdict renders." Actual implementation built the full governed cognition pipeline (PICP, PRE, consumer architecture) and the Assessment Package as a governed export action — satisfying the first item of Stream B (Assessment Package ↔ LENS convergence). |
+| **Completed** | 2026-06-01 |
 
-### P0-3: Evidence Intake Checklist
+### ~~P0-3: Evidence Intake Checklist~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | Formalized document defining what the customer provides, in what format, and how. Covers: repository access (read-only), dependency exports, architectural documentation, environment context. |
-| **Why** | Cannot run an engagement without knowing what to ask for. The intake process must be professional and repeatable. |
-| **Files** | New: `docs/commercial/EVIDENCE_INTAKE_CHECKLIST.md` |
-| **Effort** | 4 hours |
-| **Dependencies** | None |
-| **Owner** | Product / Commercial |
-| **Acceptance** | A salesperson can hand this to a customer and the customer can prepare evidence independently. No ambiguity about what is needed. |
+| **Status** | **COMPLETE** |
+| **Artifact** | `docs/commercial/EVIDENCE_INTAKE_CHECKLIST.md` |
+| **Contents** | Required evidence (repository access, dependency manifests), recommended evidence (architectural context, program context), explicit "not required" list, intake process steps, preparation checklist, confidentiality terms. A customer can prepare evidence independently. |
+| **Completed** | 2026-06-02 |
 
-### P0-4: Engagement Letter Template
+### ~~P0-4: Engagement Letter Template~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | Commercial template defining: engagement scope (one program), timeline (3-5 days), deliverables (LENS, Structural Verdict, Evidence Record, Advisory Session), terms, confidentiality. |
-| **Why** | The first sale needs a professional engagement letter. This is the commercial wrapper around the product. |
-| **Files** | New: `docs/commercial/ENGAGEMENT_LETTER_TEMPLATE.md` |
-| **Effort** | 4 hours |
-| **Dependencies** | None |
-| **Owner** | Commercial / Legal |
-| **Acceptance** | Template is complete, professional, and can be customized per customer with minimal changes. Scope, timeline, and deliverables match SIGNAL_TIER1_COMMERCIAL_OFFER.md. |
+| **Status** | **COMPLETE** |
+| **Artifact** | `docs/commercial/ENGAGEMENT_LETTER_TEMPLATE.md` |
+| **Contents** | 10-section engagement agreement template: scope (in/out), deliverables (LENS + Assessment Package + Advisory Session), timeline (3-5 days), customer obligations, pricing placeholder, LENS access terms, confidentiality (mutual), methodology disclosure, limitation of liability placeholder, signature block. Customizable per customer. Aligned with SIGNAL_TIER1_COMMERCIAL_OFFER.md. |
+| **Completed** | 2026-06-02 |
 
-### P0-5: Deliverable Handoff Process
+### ~~P0-5: Deliverable Handoff Process~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | Define how each deliverable reaches the customer: LENS access provisioning (credentials, URL, duration), Structural Verdict delivery (format, channel), Evidence Record delivery, Advisory Session scheduling. |
-| **Why** | The product exists. The delivery mechanism must be formalized. A customer paying advisory-grade fees expects advisory-grade delivery. |
-| **Files** | New: `docs/commercial/DELIVERABLE_HANDOFF_PROCESS.md` |
-| **Effort** | 4 hours |
-| **Dependencies** | P0-3 (intake must be defined before handoff) |
-| **Owner** | Product / Operations |
-| **Acceptance** | End-to-end flow: customer provides evidence → Signäl processes → deliverables are provisioned → advisory session is scheduled. No gaps. No undefined steps. |
+| **Status** | **COMPLETE** |
+| **Artifact** | `docs/commercial/DELIVERABLE_HANDOFF_PROCESS.md` |
+| **Contents** | 5-phase end-to-end process: Evidence Intake → Structural Analysis → Deliverable Production → Advisory Session → Handoff. Per-phase steps with owner and gate criteria. SA-DD extensions noted. Advisory session guidelines (lead with topology, use LENS live, no remediation prescription, no personnel attribution). Handoff email template. Completion checklist. Escalation paths. D13 governance rule enforced (no manual deliverable modification). |
+| **Completed** | 2026-06-02 |
 
-### P0-6: Product Language Decisions
+### ~~P0-6: Product Language Decisions~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | Resolve 5 product language decisions from the Product Plan (D1-D5). Each requires a YES/NO decision and product language update if applicable. |
-| **Why** | Product language must match implementation reality before the first sale. Customers must not encounter promises that don't match the product. |
-| **Decisions** | D1: Domain/cluster topology sufficient (recommend YES). D2: Governed ceiling posture replaces numeric score (recommend YES). D3: Guided Structural Interrogation replaces Golden Query (recommend YES). D4: Governed evidence inspection replaces vault access (recommend YES). D5: Governed evidence trail replaces Claim+Derived+TraceDepth (recommend YES). |
-| **Effort** | 2 hours (decision meeting + language update) |
-| **Dependencies** | None |
-| **Owner** | Product |
-| **Acceptance** | All 5 decisions recorded. Product language in all customer-facing artifacts reflects decisions. |
+| **Status** | **COMPLETE** |
+| **Artifact** | `docs/commercial/PRODUCT_LANGUAGE_DECISIONS.md` |
+| **Decisions** | All 5 resolved as Option B (update product language to match stronger implementation). D1: Domain/cluster topology sufficient. D2: Governed posture replaces numeric score (reinforces GTM D9). D3: Guided Structural Interrogation replaces Golden Query. D4: Governed evidence inspection replaces vault access. D5: Governed evidence trail replaces Claim+Derived+TraceDepth. Zero implementation work required — all 5 confirm current implementation is the correct product. |
+| **Completed** | 2026-06-02 |
 
 ### P0 Summary
 
-| ID | Item | Effort | Owner | Depends On |
-|----|------|--------|-------|------------|
-| P0-1 | Score projection to BOARDROOM | 2h | Engineering | — |
-| P0-2 | Structural Verdict verification | 2h | Engineering | — |
-| P0-3 | Evidence intake checklist | 4h | Product/Commercial | — |
-| P0-4 | Engagement letter template | 4h | Commercial/Legal | — |
-| P0-5 | Deliverable handoff process | 4h | Product/Operations | P0-3 |
-| P0-6 | Product language decisions | 2h | Product | — |
+| ID | Item | Status | Completed |
+|----|------|--------|-----------|
+| ~~P0-1~~ | Score projection to BOARDROOM | **DROPPED** (contradicts D9) | 2026-06-02 |
+| ~~P0-2~~ | Assessment Package export | **COMPLETE** | 2026-06-01 |
+| ~~P0-3~~ | Evidence intake checklist | **COMPLETE** | 2026-06-02 |
+| ~~P0-4~~ | Engagement letter template | **COMPLETE** | 2026-06-02 |
+| ~~P0-5~~ | Deliverable handoff process | **COMPLETE** | 2026-06-02 |
+| ~~P0-6~~ | Product language decisions | **COMPLETE** | 2026-06-02 |
 
-**Total P0: ~18 hours / 2-3 days.** P0-1, P0-2 are parallel. P0-3, P0-4, P0-6 are parallel. P0-5 follows P0-3.
+**P0 GATE: CLEARED.** All items complete or formally dropped. No remaining blockers to first SA sale.
 
 ```
-P0-1 ────────┐
-P0-2 ────────┤
-P0-3 ───┬────┤──→ DONE ──→ FIRST SA SALE
-P0-4 ───┤    │
-P0-6 ───┘    │
-P0-5 ────────┘
-     (after P0-3)
+P0-1 ──── DROPPED (D9)
+P0-2 ──── COMPLETE (2026-06-01)
+P0-3 ──── COMPLETE (2026-06-02)     ──→ P0 GATE CLEARED
+P0-4 ──── COMPLETE (2026-06-02)     ──→ FIRST SA SALE UNBLOCKED
+P0-5 ──── COMPLETE (2026-06-02)
+P0-6 ──── COMPLETE (2026-06-02)
 ```
 
 ---
 
 ## P1 — SC and SA-DD Sales (Target: 90 days)
 
-### P1-1: SA-DD Packaging
+### ~~P1-1: SA-DD Packaging~~ — COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **What** | SA-DD-specific commercial packaging: investment committee-ready Structural Verdict template (with DD-specific framing), deal-timeline SLA (5-day commitment), per-target pricing model, investigation trail appendix format. |
-| **Why** | SA-DD is the same intelligence as SA with different packaging for PE/M&A. The packaging difference is what justifies the premium. |
-| **Files** | New: `docs/commercial/SA_DD_PACKAGING.md`, updates to engagement letter template |
-| **Effort** | 1 day |
-| **Dependencies** | P0-4 (engagement letter template) |
-| **Owner** | Product / Commercial |
-| **Acceptance** | A PE firm receives materials that feel like deal-grade intelligence, not a tech assessment. |
+| **Status** | **COMPLETE** |
+| **Artifact** | `docs/commercial/SA_DD_PACKAGING.md` |
+| **Contents** | Full SA-DD commercial packaging: investment committee framing (how to present Structural Verdict to IC), deal-timeline SLA (5-day guaranteed, 3-day expedited option), per-target pricing model (single/multi-target/portfolio), investigation trail appendix format (self-contained HTML, IC package integration), engagement letter SA-DD modifications (scope/deliverables/timeline/LENS access), DD-specific objection handling, commercial motion (upsell paths to SC/SE). |
+| **Acceptance** | A PE firm receives materials that feel like deal-grade intelligence, not a tech assessment. IC framing section provides the exact presentation structure. Investigation Trail is positioned as the structural equivalent of DDQ responses. |
+| **Completed** | 2026-06-02 |
 
 ### P1-2: Multi-Run Posture Tracking
 
@@ -182,7 +161,7 @@ P0-5 ────────┘
 
 | ID | Item | Effort | Owner | Depends On |
 |----|------|--------|-------|------------|
-| P1-1 | SA-DD packaging | 1 day | Product/Commercial | P0-4 |
+| ~~P1-1~~ | SA-DD packaging | **COMPLETE** | Product/Commercial | P0-4 ✓ |
 | P1-2 | Multi-run posture tracking | 3-4 days | Engineering | — |
 | P1-3 | L2/L3 trace depth filter | 1 week | Engineering | — |
 | P1-4 | Subscription access model | 2-3 weeks | Engineering/Ops | P0-5 |

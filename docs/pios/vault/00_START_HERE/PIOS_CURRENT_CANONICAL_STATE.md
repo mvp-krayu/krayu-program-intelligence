@@ -239,6 +239,29 @@ See [[../08_EXECUTION_RUNTIME/COGNITION_ANATOMY]] for full anatomy hierarchy, co
 | NetBox | **S2 SEMANTIC QUALIFICATION COMPLETE** — CANONICAL REFERENCE SPECIMEN | SQO: S2 granted, all 7 blockers resolved, 12 governance events, CLUSTER_ARCHITECTURE rejection preserved; LENS: LIVE_BINDING_FAILED | **First formally governed semantic qualification specimen.** PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged). **Evolved corpus:** 77 propositions (34 COUPLING_PATTERN, 12 STRUCTURAL_DOMINANCE, 12 TIER_GROUNDING, 12 AUTHORITY_TOPOLOGY [enriched via AST], 6 HERO_MOMENT_GROUNDING [5/6 reconciled], 1 CLUSTER_ARCHITECTURE [REJECTED — preserved in lineage]). 89.6% DIRECT_EVIDENCE, 89.6% ALIGNED, 0.897 mean confidence. **Governance lifecycle proven:** operator review (5 accepted, 1 rejected), arbitration (2 contested→resolved), 3-stream substrate strengthening (feasibility→enrichment→reconciliation), deterministic revalidation (48/48 PASS). **Frozen as constitutional reference** — no exploratory mutation. |
 | StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. 22 evidence anchors (SETUP_PY, CROSS_PACKAGE_DEP, PACKAGE_README, REPO_README_MAP). LRNE-0001 resolved. |
 
+## Commercial Information Architecture
+
+**Established:** 2026-06-02
+**Authority:** [[../10_CANONICAL_RUNTIME_STATE/COMMERCIAL_INFORMATION_ARCHITECTURE]]
+
+Commercial documentation is organized by consumer purpose (`docs/commercial/`), not by governance stream origin (`docs/pios/`). The governance stream retains the historical execution record. The commercial tree is the operational working location.
+
+```
+docs/commercial/
+├── COMMERCIAL_AUTHORITY.md     ← Entry point
+├── offers/                      ← SA, SA-DD (SC, SE future)
+├── delivery/                    ← Intake, engagement, handoff
+├── reference/                   ← SKU model, catalog, product language
+├── investor/                    ← Strategic partner materials
+└── archive/                     ← Legacy pre-stream HTML
+```
+
+**Commercial readiness (2026-06-02):**
+- P0 GATE CLEARED — all delivery infrastructure formalized
+- P1-1 COMPLETE — SA-DD sellable
+- SA and SA-DD are sellable SKUs with full delivery process
+- SC and SE require P1/P2 engineering work
+
 ## Current Trustworthiness Model
 
 ```

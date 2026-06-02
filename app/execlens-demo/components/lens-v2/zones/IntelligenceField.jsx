@@ -4,6 +4,7 @@ import { PRESSURE_META, ROLE_META, DEFAULT_BINDING_CLIENT, DEFAULT_BINDING_RUN }
 import OperatorReadingGuide, { TermHint } from './OperatorReadingGuide'
 import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
+import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
@@ -810,7 +811,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -1167,6 +1168,20 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {fullReport && (
+        <div className="support-block support-block--assessment">
+          <div className="support-label">STRUCTURAL ASSESSMENT</div>
+          <div className="support-assessment-sub">Governed deliverable package — verdict, topology, evidence record</div>
+          <button
+            className="assessment-export-trigger"
+            onClick={onAssessmentExport}
+            type="button"
+          >
+            EXPORT STRUCTURAL ASSESSMENT
+          </button>
         </div>
       )}
 
@@ -9369,6 +9384,37 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }, [exploredQueries, interrogationTrail, fullReport, qualifierClass, piRuntimeActive, emergenceState, densityClass, boardroomMode])
+  const handleAssessmentExport = useCallback(() => {
+    let capturedTopologySvg = null
+    const svgEl = document.querySelector('.topo-graph-svg')
+    if (svgEl) {
+      const clone = svgEl.cloneNode(true)
+      clone.querySelectorAll('.topo-tooltip').forEach(el => el.remove())
+      clone.removeAttribute('ref')
+      capturedTopologySvg = clone.outerHTML
+    }
+    const tempSynthesis = synthesize(fullReport)
+    const tempConsequences = tempSynthesis ? compileConsequences(tempSynthesis, fullReport) : null
+    const result = buildAssessmentPackage({
+      fullReport,
+      synthesisResult: tempSynthesis,
+      consequenceResult: tempConsequences,
+      capturedTopologySvg,
+      qualifierClass,
+      client: DEFAULT_BINDING_CLIENT,
+      run: DEFAULT_BINDING_RUN,
+    })
+    if (!result.ok) return
+    const blob = new Blob([result.html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `structural-assessment-${DEFAULT_BINDING_CLIENT}-${DEFAULT_BINDING_RUN}-${new Date().toISOString().slice(0, 10)}.html`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, [fullReport, qualifierClass])
 
   useEffect(() => {
     setCognitionState(prev => ({ ...prev, activeConditionId: null }))
@@ -9535,6 +9581,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         onExpansionSelect={handleExpansionSelect}
         interrogationTrail={interrogationTrail}
         onTrailExport={handleTrailExport}
+        onAssessmentExport={handleAssessmentExport}
         selectedNarrativeArc={selectedNarrativeArc}
         resolvedCognitionContract={resolvedCognitionContract}
         cognitionQueryIndex={cognitionState.activeQueryIndex}

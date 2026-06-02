@@ -79,18 +79,18 @@ These are assumptions embedded in the commercial artifacts that have not been va
 
 Carried forward from SIGNAL_IMPLEMENTATION_PLAN_2026.md with one amendment.
 
-### P0 — First SA Sale (2 weeks)
+### P0 — First SA Sale — GATE CLEARED (2026-06-02)
 
-| ID | Item | Effort | Status | Note |
-|----|------|--------|--------|------|
-| ~~P0-1~~ | ~~Score projection to BOARDROOM~~ | ~~2h~~ | **DEMOTE or DROP** | Contradicts D9 (no numeric scores on BOARDROOM). Governed posture with driver attribution IS the executive surface. If retained, must be reframed as governed readiness posture, not numeric score. |
-| P0-2 | Assessment Package export | 4h | Open | The constituent runtime artifacts exist today: Structural Verdict synthesis (`ExecutiveIntelligenceSynthesis.synthesize()`), Evidence Record export (`buildTrailHTML()`), topology SVG capture. The Assessment Package — the single governed export that orchestrates all components into one customer deliverable — does not. This is an orchestrated packaging layer, not a report generator. ~300-400 LOC to wire existing synthesis to a single "Export Structural Assessment" action. |
-| P0-3 | Evidence intake checklist | 4h | Open | What the customer provides, in what format |
-| P0-4 | Engagement letter template | 4h | Open | Commercial wrapper: scope, timeline, deliverables, terms |
-| P0-5 | Deliverable handoff process | 4h | Open | End-to-end: evidence → processing → provisioning → advisory |
-| P0-6 | Product language decisions (D1-D5) | 2h | Open | Resolve 5 product language items from Product Plan |
+| ID | Item | Status | Date |
+|----|------|--------|------|
+| ~~P0-1~~ | Score projection to BOARDROOM | **DROPPED** — contradicts D9 | 2026-06-02 |
+| ~~P0-2~~ | Assessment Package export | **COMPLETE** — full cognition pipeline built (CIP→PICR→PICP→PRE→consumer) | 2026-06-01 |
+| ~~P0-3~~ | Evidence intake checklist | **COMPLETE** — `docs/commercial/EVIDENCE_INTAKE_CHECKLIST.md` | 2026-06-02 |
+| ~~P0-4~~ | Engagement letter template | **COMPLETE** — `docs/commercial/ENGAGEMENT_LETTER_TEMPLATE.md` | 2026-06-02 |
+| ~~P0-5~~ | Deliverable handoff process | **COMPLETE** — `docs/commercial/DELIVERABLE_HANDOFF_PROCESS.md` | 2026-06-02 |
+| ~~P0-6~~ | Product language decisions | **COMPLETE** — `docs/commercial/PRODUCT_LANGUAGE_DECISIONS.md` (all 5 → Option B, zero implementation) | 2026-06-02 |
 
-**Amended P0 total: ~18h (was 18h — P0-1 dropped, P0-2 expanded to cover full assessment package).**
+**P0 GATE: CLEARED. No remaining blockers to first SA sale.**
 
 ### P1 — SC and SA-DD Sales (90 days)
 
@@ -139,7 +139,7 @@ The GTM stream achieved its objective: a complete commercial execution stack. Wh
 | **Sales motion** | First engagement end-to-end: outreach → scoping → evidence intake → pipeline → delivery → advisory → follow-up. |
 | **Objection handling in practice** | SIGNAL_COMPETITIVE_POSITIONING.md provides positioning. Real conversations will surface objections not yet catalogued. |
 
-**Depends on:** P0 items complete (16h of work). The intelligence exists. The delivery wrapper must be formalized.
+**Depends on:** ~~P0 items complete (16h of work).~~ **P0 GATE CLEARED (2026-06-02).** All delivery infrastructure formalized.
 
 **Character:** This is not a product stream. This is a commercial execution stream. The deliverable is a closed deal, not an artifact.
 
