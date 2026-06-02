@@ -47,7 +47,7 @@ Interactive structural intelligence surface for your program. Explore:
 
 - **Structural execution topology** — the actual architecture of your program's execution: domains, clusters, dependency edges, pressure zones. Not an org chart. Not a dependency graph. The structural reality.
 - **Named structural findings** — each finding classified by severity (HIGH / ELEVATED / MODERATE), located on the topology, with operational consequence explained.
-- **Software Intelligence** — 9 behavioral consequence types: Execution Fragility, Dependency Amplification, Coupling Inertia, Propagation Asymmetry, Structural Gravity, Execution Constriction, Boundary Divergence, Coordination Fragility, Compound Convergence.
+- **Software Intelligence** — 9 behavioral consequence surfaces derived from 11 structural condition types: Execution Fragility, Dependency Amplification, Coupling Inertia, Propagation Asymmetry, Structural Gravity, Execution Constriction, Boundary Divergence, Coordination Fragility, Compound Convergence.
 - **Two cognitive modes** — BOARDROOM (executive consequence projection for leadership) and BALANCED (operational causality briefing for technical leadership).
 
 ### 2. Structural Verdict

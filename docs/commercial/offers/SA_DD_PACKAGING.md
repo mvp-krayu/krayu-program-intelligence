@@ -26,8 +26,8 @@ Your acquisition target's codebase contains structural execution risk that no ma
 | **Evidence lineage** | Implicit — trust the assessor | Explicit — every finding traces to structural evidence |
 | **Comparability** | None — each report is bespoke | Full — identical methodology across targets |
 | **Board artifact** | PowerPoint with judgments | 9-chapter Structural Verdict with governance boundary |
-| **Investigation depth** | Limited by assessor availability | 36 governed structural queries, self-service |
-| **Audit trail** | Meeting notes | Governed Investigation Trail with evidence citations |
+| **Investigation depth** | Limited by assessor availability | 76+ governed structural queries, self-service |
+| **Audit trail** | Meeting notes | Governed Evidence Record with investigation trail and evidence citations |
 
 ---
 
@@ -43,7 +43,7 @@ The artifact your deal team hands to the investment committee. Each chapter is e
 | **Program Overview** | Scale, structural coverage, and topology statistics — the factual foundation. |
 | **Structural Topology** | The target's actual execution architecture. Where constriction, fragility, and divergence concentrate. |
 | **Program Intelligence Findings** | Per-condition structural findings. Each finding: what the structure shows, why it matters, operational implication, leadership implication. |
-| **Software Intelligence Assessment** | Behavioral consequence analysis — 9 structural condition types classified by severity. |
+| **Software Intelligence Assessment** | Behavioral consequence analysis — 11 structural condition types classified by severity. |
 | **Execution Risk Landscape** | Localized, systemic, and emergent structural risk. Where risk concentrates and whether it propagates. |
 | **Operational Ceiling** | Whether the target's structure constrains execution velocity. Whether the ceiling can be resolved through isolated intervention or requires structural investment. |
 | **What Traditional Analysis Cannot Discover** | Findings that no existing tool, dashboard, or consultant can produce. The structural blind spots manual DD misses. |
@@ -63,28 +63,22 @@ Interactive structural intelligence surface with all 4 cognitive modes:
 |------|------------|---------|
 | **BOARDROOM** | Deal partners, IC members | Executive consequence projection — headline risk |
 | **BALANCED** | Deal leads, technical advisors | Operational dynamics — causal understanding |
-| **DENSE** | Technical DD leads | Full structural mechanics — every derivation path |
-| **OPERATOR** | Technical analysts | Evidence inspection at full precision. Investigation Protocol for structural verification. |
+| **DENSE** | Technical DD leads | Full structural mechanics — every derivation path. 76+ guided structural queries with evidence-traced answers. |
+| **OPERATOR** | Technical analysts | Evidence inspection at full precision. Governance lifecycle audit. Signal verification at 4-decimal precision. |
 
 ### 3. Guided Structural Investigation
 
-36 governed structural questions. Self-service. Evidence-traced answers. Available within LENS OPERATOR mode.
+76+ governed structural queries. Self-service. Evidence-traced answers. Available within LENS DENSE mode.
 
-The deal team can interrogate the target's structure independently — without scheduling assessor time, without waiting for follow-up reports. Each question produces an evidence-grounded answer with governance boundary disclosure.
+The deal team can interrogate the target's structure independently — without scheduling assessor time, without waiting for follow-up reports. Each query produces an evidence-grounded answer with governance boundary disclosure.
 
-### 4. Investigation Trail
+### 4. Evidence Record
 
-Governed record of all structural investigations conducted. Appendable to investment committee packages.
-
-Contains: questions explored, evidence cited, structural findings referenced, governance boundaries disclosed. Time-stamped. Deterministic. Auditable.
+Governed structural evidence snapshot: posture, confidence envelope, topology capture, governance boundary. When guided queries have been explored, includes investigation trail: queries executed, evidence cited, governance boundaries disclosed. The auditable proof artifact. Appendable to investment committee packages.
 
 **Format:** Self-contained HTML document. No internet connection required. Archivable alongside deal room artifacts.
 
-### 5. Evidence Record
-
-Governed structural evidence snapshot: posture, confidence envelope, topology capture, governance boundary. The auditable proof artifact.
-
-### 6. Advisory Delivery Session
+### 5. Advisory Delivery Session
 
 60-90 minute walkthrough framed for deal-grade consumption:
 
@@ -125,8 +119,8 @@ SA-DD is priced per target, per engagement. Each target repository constitutes o
 | Component | Included |
 |-----------|---------|
 | **Structural intelligence** | Full pipeline: topology extraction, condition detection, qualification, consequence analysis |
-| **Deliverables** | Structural Verdict (9-chapter), Evidence Record, Investigation Trail |
-| **LENS access** | All 4 cognitive modes. Investigation Protocol. 36 governed queries. |
+| **Deliverables** | Structural Verdict (9-chapter), Evidence Record (with investigation trail) |
+| **LENS access** | All 4 cognitive modes. 76+ guided structural queries in DENSE. |
 | **LENS access duration** | 30 days from provisioning (standard). Extended access available. |
 | **Advisory session** | 60-90 minutes. Deal-team framing. |
 | **Concurrent users** | Up to 10 named users (deal team + IC members) |
@@ -148,7 +142,7 @@ Multi-target engagements produce comparable structural intelligence — same met
 SA-DD is priced as a premium over SA, justified by:
 
 - **Full analytical depth** — all 4 cognitive modes (SA provides 2)
-- **Investigation capability** — 36 governed structural queries + Investigation Trail
+- **Guided structural investigation** — 76+ governed queries in DENSE with evidence-traced answers
 - **Deal-timeline SLA** — 5-day guaranteed delivery
 - **Investment committee framing** — advisory session calibrated for IC consumption
 - **Extended LENS access** — 30 days with up to 10 concurrent users
@@ -186,11 +180,11 @@ These are governed prohibitions, not omissions. The Structural Verdict reveals s
 
 ---
 
-## Investigation Trail — Appendix Format
+## Evidence Record — IC Appendix Format
 
-The Investigation Trail is designed to be appended to investment committee deal packages as a structural evidence appendix.
+The Evidence Record includes investigation trail content when guided queries have been explored. It is designed to be appended to investment committee deal packages as a structural evidence appendix.
 
-### Contents
+### Investigation Trail Contents (within Evidence Record)
 
 | Section | What It Contains |
 |---------|-----------------|
@@ -205,7 +199,7 @@ The Investigation Trail is designed to be appended to investment committee deal 
 |----------|-------|
 | **Format** | Self-contained HTML |
 | **Dependencies** | None — renders in any browser without internet connection |
-| **File naming** | `investigation-trail-[target]-[date].html` |
+| **File naming** | `evidence-record-[target]-[date].html` |
 | **Archivability** | Yes — suitable for deal room, data room, compliance archive |
 | **Appendability** | Designed as an appendix to IC packages. Can be referenced from the Structural Verdict. |
 | **Confidentiality** | Subject to engagement agreement confidentiality terms |
@@ -219,11 +213,10 @@ INVESTMENT COMMITTEE PACKAGE
 ├── Financial Model (deal team)
 ├── Market Analysis (deal team)
 ├── Signäl Structural Verdict ← 9-chapter governed document
-├── Signäl Evidence Record ← posture, confidence, governance boundary
-└── Signäl Investigation Trail ← structural investigation appendix
+└── Signäl Evidence Record ← posture, confidence, investigation trail, governance boundary
 ```
 
-The Investigation Trail serves the same function as a due diligence questionnaire response — but produced through governed structural investigation rather than management interviews.
+The investigation trail within the Evidence Record serves the same function as a due diligence questionnaire response — but produced through governed structural investigation rather than management interviews.
 
 ---
 
@@ -241,14 +234,11 @@ With:
 
 ### Section 2 — Deliverables
 
-Add to deliverable table:
-
-| # | Deliverable | Description | Format |
-|---|-------------|-------------|--------|
-| 4 | **Investigation Trail** | Governed record of structural investigation. Questions, evidence, governance boundaries. Appendable to investment committee packages. | Self-contained HTML document |
+Update Evidence Record description to include investigation trail:
+> "Governed structural evidence snapshot including investigation trail: queries explored, evidence cited, governance boundaries. Appendable to investment committee packages. Self-contained HTML document."
 
 Update LENS description:
-> "All 4 cognitive modes: BOARDROOM, BALANCED, DENSE, OPERATOR. Includes Investigation Protocol (36 governed structural queries)."
+> "All 4 cognitive modes: BOARDROOM, BALANCED, DENSE, OPERATOR. 76+ guided structural queries in DENSE mode."
 
 ### Section 3 — Timeline
 
@@ -265,7 +255,7 @@ Add expedited option:
 | **Access Duration** | 30 days from provisioning |
 | **Concurrent Users** | Up to 10 named users |
 | **Cognitive Modes** | BOARDROOM, BALANCED, DENSE, OPERATOR |
-| **Investigation Protocol** | 36 governed structural queries |
+| **Guided Investigation** | 76+ governed structural queries (DENSE mode) |
 
 ---
 
@@ -276,7 +266,7 @@ SA-DD follows the standard deliverable handoff process with extensions at Phase 
 | # | Additional Step | Owner | Output |
 |---|----------------|-------|--------|
 | 3.6 | Verify DENSE and OPERATOR modes render correctly | Signäl Operator | Full LENS verification |
-| 3.7 | Verify Investigation Protocol — 36 governed queries accessible, evidence-traced answers render | Signäl Operator | Investigation verification |
+| 3.7 | Verify guided structural investigation — 76+ governed queries accessible in DENSE, evidence-traced answers render | Signäl Operator | Investigation verification |
 | 3.8 | Frame Structural Verdict for investment committee consumption — confirm deal-relevant findings are prominent | Signäl Advisory | DD-specific advisory notes |
 
 These extensions are already documented in `DELIVERABLE_HANDOFF_PROCESS.md`.
@@ -290,7 +280,7 @@ These extensions are already documented in `DELIVERABLE_HANDOFF_PROCESS.md`.
 | "We already have a technical DD firm." | "Manual DD takes 4-6 weeks and produces opinions that vary by assessor. Signäl delivers deterministic structural intelligence in 5 days. Same evidence, same findings, every time. Use it alongside your DD firm — it reveals what they can't see." |
 | "5 days isn't enough for proper due diligence." | "5 days is enough for structural intelligence. Your deal team still performs commercial, financial, and operational DD. Signäl replaces the structural assessment portion — the part that currently takes 4 weeks and produces the least defensible output." |
 | "We need to compare multiple targets." | "Multi-target engagements use identical methodology across all targets. The structural intelligence is directly comparable — same instrument, same governance, same output format. This is the structural equivalent of standardized financial due diligence." |
-| "Can we share this with our co-investors?" | "LENS access supports up to 10 concurrent users. The Structural Verdict, Evidence Record, and Investigation Trail can be shared with co-investors and IC members under the engagement agreement's confidentiality terms." |
+| "Can we share this with our co-investors?" | "LENS access supports up to 10 concurrent users. The Structural Verdict and Evidence Record can be shared with co-investors and IC members under the engagement agreement's confidentiality terms." |
 | "What if the findings change the deal terms?" | "Structural findings inform deal terms — they don't determine them. The Structural Verdict reveals structural execution reality. Whether that changes your valuation, earn-out structure, or integration budget is your deal team's judgment, informed by evidence." |
 | "Is the AI component a concern for our IC?" | "The intelligence layer is entirely deterministic — same input, same output, every time. AI assists only in calibrated audience projection (~14% of output), and every AI contribution is disclosed and governance-bounded. The Structural Verdict explicitly discloses this boundary." |
 

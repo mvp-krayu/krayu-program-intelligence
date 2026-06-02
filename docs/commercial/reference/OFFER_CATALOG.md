@@ -4,9 +4,15 @@
 
 > **Corrections applied (2026-06-01):**
 > - SA-1 (without Software Intelligence) eliminated — SW-INTEL always included
-> - 4 cognitive modes (not 5) — Investigation Protocol within OPERATOR
+> - 4 cognitive modes (not 5) — INVESTIGATION is constitutional (future)
 > - "Structural Verdict" replaces "EIR" throughout
 > - Category: Software Intelligence (wedge) → Structural Intelligence (product category)
+>
+> **Corrections applied (2026-06-02) — PG-006 through PG-011:**
+> - Guided queries attributed to DENSE (not OPERATOR)
+> - Condition count: 11 (not 9). Query count: 76+ (not 36).
+> - Investigation Trail consolidated into Evidence Record
+> - "Investigation Protocol" reframed — internal verification, not customer workflow
 
 ---
 
@@ -84,10 +90,9 @@ Per-program, per-engagement fee. Advisory-grade. Not SaaS. Not subscription. A s
 
 | Additional Deliverable | Description |
 |-----------------------|-------------|
-| **Full LENS Access** | All 4 cognitive modes: BOARDROOM, BALANCED, DENSE, OPERATOR (with Investigation Protocol) |
-| **Guided Structural Investigation** | 36 governed structural questions with evidence-traced answers. Self-service structural exploration. |
-| **Investigation Trail** | Governed record of all structural investigations — questions, evidence, governance boundaries. Appendable to investment committee packages. |
-| **Investigation Protocol** | Within OPERATOR mode: structural verification panels, evidence completeness assessment, pass/fail per qualification target. |
+| **Full LENS Access** | All 4 cognitive modes: BOARDROOM, BALANCED, DENSE, OPERATOR |
+| **Guided Structural Investigation** | 76+ governed structural queries in DENSE mode with evidence-traced answers. Self-service structural exploration. |
+| **Evidence Record with Investigation Trail** | Governed structural evidence snapshot including investigation trail: queries explored, evidence cited, governance boundaries disclosed. Appendable to investment committee packages. |
 
 ### Pricing
 
@@ -114,7 +119,7 @@ Premium over SA. Deal-timeline urgency justifies premium. Per-target pricing.
 |-----------------------|-------------|
 | **Multiple Assessment Runs** | Run structural analysis on demand or on schedule. Compare posture across runs. |
 | **Qualification Progression** | Track qualification state evolution across assessments. See structural improvement over time. |
-| **Structural Escalation** | Evidence-triggered interpretive depth — governed structural interpretation when the structure warrants deeper analysis. |
+| **Structural Escalation** | Within-session evidence-triggered interpretive depth — governed structural interpretation when the structure warrants deeper analysis. |
 | **Quarterly Advisory** | Periodic structural evolution review with Signäl team. Posture comparison, trend analysis, decision support. |
 
 ### Pricing

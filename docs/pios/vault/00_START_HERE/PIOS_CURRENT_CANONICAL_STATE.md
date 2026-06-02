@@ -262,6 +262,34 @@ docs/commercial/
 - SA and SA-DD are sellable SKUs with full delivery process
 - SC and SE require P1/P2 engineering work
 
+## Open Product Gaps: 5
+
+**Established:** 2026-06-02
+**Authority:** [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_GAP_REGISTER]]
+
+Canonical register of gaps between commercial packaging and runtime implementation. Seeded from SKU capability audit against runtime code.
+
+| Disposition | Total | Open | Resolved |
+|-------------|-------|------|----------|
+| Runtime Truth Correction | 2 | 0 | 2 (PG-007, PG-008 — 2026-06-02) |
+| Commercial Gap | 4 | 0 | 4 (PG-006, PG-009, PG-010, PG-011 — 2026-06-02) |
+| Product Capability Gap | 5 | 5 | 0 |
+
+**SKU readiness:**
+- **SA:** Sellable. 0 blocking gaps. Commercial packaging matches runtime.
+- **SA-DD:** Sellable. 0 blocking gaps. Commercial packaging matches runtime.
+- **SC:** NOT sellable. 3 blocking gaps (PG-001, PG-002, PG-003).
+- **SE:** NOT sellable. 5 blocking gaps (PG-001–PG-005).
+
+**Open product capability gaps (blocking SC/SE):**
+- PG-001: Cross-session qualification progression (SC, SE)
+- PG-002: Multi-run comparison (SC, SE)
+- PG-003: SKU gating (SC, SE)
+- PG-004: Production RBAC (SE only)
+- PG-005: Multi-program intelligence (SE only)
+
+Full register: [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_GAP_REGISTER]]
+
 ## Current Trustworthiness Model
 
 ```
