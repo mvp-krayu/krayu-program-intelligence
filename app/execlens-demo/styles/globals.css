@@ -12006,3 +12006,599 @@ a.topo-chip:hover {
   color: var(--text-dim);
   word-break: break-all;
 }
+
+/* ========================================================================
+   PI CO-PILOT — Operator Transformation Surface
+   Design: editorial terminal. Content-first. Zero theater.
+   ======================================================================== */
+
+.copilot-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* --- Header --- */
+
+.copilot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.copilot-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.copilot-wordmark {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.copilot-level-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+.copilot-level-badge[data-level="2"],
+.copilot-level-badge[data-level="3"] {
+  color: var(--green);
+  border-color: rgba(100, 255, 218, 0.25);
+}
+
+.copilot-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.copilot-binding {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.copilot-lens-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+
+.copilot-lens-link:hover {
+  color: var(--text);
+}
+
+/* --- Body --- */
+
+.copilot-body {
+  flex: 1;
+  display: flex;
+  gap: 24px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.copilot-main {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* --- Conversation --- */
+
+.copilot-conversation {
+  padding: 24px 0;
+}
+
+.copilot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.copilot-empty-state {
+  text-align: center;
+  max-width: 480px;
+}
+
+.copilot-empty-title {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  color: var(--text-dim);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.copilot-empty-hint {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.copilot-empty-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.copilot-empty-examples span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 8px 14px;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  cursor: default;
+  text-align: left;
+}
+
+/* --- Messages --- */
+
+.copilot-msg {
+  margin-bottom: 32px;
+}
+
+.copilot-msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.copilot-msg-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.copilot-msg-audience {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.copilot-msg-intent {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.6;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-dim);
+  white-space: pre-wrap;
+}
+
+.copilot-msg-result {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.copilot-msg-result h1 {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 24px 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.copilot-msg-result h2 {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 20px 0 8px;
+  letter-spacing: 0;
+}
+
+.copilot-msg-result h3 {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin: 16px 0 6px;
+}
+
+.copilot-msg-result p {
+  margin: 8px 0;
+}
+
+.copilot-msg-result strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.copilot-msg-result em {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.copilot-msg-result ul,
+.copilot-msg-result ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.copilot-msg-result li {
+  margin: 4px 0;
+}
+
+.copilot-msg-result hr {
+  border: none;
+  border-top: 1px solid var(--border-dim);
+  margin: 20px 0;
+}
+
+.copilot-msg-result table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 12px;
+}
+
+.copilot-msg-result th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.copilot-msg-result td {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-dim);
+  vertical-align: top;
+}
+
+.copilot-msg-result code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(74, 158, 255, 0.06);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.copilot-msg-result pre {
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.copilot-msg-result pre code {
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.copilot-msg-result blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 14px;
+  margin: 12px 0;
+  color: var(--text-dim);
+}
+
+/* --- Mode Badge --- */
+
+.copilot-mode-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+.copilot-mode-badge[data-mode="curate"] {
+  color: var(--accent);
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+.copilot-mode-badge[data-mode="compare"] {
+  color: var(--yellow);
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+.copilot-mode-badge[data-mode="challenge"] {
+  color: var(--orange);
+  border-color: rgba(255, 158, 74, 0.2);
+}
+
+.copilot-mode-badge[data-mode="position"] {
+  color: var(--green);
+  border-color: rgba(100, 255, 218, 0.2);
+}
+
+/* --- Validation & Usage --- */
+
+.copilot-validation {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.copilot-validation-pass {
+  color: var(--green);
+}
+
+.copilot-validation-warn {
+  color: var(--orange);
+}
+
+.copilot-usage {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --- Streaming Cursor --- */
+
+.copilot-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: copilot-blink 0.8s step-end infinite;
+}
+
+@keyframes copilot-blink {
+  50% { opacity: 0; }
+}
+
+/* --- Footer / Input --- */
+
+.copilot-footer {
+  flex-shrink: 0;
+  padding: 16px 0 20px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.copilot-input-bar {}
+
+.copilot-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.copilot-input-field {
+  flex: 1;
+  background: var(--bg-card-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 2px;
+  resize: none;
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.copilot-input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.copilot-input-field:focus {
+  outline: none;
+  border-color: var(--accent-dim);
+}
+
+.copilot-send-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.copilot-send-btn:hover:not(:disabled) {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.copilot-send-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.copilot-input-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.copilot-audience-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.copilot-audience-select {
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.copilot-audience-select:focus {
+  outline: none;
+  border-color: var(--accent-dim);
+}
+
+.copilot-audience-select option {
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+.copilot-footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copilot-context-toggle {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.04em;
+}
+
+.copilot-context-toggle:hover {
+  color: var(--accent);
+}
+
+.copilot-footer-gov {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --- Context Panel (sidebar) --- */
+
+.copilot-context-panel {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 24px 0 24px 24px;
+  border-left: 1px solid var(--border-dim);
+  overflow-y: auto;
+}
+
+.copilot-context-section {
+  margin-bottom: 24px;
+}
+
+.copilot-context-heading {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.copilot-domain-list {
+  list-style: none;
+  padding: 0;
+}
+
+.copilot-domain-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 3px 0;
+}
+
+.copilot-domain-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.copilot-mode-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.copilot-mode-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 2px 7px;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+.copilot-context-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin: 3px 0;
+}
+
+/* --- Scrollbar --- */
+
+.copilot-main::-webkit-scrollbar {
+  width: 4px;
+}
+
+.copilot-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.copilot-main::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.copilot-main::-webkit-scrollbar-thumb:hover {
+  background: var(--border-dim);
+}
