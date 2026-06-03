@@ -1,8 +1,8 @@
 # THORR Interrogation Ledger
 
-Living operational document. Updated after each interrogation session that reveals strongholds, opportunities, or gaps. Not a stream artifact — evolves continuously outside stream governance.
+Human-readable supplementary context. The authoritative record of PI discoveries is `pi_discovery_specimens.json` (PI_DISCOVERY objects).
 
-Parallel to CAPABILITY_REGISTRY.md. Consumed during compiler improvement planning.
+This ledger retains strongholds and opportunities as narrative context. Gaps are captured as formal PI_DISCOVERY specimens in the JSON — this file references them but does not own them.
 
 **Last updated:** 2026-06-03
 **Sessions contributing:** BlueEdge genesis_e2e_03 multi-persona interrogation (2026-06-03)
