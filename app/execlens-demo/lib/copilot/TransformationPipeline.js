@@ -81,6 +81,71 @@ function buildSystemPrompt(assembled, modeConfig) {
   return parts.join('\n');
 }
 
+function extractVitals(assembled) {
+  const vitals = {};
+
+  if (assembled.structuralTopology) {
+    const st = assembled.structuralTopology;
+
+    if (st.topology?.clusters) {
+      let totalDomains = 0;
+      let structuralDomains = 0;
+      const clusters = [];
+      for (const c of st.topology.clusters) {
+        const total = c.domains.length;
+        const backed = c.domains.filter(d => d.structurally_backed).length;
+        totalDomains += total;
+        structuralDomains += backed;
+        clusters.push({
+          label: c.label,
+          total,
+          structural: backed,
+        });
+      }
+      vitals.domains = { total: totalDomains, structural: structuralDomains };
+      vitals.clusters = clusters;
+    }
+
+    if (st.dependencyHub?.metrics) {
+      const m = st.dependencyHub.metrics;
+      vitals.files = m.total_files;
+      vitals.edges = m.total_import_edges;
+    }
+
+    if (st.pressureZones?.zones) {
+      vitals.pressureZones = st.pressureZones.zones.length;
+    }
+
+    if (st.structuralMass?.code_graph) {
+      const cg = st.structuralMass.code_graph;
+      vitals.classes = cg.total_classes;
+      vitals.functions = cg.total_functions;
+    }
+  }
+
+  if (assembled.verdict?.boardroom) {
+    const b = assembled.verdict.boardroom;
+    vitals.posture = b.posture_label;
+    vitals.confidence = b.overall_confidence;
+  }
+
+  return Object.keys(vitals).length > 0 ? vitals : null;
+}
+
+function extractPersonaSummary(audience) {
+  if (!audience) return null;
+  const { PERSONA_PROJECTIONS, ACCESS_TIER } = require('./PIContextAssembler');
+  if (!PERSONA_PROJECTIONS) return null;
+  const persona = PERSONA_PROJECTIONS[audience];
+  if (!persona) return { name: audience };
+  return {
+    name: audience,
+    decisionHorizon: persona.decisionHorizon,
+    altitude: persona.altitude,
+    accessTier: persona.accessTier,
+  };
+}
+
 function wrapDisclosure(content, contextLevel) {
   const levelNames = {
     0: 'Level 0 — doctrine and commercial knowledge only (no specimen)',
@@ -187,8 +252,11 @@ async function* transformStream({
     type: 'meta',
     mode: resolvedMode,
     contextLevel: assembled.contextLevel,
+    accessTier: assembled.accessTier,
     availableDomains: assembled.availableDomains,
     retrievedTopics: allTopics,
+    vitals: extractVitals(assembled),
+    persona: extractPersonaSummary(audience),
   };
 
   const stream = anthropic.messages.stream({

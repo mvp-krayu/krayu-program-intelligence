@@ -5,7 +5,7 @@ Human-readable supplementary context. The authoritative record of PI discoveries
 This ledger retains strongholds and opportunities as narrative context. Gaps are captured as formal PI_DISCOVERY specimens in the JSON — this file references them but does not own them.
 
 **Last updated:** 2026-06-03
-**Sessions contributing:** BlueEdge genesis_e2e_03 multi-persona interrogation (2026-06-03)
+**Sessions contributing:** BlueEdge genesis_e2e_03 multi-persona interrogation (2026-06-03), BlueEdge genesis_e2e_03 Program Director interrogation (2026-06-03)
 
 ---
 
@@ -25,6 +25,7 @@ What held under sustained multi-persona pressure. These are confirmed defensible
 | S-08 | Investor Challenge Mode stronger than Explain Mode | Persona interrogation style | Discovered through live interrogation. Persona becomes more natural when allowed to challenge assumptions. | Interrogation > explanation for commercial value. Preserve this. |
 | S-09 | Three-tier access control (CLIENT/OPERATOR/ENGINEER) | PIContextAssembler | Investor probing for PI internals correctly gated: "at the client access tier, that information is outside the knowledge boundary." | IP protection confirmed under direct probing. |
 | S-10 | Non-index file fragility findings at Frontend Application | Structural enrichment | frontend/hooks/useSessionStatus.ts (fragility 79), frontend/socket/SocketProvider.tsx (fragility 59) confirmed through non-index paths. | Even after index file qualification, the frontend fragility finding stands on independent evidence. |
+| S-11 | Honest cognition boundary disclosure under Program Director pressure | System prompt governance + PIContextAssembler | Program Director asked for board presentation, budget input, PI Planning guidance. THORR answered structural posture fully, then explicitly disclosed: "Quarter achievements — not in structural evidence" and listed what requires external sources. | Did not fabricate planning/budget/capacity advice. The boundary disclosure IS the proof that the system knows what it knows and what it doesn't. First DOMAIN-class discovery (PID-008). |
 
 ---
 
@@ -55,6 +56,7 @@ What broke or is missing. The interrogation revealed these as pipeline problems,
 | G-05 | Evidence reference count inflated by repeated citations | Evidence assembly → Combination conclusions | Independence overstatement | Systemic fragility conclusion (21 refs from 4 unique sources) | IMMEDIATE — arithmetic fix. Count unique condition IDs and unique source artifacts, not total citation count. Display both: "4 independent sources (21 total citations)." |
 | G-06 | Temporal characterizations without temporal evidence gate | Signal derivation → Synthesis | Missing pipeline gate | Five independent analytical approaches all converged on drift characterization | DEEP — requires temporal evidence gate in compiler. Before asserting drift/deterioration/instability, derivation chain must provide either confirmed temporal comparison data OR explicit qualification that characterization is static-evidence inference. |
 | G-07 | Evidence depth asymmetry between co-presented zones | Synthesis layer | Equivalence misrepresentation | Infrastructure vs frontend throughout entire session | MEDIUM — synthesis should reflect depth asymmetry. When co-presenting zones at different evidence depths, name the asymmetry explicitly rather than implying equivalence. |
+| G-08 | Long constitutional output stalls without completion governance | THORR runtime/session/output orchestration | Missing output completion protocol | Constitutional boundary question (PI Core vs Domain Modules) stalled at Domain Module 9 | MEDIUM — THORR product runtime. Required: (1) detect long-answer risk before generation, (2) structured answer plan first, (3) chunked constitutional answers with governed sections, (4) continuation markers, (5) partial synthesis state persistence, (6) "continue from last section" without context loss, (7) never leave constitutional output mid-object without completion state. This is a CONSUMER defect (PID-009), not PI-Core. |
 
 ---
 
@@ -93,3 +95,5 @@ Based on recurrence frequency, commercial exposure, and implementability:
 | Date | Specimen | Personas Exercised | Patterns Discovered | Entries Added |
 |------|----------|-------------------|---------------------|---------------|
 | 2026-06-03 | BlueEdge genesis_e2e_03 | Investor, PE Acquisition, RTE, Board, Chief Architect | 7 gap patterns, 10 strongholds, 5 opportunities | S-01 through S-10, O-01 through O-05, G-01 through G-07 |
+| 2026-06-03 | BlueEdge genesis_e2e_03 | Program Director | 1 cognition boundary discovery (PID-008), 1 stronghold (S-11). First DOMAIN-class specimen. PI_DISCOVERY schema v0.2: added owner_type and discovery_nature dimensions. | S-11, PID-008 |
+| 2026-06-03 | BlueEdge genesis_e2e_03 | Constitutional boundary (PI Core vs Domain Modules) | 1 consumer defect (PID-009): THORR output stalled mid-constitutional-structure without completion governance. First CONSUMER-class specimen. | G-08, PID-009 |

@@ -13,6 +13,9 @@ export default function CopilotPage({ client, runId }) {
   const [availableDomains, setAvailableDomains] = useState([])
   const [availableModes, setAvailableModes] = useState([])
   const [contextOpen, setContextOpen] = useState(false)
+  const [vitals, setVitals] = useState(null)
+  const [persona, setPersona] = useState(null)
+  const [sessionStats, setSessionStats] = useState({ queries: 0, tokensIn: 0, tokensOut: 0 })
   const abortRef = useRef(null)
 
   const [assembling, setAssembling] = useState(false)
@@ -102,6 +105,8 @@ export default function CopilotPage({ client, runId }) {
               setStreamingMeta(event)
               setContextLevel(event.contextLevel ?? contextLevel)
               if (event.availableDomains) setAvailableDomains(event.availableDomains)
+              if (event.vitals) setVitals(event.vitals)
+              if (event.persona) setPersona(event.persona)
             } else if (event.type === 'delta') {
               setAssembling(false)
               fullContent += event.text
@@ -114,6 +119,14 @@ export default function CopilotPage({ client, runId }) {
             }
           } catch {}
         }
+      }
+
+      if (finalEvent?.usage) {
+        setSessionStats(prev => ({
+          queries: prev.queries + 1,
+          tokensIn: prev.tokensIn + (finalEvent.usage.inputTokens || 0),
+          tokensOut: prev.tokensOut + (finalEvent.usage.outputTokens || 0),
+        }))
       }
 
       setMessages(prev => [...prev, {
@@ -165,9 +178,10 @@ export default function CopilotPage({ client, runId }) {
 
         {contextOpen && (
           <ContextPanel
+            vitals={vitals}
+            persona={persona}
+            sessionStats={sessionStats}
             contextLevel={contextLevel}
-            availableDomains={availableDomains}
-            availableModes={availableModes}
           />
         )}
       </div>

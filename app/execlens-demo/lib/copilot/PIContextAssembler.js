@@ -571,4 +571,6 @@ module.exports = {
   assembleSystemPrompt,
   assemble,
   formatContextForPrompt,
+  PERSONA_PROJECTIONS,
+  ACCESS_TIER,
 };
