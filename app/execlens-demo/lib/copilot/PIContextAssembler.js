@@ -19,8 +19,10 @@ const {
 const { routeIntent } = require('./topic-router');
 
 const BOOT_CONTEXT_PATH = path.join(__dirname, 'pi-boot-context.md');
+const CAPABILITY_CONTEXT_PATH = path.join(__dirname, 'pi-capability-context.md');
 
 let cachedBootContext = null;
+let cachedCapabilityContext = null;
 
 function loadBootContext() {
   if (cachedBootContext) return cachedBootContext;
@@ -32,9 +34,20 @@ function loadBootContext() {
   return cachedBootContext;
 }
 
+function loadCapabilityContext() {
+  if (cachedCapabilityContext) return cachedCapabilityContext;
+  try {
+    cachedCapabilityContext = require('fs').readFileSync(CAPABILITY_CONTEXT_PATH, 'utf-8');
+  } catch {
+    cachedCapabilityContext = null;
+  }
+  return cachedCapabilityContext;
+}
+
 function assembleTier1() {
   return {
     bootContext: loadBootContext(),
+    capabilityContext: loadCapabilityContext(),
   };
 }
 
@@ -94,10 +107,17 @@ function assembleTier3(intent) {
   };
 }
 
+const ACCESS_TIER = {
+  CLIENT: 'client',
+  OPERATOR: 'operator',
+  ENGINEER: 'engineer',
+};
+
 const PERSONA_PROJECTIONS = {
   'Board of Directors': {
     decisionHorizon: 'Governance, risk, exposure, confidence, business impact',
     altitude: 'executive',
+    accessTier: ACCESS_TIER.CLIENT,
     defaultEvidence: [
       'posture and severity',
       'scope and confidence envelope',
@@ -116,6 +136,7 @@ const PERSONA_PROJECTIONS = {
   'Investor': {
     decisionHorizon: 'Asset quality, scalability, fragility, concentration risk, execution exposure',
     altitude: 'executive',
+    accessTier: ACCESS_TIER.CLIENT,
     defaultEvidence: [
       'structural quality assessment',
       'operational leverage indicators',
@@ -132,6 +153,7 @@ const PERSONA_PROJECTIONS = {
   'PE Acquisition Team': {
     decisionHorizon: 'Due diligence, integration risk, technical concentration, acquisition exposure',
     altitude: 'strategic',
+    accessTier: ACCESS_TIER.CLIENT,
     defaultEvidence: [
       'topology summaries and concentration patterns',
       'dependency concentration themes',
@@ -147,6 +169,7 @@ const PERSONA_PROJECTIONS = {
   'Program Director': {
     decisionHorizon: 'Program execution, planning, coordination',
     altitude: 'operational',
+    accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'pressure zones and their anchor domains',
       'convergence regions',
@@ -161,6 +184,7 @@ const PERSONA_PROJECTIONS = {
   'Release Train Engineer (RTE)': {
     decisionHorizon: 'Flow, delivery coordination, dependency management',
     altitude: 'operational',
+    accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'bottlenecks and flow constrictions',
       'coordination load indicators',
@@ -176,6 +200,7 @@ const PERSONA_PROJECTIONS = {
   'Engineering Director': {
     decisionHorizon: 'Organizational execution, team impact, delivery capacity',
     altitude: 'operational',
+    accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'hotspot regions and fragility concentrations',
       'delivery impact indicators',
@@ -190,6 +215,7 @@ const PERSONA_PROJECTIONS = {
   'CTO / VP Engineering': {
     decisionHorizon: 'Technical strategy, architectural direction',
     altitude: 'structural',
+    accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'dependency hubs and their structural role',
       'pressure zones with anchor detail',
@@ -203,6 +229,7 @@ const PERSONA_PROJECTIONS = {
   'Chief Architect': {
     decisionHorizon: 'Structural design, architectural integrity',
     altitude: 'structural',
+    accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'file paths, clusters, bridges, constrictions',
       'full topology and graph evidence',
@@ -215,6 +242,12 @@ const PERSONA_PROJECTIONS = {
   },
 };
 
+function resolveAccessTier(audience) {
+  const persona = PERSONA_PROJECTIONS[audience];
+  if (!persona) return ACCESS_TIER.CLIENT;
+  return persona.accessTier;
+}
+
 function resolvePersonaProjection(audience) {
   const persona = PERSONA_PROJECTIONS[audience];
   if (!persona) {
@@ -226,6 +259,7 @@ function resolvePersonaProjection(audience) {
     '',
     `Decision horizon: ${persona.decisionHorizon}`,
     `Projection altitude: ${persona.altitude}`,
+    `Access tier: ${persona.accessTier}`,
     `Narrative style: ${persona.narrativeStyle}`,
     '',
     'Default evidence to project:',
@@ -237,6 +271,35 @@ function resolvePersonaProjection(audience) {
       '',
       'AVOID in output (unless operator explicitly requests deeper evidence):',
       ...persona.avoid.map(a => `- ${a}`),
+    );
+  }
+
+  if (persona.accessTier === ACCESS_TIER.CLIENT) {
+    lines.push(
+      '',
+      'KNOWLEDGE BOUNDARY — CLIENT TIER:',
+      'This audience receives ASSESSMENT FINDINGS only. When asked about assessment improvement or evidence quality:',
+      '- State that additional evidence collection could improve confidence in specific areas',
+      '- State what the current confidence envelope covers and where uncertainty remains',
+      '- Do NOT expose PI processes, tools, modules, scripts, or internal capabilities',
+      '- Do NOT reference compiler pipeline, signal derivation, enrichment, or capability registry',
+      '- Do NOT discuss roadmap, future enhancements, or internal architecture',
+      '- Do NOT mention gap classifications (EXISTS, PARTIALLY_EXISTS, GENUINELY_MISSING)',
+      '- The PI Capability & Process Map is NOT available at this tier — do not reference it',
+      'Assessment findings and structural evidence are the complete knowledge boundary.',
+    );
+  } else if (persona.accessTier === ACCESS_TIER.OPERATOR) {
+    lines.push(
+      '',
+      'KNOWLEDGE BOUNDARY — OPERATOR TIER:',
+      'This audience may interrogate PI capabilities for assessment improvement. When asked:',
+      '- Map gaps to available PI processes using the PI Capability & Process Map',
+      '- Use gap classification vocabulary (EXISTS / PARTIALLY_EXISTS / GENUINELY_MISSING)',
+      '- Trace: Gap → PI process/tool → available now vs missing → expected output',
+      '- Do NOT expose product roadmap, strategic direction, or commercial plans',
+      '- Do NOT discuss compiler evolution strategy or internal architecture decisions',
+      '- Do NOT reference internal backlogs, future enhancement candidates, or competitive positioning',
+      '- Focus on what IS operational and what is a KNOWN GAP — not what might be built',
     );
   }
 
@@ -274,6 +337,9 @@ function assembleSystemPrompt(contextLevel, mode, audience) {
     '- All outputs must be traceable to structural evidence',
     '',
     'CONTEXT-HONESTY: Always disclose what context level you are operating at. If asked about specimen-specific data at Level 0, say so — do not hallucinate context you do not have.',
+    '',
+    'EVIDENCE PRECISION — INDEX FILE QUALIFICATION:',
+    'When a dependency hub, constriction point, or fragility hotspot is an index file (index.ts, index.tsx, index.js), the structural measurement is confirmed but operational interpretation requires qualification. Index files may be barrel/re-export files, facade/API boundaries, or logic-bearing modules — these carry different operational risk profiles. If the evidence data includes INDEX_FILE_UNCLASSIFIED, state that the structural signal is real but the file role classification (barrel vs facade vs logic-bearing) is not yet present in the evidence. Do not overstate operational risk from index-file centrality alone.',
   ];
 
   if (audience) {
@@ -292,20 +358,27 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   const rawSpecimen = (client && runId) ? resolveSpecimen(client, runId) : null;
   const contextLevel = determineContextLevel(client, runId, rawSpecimen, producedArtifacts);
   const availableDomains = getAvailableDomains(contextLevel);
+  const accessTier = resolveAccessTier(audience);
 
   const tier1 = assembleTier1();
   const tier2 = assembleTier2(contextLevel, client, runId, producedArtifacts);
   const tier3 = assembleTier3(intent);
   const systemPrompt = assembleSystemPrompt(contextLevel, mode, audience);
 
+  const capabilityContext = accessTier !== ACCESS_TIER.CLIENT
+    ? tier1.capabilityContext
+    : null;
+
   return {
     contextLevel,
+    accessTier,
     client: client || null,
     runId: runId || null,
     availableDomains,
 
     systemPrompt,
     bootContext: tier1.bootContext,
+    capabilityContext,
 
     specimen: tier2.specimen,
     verdict: tier2.verdict,
@@ -321,6 +394,11 @@ function formatContextForPrompt(assembled) {
   const sections = [];
 
   sections.push(assembled.bootContext);
+
+  if (assembled.capabilityContext) {
+    sections.push('\n---\n## PI Capability & Process Map\n');
+    sections.push(assembled.capabilityContext);
+  }
 
   if (assembled.retrievedDocuments.length > 0) {
     sections.push('\n---\n## Retrieved Knowledge\n');
@@ -389,7 +467,8 @@ function formatStructuralTopology(st) {
   if (st.dependencyHub?.spines) {
     parts.push('\n### Dependency Hubs (top structural spines by centrality)');
     for (const s of st.dependencyHub.spines) {
-      parts.push(`- #${s.centrality_rank} \`${s.path}\` — ${s.in_degree} inbound, ${s.out_degree} outbound`);
+      const roleTag = s.file_role_hint ? ` ⚠ ${s.file_role_hint}` : '';
+      parts.push(`- #${s.centrality_rank} \`${s.path}\` — ${s.in_degree} inbound, ${s.out_degree} outbound${roleTag}`);
     }
     if (st.dependencyHub.metrics) {
       const m = st.dependencyHub.metrics;
@@ -420,14 +499,16 @@ function formatStructuralTopology(st) {
   if (st.constrictionPoints?.constriction_hotspots) {
     parts.push('\n### Constriction Points (structural choke points)');
     for (const h of st.constrictionPoints.constriction_hotspots.slice(0, 5)) {
-      parts.push(`- \`${h.path}\` — score ${h.constriction_score}, through-flow ${h.through_flow}${h.is_bridge ? ', BRIDGE' : ''}`);
+      const roleTag = h.file_role_hint ? ` ⚠ ${h.file_role_hint}` : '';
+      parts.push(`- \`${h.path}\` — score ${h.constriction_score}, through-flow ${h.through_flow}${h.is_bridge ? ', BRIDGE' : ''}${roleTag}`);
     }
   }
 
   if (st.constrictionPoints?.fragility_hotspots) {
     parts.push('\n### Fragility Hotspots');
     for (const h of st.constrictionPoints.fragility_hotspots.slice(0, 5)) {
-      parts.push(`- \`${h.path}\` — fragility ${h.fragility_score}, coupling ${h.coupling}, cohesion ${h.cohesion.toFixed(2)}`);
+      const roleTag = h.file_role_hint ? ` ⚠ ${h.file_role_hint}` : '';
+      parts.push(`- \`${h.path}\` — fragility ${h.fragility_score}, coupling ${h.coupling}, cohesion ${h.cohesion.toFixed(2)}${roleTag}`);
     }
   }
 

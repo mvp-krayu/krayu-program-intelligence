@@ -125,6 +125,12 @@ function condenseBalanced(projection) {
   };
 }
 
+function classifyFileRole(filePath) {
+  const basename = filePath.split('/').pop();
+  if (/^index\.(ts|tsx|js|jsx)$/.test(basename)) return 'INDEX_FILE_UNCLASSIFIED';
+  return null;
+}
+
 function condenseSpecimenTopology(rawSpecimen) {
   if (!rawSpecimen) return null;
 
@@ -171,12 +177,17 @@ function condenseDependencyHub(rawSpecimen) {
   const result = {};
 
   if (centrality.top_structural_spines) {
-    result.spines = centrality.top_structural_spines.slice(0, 10).map(s => ({
-      path: s.path,
-      in_degree: s.in_degree,
-      out_degree: s.out_degree,
-      centrality_rank: s.centrality_rank,
-    }));
+    result.spines = centrality.top_structural_spines.slice(0, 10).map(s => {
+      const entry = {
+        path: s.path,
+        in_degree: s.in_degree,
+        out_degree: s.out_degree,
+        centrality_rank: s.centrality_rank,
+      };
+      const hint = classifyFileRole(s.path);
+      if (hint) entry.file_role_hint = hint;
+      return entry;
+    });
   }
 
   if (centrality.project_metrics) {
@@ -229,21 +240,31 @@ function condenseConstrictionPoints(rawSpecimen) {
   const result = {};
 
   if (se.constriction_surface?.constriction_hotspots) {
-    result.constriction_hotspots = se.constriction_surface.constriction_hotspots.slice(0, 10).map(h => ({
-      path: h.path,
-      constriction_score: h.constriction_score,
-      through_flow: h.through_flow,
-      is_bridge: h.is_bridge,
-    }));
+    result.constriction_hotspots = se.constriction_surface.constriction_hotspots.slice(0, 10).map(h => {
+      const entry = {
+        path: h.path,
+        constriction_score: h.constriction_score,
+        through_flow: h.through_flow,
+        is_bridge: h.is_bridge,
+      };
+      const hint = classifyFileRole(h.path);
+      if (hint) entry.file_role_hint = hint;
+      return entry;
+    });
   }
 
   if (se.fragility_surface?.fragility_hotspots) {
-    result.fragility_hotspots = se.fragility_surface.fragility_hotspots.slice(0, 10).map(h => ({
-      path: h.path,
-      fragility_score: h.fragility_score,
-      coupling: h.coupling,
-      cohesion: h.cohesion,
-    }));
+    result.fragility_hotspots = se.fragility_surface.fragility_hotspots.slice(0, 10).map(h => {
+      const entry = {
+        path: h.path,
+        fragility_score: h.fragility_score,
+        coupling: h.coupling,
+        cohesion: h.cohesion,
+      };
+      const hint = classifyFileRole(h.path);
+      if (hint) entry.file_role_hint = hint;
+      return entry;
+    });
   }
 
   if (se.boundary_divergence) {
