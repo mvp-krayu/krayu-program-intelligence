@@ -18,20 +18,37 @@ export default function CopilotPage({ client, runId }) {
   const [assembling, setAssembling] = useState(false)
 
   const handleSubmit = useCallback(async ({ message, audience }) => {
-    setMessages(prev => [...prev, {
-      role: 'user',
-      content: message,
-      audience,
-    }])
+    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
+    const prevAudience = lastUserMsg?.audience
+    const audienceChanged = prevAudience && audience && prevAudience !== audience
+
+    const newMessages = []
+    if (audienceChanged) {
+      newMessages.push({
+        role: 'system_event',
+        content: `Persona changed: ${prevAudience} → ${audience}`,
+        fromAudience: prevAudience,
+        toAudience: audience,
+      })
+    }
+    newMessages.push({ role: 'user', content: message, audience })
+
+    setMessages(prev => [...prev, ...newMessages])
 
     setStreaming(true)
     setAssembling(true)
     setStreamingContent('')
     setStreamingMeta(null)
 
-    const history = messages
-      .filter(m => m.role === 'user' || m.role === 'assistant')
-      .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }))
+    const allMessages = [...messages, ...newMessages]
+    const history = allMessages
+      .filter(m => m.role === 'user' || m.role === 'assistant' || m.role === 'system_event')
+      .map(m => {
+        if (m.role === 'system_event') {
+          return { role: 'user', content: `[System: ${m.content}. Re-answer using the new persona projection contract. Do not reference the prior answer — project fresh through the new decision-making lens.]` }
+        }
+        return { role: m.role === 'user' ? 'user' : 'assistant', content: m.content }
+      })
 
     try {
       const res = await fetch('/api/copilot/transform', {

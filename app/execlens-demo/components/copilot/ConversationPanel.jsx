@@ -66,6 +66,18 @@ function SystemMessage({ content, mode, validation, usage, streaming }) {
   )
 }
 
+function PersonaChangeEvent({ fromAudience, toAudience }) {
+  return (
+    <div className="copilot-persona-change">
+      <span className="copilot-persona-change-line" />
+      <span className="copilot-persona-change-label">
+        {fromAudience} → {toAudience}
+      </span>
+      <span className="copilot-persona-change-line" />
+    </div>
+  )
+}
+
 function AssemblingIndicator() {
   return (
     <div className="copilot-msg copilot-msg-system">
@@ -114,6 +126,9 @@ export default function ConversationPanel({ messages, streamingContent, streamin
   return (
     <div className="copilot-conversation">
       {messages.map((msg, i) => {
+        if (msg.role === 'system_event') {
+          return <PersonaChangeEvent key={i} fromAudience={msg.fromAudience} toAudience={msg.toAudience} />
+        }
         if (msg.role === 'user') {
           return <OperatorMessage key={i} content={msg.content} audience={msg.audience} />
         }

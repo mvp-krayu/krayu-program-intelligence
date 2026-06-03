@@ -12445,6 +12445,31 @@ a.topo-chip:hover {
   letter-spacing: 0.02em;
 }
 
+/* --- Persona Change Event --- */
+
+.copilot-persona-change {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  margin: 4px 0;
+}
+
+.copilot-persona-change-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-dim);
+}
+
+.copilot-persona-change-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
 /* --- Streaming Cursor --- */
 
 .copilot-cursor {
