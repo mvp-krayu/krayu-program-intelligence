@@ -28,6 +28,12 @@ const SURFACE_ICON = {
   OPERATIONAL_TOPOLOGY: '◉',
   QUALIFICATION_EXPOSURE: '⊘',
   PROPAGATION_RISK: '⟿',
+  STRUCTURAL_FRAGILITY: '⚡',
+  BOUNDARY_ALIGNMENT: '⊿',
+  STRUCTURAL_COUPLING: '⊛',
+  REINFORCEMENT_FLOWS: '⇄',
+  CONVERGENCE_PATTERNS: '⊕',
+  ABSENCE_PROFILE: '◇',
 }
 
 function QualificationContextStrip({ decomposition, qualification }) {
@@ -243,6 +249,140 @@ function CognitionSurfaceDetail({ surface }) {
           <div key={i} className="sw-intel-surface-detail-row sw-intel-surface-detail-row--warn">
             <span className="sw-intel-surface-detail-label">blocker</span>
             <span className="sw-intel-surface-detail-value">{b}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'STRUCTURAL_FRAGILITY' && c.top_hotspots) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">hotspots</span>
+          <span className="sw-intel-surface-detail-value">{c.hotspot_count} files · peak {c.peak_fragility}% · mean {c.mean_fragility}%</span>
+        </div>
+        {c.low_cohesion_modules > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">low cohesion</span>
+            <span className="sw-intel-surface-detail-value">{c.low_cohesion_modules} module{c.low_cohesion_modules !== 1 ? 's' : ''}</span>
+          </div>
+        )}
+        {c.absorptive_modules > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">absorptive</span>
+            <span className="sw-intel-surface-detail-value">{c.absorptive_modules} module{c.absorptive_modules !== 1 ? 's' : ''}</span>
+          </div>
+        )}
+        {c.top_hotspots.map(h => (
+          <div key={h.file} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{h.file}</span>
+            <span className="sw-intel-surface-detail-value">
+              {h.score}% fragility
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'BOUNDARY_ALIGNMENT' && c.top_divergent) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">divergence</span>
+          <span className="sw-intel-surface-detail-value">{c.divergent_count} module{c.divergent_count !== 1 ? 's' : ''} · system index {c.system_divergence_index}%</span>
+        </div>
+        {c.orphaned_count > 0 && (
+          <div className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">orphaned</span>
+            <span className="sw-intel-surface-detail-value">{c.orphaned_count} module{c.orphaned_count !== 1 ? 's' : ''}</span>
+          </div>
+        )}
+        {c.top_divergent.map(d => (
+          <div key={d.module} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{d.module}</span>
+            <span className="sw-intel-surface-detail-value">
+              {d.cross_boundary_ratio}% cross-boundary{d.edge_count > 0 ? ` · ${d.edge_count} edges` : ''}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'STRUCTURAL_COUPLING' && c.clusters) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">clusters</span>
+          <span className="sw-intel-surface-detail-value">{c.cluster_count} binding {c.total_modules_in_clusters} module{c.total_modules_in_clusters !== 1 ? 's' : ''}</span>
+        </div>
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">coupling</span>
+          <span className="sw-intel-surface-detail-value">{c.bidirectional_pairs} bidirectional pair{c.bidirectional_pairs !== 1 ? 's' : ''} · index {c.system_coupling_index}%</span>
+        </div>
+        {c.clusters.map((cl, i) => (
+          <div key={i} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">cluster {i + 1} ({cl.size})</span>
+            <span className="sw-intel-surface-detail-value">
+              {cl.modules.join(', ')}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'REINFORCEMENT_FLOWS' && c.top_flows) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">relationships</span>
+          <span className="sw-intel-surface-detail-value">{c.reinforcement_count} reinforcement · {c.co_presence_pairs} co-presence</span>
+        </div>
+        {c.top_flows.map((f, i) => (
+          <div key={i} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{f.from_type_label || f.from_type}</span>
+            <span className="sw-intel-surface-detail-value">{f.verb} {f.to_type_label || f.to_type}{f.domain ? ` in ${f.domain}` : ''}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'CONVERGENCE_PATTERNS' && c.convergence_domains) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">convergences</span>
+          <span className="sw-intel-surface-detail-value">{c.convergence_count} domain{c.convergence_count !== 1 ? 's' : ''} · peak {c.peak_condition_count} conditions</span>
+        </div>
+        {c.convergence_domains.map(d => (
+          <div key={d.domain} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{d.domain}</span>
+            <span className="sw-intel-surface-detail-value">{d.condition_count} condition{d.condition_count !== 1 ? 's' : ''}: {d.condition_types.join(', ')}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (surface.surface_id === 'ABSENCE_PROFILE' && c.absent_types) {
+    return (
+      <div className="sw-intel-surface-detail">
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">health ratio</span>
+          <span className="sw-intel-surface-detail-value">{c.health_ratio}% of condition types nominal</span>
+        </div>
+        <div className="sw-intel-surface-detail-row">
+          <span className="sw-intel-surface-detail-label">active</span>
+          <span className="sw-intel-surface-detail-value">{c.active_count} condition type{c.active_count !== 1 ? 's' : ''} firing</span>
+        </div>
+        {c.absent_types.map(t => (
+          <div key={t.type} className="sw-intel-surface-detail-row">
+            <span className="sw-intel-surface-detail-label">{t.label}</span>
+            <span className="sw-intel-surface-detail-value" style={{ color: '#64ffda' }}>{t.reason}</span>
           </div>
         ))}
       </div>

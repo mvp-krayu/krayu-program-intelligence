@@ -4,10 +4,13 @@
  * SoftwareIntelligenceProjectionAdapter
  * PI.SOFTWARE-INTELLIGENCE.COGNITION-COMPRESSION.01
  *
- * Produces compressed operational cognition surfaces from PI Core data.
- * Each surface synthesizes MULTIPLE PI Core sources into a single
- * operational assessment — not re-labeled lists.
+ * PRE (Projection Rendering Engine) for SW-Intel surfaces.
+ * Tier 1 surfaces (structural_fragility, boundary_alignment, structural_coupling)
+ * are consumed from PICR-materialized PICP payload.
+ * Remaining surfaces are still derived locally (prototype — extraction pending).
  */
+
+const { materialize: materializePICR, assembleCIP, getSwIntelSurface } = require('./cognition/PICRRuntime')
 
 const PROJECTION_STATUS = {
   ABSENT: 'ABSENT',
@@ -25,6 +28,9 @@ const SURFACE_CONDITION_MAP = {
   STRUCTURAL_FRAGILITY: ['EXECUTION_FRAGILITY'],
   BOUNDARY_ALIGNMENT: ['STRUCTURAL_BOUNDARY_DIVERGENCE'],
   STRUCTURAL_COUPLING: ['COUPLING_INERTIA'],
+  REINFORCEMENT_FLOWS: [],
+  CONVERGENCE_PATTERNS: ['COMPOUND_CONVERGENCE'],
+  ABSENCE_PROFILE: [],
 }
 
 // ─── SIGNAL TRANSLATION DOCTRINE ──────────────────────────────────
@@ -520,6 +526,496 @@ function derivePropagationRisk(fullReport) {
   }
 }
 
+// ─── SURFACE: STRUCTURAL FRAGILITY ─────────────────────────────────
+// Synthesizes: fragility_surface hotspots + module cohesion + absorptive modules
+// Question: "Where is the architecture structurally brittle?"
+
+// DEPRECATED: extracted to cognition/materializers/structuralFragility.js — consumed via PICP
+function deriveStructuralFragility(fullReport) {
+  const se = fullReport.structural_enrichment || {}
+  if (!se.available || !se.fragility_surface) return null
+
+  const fs = se.fragility_surface
+  const hotspots = fs.fragility_hotspots || []
+  const absorptive = fs.absorptive_modules || []
+  const cohesion = fs.module_cohesion || []
+  const mode = fs.analysis_mode || 'UNKNOWN'
+
+  if (hotspots.length === 0) return null
+
+  const registry = fullReport.semantic_domain_registry || []
+  const affectedDomains = []
+  for (const hs of hotspots) {
+    const filePath = hs.file || hs.path || ''
+    const match = registry.find(d => filePath.startsWith(d.domain_name || '') || filePath.includes(d.domain_name || ''))
+    if (match && !affectedDomains.includes(match.business_label || match.domain_name)) {
+      affectedDomains.push(match.business_label || match.domain_name)
+    }
+  }
+
+  const rawPeak = hotspots.length > 0 ? Math.max(...hotspots.map(h => h.fragility_score || h.score || 0)) : 0
+  const rawMean = hotspots.length > 0 ? hotspots.reduce((sum, h) => sum + (h.fragility_score || h.score || 0), 0) / hotspots.length : 0
+  const isPercentScale = rawPeak > 1
+  const peakPct = isPercentScale ? Math.round(rawPeak) : Math.round(rawPeak * 100)
+  const meanPct = isPercentScale ? Math.round(rawMean) : Math.round(rawMean * 100)
+
+  const severity = hotspots.length >= 5 || peakPct > 80 ? 'HIGH'
+    : hotspots.length >= 3 || peakPct > 60 ? 'ELEVATED'
+    : hotspots.length >= 1 ? 'MODERATE'
+    : 'LOW'
+
+  const lowCohesion = cohesion.filter(m => (m.cohesion || m.cohesion_score || 1) < 0.4)
+
+  return {
+    surface_id: 'STRUCTURAL_FRAGILITY',
+    surface_name: 'Structural Fragility',
+    severity,
+    operational_summary: `${hotspots.length} fragility hotspot${hotspots.length !== 1 ? 's' : ''} detected — peak fragility ${peakPct}%, mean ${meanPct}%${lowCohesion.length > 0 ? `, ${lowCohesion.length} low-cohesion module${lowCohesion.length !== 1 ? 's' : ''}` : ''}${absorptive.length > 0 ? `, ${absorptive.length} absorptive module${absorptive.length !== 1 ? 's' : ''}` : ''}`,
+    consequence: severity === 'HIGH' || severity === 'ELEVATED'
+      ? 'Files with high coupling and low cohesion concentrate change risk — modifications propagate unpredictably through fragile structural joints'
+      : 'Fragility hotspots present but below elevated threshold — monitor for accumulation',
+    evidence_density: hotspots.length + lowCohesion.length + absorptive.length,
+    affected_domains: affectedDomains,
+    constituents: {
+      hotspot_count: hotspots.length,
+      peak_fragility: peakPct,
+      mean_fragility: meanPct,
+      low_cohesion_modules: lowCohesion.length,
+      absorptive_modules: absorptive.length,
+      analysis_mode: mode,
+      top_hotspots: hotspots.slice(0, 5).map(h => {
+        const raw = h.fragility_score || h.score || 0
+        return {
+          file: (h.file || h.path || '').split('/').slice(-2).join('/'),
+          score: raw > 1 ? Math.round(raw) : Math.round(raw * 100),
+          coupling: h.coupling,
+          cohesion: h.cohesion,
+        }
+      }),
+    },
+    trace_sources: ['structural_enrichment.fragility_surface'],
+  }
+}
+
+// ─── SURFACE: BOUNDARY ALIGNMENT ──────────────────────────────────
+// Synthesizes: boundary_divergence divergent modules + orphans + system index
+// Question: "Where do module boundaries diverge from actual dependency patterns?"
+
+// DEPRECATED: extracted to cognition/materializers/boundaryAlignment.js — consumed via PICP
+function deriveBoundaryAlignment(fullReport) {
+  const se = fullReport.structural_enrichment || {}
+  if (!se.available || !se.boundary_divergence) return null
+
+  const bd = se.boundary_divergence
+  const divergent = bd.divergent_modules || []
+  const orphaned = bd.orphaned_modules || []
+  const systemIndex = bd.system_divergence_index || 0
+
+  if (divergent.length === 0 && orphaned.length === 0) return null
+
+  const registry = fullReport.semantic_domain_registry || []
+  const affectedDomains = []
+  for (const dm of divergent) {
+    const modName = dm.module || dm.name || ''
+    const match = registry.find(d => modName.startsWith(d.domain_name || '') || modName.includes(d.domain_name || ''))
+    if (match && !affectedDomains.includes(match.business_label || match.domain_name)) {
+      affectedDomains.push(match.business_label || match.domain_name)
+    }
+  }
+
+  const rawPeakRatio = divergent.length > 0 ? Math.max(...divergent.map(d => d.cross_boundary_ratio || d.ratio || 0)) : 0
+  const sysIdxPct = systemIndex > 1 ? Math.round(systemIndex) : Math.round(systemIndex * 100)
+  const peakRatioPct = rawPeakRatio > 1 ? Math.round(rawPeakRatio) : Math.round(rawPeakRatio * 100)
+
+  const severity = (divergent.length >= 4 || sysIdxPct > 50) ? 'HIGH'
+    : (divergent.length >= 2 || sysIdxPct > 30) ? 'ELEVATED'
+    : divergent.length >= 1 ? 'MODERATE'
+    : 'LOW'
+
+  return {
+    surface_id: 'BOUNDARY_ALIGNMENT',
+    surface_name: 'Boundary Alignment',
+    severity,
+    operational_summary: `${divergent.length} module${divergent.length !== 1 ? 's' : ''} with boundary divergence — system divergence index ${sysIdxPct}%${orphaned.length > 0 ? `, ${orphaned.length} orphaned module${orphaned.length !== 1 ? 's' : ''}` : ''}${peakRatioPct > 0 ? `, peak cross-boundary ratio ${peakRatioPct}%` : ''}`,
+    consequence: severity === 'HIGH' || severity === 'ELEVATED'
+      ? 'Module boundaries do not reflect actual dependency patterns — organizational structure and code structure have diverged, creating governance blind spots'
+      : 'Minor boundary divergence detected — module boundaries approximately align with dependency patterns',
+    evidence_density: divergent.length + orphaned.length,
+    affected_domains: affectedDomains,
+    constituents: {
+      divergent_count: divergent.length,
+      orphaned_count: orphaned.length,
+      system_divergence_index: sysIdxPct,
+      peak_cross_boundary_ratio: peakRatioPct,
+      top_divergent: divergent.slice(0, 5).map(d => {
+        const raw = d.cross_boundary_ratio || d.ratio || 0
+        return {
+          module: (d.module || d.name || '').split('/').slice(-2).join('/'),
+          cross_boundary_ratio: raw > 1 ? Math.round(raw) : Math.round(raw * 100),
+          edge_count: d.edge_count || d.edges || 0,
+        }
+      }),
+    },
+    trace_sources: ['structural_enrichment.boundary_divergence'],
+  }
+}
+
+// ─── SURFACE: STRUCTURAL COUPLING ─────────────────────────────────
+// Synthesizes: coupling_inertia clusters + bidirectional pairs + system index
+// Question: "Where has coupling created structural rigidity?"
+
+// DEPRECATED: extracted to cognition/materializers/structuralCoupling.js — consumed via PICP
+function deriveStructuralCoupling(fullReport) {
+  const se = fullReport.structural_enrichment || {}
+  if (!se.available || !se.coupling_inertia) return null
+
+  const ci = se.coupling_inertia
+  const clusters = ci.inertia_clusters || []
+  const systemIndex = ci.system_coupling_index || 0
+  const biPairs = ci.bidirectional_pair_count || 0
+
+  if (clusters.length === 0 && biPairs === 0) return null
+
+  const registry = fullReport.semantic_domain_registry || []
+  const affectedDomains = []
+  for (const cl of clusters) {
+    const modules = cl.modules || cl.members || []
+    for (const mod of modules) {
+      const match = registry.find(d => (typeof mod === 'string' ? mod : '').includes(d.domain_name || ''))
+      if (match && !affectedDomains.includes(match.business_label || match.domain_name)) {
+        affectedDomains.push(match.business_label || match.domain_name)
+      }
+    }
+  }
+
+  const totalModulesInClusters = clusters.reduce((sum, cl) => sum + (cl.modules || cl.members || []).length, 0)
+
+  const sysIdxPct = systemIndex > 1 ? Math.round(systemIndex) : Math.round(systemIndex * 100)
+
+  const severity = (clusters.length >= 3 || sysIdxPct > 40) ? 'HIGH'
+    : (clusters.length >= 2 || sysIdxPct > 25) ? 'ELEVATED'
+    : clusters.length >= 1 ? 'MODERATE'
+    : 'LOW'
+
+  return {
+    surface_id: 'STRUCTURAL_COUPLING',
+    surface_name: 'Structural Coupling',
+    severity,
+    operational_summary: `${clusters.length} coupling cluster${clusters.length !== 1 ? 's' : ''} binding ${totalModulesInClusters} module${totalModulesInClusters !== 1 ? 's' : ''} — ${biPairs} bidirectional pair${biPairs !== 1 ? 's' : ''}, system coupling index ${sysIdxPct}%`,
+    consequence: severity === 'HIGH' || severity === 'ELEVATED'
+      ? 'Dense mutual dependencies create structural rigidity — modules in coupling clusters cannot evolve independently, changes require coordinated release'
+      : 'Coupling clusters present but not at elevated structural risk — monitor for growth',
+    evidence_density: clusters.length + biPairs,
+    affected_domains: affectedDomains,
+    constituents: {
+      cluster_count: clusters.length,
+      total_modules_in_clusters: totalModulesInClusters,
+      bidirectional_pairs: biPairs,
+      system_coupling_index: sysIdxPct,
+      clusters: clusters.slice(0, 5).map(cl => ({
+        size: (cl.modules || cl.members || []).length,
+        modules: (cl.modules || cl.members || []).slice(0, 4).map(m => typeof m === 'string' ? m.split('/').slice(-2).join('/') : ''),
+      })),
+    },
+    trace_sources: ['structural_enrichment.coupling_inertia'],
+  }
+}
+
+// ─── SURFACE: REINFORCEMENT FLOWS ──────────────────────────────────
+// Synthesizes: co-presence relationships + domain concentration stacking
+// Question: "How do consequences reinforce each other?"
+
+function deriveReinforcementFlows(fullReport) {
+  const sigs = (fullReport.signal_interpretations || []).filter(isActivated)
+  const blocks = fullReport.evidence_blocks || []
+  const registry = fullReport.semantic_domain_registry || []
+
+  if (sigs.length === 0) return null
+
+  // co_presence is a narrative string, not an array — count signals that have co-presence notes
+  const coPresenceSigs = sigs.filter(s => typeof s.co_presence === 'string' && s.co_presence.length > 0)
+
+  // Find domains with multiple signal types concentrating via concentration narrative matching
+  const domainSignalTypes = {}
+  for (const sig of sigs) {
+    const concText = (sig.concentration || '').toLowerCase()
+    const sigType = sig.signal_family || sig.condition_type || sig.signal_id
+    if (!sigType || !concText) continue
+    for (const d of registry) {
+      const nameMatch = d.domain_name && concText.includes(d.domain_name.toLowerCase())
+      const labelMatch = d.business_label && concText.includes(d.business_label.toLowerCase())
+      if (nameMatch || labelMatch) {
+        const key = d.domain_id || d.domain_name
+        if (!domainSignalTypes[key]) domainSignalTypes[key] = new Set()
+        domainSignalTypes[key].add(sigType)
+      }
+    }
+  }
+  const amplificationDomains = Object.entries(domainSignalTypes)
+    .filter(([, types]) => types.size >= 2)
+    .map(([domain, types]) => ({ domain, type_count: types.size, types: [...types] }))
+
+  // Build flow relationships from domains with multiple condition types
+  const topFlows = []
+  for (const [domain, types] of Object.entries(domainSignalTypes)) {
+    const typeArr = [...types]
+    if (typeArr.length < 2) continue
+    const domainLabel = registry.find(d => d.domain_id === domain || d.domain_name === domain)?.business_label || domain
+    for (let i = 0; i < typeArr.length; i++) {
+      for (let j = i + 1; j < typeArr.length; j++) {
+        topFlows.push({
+          from_type: typeArr[i], from_type_label: CONDITION_TYPE_LABELS[typeArr[i]] || typeArr[i],
+          to_type: typeArr[j], to_type_label: CONDITION_TYPE_LABELS[typeArr[j]] || typeArr[j],
+          verb: 'reinforces', domain: domainLabel,
+        })
+      }
+    }
+  }
+
+  // Cross-domain reinforcement from evidence blocks
+  const originDomains = blocks.filter(b => b.propagation_role === 'ORIGIN').map(b => b.domain_alias)
+
+  const reinforcementCount = coPresenceSigs.length + amplificationDomains.length
+  if (reinforcementCount === 0) return null
+
+  const severity = reinforcementCount >= 5 ? 'HIGH'
+    : reinforcementCount >= 3 ? 'ELEVATED'
+    : 'MODERATE'
+
+  const consequenceTypeSet = new Set(sigs.map(s => s.signal_family || s.condition_type || s.signal_id))
+  const consequenceCount = consequenceTypeSet.size
+
+  const affectedDomains = [...new Set([
+    ...amplificationDomains.map(d => d.domain),
+    ...originDomains,
+  ])]
+
+  return {
+    surface_id: 'REINFORCEMENT_FLOWS',
+    surface_name: 'Reinforcement Flows',
+    severity,
+    operational_summary: `${reinforcementCount} reinforcement relationship${reinforcementCount !== 1 ? 's' : ''} across ${consequenceCount} consequence type${consequenceCount !== 1 ? 's' : ''} — ${coPresenceSigs.length > 0 ? `${coPresenceSigs.length} co-presence signal${coPresenceSigs.length !== 1 ? 's' : ''}` : ''}${coPresenceSigs.length > 0 && amplificationDomains.length > 0 ? ', ' : ''}${amplificationDomains.length > 0 ? `${amplificationDomains.length} amplification domain${amplificationDomains.length !== 1 ? 's' : ''}` : ''}`,
+    consequence: severity === 'HIGH' || severity === 'ELEVATED'
+      ? 'Multiple consequence types reinforce each other — risks compound rather than exist independently, requiring systemic rather than isolated response'
+      : 'Some reinforcement present between consequence types — monitor for compounding dynamics',
+    evidence_density: reinforcementCount,
+    affected_domains: affectedDomains,
+    constituents: {
+      reinforcement_count: reinforcementCount,
+      co_presence_signals: coPresenceSigs.length,
+      amplification_domains: amplificationDomains,
+      top_flows: topFlows.slice(0, 5),
+    },
+    trace_sources: ['signal_interpretations', 'evidence_blocks'],
+  }
+}
+
+// ─── SURFACE: CONVERGENCE PATTERNS ─────────────────────────────────
+// Synthesizes: condition type convergence on same domain
+// Question: "Where do conditions converge on the same domain?"
+
+function deriveConvergencePatterns(fullReport) {
+  const sigs = (fullReport.signal_interpretations || []).filter(isActivated)
+  const blocks = fullReport.evidence_blocks || []
+  const registry = fullReport.semantic_domain_registry || []
+  const se = fullReport.structural_enrichment || {}
+
+  if (sigs.length === 0 && blocks.length === 0) return null
+
+  // Map signals to domains via concentration narrative matching against registry
+  const domainConditions = {}
+  for (const sig of sigs) {
+    const concText = (sig.concentration || '').toLowerCase()
+    const condType = sig.condition_type || sig.signal_family || sig.signal_id
+    if (!condType) continue
+    for (const d of registry) {
+      const nameMatch = d.domain_name && concText.includes(d.domain_name.toLowerCase())
+      const labelMatch = d.business_label && concText.includes(d.business_label.toLowerCase())
+      const idMatch = d.domain_id && concText.includes(d.domain_id.toLowerCase())
+      if (nameMatch || labelMatch || idMatch) {
+        const key = d.domain_id || d.domain_name
+        if (!domainConditions[key]) domainConditions[key] = new Set()
+        domainConditions[key].add(condType)
+      }
+    }
+    // Also match via evidence blocks
+    for (const block of blocks) {
+      const alias = (block.domain_alias || '').toLowerCase()
+      if (alias && concText.includes(alias)) {
+        if (!domainConditions[alias]) domainConditions[alias] = new Set()
+        domainConditions[alias].add(condType)
+      }
+    }
+  }
+
+  // Assign enrichment-surface conditions to domains via module_prefix → cluster mapping
+  if (se.available) {
+    const clusterDomainMap = {}
+    for (const d of registry) {
+      if (d.cluster_id) clusterDomainMap[d.cluster_id] = d.domain_id || d.domain_name
+    }
+    if (se.fragility_surface) {
+      for (const h of (se.fragility_surface.fragility_hotspots || [])) {
+        const prefix = h.module_prefix || ''
+        for (const d of registry) {
+          if (d.domain_name && prefix.toLowerCase().includes(d.domain_name.toLowerCase().split(' ')[0])) {
+            const key = d.domain_id || d.domain_name
+            if (!domainConditions[key]) domainConditions[key] = new Set()
+            domainConditions[key].add('EXECUTION_FRAGILITY')
+            break
+          }
+        }
+      }
+    }
+    if (se.boundary_divergence) {
+      for (const m of (se.boundary_divergence.divergent_modules || [])) {
+        const prefix = m.module_prefix || m.path || ''
+        for (const d of registry) {
+          if (d.domain_name && prefix.toLowerCase().includes(d.domain_name.toLowerCase().split(' ')[0])) {
+            const key = d.domain_id || d.domain_name
+            if (!domainConditions[key]) domainConditions[key] = new Set()
+            domainConditions[key].add('STRUCTURAL_BOUNDARY_DIVERGENCE')
+            break
+          }
+        }
+      }
+    }
+  }
+
+  // A convergence = 2+ distinct condition types on the same domain
+  const convergenceDomains = Object.entries(domainConditions)
+    .filter(([, types]) => types.size >= 2)
+    .map(([domain, types]) => {
+      const regEntry = registry.find(d => d.domain_id === domain || d.domain_name === domain || d.domain_alias === domain)
+      const domainLabel = regEntry ? (regEntry.business_label || regEntry.domain_name || domain) : domain
+      const typeLabels = [...types].map(t => CONDITION_TYPE_LABELS[t] || t.replace(/_/g, ' '))
+      return { domain: domainLabel, condition_count: types.size, condition_types: typeLabels }
+    })
+    .sort((a, b) => b.condition_count - a.condition_count)
+
+  if (convergenceDomains.length === 0) return null
+
+  const peakConditionCount = Math.max(...convergenceDomains.map(d => d.condition_count))
+  const convergenceCount = convergenceDomains.length
+
+  const severity = peakConditionCount >= 4 ? 'HIGH'
+    : peakConditionCount >= 3 ? 'ELEVATED'
+    : 'MODERATE'
+
+  return {
+    surface_id: 'CONVERGENCE_PATTERNS',
+    surface_name: 'Convergence Patterns',
+    severity,
+    operational_summary: `${convergenceCount} domain${convergenceCount !== 1 ? 's' : ''} exhibit condition convergence — peak ${peakConditionCount} condition types on a single domain${convergenceCount > 1 ? `, ${convergenceCount} domains under multi-condition pressure` : ''}`,
+    consequence: severity === 'HIGH' || severity === 'ELEVATED'
+      ? 'Multiple independent condition types converge on the same domain — risk at these domains is compound, not additive'
+      : 'Condition convergence present but below elevated threshold — domains face limited multi-condition pressure',
+    evidence_density: convergenceDomains.reduce((sum, d) => sum + d.condition_count, 0),
+    affected_domains: convergenceDomains.map(d => d.domain),
+    constituents: {
+      convergence_count: convergenceCount,
+      peak_condition_count: peakConditionCount,
+      convergence_domains: convergenceDomains,
+    },
+    trace_sources: ['signal_interpretations', 'semantic_domain_registry'],
+  }
+}
+
+// ─── SURFACE: ABSENCE PROFILE ──────────────────────────────────────
+// Synthesizes: which condition types are NOT firing (structural health)
+// Question: "What is NOT under pressure in this system?"
+
+function deriveAbsenceProfile(fullReport) {
+  const sigs = (fullReport.signal_interpretations || []).filter(isActivated)
+  const se = fullReport.structural_enrichment || {}
+
+  const ALL_CONDITION_TYPES = [
+    'DELIVERY_PRESSURE_CONCENTRATION',
+    'DEPENDENCY_CHOKE_POINT',
+    'PROPAGATION_ASYMMETRY',
+    'STRUCTURAL_MASS_CONCENTRATION',
+    'CROSS_DOMAIN_COUPLING_PRESSURE',
+    'EXECUTION_FRAGILITY',
+    'EXECUTION_CONSTRICTION',
+    'STRUCTURAL_BOUNDARY_DIVERGENCE',
+    'COUPLING_INERTIA',
+    'GOVERNANCE_COVERAGE_GAP',
+  ]
+
+  const totalConditionTypes = ALL_CONDITION_TYPES.length
+
+  // Determine which condition types are actively firing from signals
+  const activeConditionTypes = new Set()
+  for (const sig of sigs) {
+    if (sig.condition_type) activeConditionTypes.add(sig.condition_type)
+    if (sig.signal_family === 'ISIG') {
+      activeConditionTypes.add('DEPENDENCY_CHOKE_POINT')
+      if (sig.signal_name && sig.signal_name.includes('Fan Asymmetry')) activeConditionTypes.add('PROPAGATION_ASYMMETRY')
+    }
+    if (sig.signal_family === 'DPSIG') {
+      if (sig.signal_name && sig.signal_name.includes('Absorption')) activeConditionTypes.add('STRUCTURAL_MASS_CONCENTRATION')
+      if (sig.signal_name && sig.signal_name.includes('Cluster Pressure')) activeConditionTypes.add('DELIVERY_PRESSURE_CONCENTRATION')
+    }
+  }
+
+  // Check enrichment surfaces for additional active conditions
+  if (se.available) {
+    if (se.fragility_surface && (se.fragility_surface.fragility_hotspots || []).length > 0) activeConditionTypes.add('EXECUTION_FRAGILITY')
+    if (se.boundary_divergence && (se.boundary_divergence.divergent_modules || []).length > 0) activeConditionTypes.add('STRUCTURAL_BOUNDARY_DIVERGENCE')
+    if (se.coupling_inertia && (se.coupling_inertia.inertia_clusters || []).length > 0) activeConditionTypes.add('COUPLING_INERTIA')
+    if (se.constriction_surface && (se.constriction_surface.constricted_paths || []).length > 0) activeConditionTypes.add('EXECUTION_CONSTRICTION')
+  }
+
+  const absentTypes = []
+  const activeTypes = []
+
+  for (const condType of ALL_CONDITION_TYPES) {
+    const label = CONDITION_TYPE_LABELS[condType] || condType.replace(/_/g, ' ')
+    if (activeConditionTypes.has(condType)) {
+      activeTypes.push({ type: condType, label })
+    } else {
+      // Determine reason for absence
+      let reason = 'No activation detected'
+      if (condType === 'EXECUTION_FRAGILITY' && se.available && se.fragility_surface) reason = 'Fragility surface nominal'
+      else if (condType === 'STRUCTURAL_BOUNDARY_DIVERGENCE' && se.available && se.boundary_divergence) reason = 'Boundary alignment intact'
+      else if (condType === 'COUPLING_INERTIA' && se.available && se.coupling_inertia) reason = 'Coupling within threshold'
+      else if (condType === 'EXECUTION_CONSTRICTION' && se.available && se.constriction_surface) reason = 'No constricted paths'
+      else if (condType === 'GOVERNANCE_COVERAGE_GAP') reason = 'Governance coverage sufficient'
+      else if (!se.available && ['EXECUTION_FRAGILITY', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'EXECUTION_CONSTRICTION'].includes(condType)) reason = 'Unobservable — enrichment not available'
+      absentTypes.push({ type: condType, label, reason })
+    }
+  }
+
+  const absentCount = absentTypes.length
+  const activeCount = activeTypes.length
+
+  // Always produce this surface if we have any signal data
+  if (sigs.length === 0 && !se.available) return null
+
+  return {
+    surface_id: 'ABSENCE_PROFILE',
+    surface_name: 'Absence Profile',
+    severity: 'LOW',
+    operational_summary: `${absentCount} of ${totalConditionTypes} structural condition types are nominal — ${activeCount} active, ${absentCount} absent${absentCount > activeCount ? ' — system health is structurally confirmed for the majority of condition types' : ''}`,
+    consequence: absentCount >= totalConditionTypes * 0.7
+      ? 'Strong structural health — most condition types are nominal, pressure is concentrated rather than systemic'
+      : absentCount >= totalConditionTypes * 0.4
+        ? 'Mixed health profile — some condition types are absent but a significant number are active'
+        : 'Most condition types are active — pressure is systemic rather than concentrated',
+    evidence_density: absentCount,
+    affected_domains: [],
+    constituents: {
+      absent_count: absentCount,
+      total_types: totalConditionTypes,
+      active_count: activeCount,
+      health_ratio: Math.round(absentCount / totalConditionTypes * 100),
+      absent_types: absentTypes,
+      active_types: activeTypes,
+    },
+    trace_sources: ['signal_interpretations', 'structural_enrichment'],
+  }
+}
+
 // ─── QUALIFICATION DECOMPOSITION (preserved — already compressed) ───
 
 const SW_INTEL_ROLE_MAP = {
@@ -700,13 +1196,26 @@ function deriveProjection(fullReport) {
     }
   }
 
+  // Tier 1: consume from PICR-materialized PICP — not derived locally
+  const cip = assembleCIP(fullReport)
+  const picp = materializePICR(cip)
+
   const rawSurfaces = [
+    // Prototype surfaces (derived locally — extraction pending)
     deriveDeliveryFragility(fullReport),
     deriveCoordinationSaturation(fullReport),
     deriveIntegrationExposure(fullReport),
     deriveOperationalTopologyPosture(fullReport),
     deriveQualificationExposure(fullReport),
     derivePropagationRisk(fullReport),
+    // Tier 1: consumed from PICP (PICR-materialized)
+    getSwIntelSurface(picp, 'structural_fragility'),
+    getSwIntelSurface(picp, 'boundary_alignment'),
+    getSwIntelSurface(picp, 'structural_coupling'),
+    // Tier 2: derived locally (extraction deferred)
+    deriveReinforcementFlows(fullReport),
+    deriveConvergencePatterns(fullReport),
+    deriveAbsenceProfile(fullReport),
   ].filter(Boolean)
 
   const surfaces = rawSurfaces.sort((a, b) =>
@@ -905,6 +1414,142 @@ function deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurfa
     ]
   }
 
+  else if (activeSurfaceId === 'STRUCTURAL_FRAGILITY') {
+    const fs = se.fragility_surface || {}
+    const hotspots = fs.fragility_hotspots || []
+
+    const hotspotDomainIds = []
+    for (const hs of hotspots) {
+      const filePath = hs.file || hs.path || ''
+      const match = registry.find(d => filePath.startsWith(d.domain_name || '') || filePath.includes(d.domain_name || ''))
+      if (match && !hotspotDomainIds.includes(match.domain_id)) hotspotDomainIds.push(match.domain_id)
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !hotspotDomainIds.includes(id))
+
+    base.overlay_mode = 'FRAGILITY_HOTSPOT'
+    base.emphasis_domains = hotspotDomainIds
+    base.dim_domains = hotspotDomainIds.length > 0 ? dimIds : []
+    base.topology_label = 'STRUCTURAL FRAGILITY'
+    base.legend_entries = [
+      ...(hotspotDomainIds.length > 0 ? [{ color: '#ff6b6b', label: `Fragility Hotspot (${hotspots.length} files)`, style: 'solid' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'BOUNDARY_ALIGNMENT') {
+    const bd = se.boundary_divergence || {}
+    const divergent = bd.divergent_modules || []
+
+    const divergentDomainIds = []
+    for (const dm of divergent) {
+      const modName = dm.module || dm.name || ''
+      const match = registry.find(d => modName.startsWith(d.domain_name || '') || modName.includes(d.domain_name || ''))
+      if (match && !divergentDomainIds.includes(match.domain_id)) divergentDomainIds.push(match.domain_id)
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !divergentDomainIds.includes(id))
+
+    base.overlay_mode = 'BOUNDARY_DIVERGENCE'
+    base.emphasis_domains = divergentDomainIds
+    base.dim_domains = divergentDomainIds.length > 0 ? dimIds : []
+    base.topology_label = 'BOUNDARY ALIGNMENT'
+    base.legend_entries = [
+      ...(divergentDomainIds.length > 0 ? [{ color: '#ffd700', label: `Divergent (${divergent.length} modules)`, style: 'solid' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'STRUCTURAL_COUPLING') {
+    const ci = se.coupling_inertia || {}
+    const clusters = ci.inertia_clusters || []
+
+    const clusterDomainIds = []
+    for (const cl of clusters) {
+      const modules = cl.modules || cl.members || []
+      for (const mod of modules) {
+        const match = registry.find(d => (typeof mod === 'string' ? mod : '').includes(d.domain_name || ''))
+        if (match && !clusterDomainIds.includes(match.domain_id)) clusterDomainIds.push(match.domain_id)
+      }
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !clusterDomainIds.includes(id))
+
+    base.overlay_mode = 'COUPLING_CLUSTER'
+    base.emphasis_domains = clusterDomainIds
+    base.dim_domains = clusterDomainIds.length > 0 ? dimIds : []
+    base.topology_label = 'STRUCTURAL COUPLING'
+    base.legend_entries = [
+      ...(clusterDomainIds.length > 0 ? [{ color: '#ff9e4a', label: `Coupling Cluster (${clusters.length})`, style: 'solid' }] : []),
+      ...(ci.bidirectional_pair_count > 0 ? [{ color: '#ffd700', label: `${ci.bidirectional_pair_count} bidirectional pair${ci.bidirectional_pair_count !== 1 ? 's' : ''}`, style: 'dashed' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'REINFORCEMENT_FLOWS') {
+    const coPresenceSigs = sigs.filter(s => typeof s.co_presence === 'string' && s.co_presence.length > 0)
+
+    // Resolve amplification domains from the surface constituents
+    const ampDomainIds = []
+    const surfaceAmps = (resolvedSurface.constituents || {}).amplification_domains || []
+    for (const amp of surfaceAmps) {
+      const match = registry.find(d => d.domain_name === amp.domain || d.business_label === amp.domain || d.domain_id === amp.domain)
+      if (match && !ampDomainIds.includes(match.domain_id)) ampDomainIds.push(match.domain_id)
+    }
+
+    // Build corridor paths from top_flows (domain concentration pairs, not co_presence iteration)
+    const corridorPaths = []
+    const topFlows = (resolvedSurface.constituents || {}).top_flows || []
+    for (const flow of topFlows) {
+      if (flow.domain) {
+        const match = registry.find(d => d.business_label === flow.domain || d.domain_name === flow.domain || d.domain_id === flow.domain)
+        if (match) corridorPaths.push({ from: match.domain_id, to: match.domain_id, type: 'reinforcement' })
+      }
+    }
+
+    const emphasisIds = [...new Set([...ampDomainIds, ...corridorPaths.map(c => c.from)].filter(Boolean))]
+    const dimIds = Array.from(domainIdSet).filter(id => !emphasisIds.includes(id))
+
+    base.overlay_mode = 'REINFORCEMENT_FLOW'
+    base.emphasis_domains = emphasisIds
+    base.dim_domains = emphasisIds.length > 0 ? dimIds : []
+    base.corridor_paths = corridorPaths
+    base.topology_label = 'REINFORCEMENT FLOWS'
+    base.legend_entries = [
+      ...(ampDomainIds.length > 0 ? [{ color: '#ff9e4a', label: `Amplification Domain (${ampDomainIds.length})`, style: 'solid' }] : []),
+      ...(coPresenceSigs.length > 0 ? [{ color: '#ff6b6b', label: `Co-Present Signal (${coPresenceSigs.length})`, style: 'pulse' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'CONVERGENCE_PATTERNS') {
+    const convergenceDomains = (resolvedSurface.constituents || {}).convergence_domains || []
+
+    const convergenceDomainIds = []
+    for (const cd of convergenceDomains) {
+      const match = registry.find(d => d.business_label === cd.domain || d.domain_name === cd.domain || d.domain_id === cd.domain)
+      if (match && !convergenceDomainIds.includes(match.domain_id)) convergenceDomainIds.push(match.domain_id)
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !convergenceDomainIds.includes(id))
+
+    base.overlay_mode = 'CONVERGENCE_ZONE'
+    base.emphasis_domains = convergenceDomainIds
+    base.dim_domains = convergenceDomainIds.length > 0 ? dimIds : []
+    base.topology_label = 'CONVERGENCE PATTERNS'
+    base.legend_entries = [
+      ...(convergenceDomainIds.length > 0 ? [{ color: '#ff9e4a', label: `Convergence Domain (${convergenceDomains.length})`, style: 'solid' }] : []),
+    ]
+  }
+
+  else if (activeSurfaceId === 'ABSENCE_PROFILE') {
+    base.overlay_mode = 'STRUCTURAL_HEALTH'
+    base.grounding_gradient = true
+    // Show everything — no dim domains for health view
+    base.topology_label = 'STRUCTURAL HEALTH'
+    const c = resolvedSurface.constituents || {}
+    base.legend_entries = [
+      { color: '#64ffda', label: `Healthy: ${c.absent_count || 0} types nominal`, style: 'solid' },
+      { color: '#ff9e4a', label: `Active: ${c.active_count || 0} types firing`, style: 'solid' },
+    ]
+  }
+
   else if (activeSurfaceId === 'PROPAGATION_RISK') {
     const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
     const passThroughs = blocks.filter(b => b.propagation_role === 'PASS_THROUGH')
@@ -1058,6 +1703,10 @@ const CONDITION_TYPE_LABELS = {
   CROSS_DOMAIN_COUPLING_PRESSURE: 'COUPLING PRESSURE',
   GOVERNANCE_COVERAGE_STATUS: 'GOVERNANCE COVERAGE',
   COMPOUND_CONVERGENCE: 'COMPOUND CONVERGENCE',
+  EXECUTION_FRAGILITY: 'EXECUTION FRAGILITY',
+  EXECUTION_CONSTRICTION: 'EXECUTION CONSTRICTION',
+  STRUCTURAL_BOUNDARY_DIVERGENCE: 'BOUNDARY DIVERGENCE',
+  COUPLING_INERTIA: 'COUPLING INERTIA',
 }
 
 function deriveConditionCognitionState(condition, fullReport) {

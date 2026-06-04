@@ -13004,23 +13004,23 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cognition-gap-item {
           display: flex;
-          align-items: baseline;
-          gap: 8px;
-          padding: 4px 0;
+          flex-direction: column;
+          gap: 2px;
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(30,35,48,0.3);
         }
+        .cognition-gap-item:last-child { border-bottom: none; }
         .cognition-gap-label {
           font-family: 'Courier New', monospace;
           font-size: 11px;
           color: #ccd6f6;
-          flex: 1;
-          min-width: 0;
+          line-height: 1.4;
         }
         .cognition-gap-impact {
           font-family: 'Courier New', monospace;
           font-size: 10px;
           color: #ff9e4a;
-          flex-shrink: 0;
-          text-align: right;
+          line-height: 1.4;
         }
 
         .cognition-progression {
@@ -13030,9 +13030,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cognition-progression-item {
           display: flex;
-          align-items: baseline;
-          gap: 8px;
-          padding: 4px 0;
+          flex-direction: column;
+          gap: 2px;
+          padding: 6px 0;
           border-bottom: 1px solid rgba(30,35,48,0.4);
         }
         .cognition-progression-item:last-child { border-bottom: none; }
@@ -13040,16 +13040,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 11.5px;
           color: #ccd6f6;
-          flex: 1;
-          min-width: 0;
           line-height: 1.4;
         }
         .cognition-progression-effect {
           font-family: 'Courier New', monospace;
           font-size: 10px;
           color: #64ffda;
-          flex-shrink: 0;
-          text-align: right;
+          line-height: 1.4;
         }
 
         /* Left panel — cognition query answer overlay */

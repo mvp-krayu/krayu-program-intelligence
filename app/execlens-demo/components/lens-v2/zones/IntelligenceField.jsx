@@ -1410,6 +1410,12 @@ const SW_INTEL_SURFACE_REGISTRY = {
   OPERATIONAL_TOPOLOGY:    { code: 'OT', label: 'Operational Topology Posture', icon: '◉' },
   QUALIFICATION_EXPOSURE:  { code: 'QE', label: 'Qualification Exposure',      icon: '⊘' },
   PROPAGATION_RISK:        { code: 'PR', label: 'Propagation Risk',            icon: '⟿' },
+  STRUCTURAL_FRAGILITY:    { code: 'SF', label: 'Structural Fragility',       icon: '⚡' },
+  BOUNDARY_ALIGNMENT:      { code: 'BA', label: 'Boundary Alignment',         icon: '⊿' },
+  STRUCTURAL_COUPLING:     { code: 'SC', label: 'Structural Coupling',        icon: '⊛' },
+  REINFORCEMENT_FLOWS:     { code: 'RF', label: 'Reinforcement Flows',       icon: '⇄' },
+  CONVERGENCE_PATTERNS:    { code: 'CP', label: 'Convergence Patterns',      icon: '⊕' },
+  ABSENCE_PROFILE:         { code: 'AP', label: 'Absence Profile',           icon: '◇' },
 }
 
 function findDomainGrounding(domainName, registry) {
@@ -2148,6 +2154,898 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
             { step: 'Reduce origin concentration', effect: 'Fewer pressure sources in delivery chain' },
             { step: 'Stabilize corridors', effect: 'Lower conduction amplification' },
             { step: 'Limit receiver exposure', effect: 'Reduce downstream blast radius' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── STRUCTURAL FRAGILITY ──────────────────────────────────────────
+  STRUCTURAL_FRAGILITY: {
+    meta: { code: 'SF', label: 'Structural Fragility', icon: '⚡' },
+    resolve: (fullReport, surface) => {
+      const se = fullReport.structural_enrichment || {}
+      const fs = se.fragility_surface || {}
+      const hotspots = fs.fragility_hotspots || []
+      const cohesion = fs.module_cohesion || []
+      const absorptive = fs.absorptive_modules || []
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+      const lowCohesion = cohesion.filter(m => (m.cohesion || m.cohesion_score || 1) < 0.4)
+
+      return {
+        interpretation: {
+          heading: 'Structural Fragility — Active Cognition State',
+          operationalMeaning: hotspots.length > 0
+            ? `${hotspots.length} fragility hotspot${hotspots.length !== 1 ? 's' : ''} detected — files with high coupling and low cohesion that concentrate change risk. Peak fragility: ${c.peak_fragility || 0}%. ${lowCohesion.length > 0 ? `${lowCohesion.length} module${lowCohesion.length !== 1 ? 's' : ''} have low internal cohesion — changes inside these modules propagate unpredictably.` : ''}${absorptive.length > 0 ? ` ${absorptive.length} absorptive module${absorptive.length !== 1 ? 's' : ''} absorb structural load from surrounding components.` : ''}`
+            : 'Fragility surface available but no hotspots detected at current threshold.',
+          structuralEvidence: [
+            ...(c.top_hotspots || []).slice(0, 4).map(h => ({
+              label: h.file,
+              value: `${h.score}% fragility${h.coupling ? ` · coupling ${h.coupling}` : ''}${h.cohesion ? ` · cohesion ${h.cohesion}` : ''}`,
+              severity: h.score > 70 ? 'critical' : h.score > 50 ? 'elevated' : 'nominal',
+            })),
+          ],
+          suppressionMask: ['OPERATIONAL_TOPOLOGY'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Review hotspot file changes with extended scope', priority: 'HIGH' },
+            ...(lowCohesion.length > 0 ? [{ action: `${lowCohesion.length} low-cohesion module${lowCohesion.length !== 1 ? 's' : ''} — changes propagate beyond apparent scope`, priority: 'HIGH' }] : []),
+            ...(surface.severity === 'HIGH' ? [{ action: 'Structural fragility at HIGH — deployment risk elevated for hotspot regions', priority: 'CRITICAL' }] : []),
+          ],
+          qualification: {
+            effect: hotspots.length >= 5
+              ? 'High hotspot count compounds structural risk — qualification posture affected'
+              : 'Fragility present but within manageable bounds for qualification',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: `Which files are structurally brittle? (${hotspots.length} hotspot${hotspots.length !== 1 ? 's' : ''})`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From structural_enrichment.fragility_surface — deterministic.',
+            answer_derive: (fr) => {
+              const frag = ((fr.structural_enrichment || {}).fragility_surface || {}).fragility_hotspots || []
+              return {
+                summary: frag.length > 0
+                  ? `${frag.length} file${frag.length !== 1 ? 's' : ''} exceed fragility threshold. These files combine high coupling with low cohesion — the structural signature of change amplification.`
+                  : 'No fragility hotspots at current threshold.',
+                evidence: frag.slice(0, 6).map(h => ({
+                  label: (h.file || h.path || '').split('/').slice(-2).join('/'),
+                  value: `${Math.round((h.fragility_score || h.score || 0) * 100)}% fragility`,
+                  severity: (h.fragility_score || h.score || 0) > 0.7 ? 'critical' : 'elevated',
+                })),
+                structuralContext: 'Fragility = f(coupling, cohesion). High coupling + low cohesion = structural joint that amplifies change impact.',
+              }
+            },
+          },
+          {
+            question: 'Does fragility compound with other structural pressures?',
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From ontology class intersection — deterministic.',
+            answer_derive: (fr) => {
+              const sigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const fragSigs = sigs.filter(s => s.signal_name && (s.signal_name.includes('Fragility') || s.signal_name.includes('Cohesion')))
+              const otherHighSigs = sigs.filter(s => s.severity === 'HIGH' && !fragSigs.includes(s))
+              return {
+                summary: otherHighSigs.length > 0
+                  ? `Fragility compounds with ${otherHighSigs.length} other elevated signal${otherHighSigs.length !== 1 ? 's' : ''} — structural risk is compounded, not isolated.`
+                  : 'Fragility is the dominant structural dynamic — not currently compounding with other elevated pressures.',
+                evidence: otherHighSigs.slice(0, 3).map(s => ({
+                  label: s.signal_name || s.signal_id,
+                  value: s.severity,
+                  severity: 'elevated',
+                })),
+                structuralContext: 'Compound risk assessed through ontology class intersection (Class C: Fragility & Resilience).',
+              }
+            },
+          },
+          {
+            question: 'What is the blast radius of changes to fragile files?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From fragility hotspot domain mapping + coupling — deterministic.',
+            answer_derive: (fr) => {
+              const frag = ((fr.structural_enrichment || {}).fragility_surface || {}).fragility_hotspots || []
+              const reg = fr.semantic_domain_registry || []
+              const affectedDomains = new Set()
+              for (const h of frag) {
+                const fp = h.file || h.path || ''
+                const match = reg.find(d => fp.includes(d.domain_name || ''))
+                if (match) affectedDomains.add(match.business_label || match.domain_name)
+              }
+              return {
+                summary: `Fragility hotspots span ${affectedDomains.size} domain${affectedDomains.size !== 1 ? 's' : ''}. Changes to these ${frag.length} file${frag.length !== 1 ? 's' : ''} propagate unpredictably due to high coupling — blast radius extends beyond the file's apparent scope.`,
+                evidence: [...affectedDomains].map(d => ({
+                  label: d,
+                  value: 'contains fragility hotspots',
+                  severity: 'elevated',
+                })),
+                structuralContext: 'Blast radius bounded by coupling edges from fragile files. High coupling means more downstream consumers of changes.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const affected = new Set(surface.affected_domains || [])
+          return {
+            highlightDomains: [...affected],
+            accentDomains: [],
+            dimDomains: registry.filter(d => !affected.has(d.business_label || d.domain_name) && !affected.has(d.domain_name)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Review fragility hotspot files before merge', priority: 'HIGH', type: 'investigation' },
+          { action: 'Assess low-cohesion modules for refactoring opportunity', priority: 'MEDIUM', type: 'architectural' },
+          { action: 'Monitor fragility trend across runs', priority: 'LOW', type: 'assessment' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(fs.analysis_mode === 'HEURISTIC' ? [{ gap: 'Fragility analysis in heuristic mode', impact: 'Scores approximate — full AST analysis would refine' }] : []),
+            ...(lowCohesion.length === 0 && hotspots.length > 0 ? [{ gap: 'Cohesion data unavailable for some modules', impact: 'Fragility assessment based on coupling only' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Improve cohesion of low-cohesion modules', effect: 'Reduce fragility scores at structural joints' },
+            { step: 'Reduce coupling of high-coupling hotspots', effect: 'Lower blast radius of changes' },
+            { step: 'Stabilize absorptive modules', effect: 'Reduce structural load concentration' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── BOUNDARY ALIGNMENT ────────────────────────────────────────────
+  BOUNDARY_ALIGNMENT: {
+    meta: { code: 'BA', label: 'Boundary Alignment', icon: '⊿' },
+    resolve: (fullReport, surface) => {
+      const se = fullReport.structural_enrichment || {}
+      const bd = se.boundary_divergence || {}
+      const divergent = bd.divergent_modules || []
+      const orphaned = bd.orphaned_modules || []
+      const systemIndex = bd.system_divergence_index || 0
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+
+      return {
+        interpretation: {
+          heading: 'Boundary Alignment — Active Cognition State',
+          operationalMeaning: divergent.length > 0
+            ? `${divergent.length} module${divergent.length !== 1 ? 's' : ''} show boundary divergence — their declared organizational boundaries do not match actual dependency patterns. System divergence index: ${c.system_divergence_index || 0}%.${orphaned.length > 0 ? ` ${orphaned.length} orphaned module${orphaned.length !== 1 ? 's' : ''} have no parent boundary claiming them.` : ''} This creates governance blind spots — changes in divergent modules affect domains they are not organizationally assigned to.`
+            : 'Boundary divergence surface available but no divergent modules at current threshold.',
+          structuralEvidence: [
+            ...(c.top_divergent || []).slice(0, 4).map(d => ({
+              label: d.module,
+              value: `${d.cross_boundary_ratio}% cross-boundary${d.edge_count > 0 ? ` · ${d.edge_count} edge${d.edge_count !== 1 ? 's' : ''}` : ''}`,
+              severity: d.cross_boundary_ratio > 60 ? 'critical' : d.cross_boundary_ratio > 30 ? 'elevated' : 'nominal',
+            })),
+            ...(orphaned.length > 0 ? [{ label: 'Orphaned modules', value: `${orphaned.length} without boundary`, severity: 'elevated' }] : []),
+          ],
+          suppressionMask: ['OPERATIONAL_TOPOLOGY'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Changes to divergent modules may affect unexpected domains', priority: 'HIGH' },
+            ...(orphaned.length > 0 ? [{ action: `${orphaned.length} orphaned module${orphaned.length !== 1 ? 's' : ''} — governance assignment needed`, priority: 'MEDIUM' }] : []),
+            ...(systemIndex > 0.4 ? [{ action: 'System divergence index exceeds 40% — organizational boundaries need structural review', priority: 'HIGH' }] : []),
+          ],
+          qualification: {
+            effect: systemIndex > 0.3
+              ? 'High boundary divergence indicates governance structure does not reflect structural reality — qualification confidence affected'
+              : 'Boundary divergence within manageable range for qualification',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: `Which modules cross their declared boundaries? (${divergent.length})`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From structural_enrichment.boundary_divergence — deterministic.',
+            answer_derive: (fr) => {
+              const div = ((fr.structural_enrichment || {}).boundary_divergence || {}).divergent_modules || []
+              return {
+                summary: div.length > 0
+                  ? `${div.length} module${div.length !== 1 ? 's' : ''} have dependencies crossing their declared boundaries. The cross-boundary ratio measures how much of a module's dependency traffic leaves its organizational boundary.`
+                  : 'No boundary divergence detected.',
+                evidence: div.slice(0, 6).map(d => ({
+                  label: (d.module || d.name || '').split('/').slice(-2).join('/'),
+                  value: `${Math.round((d.cross_boundary_ratio || d.ratio || 0) * 100)}% cross-boundary`,
+                  severity: (d.cross_boundary_ratio || d.ratio || 0) > 0.5 ? 'critical' : 'elevated',
+                })),
+                structuralContext: 'Boundary divergence = declared module boundary vs actual import/dependency graph. High cross-boundary ratio = organizational fiction.',
+              }
+            },
+          },
+          {
+            question: 'Where does boundary divergence create governance gaps?',
+            tone: 'architectural', archetype: 'INTERPRET', depth: 'standard',
+            boundary: 'From divergence → GOV_GAP consequence chain — deterministic.',
+            answer_derive: (fr) => {
+              const div = ((fr.structural_enrichment || {}).boundary_divergence || {}).divergent_modules || []
+              const reg = fr.semantic_domain_registry || []
+              const affectedDomains = new Set()
+              for (const dm of div) {
+                const match = reg.find(d => (dm.module || '').includes(d.domain_name || ''))
+                if (match) affectedDomains.add(match.business_label || match.domain_name)
+              }
+              return {
+                summary: `Boundary divergence affects ${affectedDomains.size} domain${affectedDomains.size !== 1 ? 's' : ''}. When module boundaries don't match dependency structure, change reviews miss cross-domain impact — the governance gap.`,
+                evidence: [...affectedDomains].map(d => ({
+                  label: d,
+                  value: 'contains divergent modules',
+                  severity: 'elevated',
+                })),
+                structuralContext: 'STRUCTURAL_BOUNDARY_DIVERGENCE → GOV_GAP consequence in ontology. Governance gaps are structural, not procedural.',
+              }
+            },
+          },
+          {
+            question: 'Are orphaned modules creating structural blind spots?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From boundary_divergence.orphaned_modules — deterministic.',
+            answer_derive: (fr) => {
+              const orph = ((fr.structural_enrichment || {}).boundary_divergence || {}).orphaned_modules || []
+              return {
+                summary: orph.length > 0
+                  ? `${orph.length} module${orph.length !== 1 ? 's' : ''} have no organizational boundary claiming them. These are structural blind spots — no team owns their governance, no review process covers their changes.`
+                  : 'No orphaned modules — all modules have organizational boundary assignment.',
+                evidence: orph.slice(0, 4).map(m => ({
+                  label: typeof m === 'string' ? m.split('/').slice(-2).join('/') : String(m),
+                  value: 'orphaned — no boundary',
+                  severity: 'critical',
+                })),
+                structuralContext: 'Orphaned modules are governance-invisible. Changes to them affect the system but no organizational process catches the impact.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const affected = new Set(surface.affected_domains || [])
+          return {
+            highlightDomains: [...affected],
+            accentDomains: [],
+            dimDomains: registry.filter(d => !affected.has(d.business_label || d.domain_name) && !affected.has(d.domain_name)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Review divergent module boundaries against dependency graph', priority: 'HIGH', type: 'architectural' },
+          { action: 'Assign orphaned modules to organizational boundaries', priority: 'MEDIUM', type: 'assessment' },
+          { action: 'Reduce cross-boundary dependency ratio in top divergent modules', priority: 'LOW', type: 'architectural' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(orphaned.length > 0 ? [{ gap: `${orphaned.length} orphaned module${orphaned.length !== 1 ? 's' : ''}`, impact: 'Governance blind spots — boundary assignment needed' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Realign module boundaries to match dependency patterns', effect: 'Reduce system divergence index' },
+            { step: 'Assign orphaned modules', effect: 'Eliminate governance blind spots' },
+            { step: 'Reduce cross-boundary coupling', effect: 'Make organizational boundaries structurally meaningful' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── STRUCTURAL COUPLING ───────────────────────────────────────────
+  STRUCTURAL_COUPLING: {
+    meta: { code: 'SC', label: 'Structural Coupling', icon: '⊛' },
+    resolve: (fullReport, surface) => {
+      const se = fullReport.structural_enrichment || {}
+      const ci = se.coupling_inertia || {}
+      const clusters = ci.inertia_clusters || []
+      const biPairs = ci.bidirectional_pair_count || 0
+      const systemIndex = ci.system_coupling_index || 0
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+
+      return {
+        interpretation: {
+          heading: 'Structural Coupling — Active Cognition State',
+          operationalMeaning: clusters.length > 0
+            ? `${clusters.length} coupling cluster${clusters.length !== 1 ? 's' : ''} binding ${c.total_modules_in_clusters || 0} module${(c.total_modules_in_clusters || 0) !== 1 ? 's' : ''} into fused change units. ${biPairs} bidirectional dependency pair${biPairs !== 1 ? 's' : ''} — modules that import each other cannot evolve independently. System coupling index: ${c.system_coupling_index || 0}%. Changes to any module in a cluster force coordinated release of all cluster members.`
+            : 'Coupling inertia surface available but no clusters at current threshold.',
+          structuralEvidence: [
+            ...(c.clusters || []).slice(0, 3).map((cl, i) => ({
+              label: `Cluster ${i + 1} (${cl.size} modules)`,
+              value: cl.modules.join(', '),
+              severity: cl.size >= 4 ? 'critical' : 'elevated',
+            })),
+            ...(biPairs > 0 ? [{ label: 'Bidirectional pairs', value: `${biPairs} mutual dependencies`, severity: biPairs >= 3 ? 'critical' : 'elevated' }] : []),
+          ],
+          suppressionMask: ['OPERATIONAL_TOPOLOGY'],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Changes to cluster members require coordinated release', priority: 'HIGH' },
+            ...(biPairs > 0 ? [{ action: `${biPairs} bidirectional pair${biPairs !== 1 ? 's' : ''} — breaking circular dependencies reduces cluster size`, priority: 'MEDIUM' }] : []),
+            ...(systemIndex > 0.3 ? [{ action: 'System coupling index exceeds 30% — architectural rigidity limits independent evolution', priority: 'HIGH' }] : []),
+          ],
+          qualification: {
+            effect: clusters.length >= 3
+              ? 'Multiple coupling clusters indicate systemic rigidity — qualification posture reflects constrained evolvability'
+              : 'Coupling present but manageable for qualification',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: `What modules are fused into change units? (${clusters.length} cluster${clusters.length !== 1 ? 's' : ''})`,
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From structural_enrichment.coupling_inertia — deterministic.',
+            answer_derive: (fr) => {
+              const cls = ((fr.structural_enrichment || {}).coupling_inertia || {}).inertia_clusters || []
+              const totalModules = cls.reduce((sum, cl) => sum + (cl.modules || cl.members || []).length, 0)
+              return {
+                summary: cls.length > 0
+                  ? `${cls.length} cluster${cls.length !== 1 ? 's' : ''} fuse ${totalModules} module${totalModules !== 1 ? 's' : ''} into coordinated change units. Modules within a cluster share bidirectional dependencies — changing one requires testing all.`
+                  : 'No coupling clusters at current threshold.',
+                evidence: cls.slice(0, 4).map((cl, i) => ({
+                  label: `Cluster ${i + 1}`,
+                  value: `${(cl.modules || cl.members || []).length} modules: ${(cl.modules || cl.members || []).slice(0, 3).map(m => typeof m === 'string' ? m.split('/').slice(-1)[0] : '').join(', ')}${(cl.modules || cl.members || []).length > 3 ? '...' : ''}`,
+                  severity: (cl.modules || cl.members || []).length >= 4 ? 'critical' : 'elevated',
+                })),
+                structuralContext: 'Clusters detected through bidirectional dependency analysis — mutual import relationships that prevent independent module evolution.',
+              }
+            },
+          },
+          {
+            question: `Where are the ${biPairs} bidirectional dependencies?`,
+            tone: 'architectural', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From coupling_inertia.bidirectional_pair_count — deterministic.',
+            answer_derive: (fr) => {
+              const cplg = (fr.structural_enrichment || {}).coupling_inertia || {}
+              const pairs = cplg.bidirectional_pairs || []
+              const pairCount = cplg.bidirectional_pair_count || 0
+              return {
+                summary: pairCount > 0
+                  ? `${pairCount} bidirectional dependency pair${pairCount !== 1 ? 's' : ''} create mutual import relationships. These are the structural anchors of coupling clusters — breaking them reduces cluster size and enables independent evolution.`
+                  : 'No bidirectional dependencies detected — coupling is unidirectional.',
+                evidence: pairs.slice(0, 4).map(p => ({
+                  label: typeof p === 'object' ? `${(p.a || '').split('/').slice(-1)[0]} ↔ ${(p.b || '').split('/').slice(-1)[0]}` : String(p),
+                  value: 'bidirectional',
+                  severity: 'elevated',
+                })),
+                structuralContext: 'Bidirectional dependency = A imports B AND B imports A. The strongest form of coupling — a single change unit.',
+              }
+            },
+          },
+          {
+            question: 'Does coupling rigidity block independent module evolution?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From cluster size + system coupling index — deterministic.',
+            answer_derive: (fr) => {
+              const cplg = (fr.structural_enrichment || {}).coupling_inertia || {}
+              const cls = cplg.inertia_clusters || []
+              const sysIdx = cplg.system_coupling_index || 0
+              const totalModules = cls.reduce((sum, cl) => sum + (cl.modules || cl.members || []).length, 0)
+              return {
+                summary: sysIdx > 0.25
+                  ? `System coupling index at ${Math.round(sysIdx * 100)}% — more than a quarter of module relationships are mutually dependent. ${totalModules} module${totalModules !== 1 ? 's' : ''} across ${cls.length} cluster${cls.length !== 1 ? 's' : ''} cannot be released independently. This is structural rigidity — the system resists decomposition.`
+                  : `System coupling index at ${Math.round(sysIdx * 100)}% — coupling is present but does not dominate the dependency structure. ${totalModules} module${totalModules !== 1 ? 's' : ''} are cluster-bound, the rest evolve independently.`,
+                evidence: [
+                  { label: 'System coupling index', value: `${Math.round(sysIdx * 100)}%`, severity: sysIdx > 0.3 ? 'critical' : sysIdx > 0.15 ? 'elevated' : 'nominal' },
+                  { label: 'Cluster-bound modules', value: String(totalModules), severity: totalModules > 8 ? 'critical' : 'elevated' },
+                  { label: 'Independent clusters', value: String(cls.length), severity: cls.length >= 3 ? 'critical' : 'nominal' },
+                ],
+                structuralContext: 'System coupling index = proportion of module relationships that are bidirectional. Higher = more structural rigidity.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const affected = new Set(surface.affected_domains || [])
+          return {
+            highlightDomains: [...affected],
+            accentDomains: [],
+            dimDomains: registry.filter(d => !affected.has(d.business_label || d.domain_name) && !affected.has(d.domain_name)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Identify bidirectional dependencies that can be broken', priority: 'HIGH', type: 'architectural' },
+          { action: 'Plan coordinated release strategy for cluster members', priority: 'MEDIUM', type: 'assessment' },
+          { action: 'Monitor coupling index trend across runs', priority: 'LOW', type: 'assessment' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(clusters.length > 0 && biPairs === 0 ? [{ gap: 'Clusters detected but bidirectional pairs not enumerated', impact: 'Cannot identify specific circular dependencies' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Break bidirectional dependencies in largest cluster', effect: 'Decompose coupling cluster into independent modules' },
+            { step: 'Reduce system coupling index below 20%', effect: 'Enable independent module evolution' },
+            { step: 'Eliminate smallest clusters first', effect: 'Quick wins — reduce total cluster-bound module count' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── REINFORCEMENT FLOWS ────────────────────────────────────────────
+  REINFORCEMENT_FLOWS: {
+    meta: { code: 'RF', label: 'Reinforcement Flows', icon: '⇄' },
+    resolve: (fullReport, surface) => {
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+      const coPresencePairs = c.co_presence_pairs || 0
+      const ampDomains = c.amplification_domains || []
+      const topFlows = c.top_flows || []
+
+      return {
+        interpretation: {
+          heading: 'Reinforcement Flows — Active Cognition State',
+          operationalMeaning: c.reinforcement_count > 0
+            ? `${c.reinforcement_count} reinforcement relationship${c.reinforcement_count !== 1 ? 's' : ''} detected. ${coPresencePairs} co-presence pair${coPresencePairs !== 1 ? 's' : ''} indicate signals that activate together — these are not independent risks but mutually reinforcing dynamics.${ampDomains.length > 0 ? ` ${ampDomains.length} amplification domain${ampDomains.length !== 1 ? 's' : ''} concentrate multiple signal types, creating compound pressure.` : ''}`
+            : 'Reinforcement flow surface available but no co-presence or amplification relationships detected at current threshold.',
+          structuralEvidence: [
+            ...(coPresencePairs > 0 ? [{ label: 'Co-presence pairs', value: `${coPresencePairs} signal pair${coPresencePairs !== 1 ? 's' : ''} activate together`, severity: coPresencePairs >= 3 ? 'critical' : 'elevated' }] : []),
+            ...ampDomains.slice(0, 3).map(d => ({
+              label: `Amplification: ${d.domain}`,
+              value: `${d.type_count} signal type${d.type_count !== 1 ? 's' : ''} concentrate`,
+              severity: d.type_count >= 3 ? 'critical' : 'elevated',
+            })),
+            ...topFlows.slice(0, 2).map(f => ({
+              label: `${f.from_type_label || f.from_type}`,
+              value: `${f.verb} ${f.to_type_label || f.to_type}${f.domain ? ` in ${f.domain}` : ''}`,
+              severity: 'elevated',
+            })),
+          ],
+          suppressionMask: [],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Treat reinforcing risks as a system — isolated mitigation is insufficient', priority: 'HIGH' },
+            ...(ampDomains.length > 0 ? [{ action: `${ampDomains.length} amplification domain${ampDomains.length !== 1 ? 's' : ''} require compound risk assessment`, priority: 'HIGH' }] : []),
+            ...(coPresencePairs > 0 ? [{ action: `${coPresencePairs} co-present signal pair${coPresencePairs !== 1 ? 's' : ''} — addressing one may not reduce the other`, priority: 'MEDIUM' }] : []),
+          ],
+          qualification: {
+            effect: c.reinforcement_count >= 3
+              ? 'Multiple reinforcement relationships indicate systemic risk compounding — qualification posture reflects interconnected rather than isolated pressure'
+              : 'Limited reinforcement present — risks are partially independent',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: 'Which risks reinforce each other?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From signal_interpretations co_presence — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const coPresence = activeSigs.filter(s => s.co_presence && s.co_presence.length > 0)
+              const pairs = []
+              for (const sig of coPresence) {
+                for (const coId of sig.co_presence) {
+                  const coSig = activeSigs.find(s => s.signal_id === coId)
+                  if (coSig) pairs.push({ a: sig.signal_name || sig.signal_id, b: coSig.signal_name || coSig.signal_id })
+                }
+              }
+              return {
+                summary: pairs.length > 0
+                  ? `${pairs.length} reinforcement pair${pairs.length !== 1 ? 's' : ''} detected. These signals co-activate — when one fires, the other is also present, indicating structural coupling between risk types.`
+                  : 'No direct co-presence relationships detected between active signals.',
+                evidence: pairs.slice(0, 4).map((p, i) => ({
+                  label: p.a,
+                  value: `reinforces ${p.b}`,
+                  severity: 'elevated',
+                })),
+                structuralContext: 'Co-presence = two signals that activate in the same evidence window. This is structural reinforcement, not coincidence.',
+              }
+            },
+          },
+          {
+            question: 'Is this a system of risks or independent risks?',
+            tone: 'architectural', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From co-presence count + amplification domain count — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const coPresence = activeSigs.filter(s => s.co_presence && s.co_presence.length > 0)
+              const domSigTypes = {}
+              for (const sig of activeSigs) {
+                const domain = sig.concentration || null
+                if (!domain) continue
+                if (!domSigTypes[domain]) domSigTypes[domain] = new Set()
+                domSigTypes[domain].add(sig.signal_family || sig.condition_type || sig.signal_id)
+              }
+              const ampCount = Object.values(domSigTypes).filter(s => s.size >= 2).length
+              const totalReinforcement = coPresence.length + ampCount
+              return {
+                summary: totalReinforcement >= 3
+                  ? `This is a system of risks. ${coPresence.length} co-presence relationship${coPresence.length !== 1 ? 's' : ''} and ${ampCount} amplification domain${ampCount !== 1 ? 's' : ''} indicate that risks are structurally coupled — they compound rather than exist independently.`
+                  : totalReinforcement > 0
+                    ? `Partial reinforcement detected. ${totalReinforcement} relationship${totalReinforcement !== 1 ? 's' : ''} link some risks together, but the majority remain independent.`
+                    : 'Risks appear independent — no significant reinforcement relationships detected.',
+                evidence: [
+                  { label: 'Co-presence relationships', value: String(coPresence.length), severity: coPresence.length >= 2 ? 'elevated' : 'nominal' },
+                  { label: 'Amplification domains', value: String(ampCount), severity: ampCount >= 2 ? 'elevated' : 'nominal' },
+                ],
+                structuralContext: 'A system of risks requires systemic response. Independent risks can be addressed in isolation.',
+              }
+            },
+          },
+          {
+            question: 'Which domains have converging pressures?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From signal concentration grouping — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const reg = fr.semantic_domain_registry || []
+              const domSigTypes = {}
+              for (const sig of activeSigs) {
+                const domain = sig.concentration || null
+                if (!domain) continue
+                if (!domSigTypes[domain]) domSigTypes[domain] = new Set()
+                domSigTypes[domain].add(sig.signal_family || sig.condition_type || sig.signal_id)
+              }
+              const converging = Object.entries(domSigTypes)
+                .filter(([, types]) => types.size >= 2)
+                .map(([domain, types]) => {
+                  const regEntry = reg.find(d => d.domain_id === domain || d.domain_name === domain)
+                  return { domain: regEntry ? (regEntry.business_label || regEntry.domain_name || domain) : domain, count: types.size }
+                })
+                .sort((a, b) => b.count - a.count)
+              return {
+                summary: converging.length > 0
+                  ? `${converging.length} domain${converging.length !== 1 ? 's' : ''} face converging pressures from multiple signal types. These domains are under compound structural stress.`
+                  : 'No domains face converging pressures — signal types are distributed across different domains.',
+                evidence: converging.slice(0, 4).map(d => ({
+                  label: d.domain,
+                  value: `${d.count} signal type${d.count !== 1 ? 's' : ''} converge`,
+                  severity: d.count >= 3 ? 'critical' : 'elevated',
+                })),
+                structuralContext: 'Converging pressures = multiple independent signal types concentrating on the same domain.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const affected = new Set(surface.affected_domains || [])
+          return {
+            highlightDomains: [...affected],
+            accentDomains: [],
+            dimDomains: registry.filter(d => !affected.has(d.business_label || d.domain_name) && !affected.has(d.domain_name)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Assess reinforcing risks as compound system, not isolated events', priority: 'HIGH', type: 'assessment' },
+          { action: 'Prioritize amplification domains for coordinated mitigation', priority: 'HIGH', type: 'architectural' },
+          { action: 'Track co-presence stability across runs', priority: 'LOW', type: 'assessment' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(coPresencePairs === 0 && ampDomains.length > 0 ? [{ gap: 'Amplification detected but no co-presence relationships', impact: 'Cannot confirm whether signal types are causally linked or coincidentally co-located' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Decompose amplification domains to isolate signal sources', effect: 'Break compound pressure into addressable components' },
+            { step: 'Reduce co-presence count below 2', effect: 'Transition from systemic to isolated risk profile' },
+            { step: 'Monitor reinforcement trend across successive runs', effect: 'Detect whether compounding is growing or stabilizing' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── CONVERGENCE PATTERNS ───────────────────────────────────────────
+  CONVERGENCE_PATTERNS: {
+    meta: { code: 'CP', label: 'Convergence Patterns', icon: '⊕' },
+    resolve: (fullReport, surface) => {
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+      const convergenceDomains = c.convergence_domains || []
+      const peakCount = c.peak_condition_count || 0
+
+      return {
+        interpretation: {
+          heading: 'Convergence Patterns — Active Cognition State',
+          operationalMeaning: convergenceDomains.length > 0
+            ? `${convergenceDomains.length} domain${convergenceDomains.length !== 1 ? 's' : ''} have multiple condition types stacking. Peak convergence: ${peakCount} distinct condition types on a single domain.${convergenceDomains.length > 1 ? ` Convergence is not isolated — ${convergenceDomains.length} domains face multi-condition pressure simultaneously.` : ''} Risk at converging domains is compound, not additive — each condition type brings independent structural consequences.`
+            : 'Convergence surface available but no domains exhibit multi-condition convergence at current threshold.',
+          structuralEvidence: convergenceDomains.slice(0, 4).map(d => ({
+            label: d.domain,
+            value: `${d.condition_count} condition${d.condition_count !== 1 ? 's' : ''}: ${d.condition_types.join(', ')}`,
+            severity: d.condition_count >= 4 ? 'critical' : d.condition_count >= 3 ? 'elevated' : 'moderate',
+          })),
+          suppressionMask: [],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Assess convergence domains for compound risk before change deployment', priority: 'HIGH' },
+            ...(peakCount >= 4 ? [{ action: `Peak convergence of ${peakCount} conditions — this domain requires holistic structural review`, priority: 'HIGH' }] : []),
+            ...(convergenceDomains.length > 2 ? [{ action: `${convergenceDomains.length} domains under convergence — systemic pattern, not isolated hotspot`, priority: 'MEDIUM' }] : []),
+          ],
+          qualification: {
+            effect: peakCount >= 4
+              ? 'High convergence indicates systemic structural pressure concentration — qualification posture reflects compound domain risk'
+              : 'Convergence present but manageable for qualification',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: 'Where are conditions stacking up?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From signal_interpretations grouped by concentration — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const reg = fr.semantic_domain_registry || []
+              const domConds = {}
+              for (const sig of activeSigs) {
+                const domain = sig.concentration || null
+                if (!domain) continue
+                if (!domConds[domain]) domConds[domain] = new Set()
+                domConds[domain].add(sig.condition_type || sig.signal_family || sig.signal_id)
+              }
+              const stacking = Object.entries(domConds)
+                .filter(([, types]) => types.size >= 2)
+                .map(([domain, types]) => {
+                  const regEntry = reg.find(d => d.domain_id === domain || d.domain_name === domain)
+                  return { domain: regEntry ? (regEntry.business_label || regEntry.domain_name || domain) : domain, count: types.size, types: [...types] }
+                })
+                .sort((a, b) => b.count - a.count)
+              return {
+                summary: stacking.length > 0
+                  ? `${stacking.length} domain${stacking.length !== 1 ? 's' : ''} have condition stacking. The highest concentration is ${stacking[0].count} condition types on ${stacking[0].domain}.`
+                  : 'No condition stacking detected — each domain faces at most one condition type.',
+                evidence: stacking.slice(0, 4).map(d => ({
+                  label: d.domain,
+                  value: `${d.count} condition${d.count !== 1 ? 's' : ''}: ${d.types.slice(0, 3).join(', ')}`,
+                  severity: d.count >= 4 ? 'critical' : d.count >= 3 ? 'elevated' : 'moderate',
+                })),
+                structuralContext: 'Condition stacking = multiple independent structural pressure types affecting the same domain simultaneously.',
+              }
+            },
+          },
+          {
+            question: 'Is this domain\'s risk compound or simple?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From convergence domain condition count — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const domConds = {}
+              for (const sig of activeSigs) {
+                const domain = sig.concentration || null
+                if (!domain) continue
+                if (!domConds[domain]) domConds[domain] = new Set()
+                domConds[domain].add(sig.condition_type || sig.signal_family || sig.signal_id)
+              }
+              const compoundDomains = Object.entries(domConds).filter(([, types]) => types.size >= 2).length
+              const simpleDomains = Object.entries(domConds).filter(([, types]) => types.size === 1).length
+              return {
+                summary: compoundDomains > 0
+                  ? `${compoundDomains} domain${compoundDomains !== 1 ? 's' : ''} face compound risk (multiple condition types). ${simpleDomains} domain${simpleDomains !== 1 ? 's' : ''} face simple risk (single condition type). Compound domains require holistic assessment — addressing one condition may not reduce overall domain pressure.`
+                  : `All ${simpleDomains} affected domain${simpleDomains !== 1 ? 's' : ''} face simple risk — single condition types that can be addressed independently.`,
+                evidence: [
+                  { label: 'Compound risk domains', value: String(compoundDomains), severity: compoundDomains >= 2 ? 'critical' : compoundDomains > 0 ? 'elevated' : 'nominal' },
+                  { label: 'Simple risk domains', value: String(simpleDomains), severity: 'nominal' },
+                ],
+                structuralContext: 'Compound risk = multiple independent structural pressures on a single domain. Simple risk = one pressure type per domain.',
+              }
+            },
+          },
+          {
+            question: 'Which condition types converge most frequently?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From signal condition_type occurrence across converging domains — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const condDomainCount = {}
+              for (const sig of activeSigs) {
+                const condType = sig.condition_type || sig.signal_family || sig.signal_id
+                const domain = sig.concentration || null
+                if (!domain) continue
+                if (!condDomainCount[condType]) condDomainCount[condType] = new Set()
+                condDomainCount[condType].add(domain)
+              }
+              const ranked = Object.entries(condDomainCount)
+                .map(([type, domains]) => ({ type, domain_count: domains.size }))
+                .sort((a, b) => b.domain_count - a.domain_count)
+              return {
+                summary: ranked.length > 0
+                  ? `${ranked[0].type.replace(/_/g, ' ')} appears in the most domains (${ranked[0].domain_count}). ${ranked.filter(r => r.domain_count >= 2).length} condition type${ranked.filter(r => r.domain_count >= 2).length !== 1 ? 's' : ''} appear in multiple domains.`
+                  : 'No condition types detected across multiple domains.',
+                evidence: ranked.slice(0, 4).map(r => ({
+                  label: r.type.replace(/_/g, ' '),
+                  value: `present in ${r.domain_count} domain${r.domain_count !== 1 ? 's' : ''}`,
+                  severity: r.domain_count >= 3 ? 'critical' : r.domain_count >= 2 ? 'elevated' : 'nominal',
+                })),
+                structuralContext: 'Frequently converging condition types indicate systemic structural patterns rather than isolated domain-specific issues.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: (() => {
+          const affected = new Set(surface.affected_domains || [])
+          return {
+            highlightDomains: [...affected],
+            accentDomains: [],
+            dimDomains: registry.filter(d => !affected.has(d.business_label || d.domain_name) && !affected.has(d.domain_name)).map(d => d.domain_id),
+          }
+        })(),
+
+        actions: [
+          { action: 'Conduct compound risk assessment for peak convergence domains', priority: 'HIGH', type: 'assessment' },
+          { action: 'Determine which converging conditions share structural root causes', priority: 'MEDIUM', type: 'architectural' },
+          { action: 'Monitor convergence count trend across runs', priority: 'LOW', type: 'assessment' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(convergenceDomains.length > 0 && sigs.length < 4 ? [{ gap: 'Limited signal coverage — convergence may be understated', impact: 'Additional signal families could reveal deeper convergence' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Decompose highest-convergence domain to isolate condition sources', effect: 'Identify whether conditions share root cause or are independent' },
+            { step: 'Reduce peak convergence below 3 condition types', effect: 'Simplify domain risk profile from compound to manageable' },
+            { step: 'Eliminate cross-cutting conditions that appear in multiple domains', effect: 'Reduce overall convergence count systemically' },
+          ],
+        },
+      }
+    },
+  },
+
+  // ── ABSENCE PROFILE ────────────────────────────────────────────────
+  ABSENCE_PROFILE: {
+    meta: { code: 'AP', label: 'Absence Profile', icon: '◇' },
+    resolve: (fullReport, surface) => {
+      const sigs = (fullReport.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+      const registry = fullReport.semantic_domain_registry || []
+      const c = surface.constituents || {}
+      const absentTypes = c.absent_types || []
+      const activeTypes = c.active_types || []
+      const healthRatio = c.health_ratio || 0
+
+      return {
+        interpretation: {
+          heading: 'Absence Profile — Structural Health Assessment',
+          operationalMeaning: `${c.absent_count || 0} of ${c.total_types || 0} structural condition types are nominal — a health ratio of ${healthRatio}%.${healthRatio >= 70 ? ' The majority of structural condition types are NOT firing — pressure is concentrated rather than systemic.' : healthRatio >= 40 ? ' A mixed health profile — some condition types are absent while a significant number remain active.' : ' Most condition types are active — the system is under broad structural pressure.'}${absentTypes.filter(t => t.reason !== 'Unobservable — enrichment not available').length > 0 ? ` ${absentTypes.filter(t => t.reason !== 'Unobservable — enrichment not available').length} type${absentTypes.filter(t => t.reason !== 'Unobservable — enrichment not available').length !== 1 ? 's' : ''} confirmed healthy through structural evidence.` : ''}`,
+          structuralEvidence: [
+            { label: 'Health ratio', value: `${healthRatio}% of condition types nominal`, severity: 'nominal' },
+            ...absentTypes.slice(0, 3).map(t => ({
+              label: t.label,
+              value: t.reason,
+              severity: 'nominal',
+            })),
+            ...activeTypes.slice(0, 2).map(t => ({
+              label: t.label,
+              value: 'Active — firing',
+              severity: 'elevated',
+            })),
+          ],
+          suppressionMask: [],
+        },
+
+        implications: {
+          orchestration: [
+            { action: 'Absent condition types represent defensive capabilities — protect them during changes', priority: 'MEDIUM' },
+            ...(healthRatio >= 70 ? [{ action: 'System health is strong — focus attention on the concentrated active conditions', priority: 'LOW' }] : []),
+            ...(healthRatio < 40 ? [{ action: 'Broad structural pressure — prioritize systemic remediation over isolated fixes', priority: 'HIGH' }] : []),
+          ],
+          qualification: {
+            effect: healthRatio >= 70
+              ? 'Strong health profile supports qualification progression — pressure is concentrated and addressable'
+              : healthRatio >= 40
+                ? 'Mixed health profile — qualification progression depends on resolving active conditions'
+                : 'Broad activation limits qualification confidence — systemic remediation needed',
+          },
+        },
+
+        guidedCognition: [
+          {
+            question: 'What\'s healthy about this system?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From absent condition type enumeration — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const se = fr.structural_enrichment || {}
+              const allTypes = ['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_GAP']
+              const activeSet = new Set()
+              for (const sig of activeSigs) { if (sig.condition_type) activeSet.add(sig.condition_type) }
+              if (se.available && se.fragility_surface && (se.fragility_surface.fragility_hotspots || []).length > 0) activeSet.add('EXECUTION_FRAGILITY')
+              if (se.available && se.boundary_divergence && (se.boundary_divergence.divergent_modules || []).length > 0) activeSet.add('STRUCTURAL_BOUNDARY_DIVERGENCE')
+              if (se.available && se.coupling_inertia && (se.coupling_inertia.inertia_clusters || []).length > 0) activeSet.add('COUPLING_INERTIA')
+              const absent = allTypes.filter(t => !activeSet.has(t))
+              return {
+                summary: absent.length > 0
+                  ? `${absent.length} of ${allTypes.length} condition types are nominal. These represent areas of structural health: ${absent.slice(0, 3).map(t => t.replace(/_/g, ' ')).join(', ')}${absent.length > 3 ? ` and ${absent.length - 3} more` : ''}.`
+                  : 'All condition types are active — no areas of confirmed structural health.',
+                evidence: absent.slice(0, 5).map(t => ({
+                  label: t.replace(/_/g, ' '),
+                  value: 'Nominal — not firing',
+                  severity: 'nominal',
+                })),
+                structuralContext: 'Absence of a condition type is evidence of structural health in that dimension — the system does not exhibit that pressure pattern.',
+              }
+            },
+          },
+          {
+            question: 'Is pressure concentrated or systemic?',
+            tone: 'alarming', archetype: 'ESCALATION', depth: 'deep',
+            boundary: 'From active vs absent condition type ratio — deterministic.',
+            answer_derive: (fr) => {
+              const activeSigs = (fr.signal_interpretations || []).filter(s => s.severity !== 'NOMINAL' && s.activation_state !== 'NOMINAL')
+              const allTypes = ['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_GAP']
+              const activeSet = new Set()
+              for (const sig of activeSigs) { if (sig.condition_type) activeSet.add(sig.condition_type) }
+              const ratio = Math.round((allTypes.length - activeSet.size) / allTypes.length * 100)
+              return {
+                summary: ratio >= 70
+                  ? `Pressure is concentrated — ${ratio}% of condition types are nominal. Only ${activeSet.size} condition type${activeSet.size !== 1 ? 's' : ''} are active. The system's structural issues are localized and addressable.`
+                  : ratio >= 40
+                    ? `Pressure is mixed — ${ratio}% of condition types are nominal, ${activeSet.size} are active. The system faces broad but not universal structural pressure.`
+                    : `Pressure is systemic — only ${ratio}% of condition types are nominal. ${activeSet.size} of ${allTypes.length} condition types are active. The system is under broad structural stress across multiple dimensions.`,
+                evidence: [
+                  { label: 'Health ratio', value: `${ratio}%`, severity: ratio >= 70 ? 'nominal' : ratio >= 40 ? 'elevated' : 'critical' },
+                  { label: 'Active condition types', value: String(activeSet.size), severity: activeSet.size >= 6 ? 'critical' : activeSet.size >= 3 ? 'elevated' : 'nominal' },
+                ],
+                structuralContext: 'Concentrated pressure = few condition types active, addressable. Systemic pressure = many condition types active, requires broad remediation.',
+              }
+            },
+          },
+          {
+            question: 'Which defensive capabilities are intact?',
+            tone: 'forensic', archetype: 'TRACE', depth: 'standard',
+            boundary: 'From absent condition types with enrichment confirmation — deterministic.',
+            answer_derive: (fr) => {
+              const se = fr.structural_enrichment || {}
+              const confirmed = []
+              if (se.available) {
+                if (se.fragility_surface && (se.fragility_surface.fragility_hotspots || []).length === 0) confirmed.push({ type: 'EXECUTION_FRAGILITY', label: 'EXECUTION FRAGILITY', reason: 'Fragility surface nominal — no hotspots' })
+                if (se.boundary_divergence && (se.boundary_divergence.divergent_modules || []).length === 0) confirmed.push({ type: 'STRUCTURAL_BOUNDARY_DIVERGENCE', label: 'BOUNDARY DIVERGENCE', reason: 'Boundary alignment intact' })
+                if (se.coupling_inertia && (se.coupling_inertia.inertia_clusters || []).length === 0) confirmed.push({ type: 'COUPLING_INERTIA', label: 'COUPLING INERTIA', reason: 'Coupling within threshold' })
+                if (se.constriction_surface && (se.constriction_surface.constricted_paths || []).length === 0) confirmed.push({ type: 'EXECUTION_CONSTRICTION', label: 'EXECUTION CONSTRICTION', reason: 'No constricted paths' })
+              }
+              return {
+                summary: confirmed.length > 0
+                  ? `${confirmed.length} defensive capabilit${confirmed.length !== 1 ? 'ies' : 'y'} confirmed intact through structural evidence: ${confirmed.map(c => c.label).join(', ')}. These are areas where the architecture is healthy and changes are unlikely to introduce structural risk.`
+                  : 'No structural enrichment available to confirm defensive capabilities — absence is observed but not structurally verified.',
+                evidence: confirmed.map(c => ({
+                  label: c.label,
+                  value: c.reason,
+                  severity: 'nominal',
+                })),
+                structuralContext: 'Defensive capabilities are condition types that are confirmed nominal through structural evidence — not just absent from signals.',
+              }
+            },
+          },
+        ],
+
+        topologyFocus: {
+          highlightDomains: [],
+          accentDomains: [],
+          dimDomains: [],
+        },
+
+        actions: [
+          { action: 'Protect absent condition types during architectural changes', priority: 'MEDIUM', type: 'assessment' },
+          { action: 'Focus remediation on the concentrated active conditions', priority: 'HIGH', type: 'architectural' },
+          { action: 'Track health ratio trend across runs', priority: 'LOW', type: 'assessment' },
+        ],
+
+        gapsAndProgression: {
+          evidenceGaps: [
+            ...(absentTypes.filter(t => t.reason === 'Unobservable — enrichment not available').length > 0 ? [{ gap: `${absentTypes.filter(t => t.reason === 'Unobservable — enrichment not available').length} condition type${absentTypes.filter(t => t.reason === 'Unobservable — enrichment not available').length !== 1 ? 's' : ''} unobservable — enrichment data not available`, impact: 'Health assessment incomplete for unobservable condition types' }] : []),
+          ],
+          progressionPath: [
+            { step: 'Enable enrichment for unobservable condition types', effect: 'Complete health assessment coverage' },
+            { step: 'Resolve active conditions to increase health ratio', effect: 'Move from mixed to concentrated health profile' },
+            { step: 'Maintain health ratio above 70% across runs', effect: 'Confirm structural health stability' },
           ],
         },
       }
