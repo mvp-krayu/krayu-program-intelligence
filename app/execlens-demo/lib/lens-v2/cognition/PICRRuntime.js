@@ -12,10 +12,19 @@ const absenceProfile = require('./materializers/absenceProfile')
 const detectionBoundary = require('./materializers/detectionBoundary')
 const operationalCeiling = require('./materializers/operationalCeiling')
 
-// Tier 1 SW-Intel sub-object materializers
+// SW-Intel sub-object materializers
 const swIntelStructuralFragility = require('./materializers/structuralFragility')
 const swIntelBoundaryAlignment = require('./materializers/boundaryAlignment')
 const swIntelStructuralCoupling = require('./materializers/structuralCoupling')
+const swIntelDeliveryFragility = require('./materializers/deliveryFragility')
+const swIntelCoordinationSaturation = require('./materializers/coordinationSaturation')
+const swIntelIntegrationExposure = require('./materializers/integrationExposure')
+const swIntelTopologyPosture = require('./materializers/topologyPosture')
+const swIntelQualificationExposure = require('./materializers/qualificationExposure')
+const swIntelPropagationRisk = require('./materializers/propagationRisk')
+const swIntelReinforcementFlows = require('./materializers/reinforcementFlows')
+const swIntelConvergencePatterns = require('./materializers/convergencePatterns')
+const swIntelAbsence = require('./materializers/swIntelAbsence')
 
 const MATERIALIZERS = [
   structuralPosture,
@@ -29,10 +38,22 @@ const MATERIALIZERS = [
   operationalCeiling,
 ]
 
-const SW_INTEL_TIER1_MATERIALIZERS = [
+const SW_INTEL_MATERIALIZERS = [
+  // Tier 1 (structural enrichment surfaces)
   { materializer: swIntelStructuralFragility, parent: 'constraint_inventory' },
   { materializer: swIntelBoundaryAlignment, parent: 'structural_posture' },
   { materializer: swIntelStructuralCoupling, parent: 'constraint_inventory' },
+  // Original 6 (signal + evidence surfaces)
+  { materializer: swIntelDeliveryFragility, parent: 'tension_map' },
+  { materializer: swIntelCoordinationSaturation, parent: 'constraint_inventory' },
+  { materializer: swIntelIntegrationExposure, parent: 'exposure_assessment' },
+  { materializer: swIntelTopologyPosture, parent: 'structural_posture' },
+  { materializer: swIntelQualificationExposure, parent: 'operational_ceiling' },
+  { materializer: swIntelPropagationRisk, parent: 'exposure_assessment' },
+  // Tier 2 (cross-signal synthesis surfaces)
+  { materializer: swIntelReinforcementFlows, parent: 'tension_map' },
+  { materializer: swIntelConvergencePatterns, parent: 'tension_map' },
+  { materializer: swIntelAbsence, parent: 'absence_profile' },
 ]
 
 const SCHEMA_VERSION = '1.0.0'
@@ -69,9 +90,9 @@ function materialize(cip) {
     }
   }
 
-  // Tier 1 SW-Intel sub-objects — materialized alongside parent objects
+  // SW-Intel sub-objects — materialized alongside parent cognition objects
   const swIntelSurfaces = {}
-  for (const entry of SW_INTEL_TIER1_MATERIALIZERS) {
+  for (const entry of SW_INTEL_MATERIALIZERS) {
     const start = Date.now()
     try {
       const result = entry.materializer.materialize(cip)
@@ -86,7 +107,7 @@ function materialize(cip) {
       }
       materializationLog.push({
         object_id: entry.materializer.OBJECT_ID,
-        type: 'SW_INTEL_TIER1',
+        type: 'SW_INTEL',
         parent: entry.parent,
         status: result ? 'MATERIALIZED' : 'NULL_RESULT',
         duration_ms: Date.now() - start,
@@ -94,7 +115,7 @@ function materialize(cip) {
     } catch (err) {
       materializationLog.push({
         object_id: entry.materializer.OBJECT_ID,
-        type: 'SW_INTEL_TIER1',
+        type: 'SW_INTEL',
         parent: entry.parent,
         status: 'ERROR',
         error: err.message,
@@ -131,4 +152,4 @@ function getSwIntelSurface(picp, surfaceId) {
   return picp.swIntelSurfaces[surfaceId] || null
 }
 
-module.exports = { materialize, assembleCIP, getSwIntelSurface, SCHEMA_VERSION, MATERIALIZERS, SW_INTEL_TIER1_MATERIALIZERS }
+module.exports = { materialize, assembleCIP, getSwIntelSurface, SCHEMA_VERSION, MATERIALIZERS, SW_INTEL_MATERIALIZERS }
