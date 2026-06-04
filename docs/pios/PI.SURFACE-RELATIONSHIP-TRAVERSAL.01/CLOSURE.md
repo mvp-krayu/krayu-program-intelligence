@@ -42,6 +42,7 @@ Zero regression. Assessment only — no code modified.
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/HYPOTHESIS.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/ARCHITECTURAL_POSITION.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/OPEN_QUESTIONS.md`
+- `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/TIERED_MATERIALIZATION_FINDING.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/execution_report.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/CLOSURE.md`
 
@@ -59,6 +60,8 @@ Surface Relationship Graph concept documented as PROPOSED with 8 open questions.
 | "AI does not explain. Traversal explains. AI calibrates language." | CONSTITUTIONAL CLAIM | HYPOTHESIS |
 | Emergence Explanation as cognitive function | CANDIDATE | UNCLASSIFIED — position in 22-function taxonomy deferred |
 | Meta-surface classification for REINFORCEMENT_FLOWS / CONVERGENCE_PATTERNS | CANDIDATE | UNCLASSIFIED — Q3 in OPEN_QUESTIONS |
+| Tiered Materialization (Tier 1: observe/relate, Tier 2: emergence) | ARCHITECTURAL FINDING | PROPOSED — reframes PICR from parallel materializers to staged cognition formation |
+| 12-surface model is 10 observation + 2 relationship (not 12 peers) | ARCHITECTURAL FINDING | PROPOSED — categorical distinction masked by uniform shape |
 
 ### Vault Files Updated
 
