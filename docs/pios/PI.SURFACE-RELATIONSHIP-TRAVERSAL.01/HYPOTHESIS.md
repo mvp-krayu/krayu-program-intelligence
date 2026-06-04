@@ -129,4 +129,8 @@ This is potentially as significant as the discovery that the ConsequenceCompiler
 
 ## 5. Status
 
-**PROPOSED** — this is a hypothesis based on examination of existing data structures. The claim that graph traversal produces meaningful emergence explanation has not been tested against runtime data. The condition-type-to-surface mapping is implicit and may have gaps. The traversal mechanism does not exist.
+**FALSIFIED** — runtime validation against BlueEdge genesis_e2e_03 demonstrated that surface-level traversal does not outperform condition-level consequence synthesis. The ConsequenceCompiler produces richer, more specific emergence explanation at the condition granularity. Surfaces are too coarse for emergence explanation — the "Relate" stage of cognition operates closer to conditions and consequences than to surfaces.
+
+See: `RUNTIME_VALIDATION.md` for full experiment results.
+
+**What survives:** The observe→relate→explain staged cognition model. The tiered materialization finding. The constitutional claim that "traversal explains" — but the traversal substrate is conditions, not surfaces.

@@ -39,10 +39,11 @@ Zero regression. Assessment only — no code modified.
 
 ## 8. Artifacts
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/DISCOVERY.md`
-- `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/HYPOTHESIS.md`
+- `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/HYPOTHESIS.md` (FALSIFIED)
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/ARCHITECTURAL_POSITION.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/OPEN_QUESTIONS.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/TIERED_MATERIALIZATION_FINDING.md`
+- `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/RUNTIME_VALIDATION.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/execution_report.md`
 - `docs/pios/PI.SURFACE-RELATIONSHIP-TRAVERSAL.01/CLOSURE.md`
 
@@ -56,12 +57,13 @@ Surface Relationship Graph concept documented as PROPOSED with 8 open questions.
 
 | Mutation | Type | Status |
 |---|---|---|
-| Surface Relationship Graph | NEW CONCEPT | PROPOSED (not CANONICAL) |
-| "AI does not explain. Traversal explains. AI calibrates language." | CONSTITUTIONAL CLAIM | HYPOTHESIS |
-| Emergence Explanation as cognitive function | CANDIDATE | UNCLASSIFIED — position in 22-function taxonomy deferred |
-| Meta-surface classification for REINFORCEMENT_FLOWS / CONVERGENCE_PATTERNS | CANDIDATE | UNCLASSIFIED — Q3 in OPEN_QUESTIONS |
-| Tiered Materialization (Tier 1: observe/relate, Tier 2: emergence) | ARCHITECTURAL FINDING | PROPOSED — reframes PICR from parallel materializers to staged cognition formation |
-| 12-surface model is 10 observation + 2 relationship (not 12 peers) | ARCHITECTURAL FINDING | PROPOSED — categorical distinction masked by uniform shape |
+| Surface Relationship Graph | NEW CONCEPT | **FALSIFIED** — runtime validation showed surface-level too coarse for emergence explanation |
+| "AI does not explain. Traversal explains. AI calibrates language." | CONSTITUTIONAL CLAIM | PARTIALLY VALIDATED — principle holds, but traversal substrate is conditions not surfaces |
+| Emergence Explanation as cognitive function | CANDIDATE | REDIRECTED — ConsequenceCompiler already performs this at condition level |
+| Meta-surface classification for REINFORCEMENT_FLOWS / CONVERGENCE_PATTERNS | CANDIDATE | DEFERRED — less urgent given surface graph falsification |
+| Tiered Materialization (Tier 1: observe/relate, Tier 2: emergence) | ARCHITECTURAL FINDING | PRESERVED — stages valid, but Tier 2 is condition-level not surface-level |
+| 12-surface model is 10 observation + 2 relationship (not 12 peers) | ARCHITECTURAL FINDING | PRESERVED — categorical distinction remains valid |
+| ConsequenceCompiler elevated to candidate core cognition mechanism | RECLASSIFICATION | **VALIDATED by runtime experiment** — outperformed graph traversal on emergence explanation |
 
 ### Vault Files Updated
 
