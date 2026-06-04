@@ -11617,6 +11617,19 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-left: auto;
         }
 
+        /* ─── Boardroom Narrative ─── */
+
+        .sw-intel-boardroom-narrative {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.55;
+          padding: 8px 10px;
+          margin-bottom: 10px;
+          background: rgba(74, 158, 255, 0.04);
+          border-left: 2px solid #4a9eff;
+          border-radius: 0 2px 2px 0;
+        }
+
         /* ─── Boardroom Surface Cards ─── */
 
         .sw-intel-boardroom-surface {
@@ -13904,6 +13917,16 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           letter-spacing: 0.1em;
           color: #7a8aaa;
+        }
+        .sw-intel-balanced-causal-narrative {
+          font-size: 12.5px;
+          color: #ccd6f6;
+          line-height: 1.6;
+          padding: 10px 12px;
+          margin-bottom: 14px;
+          background: rgba(74, 158, 255, 0.04);
+          border-left: 2px solid #4a9eff;
+          border-radius: 0 2px 2px 0;
         }
         .sw-intel-balanced-section {
           margin-bottom: 12px;

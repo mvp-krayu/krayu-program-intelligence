@@ -941,4 +941,280 @@ function deriveConditionCognitionState(condition, fullReport) {
   }
 }
 
-module.exports = { deriveProjection, deriveModuleState, deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SIGNAL_COGNITION_MAP, PROJECTION_STATUS, SURFACE_CONDITION_MAP }
+// ─── PRE ZONE A: AUDIENCE-CALIBRATED PROJECTION ──────────────────
+// Deterministic audience projection. Same PICP → same output per persona.
+// Zone B (governed narrative via AI) is not implemented — these are rule-based.
+
+const BOARDROOM_NAMES = {
+  DELIVERY_FRAGILITY: 'Delivery Risk',
+  STRUCTURAL_FRAGILITY: 'Structural Vulnerability',
+  INTEGRATION_EXPOSURE: 'Integration Risk',
+  OPERATIONAL_TOPOLOGY: 'Architecture Health',
+  QUALIFICATION_EXPOSURE: 'Governance Gaps',
+  BOUNDARY_ALIGNMENT: 'Boundary Integrity',
+  REINFORCEMENT_FLOWS: 'Compounding Patterns',
+  CONVERGENCE_PATTERNS: 'Risk Concentration',
+  PROPAGATION_RISK: 'Change Impact',
+  ABSENCE_PROFILE: 'Coverage Health',
+  COORDINATION_SATURATION: 'Coordination Load',
+  STRUCTURAL_COUPLING: 'Coupling Rigidity',
+}
+
+function deriveBoardroomSummary(surface) {
+  const c = surface.constituents || {}
+  const domains = surface.affected_domains || []
+  const domainCount = domains.length
+
+  switch (surface.surface_id) {
+    case 'DELIVERY_FRAGILITY':
+      return domainCount > 0
+        ? `Delivery changes carry elevated risk across ${domainCount} business area${domainCount !== 1 ? 's' : ''} — structural dependencies create cascading exposure`
+        : 'Delivery risk elevated — structural dependency patterns amplify change impact'
+
+    case 'STRUCTURAL_FRAGILITY': {
+      const hotspots = c.hotspot_count || 0
+      return hotspots > 0
+        ? `${hotspots} structural vulnerability point${hotspots !== 1 ? 's' : ''} in load-bearing components`
+        : 'Structural vulnerability present — component resilience below operational threshold'
+    }
+
+    case 'INTEGRATION_EXPOSURE':
+      return domainCount > 0
+        ? `Integration architecture carries exposure across ${domainCount} area${domainCount !== 1 ? 's' : ''}`
+        : 'Integration pathways show elevated structural exposure'
+
+    case 'OPERATIONAL_TOPOLOGY': {
+      const groundingPct = c.grounding_pct || 0
+      return groundingPct > 0
+        ? `${groundingPct}% of architecture structurally verified — remainder operates on declared trust`
+        : 'Architecture health requires structural verification'
+    }
+
+    case 'QUALIFICATION_EXPOSURE': {
+      const gaps = c.gaps || []
+      return gaps.length > 0
+        ? `${gaps.length} governance gap${gaps.length !== 1 ? 's' : ''} — ${gaps.slice(0, 2).join(', ')}${gaps.length > 2 ? ', ...' : ''}`
+        : 'Governance posture under review'
+    }
+
+    case 'BOUNDARY_ALIGNMENT': {
+      const divergent = c.divergent_count || 0
+      return divergent > 0
+        ? `${divergent} component${divergent !== 1 ? 's' : ''} operating outside structural boundaries — containment reduced`
+        : 'Boundary alignment under assessment'
+    }
+
+    case 'REINFORCEMENT_FLOWS':
+      return 'Multiple structural conditions reinforce each other — isolated remediation may be ineffective'
+
+    case 'CONVERGENCE_PATTERNS': {
+      const convergenceCount = c.convergence_count || 0
+      return convergenceCount > 0
+        ? `${convergenceCount} area${convergenceCount !== 1 ? 's' : ''} where multiple conditions converge — concentrated operational risk`
+        : 'Condition convergence under assessment'
+    }
+
+    case 'PROPAGATION_RISK':
+      return domainCount > 0
+        ? `Changes propagate through ${domainCount} connected area${domainCount !== 1 ? 's' : ''} — impact extends beyond origin`
+        : 'Change propagation pathways identified'
+
+    case 'ABSENCE_PROFILE': {
+      const healthRatio = c.health_ratio || 0
+      return `${healthRatio}% of monitored condition types are nominal`
+    }
+
+    default:
+      return surface.operational_summary
+  }
+}
+
+function deriveBalancedExplanation(surface) {
+  const c = surface.constituents || {}
+  const domains = surface.affected_domains || []
+
+  switch (surface.surface_id) {
+    case 'DELIVERY_FRAGILITY': {
+      if (Array.isArray(c) && c.length > 0) {
+        const origins = c.filter(x => x.role === 'ORIGIN')
+        const receivers = c.filter(x => x.role === 'RECEIVER')
+        const originNames = origins.slice(0, 2).map(x => x.domain).join(', ')
+        const receiverNames = receivers.slice(0, 2).map(x => x.domain).join(', ')
+        return `Delivery signals originate from ${originNames || 'concentrated sources'} and propagate to ${receiverNames || 'dependent areas'}. Changes in origin domains create delivery pressure that cascades through the dependency structure.`
+      }
+      return `Delivery pressure is structurally concentrated across ${domains.length} domains — the dependency architecture amplifies rather than absorbs change impact.`
+    }
+
+    case 'STRUCTURAL_FRAGILITY': {
+      const peak = c.peak_fragility || 0
+      const mean = c.mean_fragility || 0
+      const hotspots = c.hotspot_count || 0
+      return `${hotspots} file${hotspots !== 1 ? 's' : ''} above fragility threshold (peak ${peak}%, mean ${mean}%). High change frequency combined with high coupling creates breakage exposure in load-bearing paths.`
+    }
+
+    case 'INTEGRATION_EXPOSURE': {
+      const bridges = c.bridges || 0
+      const connectors = c.connectors || 0
+      return `${bridges} bridge${bridges !== 1 ? 's' : ''} and ${connectors} connector${connectors !== 1 ? 's' : ''} form the integration architecture. These carry cross-domain traffic — their structural health determines system-wide integration resilience.`
+    }
+
+    case 'OPERATIONAL_TOPOLOGY': {
+      const backed = c.backed || 0
+      const semanticOnly = c.semantic_only || 0
+      const groundingPct = c.grounding_pct || 0
+      return `${backed} domain${backed !== 1 ? 's' : ''} structurally verified, ${semanticOnly} on declared trust only. ${100 - groundingPct}% of the architecture lacks structural confirmation for operational claims.`
+    }
+
+    case 'QUALIFICATION_EXPOSURE': {
+      const present = c.artifacts_present || 0
+      const total = c.artifacts_total || 0
+      const gaps = c.gaps || []
+      return `${present}/${total} governance artifacts present.${gaps.length > 0 ? ` Missing: ${gaps.join(', ')}.` : ''} Governance depth determines what conclusions the system can certify.`
+    }
+
+    case 'BOUNDARY_ALIGNMENT': {
+      const divergent = c.divergent_count || 0
+      const sysIdx = c.system_divergence_index || 0
+      return `${divergent} module${divergent !== 1 ? 's' : ''} have structural boundaries that don't match declared domain boundaries (divergence ${sysIdx}%). Changes meant for one domain structurally affect others.`
+    }
+
+    case 'REINFORCEMENT_FLOWS': {
+      const flowCount = c.reinforcement_count || 0
+      const coPresence = c.co_presence_pairs || 0
+      return `${flowCount} reinforcement relationship${flowCount !== 1 ? 's' : ''} and ${coPresence} co-presence pair${coPresence !== 1 ? 's' : ''} detected. One condition's presence structurally amplifies another — addressing conditions in isolation produces partial results.`
+    }
+
+    case 'CONVERGENCE_PATTERNS': {
+      const convergences = c.convergence_count || 0
+      const peakConditions = c.peak_condition_count || 0
+      return `${convergences} domain${convergences !== 1 ? 's' : ''} experience multiple conditions simultaneously (peak: ${peakConditions}). Convergence concentrates operational risk — these domains need coordinated attention.`
+    }
+
+    case 'PROPAGATION_RISK': {
+      if (c.chain && c.chain.length > 0) {
+        const origins = c.chain.filter(n => n.role === 'ORIGIN').map(n => n.domain)
+        const receivers = c.chain.filter(n => n.role === 'RECEIVER').map(n => n.domain)
+        return `Changes from ${origins.join(', ') || 'source domains'} propagate to ${receivers.join(', ') || 'dependent domains'}. Local changes carry non-local consequences through the dependency architecture.`
+      }
+      return `Structural propagation paths connect ${domains.length} domains. Changes in upstream domains carry downstream consequences.`
+    }
+
+    case 'ABSENCE_PROFILE': {
+      const healthRatio = c.health_ratio || 0
+      const activeCount = c.active_count || 0
+      return `${healthRatio}% of condition types nominal, ${activeCount} active. Absence means evidence doesn't trigger the condition — structural health, not missing coverage.`
+    }
+
+    default:
+      return surface.operational_summary
+  }
+}
+
+function findSharedDomains(surfaceA, surfaceB) {
+  const domainsA = surfaceA.affected_domains || []
+  const domainsB = surfaceB.affected_domains || []
+  return domainsA.filter(d => domainsB.includes(d))
+}
+
+function synthesizeBoardroomNarrative(shownSurfaces, allSurfaces) {
+  if (shownSurfaces.length < 2) return null
+
+  const domainOccurrence = {}
+  for (const s of shownSurfaces) {
+    for (const d of (s.affected_domains || [])) {
+      domainOccurrence[d] = (domainOccurrence[d] || 0) + 1
+    }
+  }
+  const sharedDomains = Object.entries(domainOccurrence)
+    .filter(([, count]) => count >= 2)
+    .map(([domain]) => domain)
+
+  const hasDelivery = shownSurfaces.some(s => s.surface_id === 'DELIVERY_FRAGILITY')
+  const hasStructural = shownSurfaces.some(s => s.surface_id === 'STRUCTURAL_FRAGILITY')
+  const hasIntegration = shownSurfaces.some(s => s.surface_id === 'INTEGRATION_EXPOSURE')
+  const hasBoundary = shownSurfaces.some(s => s.surface_id === 'BOUNDARY_ALIGNMENT')
+
+  if (sharedDomains.length > 0) {
+    if (hasDelivery && hasStructural) {
+      return `Delivery risk and structural vulnerability converge in ${sharedDomains.length} business area${sharedDomains.length !== 1 ? 's' : ''} — structural weaknesses are load-bearing delivery paths.`
+    }
+    if (hasDelivery && hasIntegration) {
+      return `Delivery pressure flows through integration points shared across ${sharedDomains.length} area${sharedDomains.length !== 1 ? 's' : ''} — integration exposure amplifies delivery risk.`
+    }
+    if (hasStructural && hasBoundary) {
+      return `Structural vulnerability compounds where boundaries are misaligned — ${sharedDomains.length} area${sharedDomains.length !== 1 ? 's' : ''} carry both conditions.`
+    }
+    return `${shownSurfaces.length} conditions share impact across ${sharedDomains.length} business area${sharedDomains.length !== 1 ? 's' : ''} — concentrated exposure increases coordination requirements.`
+  }
+
+  return `${shownSurfaces.length} independent structural conditions at ${shownSurfaces[0].severity} severity require coordinated attention.`
+}
+
+function synthesizeBalancedNarrative(surfaces) {
+  if (surfaces.length < 2) return null
+
+  const chains = []
+
+  const deliverySurface = surfaces.find(s => s.surface_id === 'DELIVERY_FRAGILITY')
+  const fragilitySurface = surfaces.find(s => s.surface_id === 'STRUCTURAL_FRAGILITY')
+  const integrationSurface = surfaces.find(s => s.surface_id === 'INTEGRATION_EXPOSURE')
+  const boundarySurface = surfaces.find(s => s.surface_id === 'BOUNDARY_ALIGNMENT')
+  const topologySurface = surfaces.find(s => s.surface_id === 'OPERATIONAL_TOPOLOGY')
+
+  if (deliverySurface && fragilitySurface) {
+    const shared = findSharedDomains(deliverySurface, fragilitySurface)
+    if (shared.length > 0) {
+      chains.push(`Delivery pressure concentrates where structural fragility is highest (${shared.slice(0, 2).join(', ')}) — these domains absorb delivery risk with weakened structural resilience.`)
+    } else {
+      chains.push('Delivery pressure and structural fragility are both elevated — if they share load-bearing paths, the combination amplifies execution risk.')
+    }
+  }
+
+  if (integrationSurface && deliverySurface) {
+    chains.push('Integration exposure creates additional delivery pathways — changes propagate through coupling points into delivery-sensitive areas.')
+  }
+
+  if (boundarySurface && fragilitySurface) {
+    chains.push('Boundary divergence weakens structural containment — fragility is harder to isolate when domain boundaries don\'t match structural reality.')
+  }
+
+  if (topologySurface && fragilitySurface) {
+    const groundingPct = (topologySurface.constituents || {}).grounding_pct || 0
+    if (groundingPct < 80) {
+      chains.push(`${100 - groundingPct}% of the topology operates on declared trust — fragility findings in unverified areas carry additional uncertainty.`)
+    }
+  }
+
+  return chains.length > 0 ? chains.join(' ') : null
+}
+
+function projectForBoardroom(projection) {
+  const surfaces = projection.surfaces || []
+  const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+  const toShow = elevated.length > 0 ? elevated.slice(0, 3) : surfaces.slice(0, 2)
+
+  return {
+    surfaces: toShow.map(s => ({
+      ...s,
+      display_name: BOARDROOM_NAMES[s.surface_id] || s.surface_name,
+      executive_summary: deriveBoardroomSummary(s),
+    })),
+    narrative: synthesizeBoardroomNarrative(toShow, surfaces),
+    suppressed_count: surfaces.length - toShow.length,
+    total_count: surfaces.length,
+  }
+}
+
+function projectForBalanced(projection) {
+  const surfaces = (projection.surfaces || []).slice(0, 4)
+
+  return {
+    surfaces: surfaces.map(s => ({
+      ...s,
+      operational_explanation: deriveBalancedExplanation(s),
+    })),
+    causal_narrative: synthesizeBalancedNarrative(surfaces),
+  }
+}
+
+module.exports = { deriveProjection, deriveModuleState, deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, projectForBoardroom, projectForBalanced, SIGNAL_COGNITION_MAP, PROJECTION_STATUS, SURFACE_CONDITION_MAP }

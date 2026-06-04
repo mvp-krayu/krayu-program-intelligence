@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { SURFACE_CONDITION_MAP, projectForBoardroom, projectForBalanced } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { TermHint } from './OperatorReadingGuide'
 
 const SEVERITY_COLOR = {
@@ -567,9 +567,7 @@ function ConsequencePostureStrip({ posture }) {
 }
 
 export function SoftwareIntelligenceBoardroomSummary({ projection, consequencePosture }) {
-  const surfaces = projection.surfaces || []
-  const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
-  const toShow = elevated.length > 0 ? elevated.slice(0, 3) : surfaces.slice(0, 2)
+  const boardroom = useMemo(() => projectForBoardroom(projection), [projection])
 
   return (
     <div className="sw-intel-boardroom-summary">
@@ -578,24 +576,27 @@ export function SoftwareIntelligenceBoardroomSummary({ projection, consequencePo
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       </div>
       <ConsequencePostureStrip posture={consequencePosture} />
-      {toShow.map(s => (
+      {boardroom.narrative && (
+        <div className="sw-intel-boardroom-narrative">{boardroom.narrative}</div>
+      )}
+      {boardroom.surfaces.map(s => (
         <div key={s.surface_id} className="sw-intel-boardroom-surface" data-severity={s.severity}>
           <div className="sw-intel-boardroom-surface-header">
-            <span className="sw-intel-boardroom-surface-name">{s.surface_name}</span>
+            <span className="sw-intel-boardroom-surface-name">{s.display_name}</span>
             <span className="sw-intel-boardroom-surface-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
           </div>
-          <div className="sw-intel-boardroom-surface-summary">{s.operational_summary}</div>
+          <div className="sw-intel-boardroom-surface-summary">{s.executive_summary}</div>
         </div>
       ))}
-      {surfaces.length > toShow.length && (
-        <div className="sw-intel-boardroom-more">+{surfaces.length - toShow.length} surface{surfaces.length - toShow.length !== 1 ? 's' : ''}</div>
+      {boardroom.suppressed_count > 0 && (
+        <div className="sw-intel-boardroom-more">+{boardroom.suppressed_count} surface{boardroom.suppressed_count !== 1 ? 's' : ''}</div>
       )}
     </div>
   )
 }
 
 export function SoftwareIntelligenceBalancedNarrative({ projection }) {
-  const surfaces = projection.surfaces || []
+  const balanced = useMemo(() => projectForBalanced(projection), [projection])
 
   return (
     <div className="sw-intel-balanced-narrative">
@@ -603,13 +604,16 @@ export function SoftwareIntelligenceBalancedNarrative({ projection }) {
         <span className="sw-intel-balanced-module-tag">SW-INTEL</span>
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
       </div>
-      {surfaces.slice(0, 4).map(s => (
+      {balanced.causal_narrative && (
+        <div className="sw-intel-balanced-causal-narrative">{balanced.causal_narrative}</div>
+      )}
+      {balanced.surfaces.map(s => (
         <div key={s.surface_id} className="sw-intel-balanced-section">
           <div className="sw-intel-balanced-section-title">
             <span>{s.surface_name}</span>
             <span className="sw-intel-balanced-section-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
           </div>
-          <div className="sw-intel-balanced-section-body">{s.operational_summary}</div>
+          <div className="sw-intel-balanced-section-body">{s.operational_explanation}</div>
           {s.consequence && (
             <div className="sw-intel-balanced-section-consequence">{s.consequence}</div>
           )}
