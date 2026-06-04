@@ -135,6 +135,9 @@ Next actions (outside this stream):
 | No existing term collision | PASS — "Domain Cognition Engine" not in TERMINOLOGY_LOCK |
 | No existing concept superseded | PASS — extends Domain Cognition Module, does not replace |
 
-### Propagation Status: PENDING
+### Propagation Status: COMPLETE
 
-Vault updates identified but not yet committed. Propagation requires separate vault update commit after stream closure review.
+Vault updates committed:
+- PIOS_CURRENT_CANONICAL_STATE.md — Domain Cognition Engine Pattern section added (PROPOSED)
+- CURRENT_CANONICAL_PATHS.md — PI.DOMAIN-COGNITION-ENGINE-PATTERN.01 added to Governance Streams table
+- TERMINOLOGY_LOCK.md — "Domain Cognition Engine Pattern" term added (PROPOSED status)

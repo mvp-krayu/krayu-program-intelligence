@@ -824,6 +824,50 @@ Program Intelligence operates through domain cognition modules — replaceable i
 
 **Reference:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/` — 5 deliverable documents + 4 governance artifacts. Runtime artifacts in `app/execlens-demo/lib/sqo-cockpit/`.
 
+## Domain Cognition Engine Pattern (PROPOSED)
+
+**Stream:** PI.DOMAIN-COGNITION-ENGINE-PATTERN.01 (COMPLETE — 2026-06-04)
+**Classification:** G1 — Architecture-Mutating
+**Branch:** main
+
+Forensic analysis of the three SW-Intel cognition files (CognitionOntology.js ~700 lines, SignalSynthesisEngine.js ~1442 lines, ConsequenceCompiler.js ~1158 lines) discovered a canonical domain cognition engine pattern: **DOMAIN MODULE = VOCABULARY × RULES × ENGINE**.
+
+**Pattern separation (verified with line-level evidence):**
+- **VOCABULARY (~27%):** Authored, constitutional, static semantic inventory — condition types, consequence types, combination patterns, ontology classes, risk labels, cognition slices, guided interventions
+- **RULES (~35%):** Deterministic transformation logic — feature extraction, condition synthesis rules, consequence mapping functions
+- **ENGINE (~32%):** Domain-independent compilation machinery — deduplication, combination detection, compilation pipeline, relationship verb derivation, persona projection shapes
+
+**Minimum Engine Boundary (strict separation exercise):**
+- **Pure Engine:** ~300 lines with ZERO domain references — `deduplicateConsequences()`, `deriveRelationshipVerb()`, `forOperator()`, `forInvestigation()`, `resolveNode()`, `resolveConnections()`, severity/confidence/scope machinery
+- **Engine with Coupling:** ~760 lines of generic mechanism containing ~25 parameterizable coupling points where SW-Intel vocabulary is directly referenced through imports
+- **Constitutional finding:** The entanglement is implementational coupling (direct vocabulary imports), not architectural entanglement (mechanism changes). Every coupling point is a vocabulary import replaceable with a function parameter
+
+**Portability test (PMO pipeline trace):** PMO vocabulary/rules traced through all 8 pipeline stages — zero engine mechanism modifications required, only ~25 parameterization points
+
+**Engine API:**
+- Input: vocabulary registry + rule set + evidence
+- Output: conditions + consequences + risk profiles + persona projections ×4
+
+**Governance implications:**
+- ENGINE is PI Core governed infrastructure (G1 authority) — modifications affect ALL domain modules
+- VOCABULARY/RULES are Domain Module governed (G2 authority) — modifications affect single module only
+- Domain Modules do not create engines — they provide VOCABULARY + RULES to a shared ENGINE
+- Persona projections are reusable compression patterns, not domain-specific rendering
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| Domain Cognition Engine Pattern | PROPOSED — governance review required for CANONICAL promotion |
+| Minimum Engine Boundary (~1060 lines) | VERIFIED — forensic line-level evidence |
+| Engine portability (PMO trace) | VERIFIED — zero mechanism modifications |
+| Rule Contract (5 function types) | PROPOSED |
+| Vocabulary Contract (14 components) | PROPOSED |
+| Engine API | PROPOSED |
+| Engine extraction | NOT_STARTED — premature until second Domain Module needed |
+
+**Reference:** `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/` — 7 deliverable documents (ENGINE_PATTERN.md, SW_INTEL_ENGINE_INSTANCE.md, PMO_ENGINE_STUB.md, CONSTITUTIONAL_IMPLICATIONS.md, MINIMUM_ENGINE_BOUNDARY.md, execution_report.md, CLOSURE.md).
+
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 
 **Stream:** PI.GENESIS.GENERIC-SIGNAL-LINEAGE-VERIFICATION.01 (COMPLETE — 2026-05-23)

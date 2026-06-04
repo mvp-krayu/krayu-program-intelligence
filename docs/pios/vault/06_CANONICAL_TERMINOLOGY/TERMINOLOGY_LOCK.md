@@ -730,6 +730,25 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
 
+### Domain Cognition Engine Pattern
+
+**Definition:** The canonical pattern by which Domain Modules provide VOCABULARY and RULES to a shared ENGINE. Discovered from forensic analysis of the SW-Intel cognition triad (CognitionOntology.js, SignalSynthesisEngine.js, ConsequenceCompiler.js). The formula is: DOMAIN MODULE = VOCABULARY × RULES × ENGINE. VOCABULARY (~27%) is authored semantic inventory (condition types, consequence types, combination patterns, ontology classes). RULES (~35%) is deterministic transformation logic (feature extraction, condition synthesis, consequence mapping). ENGINE (~32%) is domain-independent compilation machinery (deduplication, combination detection, compilation pipeline, relationship verb derivation, persona projection shapes).
+
+**Status:** PROPOSED — governance review required for CANONICAL promotion (2026-06-04).
+
+**Minimum Engine Boundary:** ~1060 lines (~32% of 3295-line triad) of domain-independent machinery. Of this, ~300 lines are pure engine (zero domain references). ~25 coupling points identified — all parameterizable, zero mechanism changes required for portability.
+
+**Constitutional constraints (PROPOSED):**
+- ENGINE is PI Core governed infrastructure (G1 authority) — modifications affect ALL domain modules
+- VOCABULARY/RULES are Domain Module governed (G2 authority) — modifications affect single module only
+- If a proposed Domain Module requires modifying the ENGINE to function, either the engine has a gap (G1 resolution) or the proposed module is not a valid Domain Module
+
+**Relationship to Domain Cognition Module:** The Domain Cognition Engine Pattern reveals the internal structure of how Domain Modules operate. Domain Cognition Module defines WHAT a module is (interpretation layer). The Engine Pattern defines HOW modules provide their cognition (VOCABULARY + RULES to shared ENGINE). Extends, does not replace.
+
+**What it is NOT:** A second engine. A refactoring proposal. A module framework. The pattern describes the separation already present in the code — ENGINE extraction is explicitly deferred until a second Domain Module is needed.
+
+**Source:** `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/ENGINE_PATTERN.md`, `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/MINIMUM_ENGINE_BOUNDARY.md`
+
 ### SignalSynthesisEngine
 
 **Definition:** The deterministic cognition compiler that transforms signal families (PSIG, DPSIG, ISIG) and structural enrichment into operational conditions with topology overlays. Contains 11 primitive rules and 1 composite rule. Each rule maps specific signal severity patterns or structural enrichment to a condition type with operator-facing cognition title, severity, topology overlay, evidence classification, and supporting signal IDs. The engine is deterministic — same inputs produce same conditions. 12 condition types total (11 internal — GOVERNANCE_COVERAGE_STATUS shares internal GCC/GCG).
