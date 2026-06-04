@@ -13,7 +13,7 @@
 | structural_coupling | **COMPLETE** | `cognition/materializers/structuralCoupling.js` → PICP → adapter consumes |
 | All other surfaces | PROTOTYPE | Still derived locally in adapter |
 
-**Validation:** LENS renders identical output for all 3 Tier 1 surfaces from PICP payload. Adapter no longer calls `deriveStructuralFragility()`, `deriveBoundaryAlignment()`, `deriveStructuralCoupling()` — calls `getSwIntelSurface(picp, id)` instead. Local functions remain as deprecated dead code.
+**Validation:** LENS renders identical output for all 3 Tier 1 surfaces from PICP payload. Adapter consumes via `getSwIntelSurface(picp, id)`. Deprecated local derive functions deleted (commit `efb020a`) — 195 lines removed, zero functional change.
 
 ---
 
@@ -57,40 +57,45 @@ The `derive*()` functions ARE cognition materializers — they produce structure
 
 ### Surface materializers (PICR extraction candidates)
 
-| # | Function | Line | LOC | Input Sources | Output Shape | PICR Target |
-|---|----------|------|-----|---------------|--------------|-------------|
-| 1 | `deriveDeliveryFragility(fullReport)` | 129 | ~50 | signal_interpretations, evidence_blocks, propagation_summary | surface object with constituents[] | PICR: delivery_pressure |
-| 2 | `deriveCoordinationSaturation(fullReport)` | 182 | ~60 | structural_enrichment.centrality, signal_interpretations, evidence_blocks | surface object with hub analysis | PICR: coordination_saturation |
-| 3 | `deriveIntegrationExposure(fullReport)` | 241 | ~90 | structural_enrichment.code_graph, signal_interpretations, evidence_blocks | surface object with coupling analysis | PICR: integration_exposure |
-| 4 | `deriveOperationalTopologyPosture(fullReport)` | 334 | ~70 | topology_summary, reconciliation_summary, semantic_domain_registry | surface object with domain posture | PICR: topology_posture |
-| 5 | `deriveQualificationExposure(fullReport)` | 403 | ~70 | governance_lifecycle, proposition_corpus, revalidation_intelligence, convergence_intelligence | surface object with governance posture | PICR: qualification_exposure |
-| 6 | `derivePropagationRisk(fullReport)` | 474 | ~55 | evidence_blocks, signal_interpretations, propagation_summary | surface object with origin/receiver analysis | PICR: propagation_risk |
-| 7 | `deriveStructuralFragility(fullReport)` | 530 | ~70 | structural_enrichment.fragility_surface, signal_interpretations, semantic_domain_registry | surface object with hotspot analysis | PICR: structural_fragility |
-| 8 | `deriveBoundaryAlignment(fullReport)` | 600 | ~60 | structural_enrichment.boundary_divergence, signal_interpretations, semantic_domain_registry | surface object with divergence analysis | PICR: boundary_alignment |
-| 9 | `deriveStructuralCoupling(fullReport)` | 662 | ~55 | structural_enrichment.coupling_inertia, signal_interpretations, semantic_domain_registry | surface object with cluster analysis | PICR: structural_coupling |
-| 10 | `deriveReinforcementFlows(fullReport)` | 722 | ~90 | signal_interpretations, evidence_blocks, semantic_domain_registry | surface object with flow/amplification analysis | PICR: reinforcement_flows |
-| 11 | `deriveConvergencePatterns(fullReport)` | 811 | ~110 | signal_interpretations, evidence_blocks, semantic_domain_registry, structural_enrichment | surface object with domain convergence | PICR: convergence_patterns |
-| 12 | `deriveAbsenceProfile(fullReport)` | 922 | ~100 | signal_interpretations, structural_enrichment | surface object with health profile | PICR: absence_profile |
+| # | Function | Line | LOC | Input Sources | Output Shape | PICR Target | Status |
+|---|----------|------|-----|---------------|--------------|-------------|--------|
+| 1 | `deriveDeliveryFragility(fullReport)` | 129 | ~50 | signal_interpretations, evidence_blocks, propagation_summary | surface object with constituents[] | PICR: delivery_pressure | PROTOTYPE |
+| 2 | `deriveCoordinationSaturation(fullReport)` | 182 | ~60 | structural_enrichment.centrality, signal_interpretations, evidence_blocks | surface object with hub analysis | PICR: coordination_saturation | PROTOTYPE |
+| 3 | `deriveIntegrationExposure(fullReport)` | 241 | ~90 | structural_enrichment.code_graph, signal_interpretations, evidence_blocks | surface object with coupling analysis | PICR: integration_exposure | PROTOTYPE |
+| 4 | `deriveOperationalTopologyPosture(fullReport)` | 334 | ~70 | topology_summary, reconciliation_summary, semantic_domain_registry | surface object with domain posture | PICR: topology_posture | PROTOTYPE |
+| 5 | `deriveQualificationExposure(fullReport)` | 403 | ~70 | governance_lifecycle, proposition_corpus, revalidation_intelligence, convergence_intelligence | surface object with governance posture | PICR: qualification_exposure | PROTOTYPE |
+| 6 | `derivePropagationRisk(fullReport)` | 474 | ~55 | evidence_blocks, signal_interpretations, propagation_summary | surface object with origin/receiver analysis | PICR: propagation_risk | PROTOTYPE |
+| 7 | `deriveReinforcementFlows(fullReport)` | 529 | ~90 | signal_interpretations, evidence_blocks, semantic_domain_registry | surface object with flow/amplification analysis | PICR: reinforcement_flows | PROTOTYPE |
+| 8 | `deriveConvergencePatterns(fullReport)` | 618 | ~110 | signal_interpretations, evidence_blocks, semantic_domain_registry, structural_enrichment | surface object with domain convergence | PICR: convergence_patterns | PROTOTYPE |
+| 9 | `deriveAbsenceProfile(fullReport)` | 729 | ~100 | signal_interpretations, structural_enrichment | surface object with health profile | PICR: absence_profile | PROTOTYPE |
+
+### Extracted to PICR (deleted from adapter)
+
+| # | Former Function | Materializer | PICP Parent | Status |
+|---|----------------|-------------|-------------|--------|
+| 10 | `deriveStructuralFragility(fullReport)` | `cognition/materializers/structuralFragility.js` | constraint_inventory | **EXTRACTED** — deleted `efb020a` |
+| 11 | `deriveBoundaryAlignment(fullReport)` | `cognition/materializers/boundaryAlignment.js` | structural_posture | **EXTRACTED** — deleted `efb020a` |
+| 12 | `deriveStructuralCoupling(fullReport)` | `cognition/materializers/structuralCoupling.js` | constraint_inventory | **EXTRACTED** — deleted `efb020a` |
 
 ### Qualification materializers (PICR extraction candidates)
 
 | # | Function | Line | LOC | PICR Target |
 |---|----------|------|-----|-------------|
-| 13 | `deriveStructuralRichnessAxis(fullReport)` | 1025 | ~25 | PICR: qualification.structural_richness |
-| 14 | `deriveGovernanceDepthAxis(fullReport)` | 1048 | ~30 | PICR: qualification.governance_depth |
-| 15 | `deriveReconciliationAuthorityAxis(fullReport)` | 1076 | ~25 | PICR: qualification.reconciliation_authority |
-| 16 | `deriveQualificationGuidance(fullReport)` | 1098 | ~45 | PICR: qualification.guidance |
-| 17 | `deriveQualificationCognition(fullReport)` | 1161 | ~20 | PICR: qualification.cognition |
-| 18 | `deriveExecutionCorridors(fullReport)` | 1145 | ~15 | PICR: execution_corridors |
+| 13 | `deriveStructuralRichnessAxis(fullReport)` | 832 | ~25 | PICR: qualification.structural_richness |
+| 14 | `deriveGovernanceDepthAxis(fullReport)` | 855 | ~30 | PICR: qualification.governance_depth |
+| 15 | `deriveReconciliationAuthorityAxis(fullReport)` | 883 | ~25 | PICR: qualification.reconciliation_authority |
+| 16 | `deriveQualificationGuidance(fullReport)` | 905 | ~45 | PICR: qualification.guidance |
+| 17 | `deriveQualificationCognition(fullReport)` | 968 | ~20 | PICR: qualification.cognition |
+| 18 | `deriveExecutionCorridors(fullReport)` | 952 | ~15 | PICR: execution_corridors |
 
 ### Projection functions (stay in adapter — these are PRE)
 
 | # | Function | Line | LOC | Role |
 |---|----------|------|-----|------|
-| 19 | `deriveProjection(fullReport)` | 1178 | ~50 | PRE orchestrator — calls materializers, sorts, packages |
-| 20 | `deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurface)` | 1233 | ~350 | PRE — topology overlay projection per surface |
-| 21 | `derivePressureZoneCognitionState(zoneId, fullReport)` | 1583 | ~120 | PRE — pressure zone projection |
-| 22 | `deriveConditionCognitionState(condition, fullReport)` | 1699 | ~130 | PRE — condition detail projection |
+| 19 | `deriveProjection(fullReport)` | 985 | ~50 | PRE orchestrator — calls materializers, sorts, packages |
+| 20 | `deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurface)` | 1040 | ~350 | PRE — topology overlay projection per surface |
+| 21 | `derivePressureZoneCognitionState(zoneId, fullReport)` | 1390 | ~120 | PRE — pressure zone projection |
+| 22 | `deriveConditionCognitionState(condition, fullReport)` | 1506 | ~130 | PRE — condition detail projection |
 | 23 | `deriveModuleState(fullReport)` | 115 | ~15 | PRE — module availability gate |
 
 ---
@@ -240,9 +245,10 @@ deriveConditionCognitionState(condition, picp)             // condition detail
 
 ### Estimated post-extraction adapter size
 
-- Current: 1,828 lines (PICR + PRE collapsed)
-- After extraction: ~650 lines (PRE only — topology overlays, pressure zone state, projection orchestration)
-- Extracted to PICR: ~1,100 lines across 12 materializer files (~60-100 LOC each)
+- Current: 1,646 lines (PICR + PRE collapsed — down from 1,828 after Tier 1 deletion)
+- After full extraction: ~650 lines (PRE only — topology overlays, pressure zone state, projection orchestration)
+- Extracted to PICR so far: ~195 lines across 3 materializer files (Tier 1)
+- Remaining to extract: ~800 lines across 9 materializer files (Original 6 + Tier 2)
 
 ---
 
@@ -296,7 +302,7 @@ The roadmap can be steered, not rewritten:
 
 | File | Role | Lines | Violation |
 |------|------|-------|-----------|
-| `lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js` | PICR + PRE collapsed | 1,828 | Cognition compilation in projection layer |
+| `lib/lens-v2/SoftwareIntelligenceProjectionAdapter.js` | PICR + PRE collapsed | 1,646 | Cognition compilation in projection layer (Tier 1 extracted) |
 | `components/lens-v2/zones/SoftwareIntelligenceField.jsx` | Surface card renderer | ~350 | Clean — consumer-only |
 | `components/lens-v2/zones/IntelligenceField.jsx` | Domain reasoning contracts + main canvas | ~9,500+ | Contracts are consumer-side (PRE Zone A) — correct position |
 | `pages/lens-v2-flagship.js` | Inline CSS + page orchestration | ~13,000+ | CSS for surfaces — correct position |
@@ -305,10 +311,15 @@ The roadmap can be steered, not rewritten:
 
 ## 8. Decision Required
 
-The prototype is frozen. Feature work is stopped. Three decisions are needed:
+The prototype is frozen. Feature work is stopped. Tier 1 extraction is complete.
 
-1. **When to extract:** Execute Phase 1 of the roadmap now, or defer?
-2. **9 vs 14 objects:** Are SW-Intel surfaces sub-objects within the 9 PICP objects, or do they extend the schema?
-3. **Extraction granularity:** Extract all 18 derive functions at once, or phase by tier (original 6, then Tier 1, then Tier 2)?
+### Decisions made
 
-Until these decisions are made, the adapter remains the de facto PICR — architecturally wrong, operationally correct.
+3. **Extraction granularity:** Phased by tier. Tier 1 (structural_fragility, boundary_alignment, structural_coupling) extracted as PICP sub-objects, validated, deprecated functions deleted. ✓
+
+### Decisions remaining
+
+1. **When to extract Tier 2 + Original 6:** Execute remaining PICR extraction now, or defer?
+2. **9 vs 14 objects:** Are remaining SW-Intel surfaces sub-objects within the 9 PICP objects, or do they extend the schema?
+
+The adapter remains the de facto PICR for 9 of 12 surfaces — Tier 1 is architecturally correct, the rest is operationally correct but architecturally violated.
