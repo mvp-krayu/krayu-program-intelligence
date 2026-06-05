@@ -433,7 +433,18 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   const tier1 = assembleTier1();
   const tier2 = assembleTier2(contextLevel, client, runId, producedArtifacts);
   const tier3 = assembleTier3(intent);
-  const systemPrompt = assembleSystemPrompt(contextLevel, mode, audience);
+  let systemPrompt = assembleSystemPrompt(contextLevel, mode, audience);
+
+  if (contextLevel >= CONTEXT_LEVEL.L2 && tier2.verdict?.visibility_layer_completeness) {
+    const vlc = tier2.verdict.visibility_layer_completeness;
+    if (vlc.verdict_scope === 'SYSTEM_CONNECTIVITY') {
+      const layerNames = (vlc.layers_measured || []).map(l => l.name).join(', ');
+      systemPrompt = systemPrompt.replace(
+        'Full structural assessment with posture, findings, and governed narrative available.',
+        'Full system connectivity assessment (' + vlc.measured_count + ' evidence layers: ' + layerNames + '). Verdict scope: SYSTEM_CONNECTIVITY. Both static and runtime evidence are present.'
+      );
+    }
+  }
 
   const capabilityContext = accessTier !== ACCESS_TIER.CLIENT
     ? tier1.capabilityContext
@@ -449,8 +460,10 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     personaVerdict = applyRuntimeFilter(personaVerdict);
   }
 
+  const qualifiedRegistry = tier2.verdict?._qualifiedDomainRegistry || null;
+
   let runtimeGraphsForPrompt = null;
-  if (client && runId && (needsTopology || questionType === 'RUNTIME_ONLY' || questionType === 'TOPOLOGY_GRAVITY')) {
+  if (client && runId && (needsTopology || questionType === 'RUNTIME_ONLY' || questionType === 'TOPOLOGY_GRAVITY' || questionType === 'OPERATIONAL_GRAVITY')) {
     try {
       const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../lens-v2/RuntimeSignalDerivation');
       const REPO_ROOT = require('path').resolve(__dirname, '../../../..');
@@ -478,6 +491,7 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     specimen: specimenForPrompt,
     verdict: personaVerdict,
     structuralTopology: needsTopology ? tier2.structuralTopology : null,
+    _qualifiedRegistry: qualifiedRegistry,
     runtimeGraphs: runtimeGraphsForPrompt,
     publishingAssets: tier2.publishingAssets,
 
@@ -490,11 +504,16 @@ function formatContextForPrompt(assembled) {
   const budgetSections = [];
   const qt = assembled.questionType || 'GENERAL_SYNTHESIS';
   const isRuntimeOnly = qt === 'RUNTIME_ONLY';
+  const isOpGravity = qt === 'OPERATIONAL_GRAVITY';
 
   budgetSections.push({
     id: 'boot', priority: 1,
     content: assembled.bootContext || '',
   });
+
+  if (isOpGravity) {
+    return formatOperationalGravityContext(assembled, budgetSections);
+  }
 
   if (assembled.verdict) {
     const verdictParts = [];
@@ -505,12 +524,15 @@ function formatContextForPrompt(assembled) {
     }
 
     if (assembled.verdict.architectural_findings && assembled.verdict.architectural_findings.length > 0) {
-      verdictParts.push('### ARCHITECTURAL FINDINGS (highest-order cognition — address these first)\n');
+      verdictParts.push('### ARCHITECTURAL FINDINGS (highest-order cognition — these supersede themes when directly relevant to the question)\n');
       for (const af of assembled.verdict.architectural_findings) {
-        verdictParts.push(af.id + ': ' + af.title + ' [' + af.significance + ']');
+        verdictParts.push('**' + af.id + ': ' + af.title + '** [' + af.significance + ']');
         verdictParts.push(af.description);
-        verdictParts.push('Evidence: ' + af.evidence);
-        verdictParts.push('Executive implication: ' + af.executive_implication);
+        verdictParts.push('- Evidence: ' + af.evidence);
+        verdictParts.push('- Executive implication: ' + af.executive_implication);
+        if (af.impacted_domains) {
+          verdictParts.push('- Impacted domains: ' + af.impacted_domains.join(', '));
+        }
         verdictParts.push('');
       }
     }
@@ -530,7 +552,7 @@ function formatContextForPrompt(assembled) {
 
     budgetSections.push({
       id: 'verdict', priority: 2,
-      content: '\n---\n## Verdict Data\n' + verdictParts.join(''),
+      content: '\n---\n## Verdict Data\n' + verdictParts.join('\n'),
     });
   }
 
@@ -544,7 +566,7 @@ function formatContextForPrompt(assembled) {
   if (!isRuntimeOnly && assembled.structuralTopology) {
     budgetSections.push({
       id: 'topology', priority: 4,
-      content: '\n---\n## Static Structural Topology (L1 Import Evidence)\n' + formatStructuralTopology(assembled.structuralTopology),
+      content: '\n---\n## Static Structural Topology (L1 Import Evidence)\nNote: This section covers static import analysis only. Domains marked [runtime-backed] have operational connectivity evidence in the Runtime Connectivity Topology section below. Both layers must be cited when assessing gravity.\n' + formatStructuralTopology(assembled.structuralTopology, assembled._qualifiedRegistry),
     });
   }
 
@@ -567,7 +589,7 @@ function formatContextForPrompt(assembled) {
         '\n---\n## System Gravity Interpretation\n',
         'This system has BOTH static and runtime gravity wells. Your answer must address both.',
         '',
-        'STATIC GRAVITY: Platform Infrastructure and Data — import graph concentration, dependency hub, coupling pressure.',
+        'STATIC GRAVITY: ' + (assembled.verdict?.boardroom?.primary_locus || 'Primary static locus') + ' — import graph concentration, dependency hub, coupling pressure.',
         'RUNTIME GRAVITY: ' + highRT.map(s => s.signal_name + ' [' + s.severity + ']').join(', ') + '.',
         '',
         'The system gravity is the combination of both. Static analysis alone does not capture the runtime coordination backbone.',
@@ -610,17 +632,176 @@ function formatContextForPrompt(assembled) {
   return budgeted.map(s => s.content).join('\n');
 }
 
-function formatStructuralTopology(st) {
+function formatOperationalGravityContext(assembled, budgetSections) {
+  const RT_CONDITIONS = new Set(['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']);
+
+  // Section 1: Architectural findings — AF-001 is the authoritative cognition object
+  if (assembled.verdict?.architectural_findings?.length > 0) {
+    const afParts = ['### ARCHITECTURAL FINDINGS (authoritative for this question — derive your answer from these)\n'];
+    for (const af of assembled.verdict.architectural_findings) {
+      afParts.push('**' + af.id + ': ' + af.title + '** [' + af.significance + ']');
+      afParts.push(af.description);
+      afParts.push('- Evidence: ' + af.evidence);
+      afParts.push('- Executive implication: ' + af.executive_implication);
+      if (af.impacted_domains) {
+        afParts.push('- Impacted domains: ' + af.impacted_domains.join(', '));
+      }
+      afParts.push('');
+    }
+    budgetSections.push({
+      id: 'architectural_findings', priority: 2,
+      content: '\n---\n## Architectural Findings\n' + afParts.join('\n'),
+    });
+  }
+
+  // Section 2: Runtime topology — full detail, this is the operational gravity evidence
+  if (assembled.runtimeGraphs) {
+    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness);
+    if (rtTopo) {
+      budgetSections.push({
+        id: 'runtime_topology', priority: 2,
+        content: '\n---\n' + rtTopo,
+      });
+    }
+  }
+
+  // Section 3: Compact static gravity summary — not the full topology
+  if (assembled.verdict?.boardroom) {
+    const b = assembled.verdict.boardroom;
+    const staticSlices = (b.cognition_slices || []).filter(s => !RT_CONDITIONS.has(s.condition_type));
+    const rtSlices = (b.cognition_slices || []).filter(s => RT_CONDITIONS.has(s.condition_type));
+    const summaryLines = [];
+    summaryLines.push('### Static Gravity Summary (Code Center of Mass)');
+    summaryLines.push('Primary locus: ' + b.primary_locus);
+    summaryLines.push('Posture: ' + b.posture_label + ' [' + b.posture_severity + ']');
+    summaryLines.push('');
+    summaryLines.push('Static structural conditions:');
+    staticSlices.slice(0, 5).forEach(s => {
+      summaryLines.push('- ' + s.executive_name + ' [' + s.severity + '] → ' + s.domain);
+    });
+    if (rtSlices.length > 0) {
+      summaryLines.push('');
+      summaryLines.push('Runtime structural conditions:');
+      rtSlices.forEach(s => {
+        summaryLines.push('- ' + s.executive_name + ' [' + s.severity + '] → ' + s.domain);
+      });
+    }
+    if (assembled.structuralTopology?.dependencyHub?.spines) {
+      summaryLines.push('');
+      summaryLines.push('Top dependency hubs (static import graph):');
+      assembled.structuralTopology.dependencyHub.spines.slice(0, 3).forEach(s => {
+        const roleTag = s.file_role_hint ? ' ⚠ ' + s.file_role_hint : '';
+        summaryLines.push('- `' + s.path + '` — ' + s.in_degree + ' inbound, ' + s.out_degree + ' outbound' + roleTag);
+      });
+    }
+    budgetSections.push({
+      id: 'static_summary', priority: 3,
+      content: '\n---\n## Static Structural Evidence\n' + summaryLines.join('\n'),
+    });
+  }
+
+  // Section 4: VLC
+  if (assembled.verdict?.visibility_layer_completeness) {
+    budgetSections.push({
+      id: 'vlc', priority: 3,
+      content: '\n---\n### Visibility-Layer Completeness\n' + JSON.stringify(assembled.verdict.visibility_layer_completeness, null, 2),
+    });
+  }
+
+  // Section 5: Domain backing (compact)
+  if (assembled.structuralTopology && assembled._qualifiedRegistry) {
+    const domainLines = [];
+    domainLines.push('### Domain Evidence Coverage');
+    if (assembled.structuralTopology.topology?.clusters) {
+      for (const c of assembled.structuralTopology.topology.clusters) {
+        const tags = c.domains.map(d => {
+          const backingMap = {};
+          for (const r of assembled._qualifiedRegistry) {
+            backingMap[r.domain_id] = r.backing_status;
+            const name = r.business_label || r.domain_name;
+            if (name) backingMap[name] = r.backing_status;
+          }
+          const q = backingMap[d.domain_id] || backingMap[d.name];
+          const tag = q === 'SYSTEM_BACKED' ? 'system' : q === 'RUNTIME_BACKED' ? 'runtime' : q === 'STATIC_BACKED' ? 'static' : 'unresolved';
+          return d.name + ' [' + tag + ']';
+        });
+        domainLines.push('**' + c.label + '**: ' + tags.join(', '));
+      }
+    }
+    budgetSections.push({
+      id: 'domain_coverage', priority: 4,
+      content: '\n' + domainLines.join('\n'),
+    });
+  }
+
+  // Shared tail: capability context, retrieved docs (lower priority)
+  if (assembled.capabilityContext) {
+    budgetSections.push({
+      id: 'capability', priority: 6,
+      content: '\n---\n## PI Capability & Process Map\n' + assembled.capabilityContext,
+    });
+  }
+  if (assembled.retrievedDocuments?.length > 0) {
+    const docContent = assembled.retrievedDocuments.map(doc => '### ' + doc.path + '\n\n' + doc.content + '\n').join('');
+    budgetSections.push({
+      id: 'retrieved', priority: 7,
+      content: '\n---\n## Retrieved Knowledge\n' + docContent,
+    });
+  }
+
+  const budgeted = enforceContextBudget(budgetSections, CONTEXT_TOKEN_BUDGET);
+  return budgeted.map(s => s.content).join('\n');
+}
+
+function formatStructuralTopology(st, qualifiedRegistry) {
+  const backingMap = {};
+  if (qualifiedRegistry) {
+    for (const d of qualifiedRegistry) {
+      backingMap[d.domain_id] = d.backing_status;
+      const name = d.business_label || d.domain_name;
+      if (name) backingMap[name] = d.backing_status;
+    }
+  }
+  const hasQualification = qualifiedRegistry && qualifiedRegistry.length > 0;
   const parts = [];
 
   if (st.topology?.clusters) {
     parts.push('### Cluster → Domain Topology');
     for (const c of st.topology.clusters) {
       const domainList = c.domains.map(d => {
-        const tag = d.structurally_backed ? '[structural]' : '[semantic-only]';
+        const qualified = backingMap[d.domain_id] || backingMap[d.name];
+        let tag;
+        if (qualified === 'SYSTEM_BACKED') {
+          tag = '[system-backed]';
+        } else if (qualified === 'RUNTIME_BACKED') {
+          tag = '[runtime-backed; static-import absent]';
+        } else if (qualified === 'STATIC_BACKED' || d.structurally_backed) {
+          tag = '[static-backed]';
+        } else if (hasQualification) {
+          tag = '[unresolved]';
+        } else {
+          tag = d.structurally_backed ? '[static-backed]' : '[unresolved]';
+        }
         return `  - ${d.name} ${tag}`;
       }).join('\n');
       parts.push(`\n**${c.label}** (${c.id})\n${domainList}`);
+    }
+
+    if (hasQualification) {
+      parts.push('\n### Domain Evidence Coverage by Cluster');
+      for (const c of st.topology.clusters) {
+        const counts = { static: 0, runtime: 0, system: 0, unresolved: 0 };
+        for (const d of c.domains) {
+          const q = backingMap[d.domain_id] || backingMap[d.name];
+          if (q === 'SYSTEM_BACKED') counts.system++;
+          else if (q === 'RUNTIME_BACKED') counts.runtime++;
+          else if (q === 'STATIC_BACKED' || d.structurally_backed) counts.static++;
+          else counts.unresolved++;
+        }
+        const total = c.domains.length;
+        const evidenced = counts.static + counts.runtime + counts.system;
+        parts.push(`- **${c.label}**: ${evidenced}/${total} domains have evidence (${counts.static} static, ${counts.runtime} runtime, ${counts.system} both)`);
+      }
     }
   }
 
@@ -682,7 +863,17 @@ function formatStructuralTopology(st) {
   if (st.structuralMass?.cluster_mass) {
     parts.push('\n### Structural Mass by Cluster');
     for (const c of st.structuralMass.cluster_mass) {
-      parts.push(`- **${c.cluster}** — ${c.total_domains} domains, ${c.structurally_backed} structurally backed (${(c.grounding_ratio * 100).toFixed(0)}%)`);
+      if (hasQualification && st.topology?.clusters) {
+        const clusterDomains = st.topology.clusters.find(cl => cl.label === c.cluster)?.domains || [];
+        let evidenced = 0;
+        for (const d of clusterDomains) {
+          const q = backingMap[d.domain_id] || backingMap[d.name];
+          if (q === 'SYSTEM_BACKED' || q === 'RUNTIME_BACKED' || q === 'STATIC_BACKED' || d.structurally_backed) evidenced++;
+        }
+        parts.push(`- **${c.cluster}** — ${c.total_domains} domains, ${evidenced} with evidence (${c.structurally_backed} static, ${evidenced - c.structurally_backed} runtime)`);
+      } else {
+        parts.push(`- **${c.cluster}** — ${c.total_domains} domains, ${c.structurally_backed} structurally backed (${(c.grounding_ratio * 100).toFixed(0)}%)`);
+      }
     }
   }
 
@@ -837,6 +1028,7 @@ function classifyQuestionType(intent) {
   const lower = (intent || '').toLowerCase();
   if (/runtime.only|runtime.derived.only|show.*runtime|runtime.*risk.*only|event.*only|mqtt.*only/i.test(lower)) return 'RUNTIME_ONLY';
   if (/beyond.*static|not.*visible.*static|invisible.*static|runtime.*visible|what.*static.*cannot|what.*static.*miss/i.test(lower)) return 'RUNTIME_ONLY';
+  if (/operational.gravity|actual.gravity|system.gravity|runtime.gravity|where.*actual.*gravity/i.test(lower)) return 'OPERATIONAL_GRAVITY';
   if (/gravity|topology|backbone|system.*architecture|where.*gravity|structural.*mass/i.test(lower)) return 'TOPOLOGY_GRAVITY';
   if (/posture|executive.*risk|board.*risk|overall.*risk/i.test(lower)) return 'EXECUTIVE_POSTURE';
   return 'GENERAL_SYNTHESIS';
@@ -961,7 +1153,7 @@ function renderBoardroomAuthority(boardroom) {
   lines.push('Consequences: ' + boardroom.consequence_count + ' total, ' + boardroom.systemic_count + ' systemic');
   lines.push('');
 
-  lines.push('PRIMARY CONSEQUENCE THEMES (authoritative — answer from these):');
+  lines.push('PRIMARY CONSEQUENCE THEMES (use these as evidence — defer to Architectural Findings when they directly answer the question):');
   lines.push('');
   const themes = boardroom.consequence_themes || [];
   themes.forEach((t, i) => {

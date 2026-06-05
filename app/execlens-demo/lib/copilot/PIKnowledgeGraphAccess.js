@@ -112,6 +112,7 @@ function resolveVerdict(specimen, client, runId) {
       balanced: condenseBalanced(balanced),
       visibility_layer_completeness: visibilityLayer,
       architectural_findings: archFindings,
+      _qualifiedDomainRegistry: qualified.semantic_domain_registry,
     };
   } catch {
     return null;
