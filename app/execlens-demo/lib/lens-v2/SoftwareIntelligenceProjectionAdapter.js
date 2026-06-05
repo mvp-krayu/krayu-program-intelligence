@@ -288,7 +288,50 @@ function deriveQualificationCognition(fullReport) {
 
 // ─── MAIN PROJECTION ────────────────────────────────────────────────
 
-function deriveProjection(fullReport) {
+// ─── RUNTIME CONDITION → SURFACE BRIDGE ─────────────────────────────
+// Converts runtime-derived conditions into projection surfaces so LENS
+// can render them alongside legacy PICR surfaces. This is the reconciliation
+// bridge: runtime cognition enters the surface model without rewriting
+// the 12 legacy materializers.
+
+const RUNTIME_SURFACE_NAMES = {
+  EVENT_CONCENTRATION: 'Event Coordination Load',
+  RUNTIME_DEPENDENCY_CHOKE_POINT: 'Runtime Dependency Choke Point',
+  BROKER_DEPENDENCY: 'Broker Dependency',
+  TOPIC_FANOUT_PRESSURE: 'Topic Fanout Pressure',
+  ASYNC_PROPAGATION_ASYMMETRY: 'Async Propagation Asymmetry',
+  EDGE_CLOUD_PROPAGATION_RISK: 'Edge-Cloud Propagation',
+  RUNTIME_OBSERVABILITY_GAP: 'Runtime Observability Gap',
+}
+
+function runtimeConditionsToSurfaces(conditions) {
+  if (!conditions || conditions.length === 0) return []
+
+  const runtimeTypes = new Set(Object.keys(RUNTIME_SURFACE_NAMES))
+  const runtimeConditions = conditions.filter(c => runtimeTypes.has(c.condition_type) && c.severity !== 'NOMINAL')
+
+  return runtimeConditions.map(c => ({
+    surface_id: 'RUNTIME_' + c.condition_type,
+    surface_name: RUNTIME_SURFACE_NAMES[c.condition_type] || c.condition_type,
+    severity: c.severity,
+    operational_summary: c.operational_consequence,
+    evidence_class: c.evidence_class || 'RUNTIME',
+    evidence_mode: c.evidence_mode || 'RUNTIME_EVIDENCE',
+    affected_domains: (c.shared_topology_targets && c.shared_topology_targets.domains) || [],
+    condition_type: c.condition_type,
+    condition_id: c.condition_id,
+    measurement_basis: c.measurement_basis,
+    governance_boundary: c.governance_boundary,
+    is_runtime: true,
+    constituents: {
+      signal_value: c.signal_value,
+      measurement_basis: c.measurement_basis,
+      supporting_signals: c.supporting_signal_ids || [],
+    },
+  }))
+}
+
+function deriveProjection(fullReport, synthesisResult) {
   const moduleState = deriveModuleState(fullReport)
 
   if (moduleState === PROJECTION_STATUS.ABSENT) {
@@ -321,7 +364,11 @@ function deriveProjection(fullReport) {
     getSwIntelSurface(picp, 'sw_intel_absence'),
   ].filter(Boolean)
 
-  const surfaces = rawSurfaces.sort((a, b) =>
+  const runtimeSurfaces = synthesisResult
+    ? runtimeConditionsToSurfaces(synthesisResult.conditions)
+    : []
+
+  const surfaces = [...rawSurfaces, ...runtimeSurfaces].sort((a, b) =>
     (SEVERITY_ORDER[a.severity] ?? 5) - (SEVERITY_ORDER[b.severity] ?? 5)
   )
 
@@ -330,6 +377,8 @@ function deriveProjection(fullReport) {
     module_state: moduleState,
     surfaces,
     surface_count: surfaces.length,
+    static_surface_count: rawSurfaces.length,
+    runtime_surface_count: runtimeSurfaces.length,
     peak_severity: surfaces.length > 0 ? surfaces[0].severity : 'NOMINAL',
     qualification_decomposition: {
       structural_richness: deriveStructuralRichnessAxis(fullReport),
