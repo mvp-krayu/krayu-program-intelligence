@@ -527,6 +527,12 @@ function makeCombination(patternId, contributing, lk, escalate, registry) {
     derivation_trace: [...allDerivationSteps, combinationStep],
     pressure_zone_id: first.pressure_zone_id || null,
     temporal_marker: null,
+    evidence_class: contributing.some(c => c.evidence_class === 'MIXED' || (c.visibility_layer === 'RUNTIME'))
+      ? (contributing.every(c => c.visibility_layer === 'RUNTIME') ? contributing[0].evidence_class : 'MIXED')
+      : (first.evidence_class || 'STATIC_IMPORT'),
+    visibility_layer: contributing.some(c => c.visibility_layer === 'RUNTIME')
+      ? (contributing.every(c => c.visibility_layer === 'RUNTIME') ? 'RUNTIME' : 'MIXED')
+      : 'STATIC',
   }
 }
 
@@ -939,6 +945,10 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     ? `This dynamic indicates ${postureLabel} in ${primaryLocus}.${confidenceSuffix}`
     : null
 
+  const allAtomics = consequenceResult.atomic_consequences || []
+  const runtimeAtomicCount = allAtomics.filter(a => a.visibility_layer === 'RUNTIME').length
+  const totalAtomicCount = allAtomics.length
+
   const consequenceThemes = []
   const themeMap = {}
   for (const csq of csqs) {
@@ -953,6 +963,9 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         scope: csq.consequence_scope,
         source_count: (csq.source_conditions || []).length,
         is_combination: !!csq.combination_pattern,
+        _evidence_classes: new Set(),
+        _static_sources: 0,
+        _runtime_sources: 0,
       }
     } else {
       themeMap[tid].source_count += (csq.source_conditions || []).length
@@ -960,9 +973,37 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         themeMap[tid].severity = csq.severity
       }
     }
+    if (csq.evidence_class) themeMap[tid]._evidence_classes.add(csq.evidence_class)
+    const srcTypes = csq.source_condition_types || []
+    const hasRuntimeSrc = srcTypes.some(t => RUNTIME_CONDITION_SET.has(t))
+    if (csq.visibility_layer === 'RUNTIME' || csq.visibility_layer === 'MIXED' || hasRuntimeSrc) {
+      themeMap[tid]._runtime_sources += (csq.source_conditions || []).length
+    } else {
+      themeMap[tid]._static_sources += (csq.source_conditions || []).length
+    }
   }
   for (const tid of Object.keys(themeMap)) {
-    consequenceThemes.push(themeMap[tid])
+    const t = themeMap[tid]
+    t.evidence_classes = [...t._evidence_classes]
+    t.static_sources = t._static_sources
+    t.runtime_sources = t._runtime_sources
+    if (t._runtime_sources > 0 && t._static_sources > 0) {
+      t.evidence_diversity = 'MIXED'
+      t.evidence_annotation = `${t.source_count} sources (${t._static_sources} static, ${t._runtime_sources} runtime)`
+    } else if (t._runtime_sources > 0) {
+      t.evidence_diversity = 'RUNTIME'
+      t.evidence_annotation = `${t.source_count} sources (runtime connectivity evidence)`
+    } else if (runtimeAtomicCount > 0) {
+      t.evidence_diversity = 'MIXED'
+      t.evidence_annotation = `${t.source_count} sources — system includes ${runtimeAtomicCount} runtime-derived findings across ${totalAtomicCount} total structural observations`
+    } else {
+      t.evidence_diversity = 'STATIC'
+      t.evidence_annotation = `${t.source_count} sources`
+    }
+    delete t._evidence_classes
+    delete t._static_sources
+    delete t._runtime_sources
+    consequenceThemes.push(t)
   }
   consequenceThemes.sort((a, b) => (SEVERITY_RANK[b.severity] || 0) - (SEVERITY_RANK[a.severity] || 0))
 
