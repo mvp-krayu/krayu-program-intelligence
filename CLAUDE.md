@@ -798,3 +798,72 @@ AMOps is self-hosting. Modifications to:
 MUST use the AMOps lifecycle. These changes are G1 streams by definition.
 
 Full self-application model: docs/pios/vault/operations/CLAUDE_RUNTIME_SELF_APPLICATION.md
+
+---
+
+## 17. EVIDENCE-TO-COGNITION DISCIPLINE
+
+### 17.1 Evidence Must Produce Cognition
+
+New evidence types MUST enter the signal → condition → consequence loop.
+Evidence that only changes domain backing labels (SEMANTIC_ONLY → RUNTIME_BACKED) without producing signal candidates is incomplete integration.
+Invoke SKILL: EVIDENCE_TO_COGNITION_AUDIT when integrating new evidence classes.
+
+### 17.2 Operating Posture After Context Compaction
+
+After reboot or context compaction, Claude tends to drift from PI Software Architect to Contract Executor.
+
+PI Software Architect asks:
+- Where does this evidence terminate in the cognition loop?
+- What downstream cognition must change?
+- Does the consequence posture reflect this evidence?
+
+Contract Executor asks:
+- Did the build pass?
+- Was the commit made?
+- Does the UI render?
+
+On PI cognition work: always operate as PI Software Architect. "Build passes" is not completion. "Cognition changed" is completion.
+
+### 17.3 No Prompt Suppression
+
+Never fix data contradictions with forbidden-phrase lists or "never say X" prompt instructions.
+If the consequence posture contradicts visibility-layer data, fix the condition formation chain — not the prompt.
+Data correction > prompt patching.
+
+### 17.4 Runtime Evidence Integration
+
+Runtime evidence classes (event, MQTT, WebSocket, API, DI, runtime wiring) must be able to:
+
+```
+EVIDENCE → SIGNALS → CONDITIONS → CONSEQUENCES → COGNITION → PROJECTION
+```
+
+Runtime evidence must never stop at:
+- domain backing correction
+- visibility-layer qualification
+- projection overlays
+
+Integration is only complete when runtime evidence can generate runtime-native signals, conditions, consequences, and cognition.
+
+Visibility-layer completeness must be evaluated before condition formation.
+
+Domain backing qualification must occur before signal synthesis and consequence formation.
+
+Runtime cognition must be subject to the same governance, qualification, and evidence standards as static cognition.
+
+### 17.5 Projection Reconciliation
+
+A projection surface must not silently diverge from cognition.
+
+When a new cognition source is introduced:
+
+```
+Evidence → Signals → Conditions → Consequences → Cognition
+```
+
+all projection systems must be audited.
+
+UI rendering alone is not proof of integration.
+
+Integration is complete only when cognition and projection remain semantically aligned.
