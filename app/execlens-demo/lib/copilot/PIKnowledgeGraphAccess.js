@@ -134,6 +134,7 @@ function condenseBoardroom(projection) {
     domain: s.domain,
     severity: s.severity,
     confidence: s.confidence,
+    evidence_class: s.evidence_class || 'STATIC_IMPORT',
   }));
 
   const narratives = (projection.domain_narratives || []).map(n => ({

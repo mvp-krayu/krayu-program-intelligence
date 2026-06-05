@@ -453,6 +453,8 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     contextLevel,
     accessTier,
     evidenceClass,
+    questionType,
+    audience: audience || null,
     client: client || null,
     runId: runId || null,
     availableDomains,
@@ -473,6 +475,8 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
 
 function formatContextForPrompt(assembled) {
   const budgetSections = [];
+  const qt = assembled.questionType || 'GENERAL_SYNTHESIS';
+  const isRuntimeOnly = qt === 'RUNTIME_ONLY';
 
   budgetSections.push({
     id: 'boot', priority: 1,
@@ -481,6 +485,12 @@ function formatContextForPrompt(assembled) {
 
   if (assembled.verdict) {
     const verdictParts = [];
+
+    const answerContract = renderAnswerContract(assembled.questionType, assembled.verdict, assembled.audience);
+    if (answerContract) {
+      verdictParts.push(answerContract + '\n');
+    }
+
     if (assembled.verdict.visibility_layer_completeness) {
       verdictParts.push('### Visibility-Layer Completeness\n');
       verdictParts.push(JSON.stringify(assembled.verdict.visibility_layer_completeness, null, 2));
@@ -489,24 +499,25 @@ function formatContextForPrompt(assembled) {
       verdictParts.push('\n### Boardroom Cognition\n');
       verdictParts.push(renderBoardroomAuthority(assembled.verdict.boardroom));
     }
-    if (assembled.verdict.balanced) {
+    if (!isRuntimeOnly && assembled.verdict.balanced) {
       verdictParts.push('\n### Balanced Projection\n');
       verdictParts.push(JSON.stringify(assembled.verdict.balanced, null, 2));
     }
+
     budgetSections.push({
       id: 'verdict', priority: 2,
       content: '\n---\n## Verdict Data\n' + verdictParts.join(''),
     });
   }
 
-  if (assembled.specimen) {
+  if (!isRuntimeOnly && assembled.specimen) {
     budgetSections.push({
       id: 'specimen', priority: 3,
       content: '\n---\n## Specimen Data\n' + formatSpecimenSummary(assembled.specimen),
     });
   }
 
-  if (assembled.structuralTopology) {
+  if (!isRuntimeOnly && assembled.structuralTopology) {
     budgetSections.push({
       id: 'topology', priority: 4,
       content: '\n---\n## Structural Topology (L1 Specimen Evidence)\n' + formatStructuralTopology(assembled.structuralTopology),
@@ -657,6 +668,76 @@ function applyRuntimeFilter(verdict) {
         : b.executive_synthesis,
     },
   };
+}
+
+function renderAnswerContract(questionType, verdict, audience) {
+  if (!questionType || !verdict) return null;
+
+  if (questionType === 'EXECUTIVE_POSTURE') {
+    const vlc = verdict.visibility_layer_completeness;
+    const themes = verdict.boardroom?.consequence_themes || [];
+    const rtThemes = themes.filter(t => t.evidence_diversity === 'RUNTIME' || t.evidence_diversity === 'MIXED');
+    const lines = ['### ANSWER CONTRACT — EXECUTIVE POSTURE', ''];
+    lines.push('Your answer MUST include all of the following:');
+    lines.push('1. Primary posture classification and severity');
+    lines.push('2. Highest-severity systemic risks');
+    lines.push('3. Governance qualifier and confidence boundary');
+    if (vlc) {
+      lines.push('4. Visibility-layer completeness: ' + vlc.verdict_scope + ' (' + vlc.completeness + '%, ' + vlc.measured_count + '/' + vlc.required_count + ' layers, ' + vlc.architecture_profile + ')');
+    }
+    if (rtThemes.length > 0) {
+      lines.push('5. Runtime/system connectivity: ' + rtThemes.length + ' consequence themes include runtime-derived evidence:');
+      rtThemes.slice(0, 5).forEach(t => {
+        lines.push('   - ' + t.theme_label + ' [' + t.severity + '] — ' + t.evidence_annotation);
+      });
+      lines.push('   You must acknowledge these runtime findings in the posture assessment.');
+    }
+    return lines.join('\n');
+  }
+
+  if (questionType === 'RUNTIME_ONLY') {
+    const themes = verdict.boardroom?.consequence_themes || [];
+    const pureRuntime = themes.filter(t => t.evidence_diversity === 'RUNTIME');
+    const mixed = themes.filter(t => t.evidence_diversity === 'MIXED');
+    const slices = verdict.boardroom?.cognition_slices || [];
+    const vlc = verdict.visibility_layer_completeness;
+    const lines = ['### ANSWER CONTRACT — RUNTIME-ONLY RETRIEVAL', ''];
+    lines.push('The user requested runtime-derived risks only.');
+    if (vlc && vlc.verdict_scope === 'SYSTEM_CONNECTIVITY') {
+      lines.push('System connectivity: ' + vlc.verdict_scope + ' — ' + vlc.measured_count + '/' + vlc.required_count + ' visibility layers measured. Runtime evidence IS present.');
+    }
+    lines.push('');
+    lines.push('Your answer MUST:');
+    lines.push('- Name each runtime-derived risk below');
+    lines.push('- State severity, affected domains, and evidence class');
+    lines.push('- These are structural risks derived from event flow, MQTT, WebSocket, and DI evidence — NOT static import analysis');
+    lines.push('- Do NOT report static-only findings');
+    lines.push('');
+    if (pureRuntime.length > 0) {
+      lines.push('RUNTIME-DERIVED CONSEQUENCE THEMES:');
+      pureRuntime.forEach((t, i) => {
+        lines.push((i + 1) + '. ' + t.theme_label + ' [' + t.severity + '] — ' + t.evidence_annotation);
+        lines.push('   ' + t.description);
+      });
+      lines.push('');
+    }
+    if (slices.length > 0) {
+      lines.push('RUNTIME CONDITIONS (report these by name):');
+      slices.forEach((s, i) => {
+        lines.push('  ' + (i + 1) + '. ' + s.executive_name + ' [' + s.severity + '] → ' + s.domain + ' — evidence: ' + (s.evidence_class || 'RUNTIME'));
+      });
+      lines.push('');
+    }
+    if (mixed.length > 0) {
+      lines.push('MIXED-EVIDENCE THEMES (include runtime contributions):');
+      mixed.forEach((t, i) => {
+        lines.push('  ' + (i + 1) + '. ' + t.theme_label + ' [' + t.severity + '] — ' + t.evidence_annotation);
+      });
+    }
+    return lines.join('\n');
+  }
+
+  return null;
 }
 
 function renderBoardroomAuthority(boardroom) {
@@ -872,6 +953,7 @@ function applyPersonaCognitionWeighting(verdict, audience) {
     domain: s.domain,
     severity: s.severity,
     confidence: s.confidence,
+    evidence_class: s.evidence_class,
     persona_relevance: s._score.persona_bonus > 0 ? 'ELEVATED' : 'STANDARD',
     relevance_score: s._score.total,
   }));

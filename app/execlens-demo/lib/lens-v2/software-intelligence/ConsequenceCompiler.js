@@ -921,6 +921,8 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         severity: cond.severity,
         confidence: cond.governance_boundary,
         confidence_label: CONFIDENCE_EXECUTIVE[cond.governance_boundary] || cond.governance_boundary,
+        evidence_class: cond.evidence_class || 'STATIC_IMPORT',
+        evidence_mode: cond.evidence_mode || 'STATIC_EVIDENCE',
         evidence_refs: [{
           type: 'condition',
           id: cond.condition_id,
