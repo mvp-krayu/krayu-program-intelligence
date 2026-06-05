@@ -99,7 +99,7 @@ export async function getServerSideProps(context) {
     const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../../../lib/lens-v2/RuntimeSignalDerivation')
     const { resolveAllowedPath } = require('../../../lib/lens-v2/SemanticArtifactLoader')
     const path = require('path')
-    const repoRoot = path.resolve(path.dirname(resolveAllowedPath('clients')), '..')
+    const repoRoot = path.dirname(resolveAllowedPath('clients'))
     const graphs = loadRuntimeGraphs(client, run, repoRoot)
     const hasAnyGraph = graphs && Object.values(graphs).some(v => v !== null)
     if (hasAnyGraph) {
