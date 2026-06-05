@@ -449,6 +449,18 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     personaVerdict = applyRuntimeFilter(personaVerdict);
   }
 
+  let runtimeGraphsForPrompt = null;
+  if (client && runId && (needsTopology || questionType === 'RUNTIME_ONLY' || questionType === 'TOPOLOGY_GRAVITY')) {
+    try {
+      const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../lens-v2/RuntimeSignalDerivation');
+      const REPO_ROOT = require('path').resolve(__dirname, '../../../..');
+      const graphs = loadRuntimeGraphs(client, runId, REPO_ROOT);
+      if (graphs && Object.values(graphs).some(v => v !== null)) {
+        runtimeGraphsForPrompt = { _derived_signals: deriveRuntimeSignals(graphs) };
+      }
+    } catch { /* runtime graphs not available */ }
+  }
+
   return {
     contextLevel,
     accessTier,
@@ -466,6 +478,7 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     specimen: specimenForPrompt,
     verdict: personaVerdict,
     structuralTopology: needsTopology ? tier2.structuralTopology : null,
+    runtimeGraphs: runtimeGraphsForPrompt,
     publishingAssets: tier2.publishingAssets,
 
     retrievedTopics: tier3.topics,
@@ -520,8 +533,39 @@ function formatContextForPrompt(assembled) {
   if (!isRuntimeOnly && assembled.structuralTopology) {
     budgetSections.push({
       id: 'topology', priority: 4,
-      content: '\n---\n## Structural Topology (L1 Specimen Evidence)\n' + formatStructuralTopology(assembled.structuralTopology),
+      content: '\n---\n## Static Structural Topology (L1 Import Evidence)\n' + formatStructuralTopology(assembled.structuralTopology),
     });
+  }
+
+  if (assembled.runtimeGraphs) {
+    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness);
+    if (rtTopo) {
+      const isGravityQ = qt === 'TOPOLOGY_GRAVITY';
+      budgetSections.push({
+        id: 'runtime_topology', priority: isRuntimeOnly ? 3 : isGravityQ ? 4 : 5,
+        content: '\n---\n' + rtTopo,
+      });
+    }
+  }
+
+  if (qt === 'TOPOLOGY_GRAVITY' && assembled.structuralTopology && assembled.runtimeGraphs) {
+    const rtSignals = (assembled.runtimeGraphs._derived_signals || []);
+    const highRT = rtSignals.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED');
+    if (highRT.length > 0) {
+      const gravityLines = [
+        '\n---\n## System Gravity Interpretation\n',
+        'This system has BOTH static and runtime gravity wells. Your answer must address both.',
+        '',
+        'STATIC GRAVITY: Platform Infrastructure and Data — import graph concentration, dependency hub, coupling pressure.',
+        'RUNTIME GRAVITY: ' + highRT.map(s => s.signal_name + ' [' + s.severity + ']').join(', ') + '.',
+        '',
+        'The system gravity is the combination of both. Static analysis alone does not capture the runtime coordination backbone.',
+      ];
+      budgetSections.push({
+        id: 'gravity_interpretation', priority: 3,
+        content: gravityLines.join('\n'),
+      });
+    }
   }
 
   if (assembled.capabilityContext) {
@@ -639,9 +683,103 @@ function formatStructuralTopology(st) {
   return parts.join('\n');
 }
 
+function formatRuntimeTopology(runtimeGraphs, vlc) {
+  if (!runtimeGraphs) return '';
+  const signals = runtimeGraphs._derived_signals || [];
+  const parts = [];
+
+  parts.push('## Runtime Connectivity Topology\n');
+
+  if (vlc) {
+    parts.push('### Connectivity Summary');
+    parts.push(`Architecture: ${vlc.architecture_profile} | Verdict scope: ${vlc.verdict_scope} | Completeness: ${vlc.completeness}% (${vlc.measured_count}/${vlc.required_count} layers)`);
+    const rtLayers = (vlc.layers_measured || []).filter(l => l.id !== 'STATIC_IMPORT');
+    if (rtLayers.length > 0) {
+      parts.push(`Runtime layers: ${rtLayers.map(l => l.name).join(', ')}`);
+    }
+    parts.push('');
+  }
+
+  const eventSig = signals.find(s => s.signal_type === 'EVENT_CONCENTRATION' && s.evidence_class === 'EVENT_FLOW');
+  const diSig = signals.find(s => s.signal_type === 'EVENT_CONCENTRATION' && s.evidence_class === 'DI_MODULE_GRAPH');
+  const brokerSig = signals.find(s => s.signal_type === 'BROKER_DEPENDENCY');
+  const topicSig = signals.find(s => s.signal_type === 'TOPIC_FANOUT_PRESSURE');
+  const wsSig = signals.find(s => s.signal_type === 'RUNTIME_DEPENDENCY_CHOKE_POINT');
+  const asyncSig = signals.find(s => s.signal_type === 'ASYNC_PROPAGATION_ASYMMETRY');
+  const edgeCloudSig = signals.find(s => s.signal_type === 'EDGE_CLOUD_PROPAGATION_RISK');
+
+  if (eventSig) {
+    parts.push('### Event Topology');
+    parts.push(`${eventSig.measurement_basis}`);
+    parts.push(`Event concentration ratio: ${eventSig.signal_value} events per handler [${eventSig.severity}]`);
+    parts.push(`Affected domains: ${(eventSig.affected_domains || []).join(', ')}`);
+    parts.push(`Evidence: ${eventSig.evidence_class} (${eventSig.evidence_snippet || ''})`);
+    parts.push('');
+  }
+
+  if (brokerSig) {
+    parts.push('### MQTT / Broker Topology');
+    parts.push(`${brokerSig.measurement_basis}`);
+    parts.push(`Broker dependency: single broker [${brokerSig.severity}]`);
+    parts.push(`Affected domains: ${(brokerSig.affected_domains || []).join(', ')}`);
+    if (topicSig) {
+      parts.push(`Topic fanout: ${topicSig.signal_value} topics per subscriber domain [${topicSig.severity}]`);
+      parts.push(`Topic domains: ${(topicSig.affected_domains || []).join(', ')}`);
+    }
+    if (edgeCloudSig) {
+      parts.push(`Edge-cloud path: ${edgeCloudSig.measurement_basis}`);
+      parts.push(`Edge-cloud severity: ${edgeCloudSig.severity}`);
+    }
+    parts.push('');
+  }
+
+  if (wsSig) {
+    parts.push('### WebSocket / Real-Time Topology');
+    parts.push(`${wsSig.measurement_basis}`);
+    parts.push(`Stream count: ${wsSig.signal_value} real-time event streams [${wsSig.severity}]`);
+    parts.push(`Affected domains: ${(wsSig.affected_domains || []).join(', ')}`);
+    parts.push('');
+  }
+
+  if (asyncSig) {
+    parts.push('### Async Propagation');
+    parts.push(`${asyncSig.measurement_basis}`);
+    parts.push(`Asymmetry ratio: ${asyncSig.signal_value}:1 events to handlers [${asyncSig.severity}]`);
+    parts.push(`Affected domains: ${(asyncSig.affected_domains || []).join(', ')}`);
+    parts.push('');
+  }
+
+  if (diSig) {
+    parts.push('### DI / Module Graph');
+    parts.push(`${diSig.measurement_basis}`);
+    parts.push(`Global injection concentration: ${diSig.signal_value} providers [${diSig.severity}]`);
+    parts.push(`Affected domains: ${(diSig.affected_domains || []).join(', ')}`);
+    parts.push('');
+  }
+
+  const rtGravityCandidates = signals
+    .filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
+    .sort((a, b) => ({ HIGH: 0, ELEVATED: 1 }[a.severity] ?? 2) - ({ HIGH: 0, ELEVATED: 1 }[b.severity] ?? 2));
+  if (rtGravityCandidates.length > 0) {
+    parts.push('### Runtime Gravity Candidates');
+    rtGravityCandidates.forEach(s => {
+      parts.push(`- ${s.signal_name} [${s.severity}] — ${s.evidence_class} — domains: ${(s.affected_domains || []).slice(0, 4).join(', ')}`);
+    });
+    parts.push('');
+  }
+
+  parts.push('### Runtime Risk Summary');
+  signals.forEach(s => {
+    parts.push(`- ${s.signal_name} [${s.severity}] value=${s.signal_value} evidence=${s.evidence_class}`);
+  });
+
+  return parts.join('\n');
+}
+
 function classifyQuestionType(intent) {
   const lower = (intent || '').toLowerCase();
   if (/runtime.only|runtime.derived.only|show.*runtime|runtime.*risk.*only|event.*only|mqtt.*only/i.test(lower)) return 'RUNTIME_ONLY';
+  if (/beyond.*static|not.*visible.*static|invisible.*static|runtime.*visible|what.*static.*cannot|what.*static.*miss/i.test(lower)) return 'RUNTIME_ONLY';
   if (/gravity|topology|backbone|system.*architecture|where.*gravity|structural.*mass/i.test(lower)) return 'TOPOLOGY_GRAVITY';
   if (/posture|executive.*risk|board.*risk|overall.*risk/i.test(lower)) return 'EXECUTIVE_POSTURE';
   return 'GENERAL_SYNTHESIS';
