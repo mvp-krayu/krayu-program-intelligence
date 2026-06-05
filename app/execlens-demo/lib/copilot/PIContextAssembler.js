@@ -442,6 +442,8 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   const specimenForPrompt = condenseSpecimenForIntent(tier2.specimen, evidenceClass);
   const needsTopology = evidenceClass === 'STRUCTURAL' || evidenceClass === 'FULL';
 
+  const personaVerdict = tier2.verdict ? applyPersonaCognitionWeighting(tier2.verdict, audience) : null;
+
   return {
     contextLevel,
     accessTier,
@@ -455,7 +457,7 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     capabilityContext,
 
     specimen: specimenForPrompt,
-    verdict: tier2.verdict,
+    verdict: personaVerdict,
     structuralTopology: needsTopology ? tier2.structuralTopology : null,
     publishingAssets: tier2.publishingAssets,
 
@@ -688,6 +690,92 @@ const SPECIMEN_KEYS_BY_EVIDENCE_CLASS = {
     'readiness_summary', 'qualifier_summary', 'governance_verdict',
   ],
 };
+
+// ─── PERSONA-WEIGHTED COGNITION SELECTION ─────────────────────────
+// Each condition type maps to cognition categories.
+// Each persona weights categories differently.
+// Slices are scored by: severity_base + persona_category_bonus.
+
+const CONDITION_CATEGORIES = {
+  DELIVERY_PRESSURE_CONCENTRATION: ['delivery', 'coordination'],
+  DEPENDENCY_CHOKE_POINT: ['topology', 'concentration'],
+  PROPAGATION_ASYMMETRY: ['delivery', 'propagation'],
+  STRUCTURAL_MASS_CONCENTRATION: ['topology', 'concentration'],
+  CROSS_DOMAIN_COUPLING_PRESSURE: ['coordination', 'coupling'],
+  EXECUTION_FRAGILITY: ['resilience', 'delivery'],
+  EXECUTION_CONSTRICTION: ['topology', 'delivery'],
+  STRUCTURAL_BOUNDARY_DIVERGENCE: ['governance', 'drift'],
+  COUPLING_INERTIA: ['coupling', 'topology'],
+  COMPOUND_CONVERGENCE: ['systemic', 'concentration'],
+  GOVERNANCE_COVERAGE_STATUS: ['governance'],
+  EVENT_CONCENTRATION: ['runtime_connectivity', 'coordination'],
+  RUNTIME_DEPENDENCY_CHOKE_POINT: ['runtime_connectivity', 'topology'],
+  BROKER_DEPENDENCY: ['runtime_connectivity', 'resilience'],
+  TOPIC_FANOUT_PRESSURE: ['runtime_connectivity', 'propagation'],
+  ASYNC_PROPAGATION_ASYMMETRY: ['runtime_connectivity', 'coordination', 'propagation'],
+  EDGE_CLOUD_PROPAGATION_RISK: ['runtime_connectivity', 'delivery', 'resilience'],
+  RUNTIME_OBSERVABILITY_GAP: ['runtime_connectivity', 'governance'],
+};
+
+const PERSONA_CATEGORY_WEIGHTS = {
+  'Transformation Leader': { coordination: 3, propagation: 2, runtime_connectivity: 3, coupling: 2, delivery: 2, resilience: 1, drift: 2, systemic: 1 },
+  'Chief Architect': { topology: 3, runtime_connectivity: 3, coupling: 2, concentration: 2, resilience: 2, governance: 1 },
+  'CTO / VP Engineering': { topology: 2, runtime_connectivity: 2, concentration: 2, resilience: 2, coupling: 1 },
+  'Program Director': { delivery: 3, coordination: 2, propagation: 2, runtime_connectivity: 1 },
+  'Board of Directors': { systemic: 3, governance: 3, resilience: 1 },
+  'Investor': { systemic: 3, concentration: 2, resilience: 2 },
+  'PE Acquisition Team': { concentration: 3, systemic: 2, topology: 1 },
+  'Engineering Director': { delivery: 2, resilience: 2, coordination: 1 },
+  'Release Train Engineer (RTE)': { delivery: 3, coordination: 2, propagation: 2 },
+  'GOD / Founder-Operator': { runtime_connectivity: 2, topology: 2, governance: 2, coordination: 1, delivery: 1, systemic: 1 },
+};
+
+const SEVERITY_BASE_SCORE = { CRITICAL: 10, HIGH: 7, ELEVATED: 4, MODERATE: 2, LOW: 1, NOMINAL: 0 };
+
+function scoreSliceForPersona(slice, audience) {
+  const base = SEVERITY_BASE_SCORE[slice.severity] || 0;
+  const categories = CONDITION_CATEGORIES[slice.condition_type] || [];
+  const weights = PERSONA_CATEGORY_WEIGHTS[audience] || {};
+
+  let bonus = 0;
+  for (const cat of categories) {
+    bonus += weights[cat] || 0;
+  }
+
+  return { total: base + bonus, severity_base: base, persona_bonus: bonus, categories };
+}
+
+function applyPersonaCognitionWeighting(verdict, audience) {
+  if (!verdict || !verdict.boardroom || !audience) return verdict;
+
+  const slices = verdict.boardroom.cognition_slices || [];
+  if (slices.length === 0) return verdict;
+
+  const scored = slices.map(s => ({
+    ...s,
+    _score: scoreSliceForPersona(s, audience),
+  }));
+
+  scored.sort((a, b) => b._score.total - a._score.total);
+
+  const reranked = scored.slice(0, 10).map(s => ({
+    executive_name: s.executive_name,
+    condition_type: s.condition_type,
+    domain: s.domain,
+    severity: s.severity,
+    confidence: s.confidence,
+    persona_relevance: s._score.persona_bonus > 0 ? 'ELEVATED' : 'STANDARD',
+    relevance_score: s._score.total,
+  }));
+
+  return {
+    ...verdict,
+    boardroom: {
+      ...verdict.boardroom,
+      cognition_slices: reranked,
+    },
+  };
+}
 
 function condenseSpecimenForIntent(specimen, evidenceClass) {
   if (!specimen) return null;
