@@ -793,6 +793,24 @@ function deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurfa
     ]
   }
 
+  // Consequence-derived surfaces (csq-* IDs, including runtime)
+  if (resolvedSurface && resolvedSurface.is_consequence_derived) {
+    const affectedIds = (resolvedSurface.affected_domains || []).filter(id => domainIdSet.has(id))
+    const dimIds = Array.from(domainIdSet).filter(id => !affectedIds.includes(id))
+    const isRT = resolvedSurface.is_runtime
+    const evidenceClass = resolvedSurface.evidence_class || 'STATIC_IMPORT'
+    const overlayColor = isRT ? '#ff9e4a' : '#ff6b6b'
+
+    base.overlay_mode = isRT ? 'RUNTIME_' + evidenceClass : 'CONSEQUENCE_STATIC'
+    base.emphasis_domains = affectedIds
+    base.dim_domains = affectedIds.length > 0 ? dimIds : []
+    base.topology_label = resolvedSurface.surface_name + (isRT ? ' (RUNTIME)' : '')
+    base.legend_entries = [
+      { color: overlayColor, label: resolvedSurface.surface_name, style: isRT ? 'dashed' : 'solid' },
+      ...(affectedIds.length > 0 ? [{ color: overlayColor, label: `${affectedIds.length} affected domain${affectedIds.length !== 1 ? 's' : ''}`, style: 'solid' }] : []),
+    ]
+  }
+
   return base
 }
 

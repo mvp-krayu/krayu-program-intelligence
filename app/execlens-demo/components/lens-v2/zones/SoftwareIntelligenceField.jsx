@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { SURFACE_CONDITION_MAP, projectForBoardroom, projectForBalanced } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { TermHint } from './OperatorReadingGuide'
 
 const SEVERITY_COLOR = {
@@ -562,63 +562,6 @@ function ConsequencePostureStrip({ posture }) {
           ))}
         </div>
       )}
-    </div>
-  )
-}
-
-export function SoftwareIntelligenceBoardroomSummary({ projection, consequencePosture }) {
-  const boardroom = useMemo(() => projectForBoardroom(projection), [projection])
-
-  return (
-    <div className="sw-intel-boardroom-summary">
-      <div className="sw-intel-boardroom-header">
-        <span className="sw-intel-boardroom-module-tag">SW-INTEL</span>
-        <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
-      </div>
-      <ConsequencePostureStrip posture={consequencePosture} />
-      {boardroom.narrative && (
-        <div className="sw-intel-boardroom-narrative">{boardroom.narrative}</div>
-      )}
-      {boardroom.surfaces.map(s => (
-        <div key={s.surface_id} className="sw-intel-boardroom-surface" data-severity={s.severity}>
-          <div className="sw-intel-boardroom-surface-header">
-            <span className="sw-intel-boardroom-surface-name">{s.display_name}</span>
-            <span className="sw-intel-boardroom-surface-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
-          </div>
-          <div className="sw-intel-boardroom-surface-summary">{s.executive_summary}</div>
-        </div>
-      ))}
-      {boardroom.suppressed_count > 0 && (
-        <div className="sw-intel-boardroom-more">+{boardroom.suppressed_count} surface{boardroom.suppressed_count !== 1 ? 's' : ''}</div>
-      )}
-    </div>
-  )
-}
-
-export function SoftwareIntelligenceBalancedNarrative({ projection }) {
-  const balanced = useMemo(() => projectForBalanced(projection), [projection])
-
-  return (
-    <div className="sw-intel-balanced-narrative">
-      <div className="sw-intel-balanced-header">
-        <span className="sw-intel-balanced-module-tag">SW-INTEL</span>
-        <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
-      </div>
-      {balanced.causal_narrative && (
-        <div className="sw-intel-balanced-causal-narrative">{balanced.causal_narrative}</div>
-      )}
-      {balanced.surfaces.map(s => (
-        <div key={s.surface_id} className="sw-intel-balanced-section">
-          <div className="sw-intel-balanced-section-title">
-            <span>{s.surface_name}</span>
-            <span className="sw-intel-balanced-section-severity" style={{ color: SEVERITY_COLOR[s.severity] }}>{s.severity}</span>
-          </div>
-          <div className="sw-intel-balanced-section-body">{s.operational_explanation}</div>
-          {s.consequence && (
-            <div className="sw-intel-balanced-section-consequence">{s.consequence}</div>
-          )}
-        </div>
-      ))}
     </div>
   )
 }
