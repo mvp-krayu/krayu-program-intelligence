@@ -233,7 +233,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [operatorStage, setOperatorStage] = useState('SUMMARY')
@@ -479,6 +479,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             sqoBinding={sqoBinding}
             runtimeConnectivityEdges={runtimeConnectivityEdges}
             visibilityLayerCompleteness={visibilityLayerCompleteness}
+            runtimeGraphs={runtimeGraphs}
           />
         </div>
       </div>

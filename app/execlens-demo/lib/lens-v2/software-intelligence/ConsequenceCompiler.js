@@ -314,6 +314,26 @@ function mapCC(cond, registry) {
   return [makeAtomic('STAB_RISK', cond, 'SYSTEMIC', true, registry)]
 }
 
+const RUNTIME_CONSEQUENCE_MAP = {
+  EVENT_CONCENTRATION: 'COORD_FRAG',
+  RUNTIME_DEPENDENCY_CHOKE_POINT: 'DEP_AMP',
+  BROKER_DEPENDENCY: 'RESIL_DEF',
+  TOPIC_FANOUT_PRESSURE: 'PROP_EXP',
+  ASYNC_PROPAGATION_ASYMMETRY: 'COORD_FRAG',
+  EDGE_CLOUD_PROPAGATION_RISK: 'DEL_EXP',
+  RUNTIME_OBSERVABILITY_GAP: 'GOV_GAP',
+}
+
+function mapRuntimeCondition(cond, registry) {
+  const consequenceTypeId = RUNTIME_CONSEQUENCE_MAP[cond.condition_type] || 'COORD_FRAG'
+  const vocab = CONSEQUENCE_VOCABULARY[consequenceTypeId]
+  if (!vocab) return []
+  const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
+  const scope = domains.length > 2 ? 'SYSTEMIC' : domains.length > 0 ? 'REGIONAL' : 'LOCAL'
+
+  return [makeAtomic(consequenceTypeId, cond, scope, false, registry)]
+}
+
 function mapCondition(cond, ctx, registry) {
   switch (cond.condition_type) {
     case 'DELIVERY_PRESSURE_CONCENTRATION': return mapDPC(cond, registry)
@@ -327,6 +347,14 @@ function mapCondition(cond, ctx, registry) {
     case 'COUPLING_INERTIA': return mapCI(cond, registry)
     case 'GOVERNANCE_COVERAGE_STATUS': return mapGCS(cond, registry)
     case 'COMPOUND_CONVERGENCE': return mapCC(cond, registry)
+    case 'EVENT_CONCENTRATION':
+    case 'RUNTIME_DEPENDENCY_CHOKE_POINT':
+    case 'BROKER_DEPENDENCY':
+    case 'TOPIC_FANOUT_PRESSURE':
+    case 'ASYNC_PROPAGATION_ASYMMETRY':
+    case 'EDGE_CLOUD_PROPAGATION_RISK':
+    case 'RUNTIME_OBSERVABILITY_GAP':
+      return mapRuntimeCondition(cond, registry)
     default: return []
   }
 }
@@ -647,12 +675,48 @@ const COGNITION_SLICE_VOCABULARY = {
   },
   COMPOUND_CONVERGENCE: { executive_name: null, localize: () => null, is_dynamic: false },
   GOVERNANCE_COVERAGE_STATUS: { executive_name: null, localize: () => null, is_dynamic: false },
+  EVENT_CONCENTRATION: {
+    executive_name: 'Event Coordination Concentration',
+    localize: (d) => `Event infrastructure concentrates coordination load — all domain events route through a central bus affecting ${d}.`,
+    is_dynamic: true,
+  },
+  RUNTIME_DEPENDENCY_CHOKE_POINT: {
+    executive_name: 'Runtime Dependency Choke Point',
+    localize: (d) => `A runtime channel or gateway serving ${d} is a dependency for multiple domains — failure disrupts cross-domain coordination.`,
+    is_dynamic: true,
+  },
+  BROKER_DEPENDENCY: {
+    executive_name: 'Broker Dependency Risk',
+    localize: (d) => `All edge-to-cloud communication depends on a single broker — a single point of failure for telemetry reaching ${d}.`,
+    is_dynamic: true,
+  },
+  TOPIC_FANOUT_PRESSURE: {
+    executive_name: 'Topic Fanout Pressure',
+    localize: (d) => `MQTT topic families feeding ${d} create broad propagation surface — topic structure changes propagate widely.`,
+    is_dynamic: true,
+  },
+  ASYNC_PROPAGATION_ASYMMETRY: {
+    executive_name: 'Async Propagation Asymmetry',
+    localize: (d) => `Broad event vocabulary converges on narrow handler surface at ${d} — many event types, few handlers, concentrated failure exposure.`,
+    is_dynamic: true,
+  },
+  EDGE_CLOUD_PROPAGATION_RISK: {
+    executive_name: 'Edge-Cloud Propagation Exposure',
+    localize: (d) => `Edge devices depend on cloud-side coordination at ${d} through a single ingestion path — edge failure propagates to cloud visibility.`,
+    is_dynamic: true,
+  },
+  RUNTIME_OBSERVABILITY_GAP: {
+    executive_name: 'Runtime Observability Gap',
+    localize: (d) => `Runtime flows at ${d} have weak traceability — event types exist without matching handlers.`,
+    is_dynamic: true,
+  },
 }
 
 const CONFIDENCE_EXECUTIVE = {
   GOVERNED: 'Governed',
   ADVISORY_BOUND: 'Advisory-bound',
   STRUCTURAL_ONLY: 'Structural only',
+  RUNTIME_STRUCTURAL: 'Runtime-structural',
 }
 
 // ─── Persona: BOARDROOM (§10.1) ────────────────────────
@@ -1165,5 +1229,5 @@ module.exports = {
   forInvestigation,
   CONSEQUENCE_VOCABULARY,
   COGNITION_SLICE_VOCABULARY,
-  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE']),
+  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE', 'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP']),
 }

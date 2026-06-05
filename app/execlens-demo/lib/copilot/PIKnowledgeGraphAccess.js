@@ -85,14 +85,21 @@ function resolveVerdict(specimen, client, runId) {
     const visibilityLayer = resolveVisibilityLayerCompleteness(specimen, client, runId);
 
     let runtimeEdges = null;
+    let runtimeGraphs = null;
     try {
+      const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../lens-v2/RuntimeSignalDerivation');
+      const graphs = loadRuntimeGraphs(client, runId, REPO_ROOT);
+      const hasAny = graphs && Object.values(graphs).some(v => v !== null);
+      if (hasAny) {
+        runtimeGraphs = { _derived_signals: deriveRuntimeSignals(graphs) };
+      }
       const rcPath = path.join(REPO_ROOT, 'clients', client, 'psee/runs', runId, 'structure/runtime_connectivity/system_connectivity_graph.json');
       if (fs.existsSync(rcPath)) {
         runtimeEdges = JSON.parse(fs.readFileSync(rcPath, 'utf-8')).edges || [];
       }
     } catch { /* no runtime connectivity */ }
 
-    const qualified = qualifyDomainBacking(specimen, visibilityLayer, runtimeEdges);
+    const qualified = qualifyDomainBacking(specimen, visibilityLayer, runtimeEdges, runtimeGraphs);
     const synthesisResult = synthesize(qualified);
     const consequenceResult = compile(synthesisResult, qualified);
     const boardroom = forBoardroom(consequenceResult, synthesisResult, qualified);

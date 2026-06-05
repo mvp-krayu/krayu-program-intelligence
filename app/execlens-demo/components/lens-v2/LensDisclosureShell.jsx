@@ -109,6 +109,7 @@ export default function LensDisclosureShell({
   sqoBinding,
   runtimeConnectivityEdges,
   visibilityLayerCompleteness,
+  runtimeGraphs,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -225,6 +226,7 @@ export default function LensDisclosureShell({
             sqoBinding={sqoBinding}
             runtimeConnectivityEdges={runtimeConnectivityEdges}
             visibilityLayerCompleteness={visibilityLayerCompleteness}
+            runtimeGraphs={runtimeGraphs}
           />
         )
       case 'SQOIntelligenceZone':

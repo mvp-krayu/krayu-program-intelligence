@@ -94,7 +94,21 @@ export async function getServerSideProps(context) {
     }
   } catch (_) { /* runtime connectivity not available */ }
 
-  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run }, runtimeConnectivityEdges, visibilityLayerCompleteness } }
+  let runtimeGraphs = null
+  try {
+    const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../../../lib/lens-v2/RuntimeSignalDerivation')
+    const { resolveAllowedPath } = require('../../../lib/lens-v2/SemanticArtifactLoader')
+    const path = require('path')
+    const repoRoot = path.resolve(path.dirname(resolveAllowedPath('clients')), '..')
+    const graphs = loadRuntimeGraphs(client, run, repoRoot)
+    const hasAnyGraph = graphs && Object.values(graphs).some(v => v !== null)
+    if (hasAnyGraph) {
+      const derivedSignals = deriveRuntimeSignals(graphs)
+      runtimeGraphs = { _derived_signals: derivedSignals }
+    }
+  } catch (_) { /* runtime graphs not available */ }
+
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run }, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs } }
 }
 
 export default LensV2FlagshipPage

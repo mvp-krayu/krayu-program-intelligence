@@ -10084,7 +10084,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -10171,8 +10171,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const qualifiedReport = useMemo(() => {
     if (!fullReport) return fullReport
-    return qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges)
-  }, [fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges])
+    return qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs)
+  }, [fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
 
   const synthesisResult = useMemo(() => swIntelActive ? synthesize(qualifiedReport) : null, [qualifiedReport, swIntelActive])
   const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(qualifiedReport) : null, [qualifiedReport, swIntelActive])
