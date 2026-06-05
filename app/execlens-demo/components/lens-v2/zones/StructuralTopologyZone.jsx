@@ -182,6 +182,23 @@ const EDGE_COLORS = {
 }
 const EDGE_DASHED = { inferred_semantic: '5,4', structural_co_membership: '3,3' }
 
+const RUNTIME_EDGE_COLORS = {
+  EVENT_FLOW: '#ff9e4a',
+  MQTT_TOPIC_FLOW: '#64ffda',
+  WEBSOCKET_FLOW: '#b392f0',
+  API_BOUNDARY: '#58a6ff',
+  DI_INJECTION: '#d29922',
+  RUNTIME_WIRING: '#8b949e',
+}
+const RUNTIME_EDGE_DASH = {
+  EVENT_FLOW: '6,3',
+  MQTT_TOPIC_FLOW: '8,4',
+  WEBSOCKET_FLOW: '4,4',
+  API_BOUNDARY: '2,3',
+  DI_INJECTION: '10,4',
+  RUNTIME_WIRING: '3,6',
+}
+
 function nodeStyle(d) {
   if (d.lineage_status === 'STRUCTURAL') return { fill: '#0d1a2e', stroke: '#58a6ff', sw: 1.8, glow: '#58a6ff', glowOp: 0.15, dashed: false }
   if (d.lineage_status === 'EXACT') return { fill: '#0d2e1a', stroke: '#3fb950', sw: 2, glow: '#3fb950', glowOp: 0.18, dashed: false }
@@ -230,7 +247,7 @@ const ROLE_COLORS = {
   RECEIVER: '#ff9e4a',
 }
 
-export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pressureZoneState, focusedDomain, onNodeSelect, onPressureZoneClick, activePressureZone, isS1, cognitionOverlay }) {
+export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressureZoneLabel, pressureZoneState, focusedDomain, onNodeSelect, onPressureZoneClick, activePressureZone, isS1, cognitionOverlay }) {
   const [hoveredNode, setHoveredNode] = useState(null)
   const [selectedAnchor, setSelectedAnchor] = useState(null)
   const svgRef = useRef(null)
@@ -465,6 +482,28 @@ export function TopologyGraph({ domains, clusters, edges, pressureZoneLabel, pre
               markerEnd={`url(#arr-${markerKey})`}
               strokeDasharray={dash}
               style={{ transition: 'stroke-opacity 0.2s, stroke-width 0.2s' }}
+            />
+          )
+        })}
+
+        {(runtimeEdges || []).map((re, ri) => {
+          const from = allPos[re.source_domain]
+          const to = allPos[re.target_domain]
+          if (!from || !to || re.source_domain === re.target_domain) return null
+          const color = RUNTIME_EDGE_COLORS[re.edge_type] || '#8b949e'
+          const dash = RUNTIME_EDGE_DASH[re.edge_type] || '4,4'
+          const dx = to.cx - from.cx, dy = to.cy - from.cy
+          const len = Math.sqrt(dx * dx + dy * dy)
+          if (len === 0) return null
+          const ux = dx / len, uy = dy / len
+          const offset = 4
+          return (
+            <line key={`re-${ri}`}
+              x1={from.cx + ux * 18 + uy * offset} y1={from.cy + uy * 18 - ux * offset}
+              x2={to.cx - ux * 22 + uy * offset} y2={to.cy - uy * 22 - ux * offset}
+              stroke={color} strokeOpacity={0.55} strokeWidth={1.2}
+              strokeDasharray={dash}
+              style={{ transition: 'stroke-opacity 0.2s' }}
             />
           )
         })}

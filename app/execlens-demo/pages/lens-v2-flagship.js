@@ -233,7 +233,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [operatorStage, setOperatorStage] = useState('SUMMARY')
@@ -477,6 +477,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onSwIntelDeactivate={handleSwIntelDeactivate}
             sqoAuthorityWorkspace={sqoAuthorityWorkspace}
             sqoBinding={sqoBinding}
+            runtimeConnectivityEdges={runtimeConnectivityEdges}
+            visibilityLayerCompleteness={visibilityLayerCompleteness}
           />
         </div>
       </div>
@@ -6459,6 +6461,58 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8a96b2;
           letter-spacing: 0.18em;
           text-transform: uppercase;
+        }
+        .support-block--visibility {
+          padding-top: 14px;
+          border-top: 1px solid #1a2030;
+        }
+        .support-visibility-scope {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #64ffda;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .support-visibility-scope[data-scope="CODE_CONNECTIVITY"] {
+          color: #d29922;
+        }
+        .support-visibility-scope[data-scope="PARTIAL_CONNECTIVITY"] {
+          color: #ff9e4a;
+        }
+        .support-visibility-profile {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 4px;
+        }
+        .support-visibility-bar {
+          margin-top: 8px;
+          height: 3px;
+          background: #1a2030;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .support-visibility-bar-fill {
+          height: 100%;
+          background: #d29922;
+          border-radius: 2px;
+          transition: width 0.3s;
+        }
+        .support-visibility-bar-fill[data-complete="true"] {
+          background: #64ffda;
+        }
+        .support-visibility-ratio {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 4px;
+        }
+        .support-visibility-missing {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          margin-top: 6px;
+        }
+        .support-visibility-missing-layer {
+          font: 400 9px/1.2 'Courier New', monospace;
+          color: #d29922;
         }
         .support-block--conditions {
           padding-top: 14px;

@@ -811,7 +811,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -861,6 +861,27 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           <div className="support-label">QUALIFIER</div>
           <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
           <div className="support-qualifier-note">advisory bound</div>
+        </div>
+      )}
+
+      {visibilityLayerCompleteness && (
+        <div className="support-block support-block--visibility">
+          <div className="support-label">VISIBILITY COMPLETENESS</div>
+          <div className="support-visibility-scope" data-scope={visibilityLayerCompleteness.verdict_scope}>
+            {visibilityLayerCompleteness.verdict_scope.replace(/_/g, ' ')}
+          </div>
+          <div className="support-visibility-profile">{visibilityLayerCompleteness.architecture_profile}</div>
+          <div className="support-visibility-bar">
+            <div className="support-visibility-bar-fill" style={{ width: `${visibilityLayerCompleteness.completeness}%` }} data-complete={visibilityLayerCompleteness.completeness === 100} />
+          </div>
+          <div className="support-visibility-ratio">{visibilityLayerCompleteness.measured_count}/{visibilityLayerCompleteness.required_count} layers measured</div>
+          {visibilityLayerCompleteness.layers_missing.length > 0 && (
+            <div className="support-visibility-missing">
+              {visibilityLayerCompleteness.layers_missing.map(l => (
+                <span key={l.id} className="support-visibility-missing-layer">{l.name}</span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -7007,6 +7028,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
                   domains={fullReport.semantic_domain_registry}
                   clusters={clusters}
                   edges={fullReport.semantic_topology_edges || []}
+                  runtimeEdges={runtimeConnectivityEdges}
                   pressureZoneLabel={pressureZone}
                   pressureZoneState={fullReport.pressure_zone_state}
                   cognitionOverlay={cognitionOverlay}
@@ -10026,7 +10048,7 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -10062,7 +10084,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -10144,6 +10166,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       }))
     }
   }, [swIntelActive])
+
+
 
   const synthesisResult = useMemo(() => swIntelActive ? synthesize(fullReport) : null, [fullReport, swIntelActive])
   const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(fullReport) : null, [fullReport, swIntelActive])
@@ -10482,6 +10506,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onVerificationInvoke={handleVerificationInvoke}
           onVerificationClose={handleVerificationClose}
           onVerificationReopen={handleVerificationReopen}
+          runtimeConnectivityEdges={runtimeConnectivityEdges}
         />
 
         {!boardroomMode && !isBalanced && (
@@ -10524,6 +10549,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeConditions={activeConditions}
         resolvedCondition={resolvedCondition}
         swIntelActive={swIntelActive}
+        visibilityLayerCompleteness={visibilityLayerCompleteness}
       />
     </div>
   )

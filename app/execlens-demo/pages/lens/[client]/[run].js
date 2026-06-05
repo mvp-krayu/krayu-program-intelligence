@@ -58,7 +58,22 @@ export async function getServerSideProps(context) {
     }
   } catch (_) { /* SQO workspace unavailable — graceful */ }
 
-  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run } } }
+  let runtimeConnectivityEdges = null
+  let visibilityLayerCompleteness = null
+  try {
+    const rcPath = `clients/${client}/psee/runs/${run}/structure/runtime_connectivity/system_connectivity_graph.json`
+    const rcResult = loadJSON(rcPath)
+    if (rcResult.ok && rcResult.data && rcResult.data.edges) {
+      runtimeConnectivityEdges = rcResult.data.edges
+    }
+    const vlcPath = `clients/${client}/psee/runs/${run}/structure/runtime_connectivity/visibility_layer_completeness.json`
+    const vlcResult = loadJSON(vlcPath)
+    if (vlcResult.ok && vlcResult.data) {
+      visibilityLayerCompleteness = vlcResult.data
+    }
+  } catch (_) { /* runtime connectivity not available */ }
+
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run }, runtimeConnectivityEdges, visibilityLayerCompleteness } }
 }
 
 export default LensV2FlagshipPage
