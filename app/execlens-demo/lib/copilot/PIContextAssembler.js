@@ -456,7 +456,7 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
       const REPO_ROOT = require('path').resolve(__dirname, '../../../..');
       const graphs = loadRuntimeGraphs(client, runId, REPO_ROOT);
       if (graphs && Object.values(graphs).some(v => v !== null)) {
-        runtimeGraphsForPrompt = { _derived_signals: deriveRuntimeSignals(graphs) };
+        runtimeGraphsForPrompt = { _derived_signals: deriveRuntimeSignals(graphs), _raw: graphs };
       }
     } catch { /* runtime graphs not available */ }
   }
@@ -765,6 +765,52 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push(`${diSig.measurement_basis}`);
     parts.push(`Global injection concentration: ${diSig.signal_value} providers [${diSig.severity}]`);
     parts.push(`Affected domains: ${(diSig.affected_domains || []).join(', ')}`);
+    parts.push('');
+  }
+
+  const raw = runtimeGraphs._raw || {};
+
+  if (raw.eventFlowGraph || raw.websocketFlowGraph || raw.mqttTopicGraph) {
+    parts.push('### Runtime Dependency Hubs (per-component — equivalent to static import hubs)');
+
+    if (raw.websocketFlowGraph) {
+      const ws = raw.websocketFlowGraph;
+      parts.push(`- \`${ws.gateway_file || 'fleet.gateway.ts'}\` — ${(ws.server_emissions || []).length} outbound streams, ${(ws.server_channels || []).length} subscribe channels`);
+      parts.push(`  Runtime role: WebSocket gateway — ALL real-time data routes through this component`);
+      if (ws.server_emissions) {
+        ws.server_emissions.slice(0, 5).forEach(e => {
+          parts.push(`    ${e.event} → ${(e.consumers || []).length} consumers (${(e.consumers || []).join(', ')})`);
+        });
+        if (ws.server_emissions.length > 5) parts.push(`    ... +${ws.server_emissions.length - 5} more streams`);
+      }
+    }
+
+    if (raw.eventFlowGraph) {
+      const eg = raw.eventFlowGraph;
+      parts.push(`- \`${eg.source_file || 'fleet-event-emitter.service.ts'}\` — ${eg.event_count || 0} event types, ${(eg.emitters || []).length} emitter methods`);
+      parts.push(`  Runtime role: Central event bus — ALL domain events route through this service`);
+      if (eg.handlers) {
+        eg.handlers.forEach(h => {
+          parts.push(`    ${h.handler} — ${(h.subscribed_events || []).length} subscriptions → \`${h.file}\``);
+        });
+      }
+    }
+
+    if (raw.mqttTopicGraph && raw.mqttTopicGraph.edge_agents) {
+      raw.mqttTopicGraph.edge_agents.forEach(a => {
+        parts.push(`- \`${a.file}\` — publishes to ${(a.publishes_to || []).length} topics [${a.language}]`);
+        parts.push(`  Runtime role: Edge agent on ${a.runtime || 'separate hardware'}`);
+        (a.publishes_to || []).forEach(t => parts.push(`    → ${t}`));
+      });
+    }
+
+    if (raw.diModuleGraph && raw.diModuleGraph.global_modules) {
+      raw.diModuleGraph.global_modules.forEach(m => {
+        parts.push(`- \`${m.file}\` — @Global, ${(m.providers || []).length} providers injected into ALL modules`);
+        parts.push(`  Runtime role: ${m.module} — ${(m.exports || []).join(', ')}`);
+      });
+    }
+
     parts.push('');
   }
 
