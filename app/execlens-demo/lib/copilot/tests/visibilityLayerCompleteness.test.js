@@ -84,6 +84,56 @@ function run() {
   assert(unknownVlc.architecture_profile === 'unknown', 'Unknown profile detected');
   assert(unknownVlc.required_count === 1, 'Unknown requires only STATIC_IMPORT');
 
+  // 9. Domain backing qualification affects topology summary
+  console.log('\n--- Cognition Formation ---');
+  const { qualifyDomainBacking, BACKING_STATUS } = require('../../lens-v2/SignalSynthesisEngine');
+  const fsMod = require('fs');
+  const pathMod = require('path');
+
+  const rcPath = pathMod.resolve(__dirname, '../../../../../clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/runtime_connectivity/system_connectivity_graph.json');
+  let runtimeEdges = null;
+  try { runtimeEdges = JSON.parse(fsMod.readFileSync(rcPath, 'utf-8')).edges; } catch {}
+
+  if (runtimeEdges) {
+    const qualified = qualifyDomainBacking(beSpecimen, beVlc, runtimeEdges);
+    assert(qualified.topology_summary.semantic_only_count === 0, 'Qualified BlueEdge: 0 semantic-only domains');
+    assert(qualified.topology_summary.structurally_backed_count === 17, 'Qualified BlueEdge: 17 backed domains');
+    assert(qualified.topology_summary.grounding_ratio === 1.0, 'Qualified BlueEdge: grounding ratio 1.0');
+    assert(qualified.topology_summary.runtime_backed_count === 13, 'Qualified BlueEdge: 13 runtime-backed');
+    assert(qualified.topology_summary.static_backed_count === 4, 'Qualified BlueEdge: 4 static-backed');
+    assert(qualified.topology_summary.backing_qualification === 'VISIBILITY_LAYER_QUALIFIED', 'Qualified BlueEdge: backing_qualification set');
+    assert(qualified.topology_summary.coverage_classification === 'HIGH', 'Qualified BlueEdge: coverage HIGH');
+
+    const domStatuses = qualified.semantic_domain_registry.map(d => d.backing_status);
+    assert(!domStatuses.includes(undefined), 'All domains have backing_status');
+    assert(domStatuses.filter(s => s === BACKING_STATUS.SEMANTIC_ONLY).length === 0, 'Zero SEMANTIC_ONLY after qualification');
+    assert(domStatuses.filter(s => s === BACKING_STATUS.RUNTIME_BACKED).length === 13, '13 RUNTIME_BACKED');
+    assert(domStatuses.filter(s => s === BACKING_STATUS.STATIC_BACKED).length === 1, '1 STATIC_BACKED (DOMAIN-16)');
+    assert(domStatuses.filter(s => s === BACKING_STATUS.SYSTEM_BACKED).length === 3, '3 SYSTEM_BACKED (static + runtime)');
+
+    // 10. Static findings preserved
+    const staticDomain = qualified.semantic_domain_registry.find(d => d.domain_id === 'DOMAIN-10');
+    assert(staticDomain.backing_status === BACKING_STATUS.SYSTEM_BACKED, 'DOMAIN-10 is SYSTEM_BACKED (static + runtime)');
+    assert(staticDomain.structurally_backed === true, 'DOMAIN-10 structurally_backed preserved');
+
+    // 11. Qualification is idempotent
+    const doubleQualified = qualifyDomainBacking(qualified, beVlc, runtimeEdges);
+    assert(doubleQualified.topology_summary.structurally_backed_count === 17, 'Idempotent: still 17 backed');
+    assert(doubleQualified.topology_summary.semantic_only_count === 0, 'Idempotent: still 0 semantic-only');
+
+    // 12. Without runtime edges, no qualification happens
+    const unqualified = qualifyDomainBacking(beSpecimen, beVlc, null);
+    assert(unqualified.topology_summary.semantic_only_count === 12, 'Without edges: 12 semantic-only preserved');
+
+    // 13. Verdict includes qualified data
+    const beVerdict2 = resolveVerdict(beSpecimen, 'blueedge', 'run_blueedge_genesis_e2e_03');
+    assert(beVerdict2.visibility_layer_completeness.completeness === 100, 'Verdict VLC still 100%');
+
+    console.log('\n--- Cognition Formation: ALL PASS ---');
+  } else {
+    console.log('\n--- Cognition Formation: SKIPPED (no runtime edges file) ---');
+  }
+
   console.log('\n=== All tests passed ===');
 }
 

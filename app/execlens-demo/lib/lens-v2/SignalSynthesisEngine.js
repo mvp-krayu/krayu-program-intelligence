@@ -1438,4 +1438,72 @@ function synthesizeTeaser(fullReport) {
   }
 }
 
-module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }
+// ─── VISIBILITY-LAYER DOMAIN QUALIFICATION ──────────────────────
+// Augments specimen domain backing with runtime connectivity evidence.
+// Must run BEFORE synthesize() so condition formation reflects
+// actual system connectivity, not static-import-only backing.
+
+const BACKING_STATUS = {
+  STATIC_BACKED: 'STATIC_BACKED',
+  RUNTIME_BACKED: 'RUNTIME_BACKED',
+  SYSTEM_BACKED: 'SYSTEM_BACKED',
+  SEMANTIC_ONLY: 'SEMANTIC_ONLY',
+  UNRESOLVED: 'UNRESOLVED',
+}
+
+function qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges) {
+  if (!fullReport) return fullReport
+  if (!visibilityLayerCompleteness && !runtimeConnectivityEdges) return fullReport
+
+  const qualified = { ...fullReport }
+  const registry = [...(fullReport.semantic_domain_registry || [])]
+
+  const runtimeConnectedDomains = new Set()
+  if (runtimeConnectivityEdges) {
+    for (const edge of runtimeConnectivityEdges) {
+      if (edge.source_domain) runtimeConnectedDomains.add(edge.source_domain)
+      if (edge.target_domain) runtimeConnectedDomains.add(edge.target_domain)
+    }
+  }
+
+  let backedCount = 0
+  let runtimeBackedCount = 0
+
+  qualified.semantic_domain_registry = registry.map(d => {
+    const dom = { ...d }
+    if (d.structurally_backed) {
+      dom.backing_status = BACKING_STATUS.STATIC_BACKED
+      if (runtimeConnectedDomains.has(d.domain_id)) {
+        dom.backing_status = BACKING_STATUS.SYSTEM_BACKED
+      }
+      backedCount++
+    } else if (runtimeConnectedDomains.has(d.domain_id)) {
+      dom.backing_status = BACKING_STATUS.RUNTIME_BACKED
+      dom.runtime_visible = true
+      runtimeBackedCount++
+      backedCount++
+    } else {
+      dom.backing_status = BACKING_STATUS.SEMANTIC_ONLY
+    }
+    return dom
+  })
+
+  if (runtimeBackedCount > 0 && fullReport.topology_summary) {
+    const totalDomains = registry.length
+    qualified.topology_summary = {
+      ...fullReport.topology_summary,
+      structurally_backed_count: backedCount,
+      semantic_only_count: totalDomains - backedCount,
+      grounding_ratio: totalDomains > 0 ? backedCount / totalDomains : 0,
+      runtime_backed_count: runtimeBackedCount,
+      static_backed_count: backedCount - runtimeBackedCount,
+      coverage_classification: backedCount / totalDomains >= 0.8 ? 'HIGH'
+        : backedCount / totalDomains >= 0.5 ? 'MEDIUM' : 'LOW',
+      backing_qualification: 'VISIBILITY_LAYER_QUALIFIED',
+    }
+  }
+
+  return qualified
+}
+
+module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS, qualifyDomainBacking, BACKING_STATUS }

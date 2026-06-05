@@ -8,7 +8,7 @@ import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBu
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView, SoftwareIntelligenceBoardroomSummary, SoftwareIntelligenceBalancedNarrative } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
-import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS } from '../../../lib/lens-v2/SignalSynthesisEngine'
+import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
 import { resolveNode, resolveConnections, CONDITION_NODES } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
@@ -10169,18 +10169,23 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
 
 
-  const synthesisResult = useMemo(() => swIntelActive ? synthesize(fullReport) : null, [fullReport, swIntelActive])
-  const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(fullReport) : null, [fullReport, swIntelActive])
+  const qualifiedReport = useMemo(() => {
+    if (!fullReport) return fullReport
+    return qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges)
+  }, [fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges])
+
+  const synthesisResult = useMemo(() => swIntelActive ? synthesize(qualifiedReport) : null, [qualifiedReport, swIntelActive])
+  const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(qualifiedReport) : null, [qualifiedReport, swIntelActive])
   const activeConditions = synthesisResult ? synthesisResult.active : []
 
-  const consequenceResult = useMemo(() => swIntelActive && synthesisResult ? compileConsequences(synthesisResult, fullReport) : null, [synthesisResult, fullReport, swIntelActive])
+  const consequenceResult = useMemo(() => swIntelActive && synthesisResult ? compileConsequences(synthesisResult, qualifiedReport) : null, [synthesisResult, qualifiedReport, swIntelActive])
   const consequenceTeaser = useMemo(() => {
     if (swIntelActive || !fullReport) return null
     const tempSynthesis = synthesize(fullReport)
-    return tempSynthesis ? compileConsequenceTeaser(tempSynthesis, fullReport) : null
+    return tempSynthesis ? compileConsequenceTeaser(tempSynthesis, qualifiedReport) : null
   }, [fullReport, swIntelActive])
-  const consequencePosture = useMemo(() => consequenceResult ? consequencesForBoardroom(consequenceResult, synthesisResult, fullReport) : null, [consequenceResult, synthesisResult, fullReport])
-  const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, fullReport) : null, [consequenceResult, synthesisResult, fullReport])
+  const consequencePosture = useMemo(() => consequenceResult ? consequencesForBoardroom(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
+  const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
   const balancedBriefing = useMemo(() => balancedProjection ? composeBalancedBriefing(balancedProjection, synthesisResult, fullReport) : null, [balancedProjection, synthesisResult, fullReport])
 
   const resolvedCondition = useMemo(() => {

@@ -5,7 +5,7 @@ const path = require('path');
 
 const { resolveFlagshipBinding } = require('../lens-v2/flagshipBinding');
 const { compile, forBoardroom, forBalanced } = require('../lens-v2/software-intelligence/ConsequenceCompiler');
-const { synthesize } = require('../lens-v2/SignalSynthesisEngine');
+const { synthesize, qualifyDomainBacking } = require('../lens-v2/SignalSynthesisEngine');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../');
 
@@ -82,11 +82,21 @@ function resolveVerdict(specimen, client, runId) {
   if (!specimen) return null;
 
   try {
-    const synthesisResult = synthesize(specimen);
-    const consequenceResult = compile(synthesisResult, specimen);
-    const boardroom = forBoardroom(consequenceResult, synthesisResult, specimen);
-    const balanced = forBalanced(consequenceResult, synthesisResult, specimen);
     const visibilityLayer = resolveVisibilityLayerCompleteness(specimen, client, runId);
+
+    let runtimeEdges = null;
+    try {
+      const rcPath = path.join(REPO_ROOT, 'clients', client, 'psee/runs', runId, 'structure/runtime_connectivity/system_connectivity_graph.json');
+      if (fs.existsSync(rcPath)) {
+        runtimeEdges = JSON.parse(fs.readFileSync(rcPath, 'utf-8')).edges || [];
+      }
+    } catch { /* no runtime connectivity */ }
+
+    const qualified = qualifyDomainBacking(specimen, visibilityLayer, runtimeEdges);
+    const synthesisResult = synthesize(qualified);
+    const consequenceResult = compile(synthesisResult, qualified);
+    const boardroom = forBoardroom(consequenceResult, synthesisResult, qualified);
+    const balanced = forBalanced(consequenceResult, synthesisResult, qualified);
 
     return {
       boardroom: condenseBoardroom(boardroom),
