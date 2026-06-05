@@ -650,7 +650,7 @@ function classifyQuestionType(intent) {
 function applyRuntimeFilter(verdict) {
   if (!verdict || !verdict.boardroom) return verdict;
   const b = verdict.boardroom;
-  const rtThemes = (b.consequence_themes || []).filter(t => t.evidence_diversity === 'RUNTIME' || t.evidence_diversity === 'MIXED');
+  const pureRtThemes = (b.consequence_themes || []).filter(t => t.evidence_diversity === 'RUNTIME');
   const rtSlices = (b.cognition_slices || []).filter(s =>
     ['EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP'].includes(s.condition_type)
   );
@@ -660,11 +660,12 @@ function applyRuntimeFilter(verdict) {
     ...verdict,
     boardroom: {
       ...b,
-      consequence_themes: rtThemes.length > 0 ? rtThemes : b.consequence_themes,
+      consequence_themes: pureRtThemes.length > 0 ? pureRtThemes : b.consequence_themes,
       cognition_slices: rtSlices.length > 0 ? rtSlices : b.cognition_slices,
       domain_narratives: rtNarratives.length > 0 ? rtNarratives : b.domain_narratives,
-      executive_synthesis: rtThemes.length > 0
-        ? 'Runtime connectivity analysis identifies ' + rtThemes.length + ' structural risk themes derived from event flow, MQTT, WebSocket, and DI evidence — independent of static import analysis.'
+      posture_label: pureRtThemes.length > 0 ? 'Runtime Structural Risk' : b.posture_label,
+      executive_synthesis: pureRtThemes.length > 0
+        ? 'Runtime connectivity analysis identifies ' + pureRtThemes.length + ' runtime-native risk themes derived from event flow, MQTT, WebSocket, and DI evidence — independent of static import analysis.'
         : b.executive_synthesis,
     },
   };
@@ -702,21 +703,37 @@ function renderAnswerContract(questionType, verdict, audience) {
     const slices = verdict.boardroom?.cognition_slices || [];
     const vlc = verdict.visibility_layer_completeness;
     const lines = ['### ANSWER CONTRACT — RUNTIME-ONLY RETRIEVAL', ''];
-    lines.push('The user requested runtime-derived risks only.');
-    if (vlc && vlc.verdict_scope === 'SYSTEM_CONNECTIVITY') {
-      lines.push('System connectivity: ' + vlc.verdict_scope + ' — ' + vlc.measured_count + '/' + vlc.required_count + ' visibility layers measured. Runtime evidence IS present.');
+
+    if (vlc) {
+      lines.push('RUNTIME VERDICT');
+      lines.push('Verdict scope: ' + vlc.verdict_scope);
+      lines.push('Completeness: ' + vlc.completeness + '% (' + vlc.measured_count + '/' + vlc.required_count + ' layers)');
+      lines.push('Architecture: ' + vlc.architecture_profile);
+      if (vlc.verdict_scope === 'SYSTEM_CONNECTIVITY') {
+        lines.push('Runtime connectivity IS present in this assessment.');
+        lines.push('STATIC_IMPORT is one of ' + vlc.measured_count + ' measured layers — it is NOT the verdict scope.');
+        lines.push('The verdict scope is SYSTEM_CONNECTIVITY, not CODE_CONNECTIVITY.');
+        const rtLayers = (vlc.layers_measured || []).filter(l => l.id !== 'STATIC_IMPORT');
+        if (rtLayers.length > 0) {
+          lines.push('Runtime evidence classes: ' + rtLayers.map(l => l.name).join(', '));
+        }
+      }
+      lines.push('');
     }
+
+    lines.push('The user requested runtime-derived risks only.');
     lines.push('');
     lines.push('Your answer MUST:');
-    lines.push('- Name each runtime-derived risk below');
-    lines.push('- State severity, affected domains, and evidence class');
-    lines.push('- These are structural risks derived from event flow, MQTT, WebSocket, and DI evidence — NOT static import analysis');
+    lines.push('- Name each runtime-derived risk below by its exact label');
+    lines.push('- State severity, affected domains, and evidence class for each');
+    lines.push('- These are structural risks derived from runtime connectivity evidence (event flow, MQTT, WebSocket, DI) — not static import');
+    lines.push('- Do NOT describe this assessment as CODE_CONNECTIVITY — it is SYSTEM_CONNECTIVITY');
     lines.push('- Do NOT report static-only findings');
     lines.push('');
     if (pureRuntime.length > 0) {
-      lines.push('RUNTIME-DERIVED CONSEQUENCE THEMES:');
+      lines.push('RUNTIME-DERIVED CONSEQUENCE THEMES (answer from these):');
       pureRuntime.forEach((t, i) => {
-        lines.push((i + 1) + '. ' + t.theme_label + ' [' + t.severity + '] — ' + t.evidence_annotation);
+        lines.push((i + 1) + '. ' + t.theme_label + ' [' + t.severity + ']');
         lines.push('   ' + t.description);
       });
       lines.push('');
