@@ -163,6 +163,7 @@ export default function LensDisclosureShell({
             qualifierLabel={qualifierLabel}
             qualifierNote={qualifierNote}
             visible={qualifierVisible}
+            visibilityLayerCompleteness={visibilityLayerCompleteness}
           />
         )
       case 'GovernanceRibbon':
