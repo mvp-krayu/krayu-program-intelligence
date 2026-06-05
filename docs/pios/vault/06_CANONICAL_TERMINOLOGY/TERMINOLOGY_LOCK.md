@@ -1111,6 +1111,36 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Status:** CANONICAL (named) / PENDING (schema). The schema definition is the load-bearing design decision before Co-Pilot implementation.
 
+### Visibility Layer
+
+**Definition:** A distinct class of structural connectivity evidence. Static import analysis (40.3s) measures one visibility layer — file-level import/require/from relationships. Modern architectures operate across multiple visibility layers: EVENT_FLOW (pub/sub, signals, event emitters), MQTT_TOPIC_FLOW (message broker pub/sub), WEBSOCKET_FLOW (real-time streaming channels), API_BOUNDARY (REST/GraphQL controller-to-consumer routes), DI_MODULE_GRAPH (framework dependency injection), RUNTIME_WIRING (infrastructure/deploy configuration). Static import visibility ≠ structural coverage. A domain that appears "dark" in one visibility layer may be fully connected in another.
+
+**Status:** CANONICAL — proven on BlueEdge (Scenario C confirmed, 0/13 domains actually absent), validated on NetBox (same root cause, different shape). Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Visibility-Layer Completeness Check
+
+**Definition:** A pre-verdict integrity gate that classifies which visibility layers were measured for a specimen and which the specimen's architecture requires. Produces: architecture_profile (detected framework type), layers_measured, layers_required, layers_missing, completeness percentage, verdict_scope (CODE_CONNECTIVITY / PARTIAL_CONNECTIVITY / SYSTEM_CONNECTIVITY), and qualifier_modifier (VISIBILITY_INCOMPLETE when completeness < 100%). Does not change Q-class — Q-class measures reconciliation quality within measured layers. This check measures whether the measured layers are sufficient for the architecture.
+
+**Status:** CANONICAL — implemented in PIKnowledgeGraphAccess.resolveVisibilityLayerCompleteness(). Operational on BlueEdge (100%, SYSTEM_CONNECTIVITY) and NetBox (25%, CODE_CONNECTIVITY, VISIBILITY_INCOMPLETE). Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Architecture Profile
+
+**Definition:** A classification of a specimen's framework and connectivity architecture used to determine which visibility layers are required for structural completeness. Known profiles: django-monolith (requires STATIC_IMPORT + EVENT_FLOW + API_BOUNDARY + DI_MODULE_GRAPH), nestjs-event-driven (adds WEBSOCKET_FLOW), nestjs-iot (adds MQTT_TOPIC_FLOW), microservices (adds RUNTIME_WIRING), spa-api (STATIC_IMPORT + API_BOUNDARY + WEBSOCKET_FLOW). Detected from specimen intake canonical_repo structure.
+
+**Status:** CANONICAL — implemented. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### System Connectivity Graph
+
+**Definition:** The merged structural connectivity artifact produced by combining all measured visibility layers into a single edge set. Each edge carries: source_domain, target_domain, edge_type (STATIC_IMPORT / EVENT_FLOW / MQTT_TOPIC_FLOW / WEBSOCKET_FLOW / API_BOUNDARY / DI_INJECTION / RUNTIME_WIRING), evidence_class, confidence, source_file, and evidence_snippet. The system connectivity graph is the structural truth of how the system is actually connected — the code connectivity graph (40.3s static imports) is a subset.
+
+**Status:** PROPOSED — forensic proof produced for BlueEdge (19 runtime edges). Automated extraction not yet implemented. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Dual-Axis Qualification
+
+**Definition:** The classification model that separates evidence quality (Q-class) from visibility completeness into two independent axes. Axis 1 (Evidence Quality Class) measures reconciliation quality within measured evidence layers — the existing Q-01 through Q-04 scale. Axis 2 (Visibility Completeness State) measures whether the measured evidence layers are sufficient for the specimen's architecture — values are SYSTEM_CONNECTIVITY_COMPLETE, VISIBILITY_INCOMPLETE, or UNKNOWN. Neither axis invalidates the other. A specimen can be Q-03 (low static reconciliation) and SYSTEM_CONNECTIVITY_COMPLETE (all required visibility layers present) simultaneously. The operational notation is: `Q-03_STATIC_HISTORICAL + SYSTEM_CONNECTIVITY_COMPLETE`.
+
+**Status:** PROPOSED — dual-axis model documented in verdict reclassification. Q-class doctrine not yet formally amended. The visibility-layer completeness check is implemented but does not modify Q-class output. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

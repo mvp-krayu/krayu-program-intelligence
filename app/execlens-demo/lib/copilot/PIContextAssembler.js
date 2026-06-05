@@ -82,7 +82,7 @@ function assembleTier2(contextLevel, client, runId, producedArtifacts) {
   }
 
   if (contextLevel >= CONTEXT_LEVEL.L2) {
-    tier2.verdict = resolveVerdict(rawSpecimen);
+    tier2.verdict = resolveVerdict(rawSpecimen, client, runId);
   }
 
   if (contextLevel >= CONTEXT_LEVEL.L3 && producedArtifacts) {
@@ -472,8 +472,12 @@ function formatContextForPrompt(assembled) {
 
   if (assembled.verdict) {
     const verdictParts = [];
+    if (assembled.verdict.visibility_layer_completeness) {
+      verdictParts.push('### Visibility-Layer Completeness\n');
+      verdictParts.push(JSON.stringify(assembled.verdict.visibility_layer_completeness, null, 2));
+    }
     if (assembled.verdict.boardroom) {
-      verdictParts.push('### Boardroom Projection\n');
+      verdictParts.push('\n### Boardroom Projection\n');
       verdictParts.push(JSON.stringify(assembled.verdict.boardroom, null, 2));
     }
     if (assembled.verdict.balanced) {

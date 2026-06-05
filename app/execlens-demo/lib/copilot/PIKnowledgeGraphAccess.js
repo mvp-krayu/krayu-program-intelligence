@@ -78,7 +78,7 @@ function stripForContext(fullReport) {
   return stripped;
 }
 
-function resolveVerdict(specimen) {
+function resolveVerdict(specimen, client, runId) {
   if (!specimen) return null;
 
   try {
@@ -86,10 +86,12 @@ function resolveVerdict(specimen) {
     const consequenceResult = compile(synthesisResult, specimen);
     const boardroom = forBoardroom(consequenceResult, synthesisResult, specimen);
     const balanced = forBalanced(consequenceResult, synthesisResult, specimen);
+    const visibilityLayer = resolveVisibilityLayerCompleteness(specimen, client, runId);
 
     return {
       boardroom: condenseBoardroom(boardroom),
       balanced: condenseBalanced(balanced),
+      visibility_layer_completeness: visibilityLayer,
     };
   } catch {
     return null;
@@ -350,6 +352,120 @@ function condenseStructuralMass(rawSpecimen) {
   return result;
 }
 
+// ─── VISIBILITY-LAYER COMPLETENESS CHECK ──────────────────────
+// Pre-verdict integrity gate. Classifies which evidence layers
+// were measured for this specimen and which the architecture requires.
+// Constitutional: PI.RUNTIME-CONNECTIVITY-PROOF.01
+
+const VISIBILITY_LAYERS = {
+  STATIC_IMPORT:    { id: 'STATIC_IMPORT',    name: 'Static Import Graph',             enrichment: '40.3s' },
+  EVENT_FLOW:       { id: 'EVENT_FLOW',        name: 'Event/Signal Flow',               enrichment: null },
+  MQTT_TOPIC_FLOW:  { id: 'MQTT_TOPIC_FLOW',   name: 'MQTT/Message Broker',             enrichment: null },
+  WEBSOCKET_FLOW:   { id: 'WEBSOCKET_FLOW',    name: 'WebSocket/Real-Time Streaming',   enrichment: null },
+  API_BOUNDARY:     { id: 'API_BOUNDARY',      name: 'API Boundary (REST/GraphQL)',      enrichment: null },
+  DI_MODULE_GRAPH:  { id: 'DI_MODULE_GRAPH',   name: 'DI/Framework Module Graph',       enrichment: null },
+  RUNTIME_WIRING:   { id: 'RUNTIME_WIRING',    name: 'Runtime Wiring (Infra/Deploy)',    enrichment: null },
+};
+
+const ARCHITECTURE_PROFILES = {
+  'django-monolith':       { required: ['STATIC_IMPORT', 'EVENT_FLOW', 'API_BOUNDARY', 'DI_MODULE_GRAPH'] },
+  'nestjs-event-driven':   { required: ['STATIC_IMPORT', 'EVENT_FLOW', 'WEBSOCKET_FLOW', 'API_BOUNDARY', 'DI_MODULE_GRAPH'] },
+  'nestjs-iot':            { required: ['STATIC_IMPORT', 'EVENT_FLOW', 'MQTT_TOPIC_FLOW', 'WEBSOCKET_FLOW', 'API_BOUNDARY', 'DI_MODULE_GRAPH'] },
+  'microservices':         { required: ['STATIC_IMPORT', 'EVENT_FLOW', 'API_BOUNDARY', 'RUNTIME_WIRING'] },
+  'spa-api':               { required: ['STATIC_IMPORT', 'API_BOUNDARY', 'WEBSOCKET_FLOW'] },
+  'unknown':               { required: ['STATIC_IMPORT'] },
+};
+
+function detectArchitectureProfile(rawSpecimen, client, runId) {
+  if (!rawSpecimen) return 'unknown';
+
+  try {
+    const fsMod = require('fs');
+    const pathMod = require('path');
+    const intakePath = pathMod.join(REPO_ROOT, 'clients', client, 'psee/runs', runId, 'intake/canonical_repo');
+    if (fsMod.existsSync(intakePath)) {
+      const topFiles = fsMod.readdirSync(intakePath).join(' ').toLowerCase();
+      const hasSubdirs = (dir) => {
+        try { return fsMod.readdirSync(pathMod.join(intakePath, dir)).join(' ').toLowerCase(); } catch { return ''; }
+      };
+      const svgAgents = hasSubdirs('svg-agents');
+      const backend = hasSubdirs('backend');
+
+      if (svgAgents.includes('mqtt') || svgAgents.includes('paho') || svgAgents.includes('sensor'))
+        return 'nestjs-iot';
+      if (backend.includes('.module.ts') || topFiles.includes('nest'))
+        return 'nestjs-event-driven';
+      if (topFiles.includes('manage.py') || topFiles.includes('django') || topFiles.includes('wsgi'))
+        return 'django-monolith';
+      if (topFiles.includes('docker-compose') && topFiles.includes('requirements.txt'))
+        return 'django-monolith';
+      if (topFiles.includes('pyproject.toml') && topFiles.includes('netbox'))
+        return 'django-monolith';
+    }
+  } catch {
+    // Intake not accessible — fall back to specimen data
+  }
+
+  return 'unknown';
+}
+
+function resolveVisibilityLayerCompleteness(rawSpecimen, client, runId) {
+  if (!rawSpecimen) return null;
+
+  const profile = detectArchitectureProfile(rawSpecimen, client, runId);
+  const required = (ARCHITECTURE_PROFILES[profile] || ARCHITECTURE_PROFILES['unknown']).required;
+
+  const se = rawSpecimen.structural_enrichment || {};
+  const hasCodeGraph = !!(se.available && se.code_graph);
+
+  const runtimeConnPath = `clients/${client}/psee/runs/${runId}/structure/runtime_connectivity`;
+  let hasEventFlow = false;
+  let hasMqtt = false;
+  let hasWebSocket = false;
+  let hasApiBoundary = false;
+  let hasDiModule = false;
+
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const rcDir = path.join(REPO_ROOT, runtimeConnPath);
+    hasEventFlow = fs.existsSync(path.join(rcDir, 'event_flow_graph.json'));
+    hasMqtt = fs.existsSync(path.join(rcDir, 'mqtt_topic_graph.json'));
+    hasWebSocket = fs.existsSync(path.join(rcDir, 'websocket_flow_graph.json'));
+    hasApiBoundary = fs.existsSync(path.join(rcDir, 'api_boundary_graph.json'));
+    hasDiModule = fs.existsSync(path.join(rcDir, 'di_module_graph.json'));
+  } catch {
+    // Runtime connectivity not available
+  }
+
+  const measured = [];
+  if (hasCodeGraph) measured.push('STATIC_IMPORT');
+  if (hasEventFlow) measured.push('EVENT_FLOW');
+  if (hasMqtt) measured.push('MQTT_TOPIC_FLOW');
+  if (hasWebSocket) measured.push('WEBSOCKET_FLOW');
+  if (hasApiBoundary) measured.push('API_BOUNDARY');
+  if (hasDiModule) measured.push('DI_MODULE_GRAPH');
+
+  const missing = required.filter(r => !measured.includes(r));
+  const completeness = required.length > 0 ? measured.filter(m => required.includes(m)).length / required.length : 0;
+
+  const verdictScope = measured.length <= 1 ? 'CODE_CONNECTIVITY'
+    : measured.length >= 4 ? 'SYSTEM_CONNECTIVITY'
+    : 'PARTIAL_CONNECTIVITY';
+
+  return {
+    architecture_profile: profile,
+    layers_measured: measured.map(id => ({ id, name: VISIBILITY_LAYERS[id].name, enrichment: VISIBILITY_LAYERS[id].enrichment })),
+    layers_required: required.map(id => ({ id, name: VISIBILITY_LAYERS[id].name })),
+    layers_missing: missing.map(id => ({ id, name: VISIBILITY_LAYERS[id].name })),
+    completeness: Math.round(completeness * 100),
+    verdict_scope: verdictScope,
+    qualifier_modifier: completeness < 1.0 ? 'VISIBILITY_INCOMPLETE' : null,
+    measured_count: measured.length,
+    required_count: required.length,
+  };
+}
+
 function determineContextLevel(client, runId, specimen, producedArtifacts) {
   if (!client || !runId) return CONTEXT_LEVEL.L0;
   if (!specimen) return CONTEXT_LEVEL.L0;
@@ -381,6 +497,9 @@ module.exports = {
   condensePressureZones,
   condenseConstrictionPoints,
   condenseStructuralMass,
+  resolveVisibilityLayerCompleteness,
+  VISIBILITY_LAYERS,
+  ARCHITECTURE_PROFILES,
   determineContextLevel,
   getAvailableDomains,
 };

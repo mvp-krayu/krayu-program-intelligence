@@ -776,10 +776,42 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.EXECUTIVE-COGNITION-RUNTIME.01 | G1 | 77% of "consulting craft" (T7) is latent PI cognition never formalized — only 6% is genuine rendering. Corrected composition to 55/20/19/6. Discovered ECP (9 cognition objects), ECR (9 materializers), PRE (projection rendering engine). Central insight: "executive intelligence is a runtime layer, not a document format." EIC superseded by ECR+PRE | COMPLETE |
 | PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | G1 | PICP canonicalization — ECP→PICP, ECR→PICR rename (0/9 objects executive-specific, 4/8 families non-executive). L0-L5 pipeline model. Two-axis marketplace (modules × projections). Consumer contract (9 objects, governed permissions, 13 prohibitions). Strategic positioning: Program Intelligence Cognition Platform. 38/38 PASS | COMPLETE |
 | PI.PICP-CONSTITUTION.01 | G1 | Cognition Object constitutional definition — 7-gate qualification test for PICP membership (Derivation, Evidence Binding, Audience Independence, Projection Freedom, Structural Novelty, Cognitive Question, Zero Authority). 9-candidate audit: 8 unconditional PASS, 1 reconstitution (competitive_intelligence → detection_boundary — Gate 4 failure). Immutability, versioning, governance locked. Gate governs admission, not fixed population count. 32/32 PASS | COMPLETE |
+| PI.RUNTIME-CONNECTIVITY-PROOF.01 | G1 | Visibility-layer completeness — Scenario C confirmed on BlueEdge (0/13 domains actually absent, all connected through MQTT/EventEmitter/WebSocket/API/DI). Validated on NetBox (same root cause, different shape). 5 forensic evidence graphs, system connectivity graph (19 edges), domain visibility reconciliation (17/17). Root cause: static import visibility ≠ structural coverage. Visibility-layer completeness check implemented (resolveVisibilityLayerCompleteness). Architecture profile detection operational. 4 new TERMINOLOGY_LOCK entries | COMPLETE |
 | PI.PICP-QUALIFICATION-STRESS-TEST.01 | G2 | PICP qualification stress test — 6 candidates tested against 7-gate qualification. 1 PASS (detection_boundary reconstitution), 5 FAIL. 3 rejection patterns discovered. Gate discriminates effectively | COMPLETE |
 | PI.PICP-CONSUMPTION-BASELINE-MAP.01 | G2 | PICP consumption baseline map — 9 object source-of-truth with line-level references, 4 formalization tiers (T1-T4), 6 de facto consumers identified in LENS, 8/9 objects already sourced. PICP is formalization not construction. 29/29 PASS | COMPLETE |
 | PI.COGNITION-ANATOMY.RECONCILIATION.01 | G1 | Constitutional reconciliation of 4 cognition lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution). Center of gravity = Governed Cognition (22 functions × 5 strata). Three dimensions (Cognitive Function, Temporal Continuity, Structured Packaging). Four satellites (Temporal, Packaged, Qualified, Projected). PICP repositioned to packaging satellite. DNA = metaphor. Neuron = does not exist. Architectural altitude restored. 29/29 PASS | COMPLETE |
 | PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01 | G2 | 6-phase implementation roadmap for consumer-generic cognition consumption architecture (CIP → PICR → PICP → PRE → Consumer). EIR = Reference Consumer #1, LENS = #2, Marketplace = #3+. Consumer-genericity invariant: PRE core must not change when adding new consumer. ~80% deterministic, ~14% governed AI (PRE Zone B), ~6% qualification. 25 files, ~2,370 LOC. 33/33 PASS | COMPLETE |
+
+## Visibility-Layer Completeness
+
+**Stream:** PI.RUNTIME-CONNECTIVITY-PROOF.01 (COMPLETE — 2026-06-05)
+**Classification:** G1 — Architecture-Mutating
+
+Program Intelligence now recognizes that static import analysis (40.3s) measures one visibility layer in systems that operate across multiple connectivity layers. A pre-verdict integrity gate classifies which visibility layers were measured and which the specimen's architecture requires.
+
+**Visibility layers identified:**
+
+| Layer | Evidence Source | PI Status |
+|---|---|---|
+| STATIC_IMPORT | 40.3s code graph | MEASURED (automated) |
+| EVENT_FLOW | EventEmitter/Django signals/pub-sub | FORENSIC (BlueEdge only) |
+| MQTT_TOPIC_FLOW | MQTT publish/subscribe | FORENSIC (BlueEdge only) |
+| WEBSOCKET_FLOW | WebSocket/Socket.IO channels | FORENSIC (BlueEdge only) |
+| API_BOUNDARY | REST/GraphQL controllers | FORENSIC (BlueEdge only) |
+| DI_MODULE_GRAPH | Framework DI container | FORENSIC (BlueEdge only) |
+| RUNTIME_WIRING | Docker/K8s/Terraform | NOT MEASURED |
+
+**Architecture profiles:** django-monolith, nestjs-event-driven, nestjs-iot, microservices, spa-api. Each profile defines which layers are required for structural completeness.
+
+**Proven findings:**
+- BlueEdge (nestjs-iot): 6/6 layers measured → SYSTEM_CONNECTIVITY (100%). 0 of 13 "dark" domains actually absent.
+- NetBox (django-monolith): 1/4 layers measured → CODE_CONNECTIVITY (25%), VISIBILITY_INCOMPLETE.
+
+**Root cause corrected:** Static import visibility ≠ structural coverage. The "13 dark domains" finding was a visibility-layer gap, not a coverage gap.
+
+**Implementation:** `resolveVisibilityLayerCompleteness()` in `PIKnowledgeGraphAccess.js`. Wired into verdict data for THORR consumption.
+
+**Maturity:** Forensic proof complete. Automated extraction not implemented. Pipeline integration (40.3r) not implemented.
 
 ## Domain Cognition Module Architecture
 
@@ -1057,3 +1089,5 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - 9-slice topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) + fragility/resilience (EXECUTION_FRAGILITY) + flow/constriction (EXECUTION_CONSTRICTION) + drift/instability (STRUCTURAL_BOUNDARY_DIVERGENCE) + coupling/inertia (COUPLING_INERTIA) + COMPOUND_CONVERGENCE composite + GOVERNANCE_COVERAGE_STATUS governance
 - Evidence classification taxonomy: EVIDENCE_DERIVED (semantic topology edges), STRUCTURAL_CENTRALITY_DERIVED (code graph centrality), PRESSURE_ZONE_DERIVED (pressure_zone_state artifact), TOPOLOGY_METRIC_DERIVED (DPSIG distribution metrics), MIXED (composite conditions with heterogeneous evidence origins)
 - Three-layer architecture: PI Core (truth — signal families, topology, governance) / Orchestration-Agentic Runtime (guided actions, SQO workflow) / Domain Cognition (SW-Intel module — condition synthesis, topology cognition projection)
+- Visibility-layer completeness check: pre-verdict integrity gate classifying measured vs required connectivity layers per architecture profile. 7 visibility layers defined (STATIC_IMPORT, EVENT_FLOW, MQTT_TOPIC_FLOW, WEBSOCKET_FLOW, API_BOUNDARY, DI_MODULE_GRAPH, RUNTIME_WIRING). 5 architecture profiles (django-monolith, nestjs-event-driven, nestjs-iot, microservices, spa-api). Verdict scope classification (CODE_CONNECTIVITY / PARTIAL_CONNECTIVITY / SYSTEM_CONNECTIVITY). VISIBILITY_INCOMPLETE qualifier modifier
+- THORR intent-driven context loading: 16,000 token budget enforcement, evidence class routing (POSTURE/GOVERNANCE/STRUCTURAL/DOCTRINE/FULL), persona-aware escalation. 10 THORR personas including Transformation Leader and GOD/Founder-Operator
