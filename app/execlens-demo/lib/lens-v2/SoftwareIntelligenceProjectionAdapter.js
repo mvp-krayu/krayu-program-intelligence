@@ -326,10 +326,7 @@ function consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfac
     legacyMap[ls.surface_id] = ls
   }
 
-  const topLevel = consequenceResult.consequences || []
-  const atomics = consequenceResult.atomic_consequences || []
-  const runtimeAtomics = atomics.filter(a => (a.consequence_type_id || '').startsWith('RT_'))
-  const consequences = [...topLevel, ...runtimeAtomics]
+  const consequences = consequenceResult.consequences || []
   const conditionMap = {}
   if (synthesisResult && synthesisResult.conditions) {
     for (const c of synthesisResult.conditions) {
@@ -344,7 +341,7 @@ function consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfac
         .map(cid => conditionMap[cid])
         .filter(Boolean)
       const conditionTypes = sourceConditions.map(c => c.condition_type)
-      const isRuntime = sourceConditions.some(c => c.evidence_mode === 'RUNTIME_EVIDENCE')
+      const isRuntime = csq.visibility_layer === 'RUNTIME' || csq.visibility_layer === 'MIXED' || sourceConditions.some(c => c.evidence_mode === 'RUNTIME_EVIDENCE')
 
       const legacySurfaceId = conditionTypes.length > 0 ? CONDITION_TO_LEGACY_SURFACE[conditionTypes[0]] : null
       const legacyConstituents = legacySurfaceId && legacyMap[legacySurfaceId]

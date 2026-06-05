@@ -241,6 +241,8 @@ function makeAtomic(typeId, condition, scope, isDefining, registry) {
     }],
     pressure_zone_id: condition.pressure_zone_id || null,
     temporal_marker: null,
+    evidence_class: condition.evidence_class || 'STATIC_IMPORT',
+    visibility_layer: condition.evidence_mode === 'RUNTIME_EVIDENCE' ? 'RUNTIME' : 'STATIC',
     _src_type: condition.condition_type,
     _src_boundary: condition.governance_boundary,
     _defining: isDefining,
@@ -356,13 +358,23 @@ function mapCC(cond, registry) {
   return [makeAtomic('STAB_RISK', cond, 'SYSTEMIC', true, registry)]
 }
 
+const RUNTIME_CANONICAL_FAMILY = {
+  EVENT_CONCENTRATION: 'COORD_FRAG',
+  RUNTIME_DEPENDENCY_CHOKE_POINT: 'DEP_AMP',
+  BROKER_DEPENDENCY: 'RESIL_DEF',
+  TOPIC_FANOUT_PRESSURE: 'PROP_EXP',
+  ASYNC_PROPAGATION_ASYMMETRY: 'COORD_FRAG',
+  EDGE_CLOUD_PROPAGATION_RISK: 'DEL_EXP',
+  RUNTIME_OBSERVABILITY_GAP: 'GOV_GAP',
+}
+
 function mapRuntimeCondition(cond, registry) {
-  const typeId = 'RT_' + cond.condition_type
-  if (!CONSEQUENCE_VOCABULARY[typeId]) return []
+  const canonicalType = RUNTIME_CANONICAL_FAMILY[cond.condition_type] || 'COORD_FRAG'
+  if (!CONSEQUENCE_VOCABULARY[canonicalType]) return []
   const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
   const scope = domains.length > 2 ? 'SYSTEMIC' : domains.length > 0 ? 'REGIONAL' : 'LOCAL'
 
-  return [makeAtomic(typeId, cond, scope, false, registry)]
+  return [makeAtomic(canonicalType, cond, scope, false, registry)]
 }
 
 function mapCondition(cond, ctx, registry) {
@@ -413,6 +425,10 @@ function deduplicateConsequences(atomics) {
       g._defining = g._defining || csq._defining
       g.derivation_trace = [...(g.derivation_trace || []), ...(csq.derivation_trace || [])]
       g.evidence_refs = [...(g.evidence_refs || []), ...(csq.evidence_refs || [])]
+      if (csq.visibility_layer === 'RUNTIME') g.visibility_layer = 'MIXED'
+      if (csq.evidence_class && csq.evidence_class !== g.evidence_class) {
+        g.evidence_class = 'MIXED'
+      }
     }
   }
 
