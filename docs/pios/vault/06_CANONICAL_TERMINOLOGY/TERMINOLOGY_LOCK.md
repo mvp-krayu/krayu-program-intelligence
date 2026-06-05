@@ -1141,6 +1141,12 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Status:** PROPOSED — dual-axis model documented in verdict reclassification. Q-class doctrine not yet formally amended. The visibility-layer completeness check is implemented but does not modify Q-class output. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
 
+### Consumer Authority Consolidation
+
+**Definition:** The constitutional rule that establishes a single cognition authority for Program Intelligence. SignalSynthesisEngine → ConsequenceCompiler is the only path that may generate conditions, consequences, and cognition objects. All consumers (THORR, LENS, EIR) are consequence-native — they project cognition, they do not synthesize it. Projection layers may filter, rank, visualize, summarize, and attach evidence detail. Projection layers may NOT derive conditions, consequences, executive narratives, or cognition from raw evidence. Static and runtime evidence classes enter the same authority chain; runtime findings automatically propagate to all consumers once consequence formation occurs.
+
+**Status:** CANONICAL — implemented and enforced (2026-06-05). 265 LOC of legacy cognition generation deleted. 3 independent paths collapsed to 1. Origin: PI.COGNITION-AUTHORITY-CONSOLIDATION.01.
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.

@@ -776,11 +776,58 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.EXECUTIVE-COGNITION-RUNTIME.01 | G1 | 77% of "consulting craft" (T7) is latent PI cognition never formalized — only 6% is genuine rendering. Corrected composition to 55/20/19/6. Discovered ECP (9 cognition objects), ECR (9 materializers), PRE (projection rendering engine). Central insight: "executive intelligence is a runtime layer, not a document format." EIC superseded by ECR+PRE | COMPLETE |
 | PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | G1 | PICP canonicalization — ECP→PICP, ECR→PICR rename (0/9 objects executive-specific, 4/8 families non-executive). L0-L5 pipeline model. Two-axis marketplace (modules × projections). Consumer contract (9 objects, governed permissions, 13 prohibitions). Strategic positioning: Program Intelligence Cognition Platform. 38/38 PASS | COMPLETE |
 | PI.PICP-CONSTITUTION.01 | G1 | Cognition Object constitutional definition — 7-gate qualification test for PICP membership (Derivation, Evidence Binding, Audience Independence, Projection Freedom, Structural Novelty, Cognitive Question, Zero Authority). 9-candidate audit: 8 unconditional PASS, 1 reconstitution (competitive_intelligence → detection_boundary — Gate 4 failure). Immutability, versioning, governance locked. Gate governs admission, not fixed population count. 32/32 PASS | COMPLETE |
+| PI.COGNITION-AUTHORITY-CONSOLIDATION.01 | G1 | Consumer authority consolidation — single cognition authority (SSE→ConsequenceCompiler), all consumers consequence-native (THORR/LENS/EIR). 265 LOC legacy cognition deleted. 3 independent paths collapsed to 1. Runtime findings auto-propagate. Governance rule: consumers project, consumers do not synthesize | COMPLETE |
 | PI.RUNTIME-CONNECTIVITY-PROOF.01 | G1 | Visibility-layer completeness — Scenario C confirmed on BlueEdge (0/13 domains actually absent, all connected through MQTT/EventEmitter/WebSocket/API/DI). Validated on NetBox (same root cause, different shape). 5 forensic evidence graphs, system connectivity graph (19 edges), domain visibility reconciliation (17/17). Root cause: static import visibility ≠ structural coverage. Visibility-layer completeness check implemented (resolveVisibilityLayerCompleteness). Architecture profile detection operational. 4 new TERMINOLOGY_LOCK entries | COMPLETE |
 | PI.PICP-QUALIFICATION-STRESS-TEST.01 | G2 | PICP qualification stress test — 6 candidates tested against 7-gate qualification. 1 PASS (detection_boundary reconstitution), 5 FAIL. 3 rejection patterns discovered. Gate discriminates effectively | COMPLETE |
 | PI.PICP-CONSUMPTION-BASELINE-MAP.01 | G2 | PICP consumption baseline map — 9 object source-of-truth with line-level references, 4 formalization tiers (T1-T4), 6 de facto consumers identified in LENS, 8/9 objects already sourced. PICP is formalization not construction. 29/29 PASS | COMPLETE |
 | PI.COGNITION-ANATOMY.RECONCILIATION.01 | G1 | Constitutional reconciliation of 4 cognition lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution). Center of gravity = Governed Cognition (22 functions × 5 strata). Three dimensions (Cognitive Function, Temporal Continuity, Structured Packaging). Four satellites (Temporal, Packaged, Qualified, Projected). PICP repositioned to packaging satellite. DNA = metaphor. Neuron = does not exist. Architectural altitude restored. 29/29 PASS | COMPLETE |
 | PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01 | G2 | 6-phase implementation roadmap for consumer-generic cognition consumption architecture (CIP → PICR → PICP → PRE → Consumer). EIR = Reference Consumer #1, LENS = #2, Marketplace = #3+. Consumer-genericity invariant: PRE core must not change when adding new consumer. ~80% deterministic, ~14% governed AI (PRE Zone B), ~6% qualification. 25 files, ~2,370 LOC. 33/33 PASS | COMPLETE |
+
+## Consumer Authority Consolidation
+
+**Stream:** PI.COGNITION-AUTHORITY-CONSOLIDATION.01 (COMPLETE — 2026-06-05)
+**Classification:** G1 — Architecture-Mutating (Constitutional)
+
+Program Intelligence now operates with a single cognition authority and multiple projection consumers.
+
+**Canonical Authority:**
+
+```
+SignalSynthesisEngine → ConsequenceCompiler → Consequences / Cognition Objects
+```
+
+**Consumers (all consequence-native):**
+
+| Consumer | Projection Method | Status |
+|---|---|---|
+| THORR | forBoardroom() / forBalanced() | Consequence-native |
+| LENS Boardroom | consequencePosture | Consequence-native |
+| LENS Dense / Operator | consequencesToSurfaces() | Consequence-native |
+| LENS SVG | deriveTopologyCognitionState + consequence fallback | Consequence-native |
+| EIR | projectFromConsequences() | Consequence-native |
+
+**Governance Rule:**
+
+Consumers project cognition. Consumers do not synthesize cognition.
+
+Projection layers may: filter, rank, visualize, summarize, attach evidence detail.
+
+Projection layers may NOT: derive conditions, derive consequences, derive executive narratives, generate cognition from raw evidence.
+
+**Evidence Classes:**
+
+Static and runtime evidence classes enter the same authority chain. Runtime findings automatically propagate to all consumers once consequence formation occurs. No consumer-specific runtime logic required.
+
+**Historical outcome:**
+
+The consolidation originated from a runtime connectivity investigation ("Why does BlueEdge show 13 dark domains?") and resulted in:
+
+1. Runtime Visibility Layer — Scenario C confirmed, 0/13 domains actually absent
+2. Runtime Signal Derivation — 7 RSIG signals from event/MQTT/WebSocket/DI evidence
+3. Runtime Consequence Formation — runtime conditions enter ConsequenceCompiler alongside static
+4. Consumer Authority Consolidation — three independent cognition paths (THORR via ConsequenceCompiler, LENS via PICRRuntime surfaces, EIR via ExecutiveIntelligenceSynthesis) collapsed into one authority chain
+
+265 LOC of legacy cognition generation deleted. 11 independent EIR synthesis functions retired.
 
 ## Visibility-Layer Completeness
 
