@@ -374,7 +374,7 @@ function mapRuntimeCondition(cond, registry) {
   const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
   const scope = domains.length > 2 ? 'SYSTEMIC' : domains.length > 0 ? 'REGIONAL' : 'LOCAL'
 
-  return [makeAtomic(canonicalType, cond, scope, false, registry)]
+  return [makeAtomic(canonicalType, cond, scope, true, registry)]
 }
 
 function mapCondition(cond, ctx, registry) {
