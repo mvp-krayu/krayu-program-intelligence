@@ -867,3 +867,38 @@ all projection systems must be audited.
 UI rendering alone is not proof of integration.
 
 Integration is complete only when cognition and projection remain semantically aligned.
+
+### 17.6 Authority-Chain Verification
+
+Before accepting any output as correct, verify the authority chain from evidence through cognition to projection.
+
+Trace: evidence → signals → conditions → consequences → themes → executive synthesis → consumer output. If any link produces METADATA_ONLY (labels change, cognition doesn't), the integration is incomplete.
+
+### 17.7 Consumer-Reconciliation Before Expansion
+
+Do not add more evidence types or signals until all consumers are reconciled on the current authority chain.
+
+When new cognition enters the system, verify: does THORR consume it? Does LENS consume it? Does EIR consume it? If any consumer doesn't, reconcile before expanding.
+
+### 17.8 Root-Cause Isolation Protocol
+
+When multiple consumers or personas fail, the defect is upstream. Do not debug persona-by-persona.
+
+Classify the failure as: (A) consequence hierarchy, (B) narrative consumption, (C) context isolation, (D) mode routing. Fix in that order. Do not fix individual consumers until the hierarchy is proven correct.
+
+### 17.9 Completion Definition Hierarchy
+
+1. Build passes → code compiles (lowest bar)
+2. Tests pass → existing contracts maintained
+3. Data changed → cognition objects reflect new evidence
+4. Authority verified → all consumers read from single authority
+5. Projection aligned → all consumers render consistent output
+6. Answer changed → THORR/LENS/EIR output reflects the cognition change
+
+Only level 6 is completion for cognition work. Do not stop at levels 1-5.
+
+### 17.10 Context Isolation for Focused Queries
+
+When a question classifies as a focused retrieval (RUNTIME_ONLY, TOPOLOGY_GRAVITY, EXECUTIVE_POSTURE), assemble a task-specific context bundle. Exclude sections that would allow the model to infer against the answer contract.
+
+Do not let focused queries receive contradictory generic context. The model will cross-read unrelated static sections and override intended answer contracts.
