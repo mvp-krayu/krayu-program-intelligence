@@ -5,18 +5,25 @@
 
 const PRECore = require('../../projection/PRECore')
 const eirConfig = require('../../projection/configs/eir')
-const { synthesize } = require('./ExecutiveIntelligenceSynthesis')
+const { projectFromConsequences } = require('./ConsequenceNativeEIR')
 const { generateChapterGraphics } = require('./EIRGraphics')
 
-function adapt(picp, context) {
+function adapt(picp, context, consequenceData) {
   const projection = PRECore.project(picp, eirConfig)
   if (!projection.ok) {
     return { ok: false, error: projection.error, validation_errors: projection.validation_errors }
   }
 
-  const synthesis = synthesize(picp, context || {})
+  const csqData = consequenceData || {}
+  const synthesis = projectFromConsequences({
+    boardroom: csqData.boardroom || null,
+    balanced: csqData.balanced || null,
+    consequenceResult: csqData.consequenceResult || null,
+    picp,
+    groundingContext: context || {},
+  })
   if (!synthesis.ok) {
-    return { ok: false, error: 'Executive intelligence synthesis failed' }
+    return { ok: false, error: 'Consequence-native EIR projection failed: ' + (synthesis.error || '') }
   }
 
   const graphics = generateChapterGraphics(picp, context || {})

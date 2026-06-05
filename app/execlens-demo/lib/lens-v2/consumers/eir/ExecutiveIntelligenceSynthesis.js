@@ -1,3 +1,9 @@
+// LEGACY_NON_AUTHORITATIVE — Superseded by ConsequenceNativeEIR.js
+// This file independently synthesizes cognition from PICP objects.
+// The authoritative path is: ConsequenceCompiler → forBoardroom/forBalanced → ConsequenceNativeEIR.
+// Retained for reference only. No active callers after EIR authority rebase.
+//
+// Original description:
 // Executive Intelligence Synthesis — Consumer Intelligence Module for EIR.
 // Reads all 9 PICP cognition objects + specimen grounding context to produce
 // narrative-arc executive chapters with named entities and per-condition deep dives.
