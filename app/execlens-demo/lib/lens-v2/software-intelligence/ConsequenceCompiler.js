@@ -825,6 +825,12 @@ function deriveDomainRiskProfile(conditionTypes) {
   return { shape: 'stress', label: riskLabel, classes: classKey }
 }
 
+const RUNTIME_CONDITION_SET = new Set([
+  'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY',
+  'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY',
+  'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP',
+])
+
 function synthesizeBoardroomNarrative(domainConcentration, slices) {
   if (!domainConcentration || domainConcentration.length === 0) return { domain_narratives: [], executive_synthesis: null }
 
@@ -864,7 +870,13 @@ function synthesizeBoardroomNarrative(domainConcentration, slices) {
     synthesis = `${a.domain} ${aVerb} — ${a.risk_label}. ${b.domain} has a separate problem: ${b.risk_label}. These are distinct operational risks with different remediation shapes.`
   } else {
     const a = narratives[0]
-    synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. ${narratives.length - 1} other region${narratives.length - 1 > 1 ? 's' : ''} show independent structural stress.`
+    const runtimeDomains = narratives.filter((n, i) => i > 0 && slices.some(s => s.domain === n.domain && RUNTIME_CONDITION_SET.has(s.condition_type)))
+    if (runtimeDomains.length > 0) {
+      const rtNames = runtimeDomains.slice(0, 3).map(n => n.domain).join(', ')
+      synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. Runtime connectivity analysis reveals additional structural stress in ${rtNames}${runtimeDomains.length > 3 ? ` (+${runtimeDomains.length - 3} more)` : ''}. ${narratives.length - 1 - runtimeDomains.length > 0 ? (narratives.length - 1 - runtimeDomains.length) + ' other region' + (narratives.length - 1 - runtimeDomains.length > 1 ? 's' : '') + ' also show structural stress.' : ''}`
+    } else {
+      synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. ${narratives.length - 1} other region${narratives.length - 1 > 1 ? 's' : ''} show independent structural stress.`
+    }
   }
 
   return { domain_narratives: narratives, executive_synthesis: synthesis }
