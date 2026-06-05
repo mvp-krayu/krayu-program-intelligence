@@ -288,50 +288,103 @@ function deriveQualificationCognition(fullReport) {
 
 // ─── MAIN PROJECTION ────────────────────────────────────────────────
 
-// ─── RUNTIME CONDITION → SURFACE BRIDGE ─────────────────────────────
-// Converts runtime-derived conditions into projection surfaces so LENS
-// can render them alongside legacy PICR surfaces. This is the reconciliation
-// bridge: runtime cognition enters the surface model without rewriting
-// the 12 legacy materializers.
+// ─── CONSEQUENCE → SURFACE BRIDGE ────────────────────────────────────
+// Converts consequence/cognition objects into surface-compatible shapes
+// for LENS DENSE/OPERATOR rendering. This is the authoritative projection
+// path: consequences are the source of truth; surfaces are the rendering shape.
+// Legacy surface constituents are joined as evidence-detail payload.
 
-const RUNTIME_SURFACE_NAMES = {
-  EVENT_CONCENTRATION: 'Event Coordination Load',
-  RUNTIME_DEPENDENCY_CHOKE_POINT: 'Runtime Dependency Choke Point',
-  BROKER_DEPENDENCY: 'Broker Dependency',
-  TOPIC_FANOUT_PRESSURE: 'Topic Fanout Pressure',
-  ASYNC_PROPAGATION_ASYMMETRY: 'Async Propagation Asymmetry',
-  EDGE_CLOUD_PROPAGATION_RISK: 'Edge-Cloud Propagation',
-  RUNTIME_OBSERVABILITY_GAP: 'Runtime Observability Gap',
+const CONSEQUENCE_SURFACE_NAMES = {
+  COORD_FRAG: 'Coordination Fragility',
+  DEP_AMP: 'Dependency Amplification',
+  DEL_EXP: 'Delivery Exposure',
+  OP_BOTTLENECK: 'Operational Bottleneck',
+  RESIL_DEF: 'Resilience Deficit',
+  GOV_GAP: 'Governance Coverage Gap',
+  PROP_EXP: 'Propagation Exposure',
+  STAB_RISK: 'Structural Stability Risk',
 }
 
-function runtimeConditionsToSurfaces(conditions) {
-  if (!conditions || conditions.length === 0) return []
-
-  const runtimeTypes = new Set(Object.keys(RUNTIME_SURFACE_NAMES))
-  const runtimeConditions = conditions.filter(c => runtimeTypes.has(c.condition_type) && c.severity !== 'NOMINAL')
-
-  return runtimeConditions.map(c => ({
-    surface_id: 'RUNTIME_' + c.condition_type,
-    surface_name: RUNTIME_SURFACE_NAMES[c.condition_type] || c.condition_type,
-    severity: c.severity,
-    operational_summary: c.operational_consequence,
-    evidence_class: c.evidence_class || 'RUNTIME',
-    evidence_mode: c.evidence_mode || 'RUNTIME_EVIDENCE',
-    affected_domains: (c.shared_topology_targets && c.shared_topology_targets.domains) || [],
-    condition_type: c.condition_type,
-    condition_id: c.condition_id,
-    measurement_basis: c.measurement_basis,
-    governance_boundary: c.governance_boundary,
-    is_runtime: true,
-    constituents: {
-      signal_value: c.signal_value,
-      measurement_basis: c.measurement_basis,
-      supporting_signals: c.supporting_signal_ids || [],
-    },
-  }))
+const CONDITION_TO_LEGACY_SURFACE = {
+  DELIVERY_PRESSURE_CONCENTRATION: 'DELIVERY_FRAGILITY',
+  DEPENDENCY_CHOKE_POINT: 'COORDINATION_SATURATION',
+  PROPAGATION_ASYMMETRY: 'PROPAGATION_RISK',
+  STRUCTURAL_MASS_CONCENTRATION: 'OPERATIONAL_TOPOLOGY',
+  CROSS_DOMAIN_COUPLING_PRESSURE: 'INTEGRATION_EXPOSURE',
+  EXECUTION_FRAGILITY: 'STRUCTURAL_FRAGILITY',
+  EXECUTION_CONSTRICTION: 'COORDINATION_SATURATION',
+  STRUCTURAL_BOUNDARY_DIVERGENCE: 'BOUNDARY_ALIGNMENT',
+  COUPLING_INERTIA: 'STRUCTURAL_COUPLING',
+  GOVERNANCE_COVERAGE_STATUS: 'QUALIFICATION_EXPOSURE',
 }
 
-function deriveProjection(fullReport, synthesisResult) {
+function consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfaces) {
+  if (!consequenceResult) return []
+
+  const legacyMap = {}
+  for (const ls of (legacySurfaces || [])) {
+    legacyMap[ls.surface_id] = ls
+  }
+
+  const topLevel = consequenceResult.consequences || []
+  const atomics = consequenceResult.atomic_consequences || []
+  const runtimeAtomics = atomics.filter(a => (a.consequence_type_id || '').startsWith('RT_'))
+  const consequences = [...topLevel, ...runtimeAtomics]
+  const conditionMap = {}
+  if (synthesisResult && synthesisResult.conditions) {
+    for (const c of synthesisResult.conditions) {
+      conditionMap[c.condition_id] = c
+    }
+  }
+
+  return consequences
+    .filter(csq => csq.severity !== 'NOMINAL')
+    .map(csq => {
+      const sourceConditions = (csq.source_conditions || [])
+        .map(cid => conditionMap[cid])
+        .filter(Boolean)
+      const conditionTypes = sourceConditions.map(c => c.condition_type)
+      const isRuntime = sourceConditions.some(c => c.evidence_mode === 'RUNTIME_EVIDENCE')
+
+      const legacySurfaceId = conditionTypes.length > 0 ? CONDITION_TO_LEGACY_SURFACE[conditionTypes[0]] : null
+      const legacyConstituents = legacySurfaceId && legacyMap[legacySurfaceId]
+        ? legacyMap[legacySurfaceId].constituents
+        : null
+
+      const affectedDomains = sourceConditions.flatMap(c =>
+        (c.shared_topology_targets && c.shared_topology_targets.domains) || []
+      )
+
+      return {
+        surface_id: csq.consequence_id || ('csq-' + csq.consequence_type_id + '-' + csq.primary_locus),
+        surface_name: csq.operator_consequence_title || CONSEQUENCE_SURFACE_NAMES[csq.consequence_type_id] || csq.consequence_type_id,
+        severity: csq.severity,
+        operational_summary: csq.operational_implication,
+        consequence: csq.structural_consequence_label,
+        affected_domains: [...new Set(affectedDomains)],
+        evidence_density: (csq.source_conditions || []).length + (csq.evidence_refs || []).length,
+        evidence_class: isRuntime ? (sourceConditions[0] && sourceConditions[0].evidence_class) || 'RUNTIME' : 'STATIC_IMPORT',
+        evidence_mode: isRuntime ? 'RUNTIME_EVIDENCE' : 'STATIC_EVIDENCE',
+        condition_type: conditionTypes[0] || null,
+        condition_id: sourceConditions[0] ? sourceConditions[0].condition_id : null,
+        source_consequence_id: csq.consequence_id,
+        consequence_type_id: csq.consequence_type_id,
+        confidence: csq.confidence,
+        governance_boundary: csq.confidence,
+        consequence_scope: csq.consequence_scope,
+        combination_pattern: csq.combination_pattern || null,
+        is_runtime: isRuntime,
+        is_consequence_derived: true,
+        constituents: legacyConstituents || (isRuntime ? {
+          signal_value: sourceConditions[0] && sourceConditions[0].signal_value,
+          measurement_basis: sourceConditions[0] && sourceConditions[0].measurement_basis,
+          supporting_signals: sourceConditions[0] ? (sourceConditions[0].supporting_signal_ids || []) : [],
+        } : null),
+      }
+    })
+}
+
+function deriveProjection(fullReport, synthesisResult, consequenceResult) {
   const moduleState = deriveModuleState(fullReport)
 
   if (moduleState === PROJECTION_STATUS.ABSENT) {
@@ -349,7 +402,7 @@ function deriveProjection(fullReport, synthesisResult) {
   const cip = assembleCIP(fullReport)
   const picp = materializePICR(cip)
 
-  const rawSurfaces = [
+  const legacySurfaces = [
     getSwIntelSurface(picp, 'delivery_fragility'),
     getSwIntelSurface(picp, 'coordination_saturation'),
     getSwIntelSurface(picp, 'integration_exposure'),
@@ -364,11 +417,14 @@ function deriveProjection(fullReport, synthesisResult) {
     getSwIntelSurface(picp, 'sw_intel_absence'),
   ].filter(Boolean)
 
-  const runtimeSurfaces = synthesisResult
-    ? runtimeConditionsToSurfaces(synthesisResult.conditions)
-    : []
+  let surfaces
+  if (synthesisResult && consequenceResult) {
+    surfaces = consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfaces)
+  } else {
+    surfaces = legacySurfaces
+  }
 
-  const surfaces = [...rawSurfaces, ...runtimeSurfaces].sort((a, b) =>
+  surfaces.sort((a, b) =>
     (SEVERITY_ORDER[a.severity] ?? 5) - (SEVERITY_ORDER[b.severity] ?? 5)
   )
 
@@ -377,8 +433,7 @@ function deriveProjection(fullReport, synthesisResult) {
     module_state: moduleState,
     surfaces,
     surface_count: surfaces.length,
-    static_surface_count: rawSurfaces.length,
-    runtime_surface_count: runtimeSurfaces.length,
+    consequence_derived: !!(synthesisResult && consequenceResult),
     peak_severity: surfaces.length > 0 ? surfaces[0].severity : 'NOMINAL',
     qualification_decomposition: {
       structural_richness: deriveStructuralRichnessAxis(fullReport),
@@ -1009,6 +1064,8 @@ const BOARDROOM_NAMES = {
   STRUCTURAL_COUPLING: 'Coupling Rigidity',
 }
 
+// LEGACY — non-authoritative. Generates executive text from surfaces, not consequences.
+// Retained for backward compatibility. Authoritative source: ConsequenceCompiler.forBoardroom()
 function deriveBoardroomSummary(surface) {
   const c = surface.constituents || {}
   const domains = surface.affected_domains || []
@@ -1078,6 +1135,7 @@ function deriveBoardroomSummary(surface) {
   }
 }
 
+// LEGACY — non-authoritative. Retained for backward compatibility.
 function deriveBalancedExplanation(surface) {
   const c = surface.constituents || {}
   const domains = surface.affected_domains || []
@@ -1165,6 +1223,7 @@ function findSharedDomains(surfaceA, surfaceB) {
   return domainsA.filter(d => domainsB.includes(d))
 }
 
+// LEGACY — non-authoritative. Retained for backward compatibility.
 function synthesizeBoardroomNarrative(shownSurfaces, allSurfaces) {
   if (shownSurfaces.length < 2) return null
 
@@ -1199,6 +1258,7 @@ function synthesizeBoardroomNarrative(shownSurfaces, allSurfaces) {
   return `${shownSurfaces.length} independent structural conditions at ${shownSurfaces[0].severity} severity require coordinated attention.`
 }
 
+// LEGACY — non-authoritative. Retained for backward compatibility.
 function synthesizeBalancedNarrative(surfaces) {
   if (surfaces.length < 2) return null
 
@@ -1237,6 +1297,7 @@ function synthesizeBalancedNarrative(surfaces) {
   return chains.length > 0 ? chains.join(' ') : null
 }
 
+// LEGACY — non-authoritative. Retained for backward compatibility.
 function projectForBoardroom(projection) {
   const surfaces = projection.surfaces || []
   const elevated = surfaces.filter(s => s.severity === 'HIGH' || s.severity === 'ELEVATED')
@@ -1254,6 +1315,7 @@ function projectForBoardroom(projection) {
   }
 }
 
+// LEGACY — non-authoritative. Retained for backward compatibility.
 function projectForBalanced(projection) {
   const surfaces = (projection.surfaces || []).slice(0, 4)
 

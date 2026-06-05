@@ -74,6 +74,48 @@ const CONSEQUENCE_VOCABULARY = {
     operator_consequence_title: 'Structural Gravity Well',
     operational_implication: 'The structurally dominant region attracts disproportionate operational stress.',
   },
+  RT_EVENT_CONCENTRATION: {
+    consequence_type_id: 'RT_EVENT_CONCENTRATION',
+    structural_consequence_label: 'Runtime Event Coordination Concentration',
+    operator_consequence_title: 'Event Coordination Concentration',
+    operational_implication: 'Event infrastructure carries disproportionate coordination load — all domain events route through a central bus.',
+  },
+  RT_RUNTIME_DEPENDENCY_CHOKE_POINT: {
+    consequence_type_id: 'RT_RUNTIME_DEPENDENCY_CHOKE_POINT',
+    structural_consequence_label: 'Runtime Channel Dependency Concentration',
+    operator_consequence_title: 'Runtime Dependency Choke Point',
+    operational_implication: 'A runtime channel or gateway is a dependency for multiple domains — failure disrupts cross-domain coordination.',
+  },
+  RT_BROKER_DEPENDENCY: {
+    consequence_type_id: 'RT_BROKER_DEPENDENCY',
+    structural_consequence_label: 'Shared Broker Single-Point Dependency',
+    operator_consequence_title: 'Broker Dependency Risk',
+    operational_implication: 'All edge-to-cloud communication depends on a single broker — a single point of failure for telemetry ingestion.',
+  },
+  RT_TOPIC_FANOUT_PRESSURE: {
+    consequence_type_id: 'RT_TOPIC_FANOUT_PRESSURE',
+    structural_consequence_label: 'Topic Fan-Out Propagation Surface',
+    operator_consequence_title: 'Topic Fanout Pressure',
+    operational_implication: 'Topic families feed multiple consumers — changes to topic structure propagate broadly across domains.',
+  },
+  RT_ASYNC_PROPAGATION_ASYMMETRY: {
+    consequence_type_id: 'RT_ASYNC_PROPAGATION_ASYMMETRY',
+    structural_consequence_label: 'Async Event Producer/Handler Imbalance',
+    operator_consequence_title: 'Async Propagation Asymmetry',
+    operational_implication: 'Broad event vocabulary converges on narrow handler surface — concentrated failure exposure.',
+  },
+  RT_EDGE_CLOUD_PROPAGATION_RISK: {
+    consequence_type_id: 'RT_EDGE_CLOUD_PROPAGATION_RISK',
+    structural_consequence_label: 'Edge-to-Cloud Dependency Path',
+    operator_consequence_title: 'Edge-Cloud Propagation Exposure',
+    operational_implication: 'Edge devices depend on cloud-side coordination through a single ingestion path — edge failure propagates to cloud visibility.',
+  },
+  RT_RUNTIME_OBSERVABILITY_GAP: {
+    consequence_type_id: 'RT_RUNTIME_OBSERVABILITY_GAP',
+    structural_consequence_label: 'Runtime Traceability Incompleteness',
+    operator_consequence_title: 'Runtime Observability Gap',
+    operational_implication: 'Runtime flows exist with weak traceability — event types defined without matching handlers.',
+  },
   SYSTEMIC_OP_FRAG: {
     consequence_type_id: 'SYSTEMIC_OP_FRAG',
     structural_consequence_label: 'Systemic Multi-Factor Operational Fragility',
@@ -314,24 +356,13 @@ function mapCC(cond, registry) {
   return [makeAtomic('STAB_RISK', cond, 'SYSTEMIC', true, registry)]
 }
 
-const RUNTIME_CONSEQUENCE_MAP = {
-  EVENT_CONCENTRATION: 'COORD_FRAG',
-  RUNTIME_DEPENDENCY_CHOKE_POINT: 'DEP_AMP',
-  BROKER_DEPENDENCY: 'RESIL_DEF',
-  TOPIC_FANOUT_PRESSURE: 'PROP_EXP',
-  ASYNC_PROPAGATION_ASYMMETRY: 'COORD_FRAG',
-  EDGE_CLOUD_PROPAGATION_RISK: 'DEL_EXP',
-  RUNTIME_OBSERVABILITY_GAP: 'GOV_GAP',
-}
-
 function mapRuntimeCondition(cond, registry) {
-  const consequenceTypeId = RUNTIME_CONSEQUENCE_MAP[cond.condition_type] || 'COORD_FRAG'
-  const vocab = CONSEQUENCE_VOCABULARY[consequenceTypeId]
-  if (!vocab) return []
+  const typeId = 'RT_' + cond.condition_type
+  if (!CONSEQUENCE_VOCABULARY[typeId]) return []
   const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
   const scope = domains.length > 2 ? 'SYSTEMIC' : domains.length > 0 ? 'REGIONAL' : 'LOCAL'
 
-  return [makeAtomic(consequenceTypeId, cond, scope, false, registry)]
+  return [makeAtomic(typeId, cond, scope, false, registry)]
 }
 
 function mapCondition(cond, ctx, registry) {
