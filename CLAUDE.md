@@ -868,25 +868,37 @@ UI rendering alone is not proof of integration.
 
 Integration is complete only when cognition and projection remain semantically aligned.
 
-### 17.6 Authority-Chain Verification
+### 17.6 Capability Discovery Before Construction
+
+Before implementing new cognition logic, audit whether the capability already exists inside the PI spine.
+
+Check: ConsequenceCompiler outputs, ontology classes, consequence themes, persona contracts, existing projection functions, existing condition vocabulary, existing combination patterns.
+
+The work is almost always RECONNECT, not REBUILD. If the capability exists but is not consumed, the fix is wiring — not construction. If the capability exists but is not exposed, the fix is projection — not creation.
+
+Pattern: "I need to build X" → audit → "X already exists in forBoardroom / CognitionOntology / CONDITION_VOCABULARY" → reconnect existing output to consumer.
+
+This was proven repeatedly: consequence themes existed but were JSON-only. Ontology classes existed but lacked runtime entries. Persona contracts existed but were applied to slices not themes. The capability was present — the connection was missing.
+
+### 17.7 Authority-Chain Verification
 
 Before accepting any output as correct, verify the authority chain from evidence through cognition to projection.
 
 Trace: evidence → signals → conditions → consequences → themes → executive synthesis → consumer output. If any link produces METADATA_ONLY (labels change, cognition doesn't), the integration is incomplete.
 
-### 17.7 Consumer-Reconciliation Before Expansion
+### 17.8 Consumer-Reconciliation Before Expansion
 
 Do not add more evidence types or signals until all consumers are reconciled on the current authority chain.
 
 When new cognition enters the system, verify: does THORR consume it? Does LENS consume it? Does EIR consume it? If any consumer doesn't, reconcile before expanding.
 
-### 17.8 Root-Cause Isolation Protocol
+### 17.9 Root-Cause Isolation Protocol
 
 When multiple consumers or personas fail, the defect is upstream. Do not debug persona-by-persona.
 
 Classify the failure as: (A) consequence hierarchy, (B) narrative consumption, (C) context isolation, (D) mode routing. Fix in that order. Do not fix individual consumers until the hierarchy is proven correct.
 
-### 17.9 Completion Definition Hierarchy
+### 17.10 Completion Definition Hierarchy
 
 1. Build passes → code compiles (lowest bar)
 2. Tests pass → existing contracts maintained
@@ -897,7 +909,7 @@ Classify the failure as: (A) consequence hierarchy, (B) narrative consumption, (
 
 Only level 6 is completion for cognition work. Do not stop at levels 1-5.
 
-### 17.10 Context Isolation for Focused Queries
+### 17.11 Context Isolation for Focused Queries
 
 When a question classifies as a focused retrieval (RUNTIME_ONLY, TOPOLOGY_GRAVITY, EXECUTIVE_POSTURE), assemble a task-specific context bundle. Exclude sections that would allow the model to infer against the answer contract.
 
