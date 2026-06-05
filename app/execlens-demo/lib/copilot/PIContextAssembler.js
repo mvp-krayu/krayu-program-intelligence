@@ -504,6 +504,17 @@ function formatContextForPrompt(assembled) {
       verdictParts.push(answerContract + '\n');
     }
 
+    if (assembled.verdict.architectural_findings && assembled.verdict.architectural_findings.length > 0) {
+      verdictParts.push('### ARCHITECTURAL FINDINGS (highest-order cognition — address these first)\n');
+      for (const af of assembled.verdict.architectural_findings) {
+        verdictParts.push(af.id + ': ' + af.title + ' [' + af.significance + ']');
+        verdictParts.push(af.description);
+        verdictParts.push('Evidence: ' + af.evidence);
+        verdictParts.push('Executive implication: ' + af.executive_implication);
+        verdictParts.push('');
+      }
+    }
+
     if (assembled.verdict.visibility_layer_completeness) {
       verdictParts.push('### Visibility-Layer Completeness\n');
       verdictParts.push(JSON.stringify(assembled.verdict.visibility_layer_completeness, null, 2));

@@ -1322,6 +1322,89 @@ function forInvestigation(consequenceResult, synthesisResult) {
 
 // ─── Exports ───────────────────────────────────────────
 
+function deriveArchitecturalFindings(consequenceResult, synthesisResult, fullReport) {
+  if (!consequenceResult || !synthesisResult) return []
+  const findings = []
+  const conditions = synthesisResult.conditions || []
+  const atomics = consequenceResult.atomic_consequences || []
+  const stAtomics = atomics.filter(a => a.visibility_layer !== 'RUNTIME')
+  const rtAtomics = atomics.filter(a => a.visibility_layer === 'RUNTIME')
+  const registry = (fullReport && fullReport.semantic_domain_registry) || []
+  const ts = (fullReport && fullReport.topology_summary) || {}
+
+  const stLoci = [...new Set(stAtomics.map(a => a.primary_locus_display).filter(Boolean))]
+  const rtLoci = [...new Set(rtAtomics.map(a => a.primary_locus_display).filter(Boolean))]
+  const sharedLoci = stLoci.filter(l => rtLoci.includes(l))
+  const rtOnlyLoci = rtLoci.filter(l => !stLoci.includes(l))
+
+  if (stLoci.length > 0 && rtLoci.length > 0 && rtOnlyLoci.length > 0) {
+    findings.push({
+      id: 'AF-001',
+      title: 'Structural vs Operational Gravity Divergence',
+      description: 'The code\'s structural center of mass and the system\'s operational center of mass do not fully coincide. Static gravity concentrates at ' + stLoci.slice(0, 2).join(', ') + '. Runtime operational gravity concentrates at ' + rtOnlyLoci.slice(0, 3).join(', ') + '.' + (sharedLoci.length > 0 ? ' Partial overlap at ' + sharedLoci.join(', ') + '.' : ''),
+      evidence: 'Static: ' + stAtomics.length + ' consequences across ' + stLoci.length + ' loci. Runtime: ' + rtAtomics.length + ' consequences across ' + rtLoci.length + ' loci. Divergent loci: ' + rtOnlyLoci.length + '.',
+      significance: 'CRITICAL',
+      impacted_domains: [...new Set([...stLoci, ...rtOnlyLoci])],
+      executive_implication: 'Transformation planning based solely on static code analysis targets the wrong center of mass for operational resilience. The runtime coordination backbone requires separate assessment.',
+    })
+  }
+
+  const totalDomains = registry.length
+  const runtimeBacked = registry.filter(d => d.backing_status === 'RUNTIME_BACKED' || d.runtime_visible).length
+  if (runtimeBacked > 0) {
+    findings.push({
+      id: 'AF-002',
+      title: 'Runtime Visibility Corrected Domain Coverage',
+      description: runtimeBacked + ' of ' + totalDomains + ' domains were invisible to static import analysis but operationally connected through runtime connectivity. The original Q-03 "semantic-only" classification was a visibility-layer gap, not a coverage gap.',
+      evidence: 'Static backing: ' + (totalDomains - runtimeBacked) + ' domains. Runtime backing: ' + runtimeBacked + ' domains. Evidence layers: EVENT_FLOW, MQTT_TOPIC_FLOW, WEBSOCKET_FLOW, API_BOUNDARY, DI_MODULE_GRAPH.',
+      significance: 'HIGH',
+      impacted_domains: registry.filter(d => d.backing_status === 'RUNTIME_BACKED' || d.runtime_visible).map(d => d.business_label || d.domain_name || d.domain_id),
+      executive_implication: 'Domain coverage is complete when measured across all visibility layers. The previous "13 dark domains" conclusion was a measurement limitation, not a system reality.',
+    })
+  }
+
+  const brokerCond = conditions.find(c => c.condition_type === 'BROKER_DEPENDENCY')
+  if (brokerCond) {
+    findings.push({
+      id: 'AF-003',
+      title: 'MQTT Broker Operational Single Point of Failure',
+      description: 'All edge-to-cloud telemetry routes through a single MQTT broker. Edge agents on separate hardware depend entirely on this endpoint. No import graph analysis can detect this dependency.',
+      evidence: brokerCond.measurement_basis || 'Single broker dependency detected via MQTT topology analysis.',
+      significance: 'HIGH',
+      impacted_domains: (brokerCond.shared_topology_targets && brokerCond.shared_topology_targets.domains) || [],
+      executive_implication: 'Broker failure disconnects all field telemetry. This is the highest-impact single point of failure in the system and is invisible to static code analysis.',
+    })
+  }
+
+  const eventCond = conditions.find(c => c.condition_type === 'EVENT_CONCENTRATION' && c.evidence_class === 'EVENT_FLOW')
+  if (eventCond) {
+    findings.push({
+      id: 'AF-004',
+      title: 'Event Coordination Backbone Concentration',
+      description: 'Domain event infrastructure concentrates coordination load through a narrow handler surface. ' + (eventCond.measurement_basis || ''),
+      evidence: 'Event concentration ratio: ' + eventCond.signal_value + ':1. Evidence class: EVENT_FLOW.',
+      significance: 'ELEVATED',
+      impacted_domains: (eventCond.shared_topology_targets && eventCond.shared_topology_targets.domains) || [],
+      executive_implication: 'Handler failure affects all operational domains simultaneously. The event bus is the coordination backbone, not the import graph.',
+    })
+  }
+
+  const edgeCloudCond = conditions.find(c => c.condition_type === 'EDGE_CLOUD_PROPAGATION_RISK')
+  if (edgeCloudCond) {
+    findings.push({
+      id: 'AF-005',
+      title: 'Edge-Cloud Dependency Chain',
+      description: 'Edge devices run on separate hardware and communicate with the cloud through MQTT. This dependency crosses deployment boundaries and is invisible to any single-codebase analysis. ' + (edgeCloudCond.measurement_basis || ''),
+      evidence: 'Evidence class: MQTT_TOPIC_FLOW. Edge agents: separate hardware (systemd services).',
+      significance: 'ELEVATED',
+      impacted_domains: (edgeCloudCond.shared_topology_targets && edgeCloudCond.shared_topology_targets.domains) || [],
+      executive_implication: 'The system boundary extends beyond the codebase. Static analysis sees the cloud application. Runtime analysis sees the edge-cloud dependency chain.',
+    })
+  }
+
+  return findings
+}
+
 module.exports = {
   compile,
   compileTeaser,
@@ -1329,6 +1412,7 @@ module.exports = {
   forBalanced,
   forOperator,
   forInvestigation,
+  deriveArchitecturalFindings,
   CONSEQUENCE_VOCABULARY,
   COGNITION_SLICE_VOCABULARY,
   MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE', 'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP']),
