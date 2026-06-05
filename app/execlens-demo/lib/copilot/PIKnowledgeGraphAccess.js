@@ -98,6 +98,25 @@ function resolveVerdict(specimen) {
 
 function condenseBoardroom(projection) {
   if (!projection) return null;
+
+  const slices = (projection.cognition_slices || [])
+    .filter(s => s.severity !== 'NOMINAL')
+    .slice(0, 5)
+    .map(s => ({
+      executive_name: s.executive_name,
+      condition_type: s.condition_type,
+      domain: s.domain,
+      severity: s.severity,
+      confidence: s.confidence,
+    }));
+
+  const narratives = (projection.domain_narratives || []).map(n => ({
+    domain: n.domain,
+    risk_shape: n.risk_shape,
+    risk_label: n.risk_label,
+    classes: n.classes,
+  }));
+
   return {
     posture_label: projection.posture_label,
     posture_severity: projection.posture_severity,
@@ -110,11 +129,30 @@ function condenseBoardroom(projection) {
     combined_synthesis: projection.combined_synthesis,
     consequence_themes: projection.consequence_themes,
     domain_concentration: projection.domain_concentration,
+    cognition_slices: slices,
+    domain_narratives: narratives,
   };
 }
 
 function condenseBalanced(projection) {
   if (!projection) return null;
+
+  const flow = (projection.reinforcement_flow || []).slice(0, 3).map(r => ({
+    consequence_type_id: r.consequence_type_id,
+    title: r.title,
+    relationship_verb: r.relationship_verb,
+    relationship_sentence: r.relationship_sentence,
+    severity: r.severity,
+  }));
+
+  const groups = (projection.ontology_groups || []).map(g => ({
+    class_id: g.class_id,
+    class_name: g.class_name,
+    class_question: g.class_question,
+    condition_count: g.conditions.length,
+    conditions: g.conditions.slice(0, 3).map(c => c.executive_name),
+  }));
+
   return {
     posture_label: projection.posture_label,
     primary_locus: projection.primary_locus,
@@ -122,6 +160,8 @@ function condenseBalanced(projection) {
     primary_story: projection.primary_story,
     confidence_sentence: projection.confidence_sentence,
     combined_synthesis: projection.combined_synthesis,
+    reinforcement_flow: flow,
+    ontology_groups: groups,
   };
 }
 

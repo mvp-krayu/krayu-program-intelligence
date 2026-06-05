@@ -995,6 +995,13 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
   const primary = csqs[0]
   const isCombination = !!primary.combination_pattern
 
+  const contributingTypes = isCombination
+    ? (primary.source_condition_types || []).map(ct => {
+        const vocab = COGNITION_SLICE_VOCABULARY[ct]
+        return { condition_type: ct, executive_name: vocab ? vocab.executive_name : ct }
+      })
+    : null
+
   const primaryStory = {
     consequence_type_id: primary.consequence_type_id,
     title: primary.operator_consequence_title,
@@ -1008,7 +1015,11 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
     evidence_refs: primary.evidence_refs || [],
     source_signal_ids: primary.source_signal_ids || [],
     is_combination: isCombination,
+    combination_pattern: isCombination ? primary.combination_pattern : null,
     combination_explanation: isCombination ? deriveCombinationExplanation(primary) : null,
+    contributing_condition_types: contributingTypes,
+    escalation_applied: isCombination ? (primary.escalation_applied || false) : false,
+    escalation_reason: isCombination ? (primary.escalation_reason || null) : null,
   }
 
   const reinforcementFlow = csqs.slice(1).map(csq => {

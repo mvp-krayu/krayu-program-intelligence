@@ -177,7 +177,11 @@ export function projectPrimaryStory(balancedProjection) {
     confidence_label: primary_story.confidence_label,
     scope: primary_story.scope,
     is_combination: primary_story.is_combination,
+    combination_pattern: primary_story.combination_pattern,
     combination_explanation: primary_story.combination_explanation,
+    contributing_condition_types: primary_story.contributing_condition_types,
+    escalation_applied: primary_story.escalation_applied,
+    escalation_reason: primary_story.escalation_reason,
     source_conditions: primary_story.source_conditions,
     evidenceChain: [
       { source: 'forBalanced().primary_story', field: 'consequence_type_id', value: primary_story.consequence_type_id },
@@ -188,6 +192,11 @@ export function projectPrimaryStory(balancedProjection) {
         source: 'forBalanced().primary_story.source_conditions',
         field: sc.condition_type,
         value: sc.display_title,
+      })),
+      ...(primary_story.contributing_condition_types || []).map(ct => ({
+        source: 'forBalanced().primary_story.contributing_condition_types',
+        field: ct.condition_type,
+        value: ct.executive_name,
       })),
     ],
     primitive_id: 'PRIMARY_STORY',

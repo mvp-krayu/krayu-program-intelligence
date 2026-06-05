@@ -8,8 +8,10 @@ const AUDIENCE_PRESETS = [
   'Program Director',
   'Release Train Engineer (RTE)',
   'Engineering Director',
+  'Transformation Leader',
   'PE Acquisition Team',
   'Investor',
+  'GOD / Founder-Operator',
 ]
 
 export default function InputBar({ onSubmit, disabled }) {

@@ -5865,10 +5865,27 @@ function BalancedConsequenceBriefing({ briefing }) {
         </div>
         {z3.title && <div className="balanced-briefing-story-title">{z3.title}</div>}
         {z3.text && <div className="balanced-briefing-story-text">{z3.text}</div>}
-        {z3.is_combination && z3.combination_explanation && (
-          <div className="balanced-briefing-combination">{z3.combination_explanation}</div>
+        {z3.is_combination && z3.contributing_condition_types && z3.contributing_condition_types.length > 0 && (
+          <div className="balanced-briefing-combination-chain">
+            <div className="balanced-briefing-combination-flow">
+              {z3.contributing_condition_types.map((ct, i) => (
+                <span key={ct.condition_type}>
+                  {i > 0 && <span className="balanced-briefing-combination-op"> + </span>}
+                  <span className="balanced-briefing-combination-primitive">{ct.executive_name}</span>
+                </span>
+              ))}
+              <span className="balanced-briefing-combination-op"> → </span>
+              <span className="balanced-briefing-combination-result" data-pattern={z3.combination_pattern}>{z3.title}</span>
+            </div>
+            {z3.combination_explanation && (
+              <div className="balanced-briefing-combination-explanation">{z3.combination_explanation}</div>
+            )}
+            {z3.escalation_applied && z3.escalation_reason && (
+              <div className="balanced-briefing-combination-escalation">{z3.escalation_reason}</div>
+            )}
+          </div>
         )}
-        {z3.source_conditions && z3.source_conditions.length > 0 && (
+        {!z3.is_combination && z3.source_conditions && z3.source_conditions.length > 0 && (
           <div className="balanced-briefing-source-conditions">
             {z3.source_conditions.map((sc, i) => (
               <span key={i} className="balanced-briefing-source-condition">{sc.display_title}</span>
@@ -6200,10 +6217,27 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           <div className="balanced-sw-enhancement-tag-inline">SW-INTEL · CONSEQUENCE ASSESSMENT</div>
           {bz.z3.title && <div className="balanced-sw-consequence-title">{bz.z3.title}</div>}
           {bz.z3.text && <p className="balanced-sw-consequence-text">{bz.z3.text}</p>}
-          {bz.z3.is_combination && bz.z3.combination_explanation && (
-            <p className="balanced-sw-consequence-combination">{bz.z3.combination_explanation}</p>
+          {bz.z3.is_combination && bz.z3.contributing_condition_types && bz.z3.contributing_condition_types.length > 0 && (
+            <div className="balanced-sw-consequence-combination-chain">
+              <div className="balanced-sw-consequence-combination-flow">
+                {bz.z3.contributing_condition_types.map((ct, i) => (
+                  <span key={ct.condition_type}>
+                    {i > 0 && <span className="balanced-sw-consequence-combination-op"> + </span>}
+                    <span className="balanced-sw-consequence-combination-primitive">{ct.executive_name}</span>
+                  </span>
+                ))}
+                <span className="balanced-sw-consequence-combination-op"> → </span>
+                <span className="balanced-sw-consequence-combination-result" data-pattern={bz.z3.combination_pattern}>{bz.z3.title}</span>
+              </div>
+              {bz.z3.combination_explanation && (
+                <p className="balanced-sw-consequence-combination-explanation">{bz.z3.combination_explanation}</p>
+              )}
+              {bz.z3.escalation_applied && bz.z3.escalation_reason && (
+                <p className="balanced-sw-consequence-escalation">{bz.z3.escalation_reason}</p>
+              )}
+            </div>
           )}
-          {bz.z3.source_conditions && bz.z3.source_conditions.length > 0 && (
+          {!bz.z3.is_combination && bz.z3.source_conditions && bz.z3.source_conditions.length > 0 && (
             <div className="balanced-sw-consequence-conditions">
               {bz.z3.source_conditions.map((sc, i) => (
                 <span key={i} className="balanced-sw-consequence-condition">{sc.display_title}</span>
@@ -9517,6 +9551,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                       <div key={n.domain} className="cockpit-sw-intel-posture-domain">
                         <span className="cockpit-sw-intel-posture-domain-name">{n.domain}</span>
                         <span className="cockpit-sw-intel-posture-domain-weight">{n.consequence_count} consequence dimension{n.consequence_count !== 1 ? 's' : ''} · {n.condition_count} condition{n.condition_count !== 1 ? 's' : ''}</span>
+                        {n.risk_label && (
+                          <span className="cockpit-sw-intel-posture-domain-risk-shape" data-classes={n.classes}>{n.risk_label}</span>
+                        )}
                       </div>
                     ))}
                   </div>

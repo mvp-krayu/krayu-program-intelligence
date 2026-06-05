@@ -5,7 +5,8 @@ import remarkGfm from 'remark-gfm'
 const EXAMPLES = [
   { text: 'Explain the structural posture', audience: 'CTO / VP Engineering' },
   { text: 'Draft a board briefing from this verdict', audience: 'Board of Directors' },
-  { text: 'Compare PI to static analysis tools', audience: '' },
+  { text: 'What transformation risk is emerging?', audience: 'Transformation Leader' },
+  { text: 'What does the system know now that was previously invisible?', audience: 'GOD / Founder-Operator' },
   { text: 'Which architectural runways does this verdict imply?', audience: 'Chief Architect' },
 ]
 

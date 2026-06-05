@@ -1,0 +1,108 @@
+{
+  "evidence_type": "EVENT_FLOW_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "framework": "NestJS EventEmitter2 (wildcard, dot-delimited)",
+  "source_file": "backend/src/events/fleet-event-emitter.service.ts",
+  "type_file": "backend/src/events/types/fleet-events.ts",
+  "event_count": 53,
+
+  "emitters": [
+    { "method": "vehicleCreated", "event": "vehicle.created", "source_domain": "DOMAIN-03", "source_module": "vehicles" },
+    { "method": "vehicleUpdated", "event": "vehicle.updated", "source_domain": "DOMAIN-03", "source_module": "vehicles" },
+    { "method": "vehiclePositionUpdated", "event": "vehicle.position.updated", "source_domain": "DOMAIN-02", "source_module": "telemetry" },
+    { "method": "vehicleStatusChanged", "event": "vehicle.status.changed", "source_domain": "DOMAIN-03", "source_module": "vehicles" },
+    { "method": "alertCreated", "event": "alert.created", "source_domain": "DOMAIN-03", "source_module": "alerts" },
+    { "method": "alertAcknowledged", "event": "alert.acknowledged", "source_domain": "DOMAIN-03", "source_module": "alerts" },
+    { "method": "alertEscalated", "event": "alert.escalated", "source_domain": "DOMAIN-03", "source_module": "alerts" },
+    { "method": "tripStarted", "event": "trip.started", "source_domain": "DOMAIN-03", "source_module": "trips" },
+    { "method": "tripCompleted", "event": "trip.completed", "source_domain": "DOMAIN-03", "source_module": "trips" },
+    { "method": "tripDelayed", "event": "trip.delayed", "source_domain": "DOMAIN-03", "source_module": "trips" },
+    { "method": "safetyEventDetected", "event": "safety.event.detected", "source_domain": "DOMAIN-03", "source_module": "safety" },
+    { "method": "geofenceEvent", "event": "geofence.entered|exited|dwell", "source_domain": "DOMAIN-03", "source_module": "operations" },
+    { "method": "coldchainTempBreach", "event": "coldchain.temp.breach", "source_domain": "DOMAIN-04", "source_module": "coldchain" },
+    { "method": "dtcDetected", "event": "diagnostics.dtc.detected", "source_domain": "DOMAIN-05", "source_module": "diagnostics" },
+    { "method": "predictiveFailure", "event": "diagnostics.predictive.failure", "source_domain": "DOMAIN-05", "source_module": "diagnostics" },
+    { "method": "deviceConnected", "event": "system.device.connected", "source_domain": "DOMAIN-01", "source_module": "devices" },
+    { "method": "deviceDisconnected", "event": "system.device.disconnected", "source_domain": "DOMAIN-01", "source_module": "devices" }
+  ],
+
+  "handlers": [
+    {
+      "handler": "WebSocketBroadcastHandler",
+      "file": "backend/src/events/handlers/websocket-broadcast.handler.ts",
+      "target_domain": "DOMAIN-08",
+      "subscribed_events": [
+        "driver.session.started", "driver.session.closed", "driver.session.interrupted", "driver.session.dwvs.computed",
+        "vehicle.position.updated", "alert.created", "alert.escalated",
+        "trip.started", "trip.completed", "trip.delayed",
+        "safety.event.detected", "geofence.entered", "geofence.exited",
+        "coldchain.temp.breach", "diagnostics.dtc.detected", "diagnostics.predictive.failure",
+        "vehicle.status.changed", "system.device.connected", "system.device.disconnected"
+      ]
+    },
+    {
+      "handler": "CacheInvalidationHandler",
+      "file": "backend/src/events/handlers/cache-invalidation.handler.ts",
+      "target_domain": "DOMAIN-10",
+      "subscribed_events": [
+        "vehicle.created", "vehicle.updated", "vehicle.decommissioned", "vehicle.status.changed",
+        "driver.created", "driver.updated", "driver.assigned", "driver.unassigned",
+        "trip.created", "trip.started", "trip.completed", "trip.cancelled",
+        "alert.created", "alert.acknowledged", "alert.resolved",
+        "maintenance.workorder.created", "maintenance.workorder.completed",
+        "safety.event.detected", "safety.score.updated",
+        "compliance.violation", "compliance.renewed",
+        "trip.completed", "fuel.transaction", "finance.transaction.created"
+      ]
+    },
+    {
+      "handler": "AuditLogHandler",
+      "file": "backend/src/events/handlers/audit-log.handler.ts",
+      "target_domain": "DOMAIN-12",
+      "subscribed_events": [
+        "safety.event.detected", "tanker.gas.leak", "fuel.theft.suspected", "compliance.violation",
+        "vehicle.created", "vehicle.updated", "vehicle.decommissioned",
+        "trip.started", "trip.completed", "trip.cancelled",
+        "alert.created", "alert.acknowledged", "alert.resolved",
+        "maintenance.workorder.created", "maintenance.workorder.completed",
+        "tanker.custody.transfer",
+        "finance.transaction.created", "finance.transaction.approved",
+        "ota.update.started", "ota.update.completed", "ota.update.failed"
+      ]
+    },
+    {
+      "handler": "NotificationHandler",
+      "file": "backend/src/events/handlers/notification.handler.ts",
+      "target_domain": "DOMAIN-12",
+      "subscribed_events": [
+        "safety.event.detected", "compliance.expiring", "compliance.violation",
+        "maintenance.due", "maintenance.overdue", "coldchain.temp.breach",
+        "tanker.gas.leak", "ota.update.failed", "finance.budget.exceeded", "trip.completed"
+      ]
+    }
+  ],
+
+  "event_type_to_domain_map": {
+    "vehicle.*": "DOMAIN-03",
+    "telemetry.*": "DOMAIN-02",
+    "driver.*": "DOMAIN-17",
+    "trip.*": "DOMAIN-03",
+    "alert.*": "DOMAIN-03",
+    "safety.*": "DOMAIN-03",
+    "maintenance.*": "DOMAIN-03",
+    "fuel.*": "DOMAIN-04",
+    "tanker.*": "DOMAIN-04",
+    "coldchain.*": "DOMAIN-04",
+    "ev.*": "DOMAIN-15",
+    "v2g.*": "DOMAIN-15",
+    "ota.*": "DOMAIN-03",
+    "geofence.*": "DOMAIN-03",
+    "compliance.*": "DOMAIN-03",
+    "diagnostics.*": "DOMAIN-05",
+    "finance.*": "DOMAIN-12",
+    "system.*": "DOMAIN-01"
+  }
+}

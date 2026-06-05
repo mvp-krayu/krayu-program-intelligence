@@ -16,7 +16,10 @@ const {
   determineContextLevel,
   getAvailableDomains,
 } = require('./PIKnowledgeGraphAccess');
-const { routeIntent } = require('./topic-router');
+const { routeIntent, classifyIntent, resolveEvidenceClass } = require('./topic-router');
+
+const CONTEXT_TOKEN_BUDGET = 16000;
+const CHARS_PER_TOKEN = 4;
 
 const BOOT_CONTEXT_PATH = path.join(__dirname, 'pi-boot-context.md');
 const CAPABILITY_CONTEXT_PATH = path.join(__dirname, 'pi-capability-context.md');
@@ -240,6 +243,43 @@ const PERSONA_PROJECTIONS = {
     avoid: [],
     narrativeStyle: 'Structural design language. Full evidence depth. Graph mechanics, file-level detail, and derivation traceability are expected.',
   },
+  'Transformation Leader': {
+    decisionHorizon: 'Transformation execution risk, change capacity, adoption friction, investment conversion, sequencing',
+    altitude: 'strategic',
+    accessTier: ACCESS_TIER.OPERATOR,
+    defaultEvidence: [
+      'consequence posture translated to transformation risk',
+      'structural conditions as change-adoption barriers',
+      'domain concentration as execution energy drain',
+      'combination consequences as sequencing threats',
+      'risk shapes as transformation drag profiles',
+      'reinforcement flows as compounding adoption friction',
+      'governance confidence as transformation oversight readiness',
+    ],
+    avoid: [
+      'raw file paths or module names',
+      'graph metrics, z-scores, or signal IDs',
+      'implementation-level structural mechanics unless asked',
+      'customer-sanitized language — this is an internal operator persona',
+    ],
+    narrativeStyle: 'Transformation execution framing. Translate every structural finding into: what does this mean for change capacity, adoption, sequencing, and investment conversion? Use language of transformation drag, execution energy, scaling friction, and portfolio-level delivery confidence. Frame structural conditions as organizational execution barriers, not technical defects.',
+  },
+  'GOD / Founder-Operator': {
+    decisionHorizon: 'Full-stack sovereign interrogation — doctrine, product, runtime, consumer, commercial, governance, gaps, next move',
+    altitude: 'sovereign',
+    accessTier: ACCESS_TIER.ENGINEER,
+    defaultEvidence: [
+      'PI doctrine and its activation state',
+      'runtime cognition chain (evidence → condition → consequence → combination → persona)',
+      'consumer exposure state (what is wired, what is computed-but-hidden, what is missing)',
+      'commercial demonstration readiness',
+      'governance confidence boundaries',
+      'remaining gaps and next highest-leverage move',
+    ],
+    avoid: [],
+    narrativeStyle: 'Direct. Brutally honest. No customer-sanitized language. No over-technical drift unless requested. Connect every answer through the full stack: runtime → cognition → consumer → commercial value. Expose gaps explicitly. When relevant, label the cognitive layer being discussed (DOCTRINE / RUNTIME / COMPILER / ADAPTER / CONDENSER / CONSUMER / PERSONA / COMMERCIAL / GOVERNANCE). Frame answers as: what the system knows, what is exposed, what remains hidden, and what the next move is.',
+    layerAwareness: true,
+  },
 };
 
 function resolveAccessTier(audience) {
@@ -301,6 +341,31 @@ function resolvePersonaProjection(audience) {
       '- Do NOT reference internal backlogs, future enhancement candidates, or competitive positioning',
       '- Focus on what IS operational and what is a KNOWN GAP — not what might be built',
     );
+  } else if (persona.accessTier === ACCESS_TIER.ENGINEER) {
+    lines.push(
+      '',
+      'KNOWLEDGE BOUNDARY — ENGINEER / FOUNDER TIER:',
+      'Full-stack sovereign access. No knowledge boundary restrictions.',
+      '- Full PI doctrine, runtime architecture, compiler internals, consumer exposure',
+      '- Product roadmap, commercial strategy, competitive positioning — all available',
+      '- Gap classifications, capability registry, internal backlogs — all available',
+      '- May discuss what exists, what is missing, what should be built next',
+      '- May reference specific compiler functions, adapter boundaries, condenser logic',
+      '- May expose where cognition is being lost, flattened, or hidden',
+      '',
+      'LAYER AWARENESS — include layer labels when relevant to the answer:',
+      '- DOCTRINE: PI foundational principles and governance rules',
+      '- RUNTIME: Pipeline execution, evidence ingestion, signal derivation',
+      '- COMPILER: ConsequenceCompiler, SignalSynthesisEngine, cognition formation',
+      '- ADAPTER: SoftwareIntelligenceProjectionAdapter, surface-level projection',
+      '- CONDENSER: PIKnowledgeGraphAccess condensers, THORR context assembly',
+      '- CONSUMER: LENS UI components, EIR chapters, report pack rendering',
+      '- PERSONA: Persona projection contracts, audience-specific framing',
+      '- COMMERCIAL: Demo readiness, customer-facing value, product packaging',
+      '- GOVERNANCE: SQO state, qualification ceiling, confidence boundaries',
+      '',
+      'When answering, structure as: Layer → Finding → Why it matters → Remaining gap → Next move.',
+    );
   }
 
   lines.push(
@@ -360,6 +425,9 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   const availableDomains = getAvailableDomains(contextLevel);
   const accessTier = resolveAccessTier(audience);
 
+  const topics = classifyIntent(intent);
+  const evidenceClass = resolveEvidenceClass(topics, audience, intent);
+
   const tier1 = assembleTier1();
   const tier2 = assembleTier2(contextLevel, client, runId, producedArtifacts);
   const tier3 = assembleTier3(intent);
@@ -369,9 +437,13 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     ? tier1.capabilityContext
     : null;
 
+  const specimenForPrompt = condenseSpecimenForIntent(tier2.specimen, evidenceClass);
+  const needsTopology = evidenceClass === 'STRUCTURAL' || evidenceClass === 'FULL';
+
   return {
     contextLevel,
     accessTier,
+    evidenceClass,
     client: client || null,
     runId: runId || null,
     availableDomains,
@@ -380,9 +452,9 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     bootContext: tier1.bootContext,
     capabilityContext,
 
-    specimen: tier2.specimen,
+    specimen: specimenForPrompt,
     verdict: tier2.verdict,
-    structuralTopology: tier2.structuralTopology,
+    structuralTopology: needsTopology ? tier2.structuralTopology : null,
     publishingAssets: tier2.publishingAssets,
 
     retrievedTopics: tier3.topics,
@@ -391,56 +463,72 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
 }
 
 function formatContextForPrompt(assembled) {
-  const sections = [];
+  const budgetSections = [];
 
-  sections.push(assembled.bootContext);
+  budgetSections.push({
+    id: 'boot', priority: 1,
+    content: assembled.bootContext || '',
+  });
 
-  if (assembled.capabilityContext) {
-    sections.push('\n---\n## PI Capability & Process Map\n');
-    sections.push(assembled.capabilityContext);
-  }
-
-  if (assembled.retrievedDocuments.length > 0) {
-    sections.push('\n---\n## Retrieved Knowledge\n');
-    for (const doc of assembled.retrievedDocuments) {
-      sections.push(`### ${doc.path}\n\n${doc.content}\n`);
+  if (assembled.verdict) {
+    const verdictParts = [];
+    if (assembled.verdict.boardroom) {
+      verdictParts.push('### Boardroom Projection\n');
+      verdictParts.push(JSON.stringify(assembled.verdict.boardroom, null, 2));
     }
+    if (assembled.verdict.balanced) {
+      verdictParts.push('\n### Balanced Projection\n');
+      verdictParts.push(JSON.stringify(assembled.verdict.balanced, null, 2));
+    }
+    budgetSections.push({
+      id: 'verdict', priority: 2,
+      content: '\n---\n## Verdict Data\n' + verdictParts.join(''),
+    });
   }
 
   if (assembled.specimen) {
-    sections.push('\n---\n## Specimen Data\n');
-    const specimenSummary = formatSpecimenSummary(assembled.specimen);
-    sections.push(specimenSummary);
-  }
-
-  if (assembled.verdict) {
-    sections.push('\n---\n## Verdict Data\n');
-    if (assembled.verdict.boardroom) {
-      sections.push('### Boardroom Projection\n');
-      sections.push(JSON.stringify(assembled.verdict.boardroom, null, 2));
-    }
-    if (assembled.verdict.balanced) {
-      sections.push('\n### Balanced Projection\n');
-      sections.push(JSON.stringify(assembled.verdict.balanced, null, 2));
-    }
+    budgetSections.push({
+      id: 'specimen', priority: 3,
+      content: '\n---\n## Specimen Data\n' + formatSpecimenSummary(assembled.specimen),
+    });
   }
 
   if (assembled.structuralTopology) {
-    sections.push('\n---\n## Structural Topology (L1 Specimen Evidence)\n');
-    sections.push(formatStructuralTopology(assembled.structuralTopology));
+    budgetSections.push({
+      id: 'topology', priority: 4,
+      content: '\n---\n## Structural Topology (L1 Specimen Evidence)\n' + formatStructuralTopology(assembled.structuralTopology),
+    });
+  }
+
+  if (assembled.capabilityContext) {
+    budgetSections.push({
+      id: 'capability', priority: 5,
+      content: '\n---\n## PI Capability & Process Map\n' + assembled.capabilityContext,
+    });
+  }
+
+  if (assembled.retrievedDocuments && assembled.retrievedDocuments.length > 0) {
+    const docContent = assembled.retrievedDocuments
+      .map(doc => `### ${doc.path}\n\n${doc.content}\n`)
+      .join('');
+    budgetSections.push({
+      id: 'retrieved', priority: 6,
+      content: '\n---\n## Retrieved Knowledge\n' + docContent,
+    });
   }
 
   if (assembled.publishingAssets && assembled.publishingAssets.length > 0) {
-    sections.push('\n---\n## Previously Produced Artifacts\n');
-    for (const asset of assembled.publishingAssets) {
-      sections.push(`- **${asset.title}** (${asset.audience}, ${asset.mode}, ${asset.timestamp})`);
-      if (asset.contentPreview) {
-        sections.push(`  Preview: ${asset.contentPreview}...`);
-      }
-    }
+    const assetContent = assembled.publishingAssets
+      .map(a => `- **${a.title}** (${a.audience}, ${a.mode}, ${a.timestamp})${a.contentPreview ? '\n  Preview: ' + a.contentPreview + '...' : ''}`)
+      .join('\n');
+    budgetSections.push({
+      id: 'publishing', priority: 7,
+      content: '\n---\n## Previously Produced Artifacts\n' + assetContent,
+    });
   }
 
-  return sections.join('\n');
+  const budgeted = enforceContextBudget(budgetSections, CONTEXT_TOKEN_BUDGET);
+  return budgeted.map(s => s.content).join('\n');
 }
 
 function formatStructuralTopology(st) {
@@ -562,6 +650,87 @@ function formatSpecimenSummary(specimen) {
   }
 
   return parts.join('\n');
+}
+
+// ─── INTENT-DRIVEN SPECIMEN CONDENSER ─────────────────────────────
+// Instead of dumping the full specimen (~20k tokens), select only
+// the keys needed for the classified evidence class.
+
+const SPECIMEN_KEYS_BY_EVIDENCE_CLASS = {
+  POSTURE: [
+    'client', 'run_id', 'qualification_level', 'topology_summary',
+    'readiness_summary', 'qualifier_summary', 'evidence_summary',
+    'governance_summary', 'header_block', 'narrative_block',
+    'governance_verdict', 'readiness_state', 'qualifier_class',
+  ],
+  GOVERNANCE: [
+    'client', 'run_id', 'qualification_level', 'topology_summary',
+    'readiness_summary', 'qualifier_summary', 'governance_summary',
+    'governance_lifecycle', 'proposition_corpus', 'constitutional_anchor',
+    'revalidation_intelligence', 'governance_verdict', 'qualifier_class',
+  ],
+  STRUCTURAL: [
+    'client', 'run_id', 'qualification_level', 'topology_summary',
+    'readiness_summary', 'qualifier_summary', 'evidence_summary',
+    'dpsig_signal_summary', 'signal_interpretations',
+    'pressure_zone_state', 'propagation_summary',
+    'semantic_domain_registry', 'semantic_cluster_registry',
+    'semantic_topology_edges', 'governance_verdict', 'qualifier_class',
+  ],
+  DOCTRINE: [
+    'client', 'run_id', 'qualification_level', 'topology_summary',
+    'readiness_summary', 'qualifier_summary', 'governance_verdict',
+  ],
+};
+
+function condenseSpecimenForIntent(specimen, evidenceClass) {
+  if (!specimen) return null;
+  if (evidenceClass === 'FULL') return specimen;
+
+  const allowedKeys = SPECIMEN_KEYS_BY_EVIDENCE_CLASS[evidenceClass]
+    || SPECIMEN_KEYS_BY_EVIDENCE_CLASS.POSTURE;
+  const condensed = {};
+  for (const key of allowedKeys) {
+    if (specimen[key] !== undefined) {
+      condensed[key] = specimen[key];
+    }
+  }
+  return condensed;
+}
+
+// ─── CONTEXT BUDGET ENFORCEMENT ───────────────────────────────────
+
+function enforceContextBudget(sections, budgetTokens) {
+  let totalChars = sections.reduce((s, sec) => s + sec.content.length, 0);
+  const budgetChars = budgetTokens * CHARS_PER_TOKEN;
+
+  if (totalChars <= budgetChars) return sections;
+
+  const result = [];
+  const coreIds = new Set(['system', 'boot', 'verdict', 'topology']);
+  const core = sections.filter(s => coreIds.has(s.id));
+  const flexible = sections.filter(s => !coreIds.has(s.id));
+
+  let coreChars = core.reduce((s, sec) => s + sec.content.length, 0);
+  let remaining = budgetChars - coreChars;
+
+  result.push(...core);
+
+  flexible.sort((a, b) => (a.priority || 99) - (b.priority || 99));
+  for (const sec of flexible) {
+    if (sec.content.length <= remaining) {
+      result.push(sec);
+      remaining -= sec.content.length;
+    } else if (remaining > 400) {
+      const truncated = sec.content.slice(0, remaining - 100)
+        + '\n\n[... truncated — ' + Math.round(sec.content.length / CHARS_PER_TOKEN)
+        + ' tokens total, ask for detail if needed]';
+      result.push({ ...sec, content: truncated });
+      remaining = 0;
+    }
+  }
+
+  return result;
 }
 
 module.exports = {

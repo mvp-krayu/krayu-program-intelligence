@@ -1,0 +1,58 @@
+{
+  "evidence_type": "SYSTEM_CONNECTIVITY_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "status": "PROVISIONAL",
+  "note": "Merged from 5 forensic sub-graphs. Not automated — manual classification from investigation.",
+
+  "visibility_layers": [
+    { "layer": "STATIC_IMPORT", "source": "40.3s code graph", "domains_visible": 4, "automated": true },
+    { "layer": "EVENT_FLOW", "source": "runtime_connectivity/event_flow_graph.json", "domains_visible": 10, "automated": false },
+    { "layer": "MQTT_TOPIC_FLOW", "source": "runtime_connectivity/mqtt_topic_graph.json", "domains_visible": 4, "automated": false },
+    { "layer": "WEBSOCKET_FLOW", "source": "runtime_connectivity/websocket_flow_graph.json", "domains_visible": 8, "automated": false },
+    { "layer": "API_BOUNDARY", "source": "runtime_connectivity/api_boundary_graph.json", "domains_visible": 11, "automated": false },
+    { "layer": "DI_MODULE_GRAPH", "source": "runtime_connectivity/di_module_graph.json", "domains_visible": 13, "automated": false }
+  ],
+
+  "edges": [
+    { "source_domain": "DOMAIN-01", "target_domain": "DOMAIN-02", "edge_type": "MQTT_TOPIC_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "svg-agents/sensor-collector/sensor_collector.py", "target_file_or_runtime_target": "MQTT broker → backend ingestion", "evidence_snippet": "topic = blueedge/sensors/{device_id}/readings; mqtt_client.publish(topic, msg, qos=1)" },
+    { "source_domain": "DOMAIN-01", "target_domain": "DOMAIN-02", "edge_type": "MQTT_TOPIC_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "svg-agents/sensor-collector/sensor_collector.py", "target_file_or_runtime_target": "MQTT broker → backend ingestion", "evidence_snippet": "topic = blueedge/telemetry/{device_id}" },
+    { "source_domain": "DOMAIN-07", "target_domain": "DOMAIN-07", "edge_type": "MQTT_TOPIC_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "svg-agents/hasi-bridge/hasi_bridge.py", "target_file_or_runtime_target": "MQTT broker → HASI module", "evidence_snippet": "topic = blueedge/hasi/{device_id}/capture" },
+    { "source_domain": "DOMAIN-10", "target_domain": "DOMAIN-01", "edge_type": "MQTT_TOPIC_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/modules/devices/devices.controller.ts", "target_file_or_runtime_target": "MQTT broker → SVG agent", "evidence_snippet": "Send arbitrary command to device via MQTT" },
+
+    { "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/websocket-broadcast.handler.ts", "evidence_snippet": "vehicle.*, trip.*, alert.*, safety.*, geofence.* → WebSocketBroadcastHandler" },
+    { "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-10", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/cache-invalidation.handler.ts", "evidence_snippet": "vehicle.*, trip.*, alert.*, maintenance.* → CacheInvalidationHandler" },
+    { "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-12", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/audit-log.handler.ts", "evidence_snippet": "vehicle.*, trip.*, alert.*, maintenance.*, custody.* → AuditLogHandler" },
+    { "source_domain": "DOMAIN-04", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/websocket-broadcast.handler.ts", "evidence_snippet": "coldchain.temp.breach → WebSocketBroadcastHandler" },
+    { "source_domain": "DOMAIN-05", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/websocket-broadcast.handler.ts", "evidence_snippet": "diagnostics.dtc.detected, diagnostics.predictive.failure → WebSocketBroadcastHandler" },
+    { "source_domain": "DOMAIN-02", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/websocket-broadcast.handler.ts", "evidence_snippet": "vehicle.position.updated → WebSocketBroadcastHandler" },
+    { "source_domain": "DOMAIN-17", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/fleet-event-emitter.service.ts", "target_file_or_runtime_target": "backend/src/events/handlers/websocket-broadcast.handler.ts", "evidence_snippet": "driver.session.* → WebSocketBroadcastHandler" },
+    { "source_domain": "DOMAIN-15", "target_domain": "DOMAIN-08", "edge_type": "EVENT_FLOW", "evidence_class": "RUNTIME", "confidence": "MEDIUM", "source_file": "backend/src/events/types/fleet-events.ts", "target_file_or_runtime_target": "runtime handlers (no explicit handler found)", "evidence_snippet": "ev.charge.started, v2g.session.started defined but no @OnEvent handler found in forensic scan" },
+
+    { "source_domain": "DOMAIN-08", "target_domain": "DOMAIN-14", "edge_type": "WEBSOCKET_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/gateways/fleet.gateway.ts", "target_file_or_runtime_target": "frontend/socket/FleetSocket.ts", "evidence_snippet": "server.to('fleet:all').emit('fleet:positions', ...)" },
+    { "source_domain": "DOMAIN-08", "target_domain": "DOMAIN-14", "edge_type": "WEBSOCKET_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/gateways/fleet.gateway.ts", "target_file_or_runtime_target": "frontend/socket/FleetSocket.ts", "evidence_snippet": "server.to('vehicle:{id}').emit('vehicle:telemetry', ...)" },
+    { "source_domain": "DOMAIN-08", "target_domain": "DOMAIN-14", "edge_type": "WEBSOCKET_FLOW", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/gateways/fleet.gateway.ts", "target_file_or_runtime_target": "frontend/socket/FleetSocket.ts", "evidence_snippet": "server.to('alerts:all').emit('alert:new', ...)" },
+
+    { "source_domain": "DOMAIN-09", "target_domain": "DOMAIN-03", "edge_type": "DI_INJECTION", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/modules/auth/auth.module.ts", "target_file_or_runtime_target": "all controllers via APP_GUARD", "evidence_snippet": "AuthGuard applied globally — every route depends on auth module at runtime" },
+    { "source_domain": "DOMAIN-11", "target_domain": "DOMAIN-03", "edge_type": "DI_INJECTION", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/events/index.ts", "target_file_or_runtime_target": "all modules via @Global()", "evidence_snippet": "FleetEventsModule is @Global — FleetEventEmitter injectable everywhere without explicit import" },
+
+    { "source_domain": "DOMAIN-06", "target_domain": "DOMAIN-14", "edge_type": "API_BOUNDARY", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/modules/agentic-ai/agentic-ai.controller.ts", "target_file_or_runtime_target": "frontend/pages/intelligence/*", "evidence_snippet": "@Controller('agentic-ai') — REST API consumed by frontend" },
+    { "source_domain": "DOMAIN-13", "target_domain": "DOMAIN-14", "edge_type": "API_BOUNDARY", "evidence_class": "RUNTIME", "confidence": "HIGH", "source_file": "backend/src/modules/integration-hub/integration-hub.controller.ts", "target_file_or_runtime_target": "frontend pages + external systems", "evidence_snippet": "@Controller('integration-hub') — REST API + webhook delivery to external systems" }
+  ],
+
+  "summary": {
+    "total_edges": 19,
+    "by_type": {
+      "MQTT_TOPIC_FLOW": 4,
+      "EVENT_FLOW": 7,
+      "WEBSOCKET_FLOW": 3,
+      "DI_INJECTION": 2,
+      "API_BOUNDARY": 2
+    },
+    "domains_with_runtime_edges": 14,
+    "domains_without_any_runtime_edges": ["DOMAIN-16"],
+    "note": "DOMAIN-16 (Operational Engineering) has STATIC_IMPORT edges only (monitoring, load-tests, .github/workflows). It is a DevOps/tooling domain that connects through CI/CD and infrastructure, not runtime code."
+  }
+}

@@ -133,12 +133,32 @@ const INTENT_KEYWORDS = {
   'delivery':     ['deliver', 'engagement', 'intake', 'handoff', 'onboard'],
   'pricing':      ['price', 'cost', 'tier', 'bundle', 'upsell'],
   'runtime':      ['runtime', 'pipeline', 'execution', 'corridor'],
-  'signals':      ['signal', 'dpsig', 'synthesis', 'condition'],
+  'signals':      ['signal', 'dpsig', 'synthesis', 'condition', 'topology', 'pressure zone', 'dependency', 'choke', 'hub', 'spine', 'bridge', 'constriction', 'fragility', 'coupling', 'propagation', 'convergence', 'cluster', 'domain registry', 'structural'],
   'evidence':     ['evidence', 'grounding', 'path a', 'path b', 'substrate'],
   'strategic':    ['investor', 'strategic', 'pe firm', 'private equity', 'investment', 'board', 'executive'],
   'consumption':  ['consumption', 'surface', 'three-surface', 'customer access', 'hosting'],
   'copilot':      ['co-pilot', 'copilot', 'operator surface', 'amplif'],
   'terminology':  ['term', 'definition', 'vocabulary', 'glossary', 'what is a '],
+};
+
+// Evidence class determines which specimen sections to load
+const INTENT_EVIDENCE_CLASS = {
+  'pi-identity':  'DOCTRINE',
+  'commercial':   'DOCTRINE',
+  'competitive':  'DOCTRINE',
+  'governance':   'GOVERNANCE',
+  'sqo':          'GOVERNANCE',
+  'cognition':    'STRUCTURAL',
+  'marketplace':  'DOCTRINE',
+  'delivery':     'POSTURE',
+  'pricing':      'DOCTRINE',
+  'runtime':      'STRUCTURAL',
+  'signals':      'STRUCTURAL',
+  'evidence':     'FULL',
+  'strategic':    'POSTURE',
+  'consumption':  'DOCTRINE',
+  'copilot':      'DOCTRINE',
+  'terminology':  'DOCTRINE',
 };
 
 function classifyIntent(input) {
@@ -154,10 +174,56 @@ function classifyIntent(input) {
   }
 
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  if (sorted.length === 0) return ['pi-identity'];
+  if (sorted.length === 0) return ['specimen-bound'];
 
   const topScore = sorted[0][1];
   return sorted.filter(([, s]) => s === topScore).map(([t]) => t);
+}
+
+function resolveEvidenceClass(topics, audience, intent) {
+  const base = resolveBaseEvidenceClass(topics);
+
+  if (audience === 'Transformation Leader') {
+    if (base === 'DOCTRINE') return 'POSTURE';
+    if (base === 'POSTURE') return 'STRUCTURAL';
+    return base;
+  }
+
+  if (audience === 'GOD / Founder-Operator') {
+    const lower = (intent || '').toLowerCase();
+    if (lower.includes('full') || lower.includes('all context'))
+      return 'FULL';
+    if (lower.includes('prove') || lower.includes('trace') || lower.includes('lineage') || lower.includes('trust'))
+      return 'STRUCTURAL';
+    if (lower.includes('full stack') || lower.includes('doctrine') || lower.includes('why does this matter') || lower.includes('where are we') || lower.includes('next move'))
+      return 'STRUCTURAL';
+    if (base === 'DOCTRINE') return 'POSTURE';
+    return base;
+  }
+
+  return base;
+}
+
+function resolveBaseEvidenceClass(topics) {
+  if (!topics || topics.length === 0) return 'POSTURE';
+  if (topics.includes('specimen-bound')) return 'POSTURE';
+  for (const t of topics) {
+    const cls = INTENT_EVIDENCE_CLASS[t];
+    if (cls === 'FULL') return 'FULL';
+  }
+  for (const t of topics) {
+    const cls = INTENT_EVIDENCE_CLASS[t];
+    if (cls === 'STRUCTURAL') return 'STRUCTURAL';
+  }
+  for (const t of topics) {
+    const cls = INTENT_EVIDENCE_CLASS[t];
+    if (cls === 'GOVERNANCE') return 'GOVERNANCE';
+  }
+  for (const t of topics) {
+    const cls = INTENT_EVIDENCE_CLASS[t];
+    if (cls === 'POSTURE') return 'POSTURE';
+  }
+  return 'DOCTRINE';
 }
 
 function getFilesForTopics(topics) {
@@ -187,7 +253,9 @@ function routeIntent(input) {
 module.exports = {
   TOPIC_ROUTES,
   INTENT_KEYWORDS,
+  INTENT_EVIDENCE_CLASS,
   classifyIntent,
   getFilesForTopics,
   routeIntent,
+  resolveEvidenceClass,
 };

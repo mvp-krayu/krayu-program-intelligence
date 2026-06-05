@@ -3527,6 +3527,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding-left: 16px;
           border-left: 2px solid rgba(255, 158, 74, 0.3);
         }
+        .balanced-sw-consequence-combination-chain {
+          margin: 0 0 12px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.35);
+        }
+        .balanced-sw-consequence-combination-flow {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 2px;
+        }
+        .balanced-sw-consequence-combination-primitive {
+          color: #a8b2d1;
+        }
+        .balanced-sw-consequence-combination-op {
+          color: #5e6d8a;
+          padding: 0 2px;
+        }
+        .balanced-sw-consequence-combination-result {
+          color: #ff9e4a;
+          font-weight: 600;
+        }
+        .balanced-sw-consequence-combination-explanation {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 6px 0 0;
+        }
+        .balanced-sw-consequence-escalation {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff6b6b;
+          margin: 4px 0 0;
+        }
         .balanced-sw-consequence-conditions {
           display: flex;
           flex-wrap: wrap;
@@ -4079,6 +4113,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 10px;
           padding-left: 16px;
           border-left: 2px solid rgba(255, 158, 74, 0.3);
+        }
+        .balanced-briefing-combination-chain {
+          margin-top: 12px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.35);
+        }
+        .balanced-briefing-combination-flow {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 2px;
+        }
+        .balanced-briefing-combination-primitive {
+          color: #a8b2d1;
+        }
+        .balanced-briefing-combination-op {
+          color: #5e6d8a;
+          padding: 0 2px;
+        }
+        .balanced-briefing-combination-result {
+          color: #ff9e4a;
+          font-weight: 600;
+        }
+        .balanced-briefing-combination-explanation {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin-top: 6px;
+        }
+        .balanced-briefing-combination-escalation {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff6b6b;
+          margin-top: 4px;
         }
         .balanced-briefing-source-conditions {
           display: flex;
@@ -11924,8 +11992,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-sw-intel-posture-domain {
           display: flex;
+          flex-wrap: wrap;
           align-items: baseline;
-          gap: 10px;
+          gap: 6px 10px;
           min-width: 0;
         }
         .cockpit-sw-intel-posture-domain-name {
@@ -11942,6 +12011,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a8aaa;
           margin-left: auto;
           white-space: nowrap;
+        }
+        .cockpit-sw-intel-posture-domain-risk-shape {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #a8b2d1;
+          font-style: italic;
+          width: 100%;
+          padding-left: 1px;
         }
         .cockpit-sw-intel-posture-disclosure {
           margin-top: 12px;

@@ -1,0 +1,44 @@
+{
+  "evidence_type": "WEBSOCKET_FLOW_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "framework": "Socket.IO (NestJS @WebSocketGateway)",
+  "gateway_file": "backend/src/gateways/fleet.gateway.ts",
+  "client_file": "frontend/socket/FleetSocket.ts",
+  "provider_file": "frontend/socket/index.tsx",
+
+  "server_channels": [
+    { "message": "subscribe:fleet", "direction": "CLIENT_TO_SERVER", "room_pattern": "fleet:{type}", "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-08" },
+    { "message": "subscribe:vehicle", "direction": "CLIENT_TO_SERVER", "room_pattern": "vehicle:{vehicleId}", "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-08" },
+    { "message": "subscribe:alerts", "direction": "CLIENT_TO_SERVER", "room_pattern": "alerts:{severity}", "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-08" },
+    { "message": "subscribe:sessions", "direction": "CLIENT_TO_SERVER", "room_pattern": "sessions:*", "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-08" },
+    { "message": "vehicle:command", "direction": "CLIENT_TO_SERVER", "room_pattern": null, "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-03" },
+    { "message": "request:snapshot", "direction": "CLIENT_TO_SERVER", "room_pattern": null, "source_domain": "DOMAIN-14", "target_domain": "DOMAIN-03" }
+  ],
+
+  "server_emissions": [
+    { "event": "fleet:positions", "direction": "SERVER_TO_CLIENT", "room": "fleet:all|fleet:{type}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": ["LiveFleetMap", "GeofenceAutomationPage", "BusPage", "VehiclesPage"] },
+    { "event": "vehicle:position", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-02", "target_domain": "DOMAIN-14", "consumers": ["VehiclesPage"] },
+    { "event": "vehicle:telemetry", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-02", "target_domain": "DOMAIN-14", "consumers": ["VehiclesPage"] },
+    { "event": "vehicle:status", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": [] },
+    { "event": "alert:new", "direction": "SERVER_TO_CLIENT", "room": "alerts:all|alerts:{severity}|vehicle:{vehicleId}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": ["AlertsPage", "CompliancePage", "SafetyPage", "NotificationCenter"] },
+    { "event": "safety:event", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": ["DriverScoringPage"] },
+    { "event": "geofence:entered", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": ["GeofenceAutomationPage"] },
+    { "event": "geofence:exited", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-03", "target_domain": "DOMAIN-14", "consumers": ["GeofenceAutomationPage"] },
+    { "event": "coldchain:breach", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-04", "target_domain": "DOMAIN-14", "consumers": [] },
+    { "event": "driver:session:started", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}|sessions:all", "source_domain": "DOMAIN-17", "target_domain": "DOMAIN-14", "consumers": ["DriversPage"] },
+    { "event": "driver:session:closed", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}|sessions:all", "source_domain": "DOMAIN-17", "target_domain": "DOMAIN-14", "consumers": ["DriversPage"] },
+    { "event": "diagnostics:predictive", "direction": "SERVER_TO_CLIENT", "room": "vehicle:{vehicleId}", "source_domain": "DOMAIN-05", "target_domain": "DOMAIN-14", "consumers": ["PredictiveMaintenancePage"] }
+  ],
+
+  "frontend_hooks": [
+    { "hook": "useFleetPositions", "events": ["fleet:positions"], "used_by": ["LiveFleetMap", "GeofenceAutomationPage", "BusPage", "VehiclesPage"] },
+    { "hook": "useVehicleTelemetry", "events": ["vehicle:position", "vehicle:telemetry"], "used_by": ["VehiclesPage"] },
+    { "hook": "useAlertStream", "events": ["alert:new"], "used_by": ["AlertsPage", "CompliancePage", "SafetyPage"] },
+    { "hook": "useActivityFeed", "events": ["*"], "used_by": ["ActivityFeed"] },
+    { "hook": "useSocketEvent", "events": ["safety:event", "diagnostics:predictive", "geofence:entered", "geofence:exited"], "used_by": ["DriverScoringPage", "PredictiveMaintenancePage", "GeofenceAutomationPage"] },
+    { "hook": "useVehicleCommand", "events": ["vehicle:command"], "used_by": [] }
+  ]
+}
