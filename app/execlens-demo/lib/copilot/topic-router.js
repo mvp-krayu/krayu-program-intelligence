@@ -133,7 +133,7 @@ const INTENT_KEYWORDS = {
   'delivery':     ['deliver', 'engagement', 'intake', 'handoff', 'onboard'],
   'pricing':      ['price', 'cost', 'tier', 'bundle', 'upsell'],
   'runtime':      ['runtime', 'pipeline', 'execution', 'corridor'],
-  'signals':      ['signal', 'dpsig', 'synthesis', 'condition', 'topology', 'pressure zone', 'dependency', 'choke', 'hub', 'spine', 'bridge', 'constriction', 'fragility', 'coupling', 'propagation', 'convergence', 'cluster', 'domain registry', 'structural'],
+  'signals':      ['signal', 'dpsig', 'synthesis', 'condition', 'topology', 'pressure zone', 'dependency', 'choke', 'hub', 'spine', 'bridge', 'constriction', 'fragility', 'coupling', 'propagation', 'convergence', 'cluster', 'domain registry', 'structural', 'gravity', 'gravity well', 'backbone', 'mass concentration', 'system gravity'],
   'evidence':     ['evidence', 'grounding', 'path a', 'path b', 'substrate'],
   'strategic':    ['investor', 'strategic', 'pe firm', 'private equity', 'investment', 'board', 'executive'],
   'consumption':  ['consumption', 'surface', 'three-surface', 'customer access', 'hosting'],

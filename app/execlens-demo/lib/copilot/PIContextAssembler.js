@@ -442,7 +442,12 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   const specimenForPrompt = condenseSpecimenForIntent(tier2.specimen, evidenceClass);
   const needsTopology = evidenceClass === 'STRUCTURAL' || evidenceClass === 'FULL';
 
-  const personaVerdict = tier2.verdict ? applyPersonaCognitionWeighting(tier2.verdict, audience) : null;
+  const questionType = classifyQuestionType(intent);
+  let personaVerdict = tier2.verdict ? applyPersonaCognitionWeighting(tier2.verdict, audience) : null;
+
+  if (questionType === 'RUNTIME_ONLY' && personaVerdict && personaVerdict.boardroom) {
+    personaVerdict = applyRuntimeFilter(personaVerdict);
+  }
 
   return {
     contextLevel,
@@ -481,8 +486,8 @@ function formatContextForPrompt(assembled) {
       verdictParts.push(JSON.stringify(assembled.verdict.visibility_layer_completeness, null, 2));
     }
     if (assembled.verdict.boardroom) {
-      verdictParts.push('\n### Boardroom Projection\n');
-      verdictParts.push(JSON.stringify(assembled.verdict.boardroom, null, 2));
+      verdictParts.push('\n### Boardroom Cognition\n');
+      verdictParts.push(renderBoardroomAuthority(assembled.verdict.boardroom));
     }
     if (assembled.verdict.balanced) {
       verdictParts.push('\n### Balanced Projection\n');
@@ -621,6 +626,81 @@ function formatStructuralTopology(st) {
   }
 
   return parts.join('\n');
+}
+
+function classifyQuestionType(intent) {
+  const lower = (intent || '').toLowerCase();
+  if (/runtime.only|runtime.derived.only|show.*runtime|runtime.*risk.*only|event.*only|mqtt.*only/i.test(lower)) return 'RUNTIME_ONLY';
+  if (/gravity|topology|backbone|system.*architecture|where.*gravity|structural.*mass/i.test(lower)) return 'TOPOLOGY_GRAVITY';
+  if (/posture|executive.*risk|board.*risk|overall.*risk/i.test(lower)) return 'EXECUTIVE_POSTURE';
+  return 'GENERAL_SYNTHESIS';
+}
+
+function applyRuntimeFilter(verdict) {
+  if (!verdict || !verdict.boardroom) return verdict;
+  const b = verdict.boardroom;
+  const rtThemes = (b.consequence_themes || []).filter(t => t.evidence_diversity === 'RUNTIME' || t.evidence_diversity === 'MIXED');
+  const rtSlices = (b.cognition_slices || []).filter(s =>
+    ['EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP'].includes(s.condition_type)
+  );
+  const rtNarratives = (b.domain_narratives || []).filter(n => n.risk_label && n.risk_label !== 'structural stress is present');
+
+  return {
+    ...verdict,
+    boardroom: {
+      ...b,
+      consequence_themes: rtThemes.length > 0 ? rtThemes : b.consequence_themes,
+      cognition_slices: rtSlices.length > 0 ? rtSlices : b.cognition_slices,
+      domain_narratives: rtNarratives.length > 0 ? rtNarratives : b.domain_narratives,
+      executive_synthesis: rtThemes.length > 0
+        ? 'Runtime connectivity analysis identifies ' + rtThemes.length + ' structural risk themes derived from event flow, MQTT, WebSocket, and DI evidence — independent of static import analysis.'
+        : b.executive_synthesis,
+    },
+  };
+}
+
+function renderBoardroomAuthority(boardroom) {
+  const lines = [];
+
+  lines.push('POSTURE: ' + boardroom.posture_label + ' [' + boardroom.posture_severity + '] — ' + boardroom.posture_scope);
+  lines.push('Confidence: ' + (boardroom.overall_confidence_label || boardroom.overall_confidence));
+  lines.push('Primary locus: ' + boardroom.primary_locus);
+  lines.push('Consequences: ' + boardroom.consequence_count + ' total, ' + boardroom.systemic_count + ' systemic');
+  lines.push('');
+
+  lines.push('PRIMARY CONSEQUENCE THEMES (authoritative — answer from these):');
+  lines.push('');
+  const themes = boardroom.consequence_themes || [];
+  themes.forEach((t, i) => {
+    const rel = t.persona_relevance === 'ELEVATED' ? ' [PERSONA-RELEVANT]' : '';
+    lines.push((i + 1) + '. ' + t.theme_label + ' — ' + t.severity + ' — ' + (t.scope || 'REGIONAL') + rel);
+    lines.push('   Evidence: ' + t.evidence_diversity + (t.evidence_annotation ? ' — ' + t.evidence_annotation : ''));
+    lines.push('   Meaning: ' + t.description);
+    lines.push('');
+  });
+
+  lines.push('EXECUTIVE SYNTHESIS (derived from themes above):');
+  lines.push(boardroom.executive_synthesis || '');
+  lines.push('');
+
+  lines.push('SUPPORTING COGNITION SLICES:');
+  const slices = boardroom.cognition_slices || [];
+  slices.forEach((s, i) => {
+    const rel = s.persona_relevance === 'ELEVATED' ? ' [PERSONA-RELEVANT]' : '';
+    lines.push('  ' + (i + 1) + '. [' + s.severity + '] ' + s.executive_name + ' → ' + s.domain + rel);
+  });
+  lines.push('');
+
+  lines.push('DOMAIN NARRATIVES:');
+  const narratives = boardroom.domain_narratives || [];
+  narratives.forEach(n => {
+    lines.push('  ' + n.domain + ': ' + n.risk_label + (n.classes ? ' (classes: ' + n.classes + ')' : ''));
+  });
+  lines.push('');
+
+  lines.push('COMBINED SYNTHESIS: ' + (boardroom.combined_synthesis || ''));
+
+  return lines.join('\n');
 }
 
 function formatSpecimenSummary(specimen) {
