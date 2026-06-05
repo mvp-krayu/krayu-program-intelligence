@@ -67,21 +67,29 @@ export async function getServerSideProps(context) {
       runtimeConnectivityEdges = rcResult.data.edges
     }
 
-    const { resolveVisibilityLayerCompleteness } = require('../../../lib/copilot/PIKnowledgeGraphAccess')
-    const specimen = result.props && result.props.livePayload
-    if (specimen) {
-      const vlc = resolveVisibilityLayerCompleteness(specimen, client, run)
-      if (vlc) {
-        visibilityLayerCompleteness = vlc
+    const vlcPath = `clients/${client}/psee/runs/${run}/structure/runtime_connectivity/visibility_layer_completeness.json`
+    const vlcResult = loadJSON(vlcPath)
+    if (vlcResult.ok && vlcResult.data) {
+      visibilityLayerCompleteness = vlcResult.data
+    }
 
-        const fs = require('fs')
-        const path = require('path')
-        const rcDir = path.resolve(process.cwd(), '..', 'clients', client, 'psee/runs', run, 'structure/runtime_connectivity')
-        const vlcFile = path.join(rcDir, 'visibility_layer_completeness.json')
-        try {
-          if (!fs.existsSync(rcDir)) fs.mkdirSync(rcDir, { recursive: true })
-          fs.writeFileSync(vlcFile, JSON.stringify({ ...vlc, persisted_at: new Date().toISOString(), specimen: client, run_id: run }, null, 2))
-        } catch (_) { /* write failed — read-only or missing path */ }
+    if (!visibilityLayerCompleteness) {
+      const { resolveVisibilityLayerCompleteness } = require('../../../lib/copilot/PIKnowledgeGraphAccess')
+      const specimen = result.props && result.props.livePayload
+      if (specimen) {
+        const vlc = resolveVisibilityLayerCompleteness(specimen, client, run)
+        if (vlc) {
+          visibilityLayerCompleteness = vlc
+
+          const { resolveAllowedPath } = require('../../../lib/lens-v2/SemanticArtifactLoader')
+          try {
+            const fs = require('fs')
+            const path = require('path')
+            const rcDir = path.dirname(resolveAllowedPath(vlcPath))
+            if (!fs.existsSync(rcDir)) fs.mkdirSync(rcDir, { recursive: true })
+            fs.writeFileSync(resolveAllowedPath(vlcPath), JSON.stringify({ ...vlc, persisted_at: new Date().toISOString(), specimen: client, run_id: run }, null, 2))
+          } catch (_) { /* write failed */ }
+        }
       }
     }
   } catch (_) { /* runtime connectivity not available */ }
