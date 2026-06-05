@@ -115,19 +115,26 @@ function resolveVerdict(specimen, client, runId) {
   }
 }
 
+const RUNTIME_CONDITION_TYPES = new Set([
+  'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY',
+  'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY',
+  'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP',
+]);
+function isRuntimeCondition(type) { return RUNTIME_CONDITION_TYPES.has(type); }
+
 function condenseBoardroom(projection) {
   if (!projection) return null;
 
-  const slices = (projection.cognition_slices || [])
-    .filter(s => s.severity !== 'NOMINAL')
-    .slice(0, 5)
-    .map(s => ({
-      executive_name: s.executive_name,
-      condition_type: s.condition_type,
-      domain: s.domain,
-      severity: s.severity,
-      confidence: s.confidence,
-    }));
+  const allSlices = (projection.cognition_slices || []).filter(s => s.severity !== 'NOMINAL');
+  const staticSlices = allSlices.filter(s => !isRuntimeCondition(s.condition_type)).slice(0, 5);
+  const runtimeSlices = allSlices.filter(s => isRuntimeCondition(s.condition_type)).slice(0, 5);
+  const slices = [...staticSlices, ...runtimeSlices].map(s => ({
+    executive_name: s.executive_name,
+    condition_type: s.condition_type,
+    domain: s.domain,
+    severity: s.severity,
+    confidence: s.confidence,
+  }));
 
   const narratives = (projection.domain_narratives || []).map(n => ({
     domain: n.domain,
