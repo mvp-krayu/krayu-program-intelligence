@@ -892,3 +892,112 @@ FAIL CONDITIONS:
 - advisory drift not flagged
 
 ──────────────────────────────────────────────────
+
+## SKILL: EVIDENCE_TO_COGNITION_AUDIT
+
+Authority: PI.RUNTIME-CONNECTIVITY-PROOF.01
+Trigger: ANY work involving new evidence types, new structural data, new connectivity discovery, or evidence-layer expansion.
+
+Purpose:
+Prevent the "metadata-only" anti-pattern — where new evidence changes labels/backing but does not enter the signal → condition → consequence cognition loop.
+
+PI's core loop: evidence → signals → conditions → consequences → persona projections.
+Evidence that qualifies metadata but does not produce signal candidates is incomplete integration.
+
+────────────────────────────────────
+
+### STEP 1 — EVIDENCE CLASSIFICATION
+
+For any new evidence being integrated, classify:
+
+| Question | Answer |
+|---|---|
+| What evidence type is this? | (STATIC_IMPORT / EVENT_FLOW / MQTT_TOPIC_FLOW / WEBSOCKET_FLOW / API_BOUNDARY / DI_MODULE_GRAPH / RUNTIME_WIRING / OTHER) |
+| Does it contain structural patterns? | (hub concentration / single-point-of-failure / propagation asymmetry / coupling / mass / fragility / other) |
+| Do those patterns have signal equivalents in existing vocabulary? | (map to PSIG / ISIG / DPSIG / new family needed) |
+
+If structural patterns exist and are NOT entering the signal chain → the integration is incomplete.
+
+────────────────────────────────────
+
+### STEP 2 — COGNITION LOOP CHECK
+
+Trace the evidence through the full loop:
+
+```
+NEW EVIDENCE
+  → enters signal derivation? (extractFeatures / tagged signals)
+  → produces conditions? (rule functions in SignalSynthesisEngine)
+  → conditions enter consequence compilation? (ConsequenceCompiler)
+  → consequences reach persona projections? (forBoardroom / forBalanced)
+  → projections reach consumers? (THORR / LENS / EIR)
+```
+
+For each link, classify:
+- CONNECTED — evidence flows through this link
+- METADATA_ONLY — evidence changes labels/backing but not cognition
+- NOT_CONNECTED — evidence does not reach this link
+
+If any link is METADATA_ONLY → challenge: should this evidence produce signal candidates?
+
+────────────────────────────────────
+
+### STEP 3 — SIGNAL CANDIDATE ASSESSMENT
+
+For evidence that contains structural patterns:
+
+1. Identify candidate signals:
+   - Hub concentration in event/MQTT/WebSocket graph → DEPENDENCY_CHOKE_POINT equivalent
+   - Single-point-of-failure (all traffic through one node) → RESILIENCE_DEFICIT equivalent
+   - Propagation asymmetry in event topology → PROPAGATION_ASYMMETRY equivalent
+   - Coordination overload (handler fan-out) → STRUCTURAL_MASS_CONCENTRATION equivalent
+
+2. Classify each candidate:
+   - EXPRESSIBLE_NOW — existing condition vocabulary can represent this
+   - REQUIRES_NEW_RULE — new SignalSynthesisEngine rule needed
+   - REQUIRES_NEW_SIGNAL_FAMILY — new signal type beyond PSIG/ISIG/DPSIG
+
+3. If candidates exist → they should be implemented, not deferred
+
+────────────────────────────────────
+
+### STEP 4 — ANTI-PATTERN DETECTION
+
+Fail-closed on any of:
+- Evidence changes domain backing but produces no signal candidates
+- Evidence reaches projection surfaces but not cognition formation
+- THORR/LENS display corrected labels but consequence posture is unchanged
+- "Build passes, banner renders" accepted as completion when cognition is unaffected
+- Prompt suppression used instead of data correction
+- VLC data contradicts consequence posture output
+
+────────────────────────────────────
+
+### STEP 5 — OPERATING POSTURE CHECK
+
+After context compaction or session resume, verify operating posture:
+
+PI SOFTWARE ARCHITECT asks:
+- Where does this evidence terminate in the cognition loop?
+- What downstream cognition must change?
+- Does the consequence posture reflect this evidence?
+- What would a PI customer see differently?
+
+CONTRACT EXECUTOR asks:
+- Was the artifact created?
+- Did the build pass?
+- Was the commit made?
+
+If operating as CONTRACT EXECUTOR on cognition work → STOP → rehydrate architectural context → resume as PI SOFTWARE ARCHITECT.
+
+────────────────────────────────────
+
+FAIL CONDITIONS:
+
+- evidence produces metadata change only, no signal candidates
+- cognition loop has METADATA_ONLY links
+- consequence posture contradicts evidence
+- prompt suppression substituted for cognition formation
+- operating as Contract Executor on architecture-sensitive work
+
+──────────────────────────────────────────────────
