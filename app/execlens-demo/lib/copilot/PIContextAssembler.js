@@ -745,20 +745,48 @@ function scoreSliceForPersona(slice, audience) {
   return { total: base + bonus, severity_base: base, persona_bonus: bonus, categories };
 }
 
+const CONSEQUENCE_TO_CATEGORIES = {
+  COORD_FRAG: ['coordination', 'coupling'],
+  DEP_AMP: ['topology', 'concentration'],
+  DEL_EXP: ['delivery'],
+  OP_BOTTLENECK: ['delivery', 'topology'],
+  RESIL_DEF: ['resilience'],
+  GOV_GAP: ['governance'],
+  PROP_EXP: ['propagation'],
+  STAB_RISK: ['systemic', 'concentration'],
+  AMPLIFIED_DEP_FRAG: ['concentration', 'coordination'],
+  STRUCT_GRAVITY_WELL: ['topology', 'concentration'],
+  SYSTEMIC_OP_FRAG: ['systemic'],
+};
+
+function scoreThemeForPersona(theme, audience) {
+  const base = SEVERITY_BASE_SCORE[theme.severity] || 0;
+  const categories = CONSEQUENCE_TO_CATEGORIES[theme.theme_id] || [];
+  const weights = PERSONA_CATEGORY_WEIGHTS[audience] || {};
+
+  let bonus = 0;
+  for (const cat of categories) {
+    bonus += weights[cat] || 0;
+  }
+  if (theme.evidence_diversity === 'RUNTIME' || theme.evidence_diversity === 'MIXED') {
+    bonus += weights['runtime_connectivity'] || 0;
+  }
+
+  return { total: base + bonus, severity_base: base, persona_bonus: bonus };
+}
+
 function applyPersonaCognitionWeighting(verdict, audience) {
   if (!verdict || !verdict.boardroom || !audience) return verdict;
 
   const slices = verdict.boardroom.cognition_slices || [];
-  if (slices.length === 0) return verdict;
+  const themes = verdict.boardroom.consequence_themes || [];
 
-  const scored = slices.map(s => ({
+  const scoredSlices = slices.map(s => ({
     ...s,
     _score: scoreSliceForPersona(s, audience),
   }));
-
-  scored.sort((a, b) => b._score.total - a._score.total);
-
-  const reranked = scored.slice(0, 10).map(s => ({
+  scoredSlices.sort((a, b) => b._score.total - a._score.total);
+  const rerankedSlices = scoredSlices.slice(0, 10).map(s => ({
     executive_name: s.executive_name,
     condition_type: s.condition_type,
     domain: s.domain,
@@ -768,11 +796,22 @@ function applyPersonaCognitionWeighting(verdict, audience) {
     relevance_score: s._score.total,
   }));
 
+  const scoredThemes = themes.map(t => {
+    const score = scoreThemeForPersona(t, audience);
+    return {
+      ...t,
+      persona_relevance: score.persona_bonus > 0 ? 'ELEVATED' : 'STANDARD',
+      relevance_score: score.total,
+    };
+  });
+  scoredThemes.sort((a, b) => b.relevance_score - a.relevance_score);
+
   return {
     ...verdict,
     boardroom: {
       ...verdict.boardroom,
-      cognition_slices: reranked,
+      cognition_slices: rerankedSlices,
+      consequence_themes: scoredThemes,
     },
   };
 }
