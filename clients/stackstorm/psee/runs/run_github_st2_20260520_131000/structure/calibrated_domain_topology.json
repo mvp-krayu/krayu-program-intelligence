@@ -1,0 +1,213 @@
+{
+  "calibration_version": "1.0",
+  "edge_count": 23,
+  "edges": [
+    {
+      "source_domain": "DOM-08",
+      "source_name": "st2api",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 390,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-01",
+      "source_name": "contrib",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 366,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-06",
+      "source_name": "st2actions",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 270,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-05",
+      "source_name": "st2reactor",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 215,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-02",
+      "source_name": "st2common",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 195,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-04",
+      "source_name": "st2tests",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 126,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-01",
+      "source_name": "contrib",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 119,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-08",
+      "source_name": "st2api",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 82,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-06",
+      "source_name": "st2actions",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 74,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-09",
+      "source_name": "st2auth",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 49,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-11",
+      "source_name": "tools",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 45,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-10",
+      "source_name": "st2stream",
+      "target_domain": "DOM-02",
+      "target_name": "st2common",
+      "import_count": 44,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-05",
+      "source_name": "st2reactor",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 35,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-01",
+      "source_name": "contrib",
+      "target_domain": "DOM-03",
+      "target_name": "st2client",
+      "import_count": 10,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-01",
+      "source_name": "contrib",
+      "target_domain": "DOM-06",
+      "target_name": "st2actions",
+      "import_count": 10,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-09",
+      "source_name": "st2auth",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 7,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-01",
+      "source_name": "contrib",
+      "target_domain": "DOM-05",
+      "target_name": "st2reactor",
+      "import_count": 6,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-04",
+      "source_name": "st2tests",
+      "target_domain": "DOM-06",
+      "target_name": "st2actions",
+      "import_count": 6,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-02",
+      "source_name": "st2common",
+      "target_domain": "DOM-06",
+      "target_name": "st2actions",
+      "import_count": 4,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-02",
+      "source_name": "st2common",
+      "target_domain": "DOM-03",
+      "target_name": "st2client",
+      "import_count": 3,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-04",
+      "source_name": "st2tests",
+      "target_domain": "DOM-03",
+      "target_name": "st2client",
+      "import_count": 3,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-06",
+      "source_name": "st2actions",
+      "target_domain": "DOM-05",
+      "target_name": "st2reactor",
+      "import_count": 2,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "source_domain": "DOM-10",
+      "source_name": "st2stream",
+      "target_domain": "DOM-04",
+      "target_name": "st2tests",
+      "import_count": 2,
+      "direction": "IMPORTS",
+      "evidence_source": "code_graph:IMPORTS"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "calibration_version": "1.0",
+  "calibration_method": "PACKAGE_LEVEL_IMPORT_DIRECTION",
+  "source_artifact": "/Users/khorrix/Projects/k-pi-core/clients/stackstorm/psee/runs/run_github_st2_20260520_131000/structure/40.3s/code_graph.json",
+  "min_file_threshold": 5,
+  "domain_count": 11,
+  "domains": [
+    {
+      "domain_id": "DOM-02",
+      "source_name": "st2common",
+      "display_name": "St2common",
+      "file_count": 459,
+      "inbound_imports": 1506,
+      "outbound_imports": 203,
+      "direction_ratio": 7.42,
+      "role_classification": "SHARED_LIBRARY",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-04",
+      "source_name": "st2tests",
+      "display_name": "St2tests",
+      "file_count": 110,
+      "inbound_imports": 514,
+      "outbound_imports": 138,
+      "direction_ratio": 3.72,
+      "role_classification": "TEST_INFRASTRUCTURE",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-06",
+      "source_name": "st2actions",
+      "display_name": "St2actions",
+      "file_count": 48,
+      "inbound_imports": 20,
+      "outbound_imports": 346,
+      "direction_ratio": 0.06,
+      "role_classification": "EXECUTION_ENGINE",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-03",
+      "source_name": "st2client",
+      "display_name": "St2client",
+      "file_count": 87,
+      "inbound_imports": 16,
+      "outbound_imports": 1,
+      "direction_ratio": 16,
+      "role_classification": "CLIENT_INTERFACE",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-05",
+      "source_name": "st2reactor",
+      "display_name": "St2reactor",
+      "file_count": 56,
+      "inbound_imports": 10,
+      "outbound_imports": 250,
+      "direction_ratio": 0.04,
+      "role_classification": "EXECUTION_ENGINE",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-08",
+      "source_name": "st2api",
+      "display_name": "St2api",
+      "file_count": 78,
+      "inbound_imports": 2,
+      "outbound_imports": 472,
+      "direction_ratio": 0,
+      "role_classification": "API_BOUNDARY",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-09",
+      "source_name": "st2auth",
+      "display_name": "St2auth",
+      "file_count": 24,
+      "inbound_imports": 2,
+      "outbound_imports": 56,
+      "direction_ratio": 0.04,
+      "role_classification": "AUTH_BOUNDARY",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-01",
+      "source_name": "contrib",
+      "display_name": "Contrib",
+      "file_count": 116,
+      "inbound_imports": 0,
+      "outbound_imports": 511,
+      "direction_ratio": 0,
+      "role_classification": "APPLICATION_DOMAIN",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-07",
+      "source_name": "pants-plugins",
+      "display_name": "Pants plugins",
+      "file_count": 35,
+      "inbound_imports": 0,
+      "outbound_imports": 0,
+      "direction_ratio": 0,
+      "role_classification": "BUILD_INFRASTRUCTURE",
+      "confidence": "HIGH",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-10",
+      "source_name": "st2stream",
+      "display_name": "St2stream",
+      "file_count": 14,
+      "inbound_imports": 0,
+      "outbound_imports": 47,
+      "direction_ratio": 0,
+      "role_classification": "STREAMING_INTERFACE",
+      "confidence": "MODERATE",
+      "evidence_source": "code_graph:IMPORTS"
+    },
+    {
+      "domain_id": "DOM-11",
+      "source_name": "tools",
+      "display_name": "Tools",
+      "file_count": 12,
+      "inbound_imports": 0,
+      "outbound_imports": 46,
+      "direction_ratio": 0,
+      "role_classification": "BUILD_INFRASTRUCTURE",
+      "confidence": "MODERATE",
+      "evidence_source": "code_graph:IMPORTS"
+    }
+  ]
+}
