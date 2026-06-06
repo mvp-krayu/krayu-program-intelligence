@@ -113,11 +113,15 @@ Each group gets a blindness label, business capability, and failure implication.
 ### Chapter 5: SW-Intel Assessment
 
 **Current:** Domain narratives + runtime consequences. Mixed static/runtime evidence.
-**Execution Blindness relevance:** LOW as standalone — content absorbed into chapters 3 and 4.
+**Execution Blindness relevance:** MODERATE — SW-Intel is a parallel cognition layer, not a chapter to dissolve.
 
-**Assessment: ABSORB**
+**Assessment: KEEP as supporting layer**
 
-Domain narratives belong in "What Actually Governs Execution" (runtime domains) and "What the Organization Believes" (static domains). The separate SW-Intel chapter creates a technical sidebar that breaks the narrative arc. Its content is more powerful distributed across the spine chapters.
+SW-Intel is becoming its own commercial module. Its concepts (propagation asymmetry, corridor saturation, convergence pressure, reinforcement flow) are the organization's structural intelligence — the visible problems that the organization CAN see and reason about.
+
+Under the Execution Blindness spine, SW-Intel becomes the competent-but-incomplete baseline. It shows what static structural analysis reveals — which makes the blindness findings (what it cannot reveal) more surprising and more valuable. The contrast between SW-Intel's visible findings and Execution Blindness's invisible findings IS the narrative.
+
+Domain narratives feed both "What the Organization Believes" (static domains) and "What Actually Governs Execution" (runtime domains). The chapter is repositioned, not removed.
 
 ---
 
@@ -189,14 +193,24 @@ Followed by the implication: "Transformation planning based solely on static cod
 | 2 | Program Overview | REFACTOR | What the Organization Believes |
 | 3 | Structural Topology | REFACTOR | What Actually Governs Execution |
 | 4 | PI Findings | REFACTOR | What Cannot Currently Be Seen |
-| 5 | SW-Intel Assessment | ABSORB into 2+3 | — |
+| 5 | SW-Intel Assessment | KEEP as supporting layer | Software Intelligence (feeds both chapters 2 and 3) |
 | 6 | Execution Risk Landscape | REFACTOR | Executive Consequences |
 | 7 | Operational Ceiling | ABSORB into 6 | — |
 | 8 | What Traditional Analysis Cannot Discover | REFACTOR | Why Traditional Analysis Missed It |
 | 9 | Executive Verdict | REFACTOR | Verdict (three remembered discoveries) |
 
 Current: 9 chapters.
-Proposed: 7 chapters.
+Proposed: 8 chapters.
+
+### Correction: Software Intelligence Is Not Absorbed
+
+SW-Intel is a parallel cognition layer, not a narrative chapter to dissolve. It is becoming its own commercial module. Its concepts (propagation asymmetry, execution constriction, corridor saturation, reinforcement flow, convergence pressure) are related to Execution Blindness but not identical.
+
+Under the Execution Blindness spine, SW-Intel becomes **supporting evidence** feeding both narrative modes:
+- In CODE_CONNECTIVITY: SW-Intel drives the structural story directly (current behavior)
+- In SYSTEM_CONNECTIVITY: SW-Intel contributes the visible problems (what the org CAN see) that contrast with the invisible blindness findings (what it cannot)
+
+SW-Intel is not destroyed to serve the spine. It is repositioned as the organization's current understanding — the competent but incomplete analysis that Execution Blindness extends.
 
 ---
 
@@ -210,11 +224,12 @@ Does every chapter serve the spine "Here is where the organization is blind"?
 | What the Organization Believes | YES — establishes the visible (incomplete) picture |
 | What Actually Governs Execution | YES — reveals the invisible operational reality |
 | What Cannot Currently Be Seen | YES — names the three blindness types |
+| Software Intelligence | YES — provides the structural evidence that makes blindness meaningful (you need to see what IS visible to understand what ISN'T) |
 | Why Traditional Analysis Missed It | YES — explains WHY blindness exists |
 | Executive Consequences | YES — shows WHAT HAPPENS when blind spots fail |
 | Verdict | YES — crystallizes the three discoveries |
 
-Every chapter serves the spine. No chapter is a technical sidebar. The narrative arc is: confidence → surprise → evidence → implication → verdict.
+Every chapter serves the spine. SW-Intel contributes by establishing the competent-but-incomplete baseline that makes the blindness discovery surprising. The narrative arc is: confidence → surprise → evidence → implication → verdict.
 
 ---
 
