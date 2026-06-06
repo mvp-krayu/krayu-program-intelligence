@@ -914,3 +914,21 @@ Only level 6 is completion for cognition work. Do not stop at levels 1-5.
 When a question classifies as a focused retrieval (RUNTIME_ONLY, TOPOLOGY_GRAVITY, EXECUTIVE_POSTURE), assemble a task-specific context bundle. Exclude sections that would allow the model to infer against the answer contract.
 
 Do not let focused queries receive contradictory generic context. The model will cross-read unrelated static sections and override intended answer contracts.
+
+### 17.12 Root Cause Closure Rule
+
+Never declare model behavior, nondeterminism, model hallucination, or model editorial choice as the root cause of a THORR/LENS/EIR output defect until the final prompt has been audited for:
+
+1. Stale raw-data contradictions (unqualified fields rendering alongside qualified fields)
+2. Prompt suppression phrases ("FORBIDDEN", "Do not claim", "never say" — these anchor the model on the forbidden content)
+3. Missing component names (runtime components absent from the prompt the model is asked to cite)
+4. Conflicting authority sections (two sections claiming "answer from these" with different evidence)
+5. Context ordering conflicts (400 lines of static evidence before runtime evidence causes narrative commitment)
+6. Missing evidence parity (one evidence class has file-level quantitative detail, the other has summary text)
+7. Unqualified vs qualified object mismatch (raw specimen says semantic-only, qualified registry says runtime-backed)
+8. Rendering defects (join('') collapsing structured objects into unreadable walls of text)
+9. System prompt framing (system prompt says "structural assessment" when VLC says SYSTEM_CONNECTIVITY)
+
+If any of these exist, the issue is a context assembly defect, not model behavior. Fix the context before attributing to the model.
+
+Data correction > prompt patching > output compensation. In that order.
