@@ -459,11 +459,32 @@ function resolveVisibilityLayerCompleteness(rawSpecimen, client, runId) {
     const fs = require('fs');
     const path = require('path');
     const rcDir = path.join(REPO_ROOT, runtimeConnPath);
-    hasEventFlow = fs.existsSync(path.join(rcDir, 'event_flow_graph.json'));
-    hasMqtt = fs.existsSync(path.join(rcDir, 'mqtt_topic_graph.json'));
-    hasWebSocket = fs.existsSync(path.join(rcDir, 'websocket_flow_graph.json'));
-    hasApiBoundary = fs.existsSync(path.join(rcDir, 'api_boundary_graph.json'));
-    hasDiModule = fs.existsSync(path.join(rcDir, 'di_module_graph.json'));
+    if (fs.existsSync(rcDir)) {
+      const EVIDENCE_TYPE_TO_LAYER = {
+        'EVENT_FLOW_GRAPH': 'EVENT_FLOW',
+        'AMQP_EXCHANGE_GRAPH': 'EVENT_FLOW',
+        'MQTT_TOPIC_GRAPH': 'MQTT_TOPIC_FLOW',
+        'EXTERNAL_DEPENDENCY_GRAPH': 'MQTT_TOPIC_FLOW',
+        'WEBSOCKET_FLOW_GRAPH': 'WEBSOCKET_FLOW',
+        'API_BOUNDARY_GRAPH': 'API_BOUNDARY',
+        'SERVICE_TOPOLOGY': 'API_BOUNDARY',
+        'DI_MODULE_GRAPH': 'DI_MODULE_GRAPH',
+      };
+      const detectedLayers = new Set();
+      const files = fs.readdirSync(rcDir).filter(f => f.endsWith('.json'));
+      for (const file of files) {
+        try {
+          const content = JSON.parse(fs.readFileSync(path.join(rcDir, file), 'utf-8'));
+          const layer = content.evidence_type && EVIDENCE_TYPE_TO_LAYER[content.evidence_type];
+          if (layer) detectedLayers.add(layer);
+        } catch { /* skip */ }
+      }
+      hasEventFlow = detectedLayers.has('EVENT_FLOW');
+      hasMqtt = detectedLayers.has('MQTT_TOPIC_FLOW');
+      hasWebSocket = detectedLayers.has('WEBSOCKET_FLOW');
+      hasApiBoundary = detectedLayers.has('API_BOUNDARY');
+      hasDiModule = detectedLayers.has('DI_MODULE_GRAPH');
+    }
   } catch {
     // Runtime connectivity not available
   }

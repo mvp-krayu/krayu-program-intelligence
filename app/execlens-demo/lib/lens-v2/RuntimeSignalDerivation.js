@@ -320,22 +320,45 @@ function loadRuntimeGraphs(client, runId, repoRoot) {
   const path = require('path');
   const rcDir = path.join(repoRoot, 'clients', client, 'psee/runs', runId, 'structure/runtime_connectivity');
 
-  function loadJSON(filename) {
+  if (!fs.existsSync(rcDir)) return {};
+
+  const CANONICAL_TYPE_MAP = {
+    'EVENT_FLOW_GRAPH': 'eventFlowGraph',
+    'MQTT_TOPIC_GRAPH': 'mqttTopicGraph',
+    'WEBSOCKET_FLOW_GRAPH': 'websocketFlowGraph',
+    'API_BOUNDARY_GRAPH': 'apiBoundaryGraph',
+    'DI_MODULE_GRAPH': 'diModuleGraph',
+    'SYSTEM_CONNECTIVITY_GRAPH': 'systemConnectivityGraph',
+  };
+
+  const ALTERNATE_TYPE_MAP = {
+    'AMQP_EXCHANGE_GRAPH': 'eventFlowGraph',
+    'EXTERNAL_DEPENDENCY_GRAPH': 'mqttTopicGraph',
+    'SERVICE_TOPOLOGY': 'apiBoundaryGraph',
+  };
+
+  const result = {};
+  const files = fs.readdirSync(rcDir).filter(f => f.endsWith('.json'));
+  const loaded = [];
+
+  for (const file of files) {
     try {
-      const p = path.join(rcDir, filename);
-      if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf-8'));
-    } catch { /* not available */ }
-    return null;
+      const content = JSON.parse(fs.readFileSync(path.join(rcDir, file), 'utf-8'));
+      loaded.push({ file, content, evidenceType: content.evidence_type || null });
+    } catch { /* skip */ }
   }
 
-  return {
-    eventFlowGraph: loadJSON('event_flow_graph.json'),
-    mqttTopicGraph: loadJSON('mqtt_topic_graph.json'),
-    websocketFlowGraph: loadJSON('websocket_flow_graph.json'),
-    apiBoundaryGraph: loadJSON('api_boundary_graph.json'),
-    diModuleGraph: loadJSON('di_module_graph.json'),
-    systemConnectivityGraph: loadJSON('system_connectivity_graph.json'),
-  };
+  for (const { content, evidenceType } of loaded) {
+    const key = evidenceType && CANONICAL_TYPE_MAP[evidenceType];
+    if (key && !result[key]) result[key] = content;
+  }
+
+  for (const { content, evidenceType } of loaded) {
+    const key = evidenceType && ALTERNATE_TYPE_MAP[evidenceType];
+    if (key && !result[key]) result[key] = content;
+  }
+
+  return result;
 }
 
 module.exports = {
