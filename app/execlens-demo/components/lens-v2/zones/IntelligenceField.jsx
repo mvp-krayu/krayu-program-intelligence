@@ -8,6 +8,7 @@ import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBu
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
+import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
@@ -10556,6 +10557,12 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         swIntelActive={swIntelActive}
         visibilityLayerCompleteness={visibilityLayerCompleteness}
       />
+      {cognitionState.activeSurface === 'EXECUTION_BLINDNESS' && fullReport && (
+        <ExecutionBlindnessModal fullReport={fullReport} onClose={() => handleSurfaceSelect(null)} />
+      )}
+      {cognitionState.activeSurface === 'GRAVITY_DIVERGENCE' && fullReport && (
+        <GravityDivergenceModal fullReport={fullReport} onClose={() => handleSurfaceSelect(null)} />
+      )}
     </div>
   )
 }

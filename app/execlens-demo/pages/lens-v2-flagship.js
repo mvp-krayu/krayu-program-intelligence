@@ -273,6 +273,10 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     const qualified = qualifyForProjection(reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs)
     const synResult = synthesizeForProjection(qualified)
     const csqResult = synResult ? compileForProjection(synResult, qualified) : null
+    if (synResult) {
+      qualified._synthesisResult = synResult
+      reportObject._synthesisResult = synResult
+    }
     return deriveProjection(qualified, synResult, csqResult)
   }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
 

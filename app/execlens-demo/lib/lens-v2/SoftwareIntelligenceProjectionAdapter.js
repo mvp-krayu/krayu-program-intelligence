@@ -425,6 +425,30 @@ function deriveProjection(fullReport, synthesisResult, consequenceResult) {
     (SEVERITY_ORDER[a.severity] ?? 5) - (SEVERITY_ORDER[b.severity] ?? 5)
   )
 
+  const hasRuntimeConditions = synthesisResult && (synthesisResult.conditions || []).some(c =>
+    ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP'].includes(c.condition_type)
+  )
+  if (hasRuntimeConditions) {
+    surfaces.unshift(
+      {
+        surface_id: 'EXECUTION_BLINDNESS',
+        surface_name: 'Execution Blindness',
+        severity: 'CRITICAL',
+        operational_summary: 'What can fail while the organization believes it is healthy',
+        is_category_surface: true,
+        is_runtime: true,
+      },
+      {
+        surface_id: 'GRAVITY_DIVERGENCE',
+        surface_name: 'Gravity Divergence',
+        severity: 'CRITICAL',
+        operational_summary: 'Where code gravity and operational gravity diverge',
+        is_category_surface: true,
+        is_runtime: true,
+      },
+    )
+  }
+
   return {
     projection_type: 'COMPRESSED_SW_INTEL_COGNITION',
     module_state: moduleState,
@@ -788,6 +812,70 @@ function deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurfa
       ...(ptIds.length > 0 ? [{ color: '#ffd700', label: `Pass-Through (${ptIds.length})`, style: 'dashed' }] : []),
       ...(receiverIds.length > 0 ? [{ color: '#ff9e4a', label: `Receiver (${receiverIds.length})`, style: 'solid' }] : []),
     ]
+  }
+
+  if (activeSurfaceId === 'GRAVITY_DIVERGENCE') {
+    const RT_CONDITION_TYPES = new Set(['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP'])
+
+    const conditions = (fullReport._synthesisResult || fullReport.synthesisResult || {}).conditions || []
+    const staticDomains = new Set()
+    const runtimeDomains = new Set()
+
+    for (const c of conditions) {
+      const domains = (c.shared_topology_targets && c.shared_topology_targets.domains) || []
+      if (RT_CONDITION_TYPES.has(c.condition_type)) {
+        domains.forEach(id => runtimeDomains.add(id))
+      } else if (c.severity !== 'NOMINAL') {
+        domains.forEach(id => staticDomains.add(id))
+      }
+    }
+
+    const allGravity = new Set([...staticDomains, ...runtimeDomains])
+    const dimIds = Array.from(domainIdSet).filter(id => !allGravity.has(id))
+
+    base.overlay_mode = 'GRAVITY_DIVERGENCE'
+    base.emphasis_domains = Array.from(allGravity)
+    base.dim_domains = dimIds
+    base.gravity_static = staticDomains
+    base.gravity_runtime = runtimeDomains
+    base.topology_label = 'Gravity Divergence — Code vs Operational Center of Mass'
+    base.legend_entries = [
+      { color: '#4a9eff', label: 'Code gravity (static import)', style: 'solid' },
+      { color: '#ff9e4a', label: 'Operational gravity (runtime)', style: 'solid' },
+      { color: '#b392f0', label: 'Both', style: 'solid' },
+    ]
+    return base
+  }
+
+  if (activeSurfaceId === 'EXECUTION_BLINDNESS') {
+    const blindnessTypes = {}
+    const affectedIds = new Set()
+
+    const conditions = (fullReport._synthesisResult || fullReport.synthesisResult || {}).conditions || []
+    for (const c of conditions) {
+      const domains = (c.shared_topology_targets && c.shared_topology_targets.domains) || []
+      if (c.condition_type === 'BROKER_DEPENDENCY' || c.condition_type === 'EDGE_CLOUD_PROPAGATION_RISK') {
+        domains.forEach(id => { blindnessTypes[id] = 'BOUNDARY'; affectedIds.add(id) })
+      } else if (c.condition_type === 'RUNTIME_DEPENDENCY_CHOKE_POINT' || c.condition_type === 'ASYNC_PROPAGATION_ASYMMETRY') {
+        domains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'SILENCE'; affectedIds.add(id) })
+      } else if (c.condition_type === 'EVENT_CONCENTRATION' || c.condition_type === 'TOPIC_FANOUT_PRESSURE') {
+        domains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'COUPLING'; affectedIds.add(id) })
+      }
+    }
+
+    const dimIds = Array.from(domainIdSet).filter(id => !affectedIds.has(id))
+
+    base.overlay_mode = 'EXECUTION_BLINDNESS'
+    base.emphasis_domains = Array.from(affectedIds)
+    base.dim_domains = dimIds
+    base.blindness_types = blindnessTypes
+    base.topology_label = 'Execution Blindness — What Can Fail While Appearing Healthy'
+    base.legend_entries = [
+      { color: '#ff4757', label: 'Boundary blind (outside codebase)', style: 'dashed' },
+      { color: '#ff4757', label: 'Silence blind (failure produces no signal)', style: 'solid' },
+      { color: '#ff4757', label: 'Coupling blind (blast radius exceeds prediction)', style: 'dotted' },
+    ]
+    return base
   }
 
   // Consequence-derived surfaces (csq-* IDs, including runtime)

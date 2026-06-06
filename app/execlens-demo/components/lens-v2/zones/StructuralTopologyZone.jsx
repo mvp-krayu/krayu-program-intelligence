@@ -239,6 +239,8 @@ const COGNITION_OVERLAY_COLORS = {
   CONSTRICTION_POINT: '#ffd700',
   BOUNDARY_DIVERGENCE: '#ff9e4a',
   COUPLING_CLUSTER: '#b794f4',
+  GRAVITY_DIVERGENCE: '#b392f0',
+  EXECUTION_BLINDNESS: '#ff4757',
 }
 
 const ROLE_COLORS = {
@@ -629,6 +631,41 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 fill={st.fill} stroke={isEmphasized && cognitionOverlay ? overlayColor : st.stroke} strokeWidth={isEmphasized ? 2.2 : st.sw}
                 strokeDasharray={(st.dashed && !isEmphasized) ? '4,3' : (isAdvisory && isEmphasized) ? '4,3' : undefined}
                 style={{ transition: 'stroke 0.3s, stroke-width 0.3s' }} />
+              {cognitionOverlay && cognitionOverlay.overlay_mode === 'GRAVITY_DIVERGENCE' && (() => {
+                const isStaticGravity = cognitionOverlay.gravity_static && cognitionOverlay.gravity_static.has(d.domain_id)
+                const isRuntimeGravity = cognitionOverlay.gravity_runtime && cognitionOverlay.gravity_runtime.has(d.domain_id)
+                if (!isStaticGravity && !isRuntimeGravity) return null
+                const gx = pos.cx + innerR - 3
+                const gy = pos.cy - innerR + 3
+                if (isStaticGravity && isRuntimeGravity) {
+                  return (<g>
+                    <circle cx={gx - 4} cy={gy} r={3} fill="#4a9eff" fillOpacity={0.9} />
+                    <circle cx={gx + 4} cy={gy} r={3} fill="#ff9e4a" fillOpacity={0.9} />
+                  </g>)
+                }
+                return <circle cx={gx} cy={gy} r={3.5} fill={isStaticGravity ? '#4a9eff' : '#ff9e4a'} fillOpacity={0.9} />
+              })()}
+              {cognitionOverlay && cognitionOverlay.overlay_mode === 'EXECUTION_BLINDNESS' && (() => {
+                const blindType = cognitionOverlay.blindness_types && cognitionOverlay.blindness_types[d.domain_id]
+                if (!blindType) return null
+                const bx = pos.cx - innerR + 3
+                const by = pos.cy - innerR + 3
+                if (blindType === 'BOUNDARY') {
+                  return (<g>
+                    <rect x={bx - 4} y={by - 4} width={8} height={8} rx={1} fill="none" stroke="#ff4757" strokeWidth={1.2} strokeDasharray="2,2" />
+                  </g>)
+                }
+                if (blindType === 'SILENCE') {
+                  return <circle cx={bx} cy={by} r={3.5} fill="none" stroke="#ff4757" strokeWidth={1.5} strokeOpacity={0.8} />
+                }
+                if (blindType === 'COUPLING') {
+                  return (<g>
+                    <circle cx={bx} cy={by} r={5} fill="none" stroke="#ff4757" strokeWidth={0.8} strokeOpacity={0.5} />
+                    <circle cx={bx} cy={by} r={2.5} fill="#ff4757" fillOpacity={0.6} />
+                  </g>)
+                }
+                return null
+              })()}
               {backed && d.confidence > 0 && !cognitionOverlay && (
                 crowdedAbove
                   ? <text x={pos.cx + innerR + 4} y={pos.cy - innerR + 2} textAnchor="start"
