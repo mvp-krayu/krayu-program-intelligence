@@ -1,0 +1,111 @@
+{
+  "evidence_type": "SYSTEM_CONNECTIVITY_GRAPH",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "framework": "StackStorm (Python, kombu/AMQP, systemd multi-service)",
+  "edge_count": 14,
+  "edges": [
+    {
+      "source_domain": "st2sensorcontainer",
+      "target_domain": "st2rulesengine",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.trigger_instances_dispatch",
+      "description": "Sensor container dispatches trigger instances to rules engine"
+    },
+    {
+      "source_domain": "st2rulesengine",
+      "target_domain": "st2scheduler",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.liveaction",
+      "description": "Rules engine creates liveactions consumed by scheduler"
+    },
+    {
+      "source_domain": "st2scheduler",
+      "target_domain": "st2actionrunner",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.liveaction",
+      "description": "Scheduler dispatches scheduled actions to runner"
+    },
+    {
+      "source_domain": "st2actionrunner",
+      "target_domain": "st2notifier",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.execution",
+      "description": "Action runner publishes execution results to notifier"
+    },
+    {
+      "source_domain": "st2actionrunner",
+      "target_domain": "st2workflowengine",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.workflow",
+      "description": "Action runner publishes workflow execution state"
+    },
+    {
+      "source_domain": "st2workflowengine",
+      "target_domain": "st2actionrunner",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.liveaction",
+      "description": "Workflow engine creates sub-actions for runner"
+    },
+    {
+      "source_domain": "st2api",
+      "target_domain": "st2actionrunner",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.liveaction",
+      "description": "API creates actions from user requests"
+    },
+    {
+      "source_domain": "st2api",
+      "target_domain": "st2sensorcontainer",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.sensor",
+      "description": "API manages sensor lifecycle"
+    },
+    {
+      "source_domain": "st2api",
+      "target_domain": "st2rulesengine",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.trigger",
+      "description": "API manages trigger lifecycle"
+    },
+    {
+      "source_domain": "st2notifier",
+      "target_domain": "st2stream",
+      "edge_type": "AMQP_EXCHANGE",
+      "exchange": "st2.announcement",
+      "description": "Notifier publishes announcements for SSE streaming"
+    },
+    {
+      "source_domain": "EXTERNAL_SENSOR_TARGET",
+      "target_domain": "st2sensorcontainer",
+      "edge_type": "EXTERNAL_INBOUND",
+      "description": "External events ingested by sensors"
+    },
+    {
+      "source_domain": "st2actionrunner",
+      "target_domain": "EXTERNAL_ACTION_TARGET",
+      "edge_type": "EXTERNAL_OUTBOUND",
+      "description": "Actions execute on remote targets"
+    },
+    {
+      "source_domain": "ALL_SERVICES",
+      "target_domain": "RABBITMQ_BROKER",
+      "edge_type": "INFRASTRUCTURE_DEPENDENCY",
+      "description": "All 11 services depend on RabbitMQ"
+    },
+    {
+      "source_domain": "ALL_SERVICES",
+      "target_domain": "MONGODB",
+      "edge_type": "INFRASTRUCTURE_DEPENDENCY",
+      "description": "All 11 services depend on MongoDB"
+    }
+  ],
+  "service_count": 11,
+  "exchange_count": 12,
+  "external_dependency_count": 3,
+  "inter_service_import_count": 0,
+  "coordination_mechanism": "AMQP_EXCLUSIVE",
+  "gravity_note": "Static gravity at st2common (2967 inbound imports). Runtime gravity at AMQP exchange layer. Divergence: TOTAL (zero overlap)."
+}

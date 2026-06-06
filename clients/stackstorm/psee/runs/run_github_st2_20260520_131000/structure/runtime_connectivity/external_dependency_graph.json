@@ -1,0 +1,71 @@
+{
+  "evidence_type": "EXTERNAL_DEPENDENCY_GRAPH",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "dependencies": [
+    {
+      "dependency_id": "EXTDEP-01",
+      "name": "RabbitMQ Message Broker",
+      "type": "MESSAGE_BROKER",
+      "endpoint": "amqp://127.0.0.1:5672",
+      "config_source": "st2common/st2common/config.py:348",
+      "production_config": "conf/st2.package.conf:73",
+      "protocol": "AMQP 0-9-1",
+      "criticality": "CRITICAL",
+      "dependent_services": 11,
+      "function": "ALL inter-service coordination. Every service depends on this broker for message exchange. Failure disconnects all services from each other.",
+      "failure_mode": "SILENCE — services continue running independently but coordination stops",
+      "redundancy_visible": false
+    },
+    {
+      "dependency_id": "EXTDEP-02",
+      "name": "MongoDB Database",
+      "type": "DATABASE",
+      "endpoint": "127.0.0.1:27017",
+      "config_source": "st2common/st2common/config.py:191",
+      "database_name": "st2",
+      "criticality": "CRITICAL",
+      "dependent_services": 11,
+      "function": "ALL persistent state — actions, executions, triggers, rules, datastore. Every service stores and retrieves state through MongoDB.",
+      "failure_mode": "ERROR — services will throw connection errors",
+      "redundancy_visible": false
+    },
+    {
+      "dependency_id": "EXTDEP-03",
+      "name": "Coordination Backend",
+      "type": "DISTRIBUTED_LOCK",
+      "endpoint": "configured via coordination.url",
+      "config_source": "st2common/st2common/config.py:707",
+      "protocol": "Redis or Zookeeper",
+      "criticality": "ELEVATED",
+      "dependent_services": "services requiring distributed locking",
+      "function": "Distributed coordination and leader election for multi-node deployments",
+      "failure_mode": "DEGRADED — affects multi-node coordination, single-node may continue",
+      "redundancy_visible": false
+    }
+  ],
+  "external_target_types": [
+    {
+      "type": "SENSOR_TARGET",
+      "description": "Sensors connect to external monitoring systems, APIs, file systems, webhooks",
+      "direction": "INBOUND",
+      "examples": [
+        "FileWatchSensor",
+        "HelloSensor",
+        "EchoFlaskSensor"
+      ]
+    },
+    {
+      "type": "ACTION_TARGET",
+      "description": "Actions execute on remote targets via SSH, REST, cloud APIs",
+      "direction": "OUTBOUND",
+      "examples": [
+        "remote-shell-cmd",
+        "remote-shell-script",
+        "http-request"
+      ]
+    }
+  ]
+}

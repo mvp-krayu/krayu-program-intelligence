@@ -1,0 +1,92 @@
+{
+  "evidence_type": "SERVICE_TOPOLOGY",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "deployment_model": "systemd",
+  "service_count": 11,
+  "services": [
+    {
+      "service_name": "st2auth",
+      "service_file": "packaging/deb/systemd/st2auth.service",
+      "exec_start": "gunicorn",
+      "process_type": "systemd",
+      "source_package": "st2auth"
+    },
+    {
+      "service_name": "st2actionrunner",
+      "service_file": "packaging/deb/systemd/st2actionrunner.service",
+      "exec_start": "runners.sh",
+      "process_type": "systemd",
+      "source_package": "st2actions"
+    },
+    {
+      "service_name": "st2sensorcontainer",
+      "service_file": "packaging/deb/systemd/st2sensorcontainer.service",
+      "exec_start": "st2sensorcontainer",
+      "process_type": "systemd",
+      "source_package": "st2reactor"
+    },
+    {
+      "service_name": "st2notifier",
+      "service_file": "packaging/deb/systemd/st2notifier.service",
+      "exec_start": "st2notifier",
+      "process_type": "systemd",
+      "source_package": "st2actions"
+    },
+    {
+      "service_name": "st2api",
+      "service_file": "packaging/deb/systemd/st2api.service",
+      "exec_start": "gunicorn",
+      "process_type": "systemd",
+      "source_package": "st2api"
+    },
+    {
+      "service_name": "st2timersengine",
+      "service_file": "packaging/deb/systemd/st2timersengine.service",
+      "exec_start": "st2timersengine",
+      "process_type": "systemd",
+      "source_package": "st2reactor"
+    },
+    {
+      "service_name": "st2stream",
+      "service_file": "packaging/deb/systemd/st2stream.service",
+      "exec_start": "gunicorn",
+      "process_type": "systemd",
+      "source_package": "st2stream"
+    },
+    {
+      "service_name": "st2workflowengine",
+      "service_file": "packaging/deb/systemd/st2workflowengine.service",
+      "exec_start": "st2workflowengine",
+      "process_type": "systemd",
+      "source_package": "st2actions"
+    },
+    {
+      "service_name": "st2garbagecollector",
+      "service_file": "packaging/deb/systemd/st2garbagecollector.service",
+      "exec_start": "st2garbagecollector",
+      "process_type": "systemd",
+      "source_package": "st2actions"
+    },
+    {
+      "service_name": "st2rulesengine",
+      "service_file": "packaging/deb/systemd/st2rulesengine.service",
+      "exec_start": "st2rulesengine",
+      "process_type": "systemd",
+      "source_package": "st2reactor"
+    },
+    {
+      "service_name": "st2scheduler",
+      "service_file": "packaging/deb/systemd/st2scheduler.service",
+      "exec_start": "st2scheduler",
+      "process_type": "systemd",
+      "source_package": "st2actions"
+    }
+  ],
+  "coordination_mechanism": "AMQP (RabbitMQ)",
+  "coordination_broker": "amqp://127.0.0.1:5672",
+  "inter_service_imports": 0,
+  "inter_service_coupling": "MESSAGE_ONLY"
+}

@@ -1,0 +1,41 @@
+{
+  "evidence_type": "MQTT_TOPIC_GRAPH",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "protocol": "AMQP 0-9-1",
+  "broker": "amqp://127.0.0.1:5672",
+  "tls": false,
+  "auth": "guest:guest (default)",
+  "topic_channels": [
+    {
+      "topic_pattern": "st2.trigger_instances_dispatch",
+      "direction": "INTERNAL",
+      "publisher": "st2sensorcontainer",
+      "publisher_domain": "st2reactor",
+      "subscriber_domain": "st2reactor"
+    },
+    {
+      "topic_pattern": "st2.liveaction",
+      "direction": "INTERNAL",
+      "publisher": "st2rulesengine/st2api",
+      "publisher_domain": "st2reactor",
+      "subscriber_domain": "st2actions"
+    },
+    {
+      "topic_pattern": "st2.execution",
+      "direction": "INTERNAL",
+      "publisher": "st2actionrunner",
+      "publisher_domain": "st2actions",
+      "subscriber_domain": "st2actions"
+    },
+    {
+      "topic_pattern": "st2.workflow",
+      "direction": "INTERNAL",
+      "publisher": "st2actionrunner",
+      "publisher_domain": "st2actions",
+      "subscriber_domain": "st2actions"
+    }
+  ]
+}

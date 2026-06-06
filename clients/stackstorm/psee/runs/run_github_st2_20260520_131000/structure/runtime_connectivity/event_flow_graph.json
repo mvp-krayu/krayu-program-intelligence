@@ -1,0 +1,133 @@
+{
+  "evidence_type": "EVENT_FLOW_GRAPH",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "framework": "kombu/AMQP (RabbitMQ)",
+  "source_file": "st2common/st2common/transport/",
+  "type_file": "st2common/st2common/transport/reactor.py",
+  "event_count": 12,
+  "emitters": [
+    {
+      "method": "st2auth",
+      "event": "service_coordination",
+      "source_domain": "st2auth",
+      "source_module": "st2auth"
+    },
+    {
+      "method": "st2actionrunner",
+      "event": "service_coordination",
+      "source_domain": "st2actions",
+      "source_module": "st2actionrunner"
+    },
+    {
+      "method": "st2sensorcontainer",
+      "event": "service_coordination",
+      "source_domain": "st2reactor",
+      "source_module": "st2sensorcontainer"
+    },
+    {
+      "method": "st2notifier",
+      "event": "service_coordination",
+      "source_domain": "st2actions",
+      "source_module": "st2notifier"
+    },
+    {
+      "method": "st2api",
+      "event": "service_coordination",
+      "source_domain": "st2api",
+      "source_module": "st2api"
+    },
+    {
+      "method": "st2timersengine",
+      "event": "service_coordination",
+      "source_domain": "st2reactor",
+      "source_module": "st2timersengine"
+    },
+    {
+      "method": "st2stream",
+      "event": "service_coordination",
+      "source_domain": "st2stream",
+      "source_module": "st2stream"
+    },
+    {
+      "method": "st2workflowengine",
+      "event": "service_coordination",
+      "source_domain": "st2actions",
+      "source_module": "st2workflowengine"
+    },
+    {
+      "method": "st2garbagecollector",
+      "event": "service_coordination",
+      "source_domain": "st2actions",
+      "source_module": "st2garbagecollector"
+    },
+    {
+      "method": "st2rulesengine",
+      "event": "service_coordination",
+      "source_domain": "st2reactor",
+      "source_module": "st2rulesengine"
+    },
+    {
+      "method": "st2scheduler",
+      "event": "service_coordination",
+      "source_domain": "st2actions",
+      "source_module": "st2scheduler"
+    }
+  ],
+  "handlers": [
+    {
+      "handler": "TriggerInstanceDispatcher",
+      "file": "st2reactor/st2reactor/rules/worker.py",
+      "target_domain": "st2reactor",
+      "subscribed_events": [
+        "st2.trigger_instances_dispatch"
+      ]
+    },
+    {
+      "handler": "ActionExecutionDispatcher",
+      "file": "st2actions/st2actions/worker.py",
+      "target_domain": "st2actions",
+      "subscribed_events": [
+        "st2.liveaction",
+        "st2.liveaction.status"
+      ]
+    },
+    {
+      "handler": "Notifier",
+      "file": "st2actions/st2actions/notifier/notifier.py",
+      "target_domain": "st2actions",
+      "subscribed_events": [
+        "st2.execution",
+        "st2.execution.output"
+      ]
+    },
+    {
+      "handler": "WorkflowExecutionHandler",
+      "file": "st2actions/st2actions/workflows/workflows.py",
+      "target_domain": "st2actions",
+      "subscribed_events": [
+        "st2.workflow",
+        "st2.workflow.status"
+      ]
+    },
+    {
+      "handler": "SchedulerEntrypoint",
+      "file": "st2actions/st2actions/scheduler/entrypoint.py",
+      "target_domain": "st2actions",
+      "subscribed_events": [
+        "st2.liveaction"
+      ]
+    },
+    {
+      "handler": "BaseListener",
+      "file": "st2common/st2common/stream/listener.py",
+      "target_domain": "st2stream",
+      "subscribed_events": [
+        "st2.announcement"
+      ]
+    }
+  ],
+  "event_type_to_domain_map": {}
+}

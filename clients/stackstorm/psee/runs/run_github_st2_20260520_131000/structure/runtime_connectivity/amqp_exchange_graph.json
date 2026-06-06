@@ -1,0 +1,128 @@
+{
+  "evidence_type": "AMQP_EXCHANGE_GRAPH",
+  "specimen": "stackstorm",
+  "run_id": "run_github_st2_20260520_131000",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-06",
+  "protocol": "AMQP 0-9-1",
+  "broker": "amqp://127.0.0.1:5672",
+  "broker_config_source": "conf/st2.package.conf",
+  "exchange_count": 12,
+  "exchanges": [
+    {
+      "exchange_name": "st2.trigger",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/reactor.py"
+    },
+    {
+      "exchange_name": "st2.trigger_instances_dispatch",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/reactor.py"
+    },
+    {
+      "exchange_name": "st2.sensor",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/reactor.py"
+    },
+    {
+      "exchange_name": "st2.execution",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/execution.py"
+    },
+    {
+      "exchange_name": "st2.execution.output",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/execution.py"
+    },
+    {
+      "exchange_name": "st2.actionexecutionstate",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/actionexecutionstate.py"
+    },
+    {
+      "exchange_name": "st2.workflow",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/workflow.py"
+    },
+    {
+      "exchange_name": "st2.workflow.status",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/workflow.py"
+    },
+    {
+      "exchange_name": "st2.liveaction",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/liveaction.py"
+    },
+    {
+      "exchange_name": "st2.liveaction.status",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/liveaction.py"
+    },
+    {
+      "exchange_name": "st2.actionalias",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/actionalias.py"
+    },
+    {
+      "exchange_name": "st2.announcement",
+      "exchange_type": "topic",
+      "source_file": "st2common/st2common/transport/announcement.py"
+    }
+  ],
+  "handler_count": 13,
+  "handlers": [
+    {
+      "handler": "QueueConsumer",
+      "file": "tools/queue_consumer.py"
+    },
+    {
+      "handler": "TriggerInstanceDispatcher",
+      "file": "st2reactor/st2reactor/rules/worker.py"
+    },
+    {
+      "handler": "ActionExecutionDispatcher",
+      "file": "st2actions/st2actions/worker.py"
+    },
+    {
+      "handler": "Notifier",
+      "file": "st2actions/st2actions/notifier/notifier.py"
+    },
+    {
+      "handler": "WorkflowExecutionHandler",
+      "file": "st2actions/st2actions/workflows/workflows.py"
+    },
+    {
+      "handler": "SchedulerEntrypoint",
+      "file": "st2actions/st2actions/scheduler/entrypoint.py"
+    },
+    {
+      "handler": "QueueConsumer",
+      "file": "st2common/st2common/transport/consumers.py"
+    },
+    {
+      "handler": "MessageHandler",
+      "file": "st2common/st2common/transport/consumers.py"
+    },
+    {
+      "handler": "StagedMessageHandler",
+      "file": "st2common/st2common/transport/consumers.py"
+    },
+    {
+      "handler": "VariableMessageHandler",
+      "file": "st2common/st2common/transport/consumers.py"
+    },
+    {
+      "handler": "BaseListener",
+      "file": "st2common/st2common/stream/listener.py"
+    },
+    {
+      "handler": "SensorWatcher",
+      "file": "st2common/st2common/services/sensor_watcher.py"
+    },
+    {
+      "handler": "TriggerWatcher",
+      "file": "st2common/st2common/services/triggerwatcher.py"
+    }
+  ]
+}
