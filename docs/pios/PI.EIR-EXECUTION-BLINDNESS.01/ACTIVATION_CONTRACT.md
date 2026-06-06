@@ -54,23 +54,26 @@ Where runtime conditions are any of: EVENT_CONCENTRATION, RUNTIME_DEPENDENCY_CHO
 
 At least 2 runtime conditions must be present. A single runtime condition is insufficient to claim organizational blindness — it could be an isolated finding, not a pattern.
 
-### 3. Architectural Findings Present
-
-```
-architectural_findings.length >= 1
-AND
-architectural_findings.some(f => f.id === 'AF-001' || f.significance === 'CRITICAL')
-```
-
-At least one architectural finding must exist, and at least one must be either AF-001 (gravity divergence) or CRITICAL significance. Execution Blindness without a high-significance cross-evidence finding is not narratively warranted.
-
-### 4. Divergence Evidence
+### 3. Proven Divergence
 
 ```
 runtime_gravity_loci ∩ static_gravity_loci !== complete_overlap
 ```
 
-There must be at least one domain that appears in runtime gravity but not in static gravity (or vice versa). If static and operational gravity perfectly coincide, there is no blindness — the organization's existing analysis was correct.
+There must be at least one domain that appears in runtime gravity but not in static gravity (or vice versa). If static and operational gravity perfectly coincide, there is no blindness — the organization's existing analysis was correct. Divergence is the structural proof that the organization's visible understanding is incomplete.
+
+### 4. At Least One Blindness Class Evidenced
+
+```
+blindness_classes_evidenced >= 1
+```
+
+Where blindness classes are:
+- **Boundary blindness:** runtime dependency outside the codebase boundary (BROKER_DEPENDENCY, EDGE_CLOUD_PROPAGATION_RISK)
+- **Silence blindness:** failure produces absence of signal, not error (RUNTIME_DEPENDENCY_CHOKE_POINT, ASYNC_PROPAGATION_ASYMMETRY)
+- **Coupling blindness:** runtime blast radius exceeds static prediction (EVENT_CONCENTRATION, TOPIC_FANOUT_PRESSURE)
+
+At least one class must have supporting runtime conditions. The narrative "the organization is blind" requires at least one specific form of blindness to be evidenced — not just general runtime findings.
 
 ---
 
@@ -80,11 +83,13 @@ There must be at least one domain that appears in runtime gravity but not in sta
 |---|---|---|
 | SYSTEM_CONNECTIVITY | NO | → MODE A |
 | SYSTEM_CONNECTIVITY | YES, but < 2 runtime conditions | → MODE A |
-| SYSTEM_CONNECTIVITY + >= 2 runtime conditions | YES, but no AF or no CRITICAL | → MODE A |
-| SYSTEM_CONNECTIVITY + >= 2 runtime conditions + AF with CRITICAL | YES, but no divergence | → MODE A |
+| SYSTEM_CONNECTIVITY + >= 2 runtime conditions | YES, but no divergence | → MODE A |
+| SYSTEM_CONNECTIVITY + >= 2 runtime conditions + divergence | YES, but no blindness class evidenced | → MODE A |
 | All four criteria met | YES | → MODE B |
 
 The switch is conservative. MODE B only activates when the evidence is strong enough to support the narrative "the organization is blind." A weak or partial runtime signal does not justify that claim.
+
+Note: severity labels (CRITICAL, HIGH, etc.) are not part of the activation criteria. The narrative mode is determined by structural evidence (divergence + blindness class), not by severity scoring. A system can be blind at any severity level.
 
 ---
 
