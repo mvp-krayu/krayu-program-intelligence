@@ -1405,11 +1405,11 @@ function resolveSemanticPayload(manifest) {
           color_accent: c.color_accent || null,
           domain_count: c.domain_count != null ? c.domain_count : 0,
         })),
-    semantic_topology_edges: ((semanticTopology && semanticTopology.edges) || []).map(e => ({
+    semantic_topology_edges: (((semanticTopology && semanticTopology.edges) || (isS1 && canonicalTopology.edges) || []).map(e => ({
       source_domain: e.source_domain || null,
       target_domain: e.target_domain || null,
       relationship_type: e.relationship_type || null,
-    })),
+    }))),
     semantic_crosswalk: semanticCrosswalk,
     topology_summary: isS1 ? Object.assign({
       semantic_domain_count: semanticDomainRegistry.length,

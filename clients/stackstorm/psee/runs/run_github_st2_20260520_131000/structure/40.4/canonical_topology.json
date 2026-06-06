@@ -1,0 +1,337 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "client_id": "stackstorm",
+  "source_id": "source_01",
+  "run_id": "run_github_st2_20260520_131000",
+  "stage": "40.4",
+  "generated_at": "2026-05-20T13:17:04Z",
+  "platform": "generic",
+  "cluster_count": 11,
+  "wrapper_normalization": {
+    "wrapper_detected": false,
+    "wrapper_prefix": null
+  },
+  "clusters": [
+    {
+      "cluster_id": "DOM-02",
+      "cluster_label": "St2common",
+      "name": "St2common",
+      "node_count": 459,
+      "source_name": "st2common",
+      "role_classification": "SHARED_LIBRARY",
+      "inbound_imports": 1506,
+      "outbound_imports": 203,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-04",
+      "cluster_label": "St2tests",
+      "name": "St2tests",
+      "node_count": 110,
+      "source_name": "st2tests",
+      "role_classification": "TEST_INFRASTRUCTURE",
+      "inbound_imports": 514,
+      "outbound_imports": 138,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-06",
+      "cluster_label": "St2actions",
+      "name": "St2actions",
+      "node_count": 48,
+      "source_name": "st2actions",
+      "role_classification": "EXECUTION_ENGINE",
+      "inbound_imports": 20,
+      "outbound_imports": 346,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-03",
+      "cluster_label": "St2client",
+      "name": "St2client",
+      "node_count": 87,
+      "source_name": "st2client",
+      "role_classification": "CLIENT_INTERFACE",
+      "inbound_imports": 16,
+      "outbound_imports": 1,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-05",
+      "cluster_label": "St2reactor",
+      "name": "St2reactor",
+      "node_count": 56,
+      "source_name": "st2reactor",
+      "role_classification": "EXECUTION_ENGINE",
+      "inbound_imports": 10,
+      "outbound_imports": 250,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-08",
+      "cluster_label": "St2api",
+      "name": "St2api",
+      "node_count": 78,
+      "source_name": "st2api",
+      "role_classification": "API_BOUNDARY",
+      "inbound_imports": 2,
+      "outbound_imports": 472,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-09",
+      "cluster_label": "St2auth",
+      "name": "St2auth",
+      "node_count": 24,
+      "source_name": "st2auth",
+      "role_classification": "AUTH_BOUNDARY",
+      "inbound_imports": 2,
+      "outbound_imports": 56,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-01",
+      "cluster_label": "Contrib",
+      "name": "Contrib",
+      "node_count": 116,
+      "source_name": "contrib",
+      "role_classification": "APPLICATION_DOMAIN",
+      "inbound_imports": 0,
+      "outbound_imports": 511,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-07",
+      "cluster_label": "Pants plugins",
+      "name": "Pants plugins",
+      "node_count": 35,
+      "source_name": "pants-plugins",
+      "role_classification": "BUILD_INFRASTRUCTURE",
+      "inbound_imports": 0,
+      "outbound_imports": 0,
+      "confidence": "HIGH",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-10",
+      "cluster_label": "St2stream",
+      "name": "St2stream",
+      "node_count": 14,
+      "source_name": "st2stream",
+      "role_classification": "STREAMING_INTERFACE",
+      "inbound_imports": 0,
+      "outbound_imports": 47,
+      "confidence": "MODERATE",
+      "domains": []
+    },
+    {
+      "cluster_id": "DOM-11",
+      "cluster_label": "Tools",
+      "name": "Tools",
+      "node_count": 12,
+      "source_name": "tools",
+      "role_classification": "BUILD_INFRASTRUCTURE",
+      "inbound_imports": 0,
+      "outbound_imports": 46,
+      "confidence": "MODERATE",
+      "domains": []
+    }
+  ],
+  "calibrated": true,
+  "calibration_version": "1.0",
+  "calibration_method": "PACKAGE_LEVEL_IMPORT_DIRECTION",
+  "edges": [
+    {
+      "source_domain": "DOM-08",
+      "target_domain": "DOM-02",
+      "source_name": "st2api",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 390
+    },
+    {
+      "source_domain": "DOM-01",
+      "target_domain": "DOM-02",
+      "source_name": "contrib",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 366
+    },
+    {
+      "source_domain": "DOM-06",
+      "target_domain": "DOM-02",
+      "source_name": "st2actions",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 270
+    },
+    {
+      "source_domain": "DOM-05",
+      "target_domain": "DOM-02",
+      "source_name": "st2reactor",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 215
+    },
+    {
+      "source_domain": "DOM-02",
+      "target_domain": "DOM-04",
+      "source_name": "st2common",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 195
+    },
+    {
+      "source_domain": "DOM-04",
+      "target_domain": "DOM-02",
+      "source_name": "st2tests",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 126
+    },
+    {
+      "source_domain": "DOM-01",
+      "target_domain": "DOM-04",
+      "source_name": "contrib",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 119
+    },
+    {
+      "source_domain": "DOM-08",
+      "target_domain": "DOM-04",
+      "source_name": "st2api",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 82
+    },
+    {
+      "source_domain": "DOM-06",
+      "target_domain": "DOM-04",
+      "source_name": "st2actions",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 74
+    },
+    {
+      "source_domain": "DOM-09",
+      "target_domain": "DOM-02",
+      "source_name": "st2auth",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 49
+    },
+    {
+      "source_domain": "DOM-11",
+      "target_domain": "DOM-02",
+      "source_name": "tools",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 45
+    },
+    {
+      "source_domain": "DOM-10",
+      "target_domain": "DOM-02",
+      "source_name": "st2stream",
+      "target_name": "st2common",
+      "relationship_type": "IMPORTS",
+      "import_count": 44
+    },
+    {
+      "source_domain": "DOM-05",
+      "target_domain": "DOM-04",
+      "source_name": "st2reactor",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 35
+    },
+    {
+      "source_domain": "DOM-01",
+      "target_domain": "DOM-03",
+      "source_name": "contrib",
+      "target_name": "st2client",
+      "relationship_type": "IMPORTS",
+      "import_count": 10
+    },
+    {
+      "source_domain": "DOM-01",
+      "target_domain": "DOM-06",
+      "source_name": "contrib",
+      "target_name": "st2actions",
+      "relationship_type": "IMPORTS",
+      "import_count": 10
+    },
+    {
+      "source_domain": "DOM-09",
+      "target_domain": "DOM-04",
+      "source_name": "st2auth",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 7
+    },
+    {
+      "source_domain": "DOM-01",
+      "target_domain": "DOM-05",
+      "source_name": "contrib",
+      "target_name": "st2reactor",
+      "relationship_type": "IMPORTS",
+      "import_count": 6
+    },
+    {
+      "source_domain": "DOM-04",
+      "target_domain": "DOM-06",
+      "source_name": "st2tests",
+      "target_name": "st2actions",
+      "relationship_type": "IMPORTS",
+      "import_count": 6
+    },
+    {
+      "source_domain": "DOM-02",
+      "target_domain": "DOM-06",
+      "source_name": "st2common",
+      "target_name": "st2actions",
+      "relationship_type": "IMPORTS",
+      "import_count": 4
+    },
+    {
+      "source_domain": "DOM-02",
+      "target_domain": "DOM-03",
+      "source_name": "st2common",
+      "target_name": "st2client",
+      "relationship_type": "IMPORTS",
+      "import_count": 3
+    },
+    {
+      "source_domain": "DOM-04",
+      "target_domain": "DOM-03",
+      "source_name": "st2tests",
+      "target_name": "st2client",
+      "relationship_type": "IMPORTS",
+      "import_count": 3
+    },
+    {
+      "source_domain": "DOM-06",
+      "target_domain": "DOM-05",
+      "source_name": "st2actions",
+      "target_name": "st2reactor",
+      "relationship_type": "IMPORTS",
+      "import_count": 2
+    },
+    {
+      "source_domain": "DOM-10",
+      "target_domain": "DOM-04",
+      "source_name": "st2stream",
+      "target_name": "st2tests",
+      "relationship_type": "IMPORTS",
+      "import_count": 2
+    }
+  ]
+}
