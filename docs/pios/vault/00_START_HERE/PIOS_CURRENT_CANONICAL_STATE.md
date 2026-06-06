@@ -181,6 +181,95 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 
 **Investigative authority** is the new middle layer introduced by Phase 5 roadmap. It permits surfacing connected domains via topology edges, exposing pressure zones via structural adjacency, traversing evidence lineage, presenting temporal deltas. It does NOT permit inference, recommendation, prioritization, or prediction.
 
+## Cognition Anatomy
+
+**Stream:** PI.COGNITION-ANATOMY.RECONCILIATION.01 (COMPLETE — 2026-05-31)
+**Classification:** G1 — Architecture Defining
+
+The canonical cognition anatomy reconciles four independent discovery lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution) into a single hierarchical model.
+
+**Center of gravity:** GOVERNED COGNITION (22 cognitive functions × 5 cognition strata). Everything else in the architecture serves it.
+
+**Three dimensions of PI cognition:**
+- **Cognitive Function** — what the system DOES (22 functions in 5 strata)
+- **Temporal Continuity** — what the system REMEMBERS (Spine, Chronicle, Certification)
+- **Structured Packaging** — what the system DELIVERS (CIP → PICR → PICP → PRE)
+
+**Four satellite systems** orbit Governed Cognition:
+- **Temporal Continuity** — Spine (8 object classes) + Chronicle — gives cognition memory
+- **Packaged Cognition** — PICP (9 objects) — gives cognition portability
+- **Qualified Cognition** — SQO (S0→S3) + Certification + Revalidation — gives cognition authority
+- **Projected Cognition** — PRE × 5 Personas × 8 Projection Families — gives cognition audience reach
+
+**PICP repositioned:** From implicit "center of architecture" to explicit "cognition packaging layer" — one of four satellite systems serving Governed Cognition. PICP is an artifact PRODUCED BY the architecture, not the architecture itself.
+
+**Concept reconciliation:**
+- Spine: CONSTITUTIONAL — Stratum C temporal continuity substrate. NOT orphaned by PICP
+- Chronicle: CONSTITUTIONAL — governance replay mechanism. OPERATIONAL
+- DNA: METAPHOR — do NOT constitutionalize
+- Neuron: DOES NOT EXIST — no architectural standing
+
+**Consumer-generic cognition consumption architecture** (established by PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01):
+```
+CIP → PICR → PICP → PRE → Consumer
+                            ├── EIR (Reference Consumer #1)
+                            ├── LENS (Reference Consumer #2 — 5 persona projections)
+                            └── Marketplace consumers (#3+)
+```
+Consumer-genericity invariant: PRE core must not change when adding a new consumer. Only ProjectionConfig and consumer-specific rendering adapters may change.
+
+See [[../08_EXECUTION_RUNTIME/COGNITION_ANATOMY]] for full anatomy hierarchy, concept classifications, and discovery lineage.
+
+## Consumption Architecture (Frozen 2026-06-02)
+
+**Authority:** PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01, PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01
+
+### Three-Surface Architecture
+
+```
+Customer ⊂ Operator ⊂ Platform
+```
+
+| Surface | Who | Purpose |
+|---------|-----|---------|
+| **Customer Consumption Surface (LENS)** | Customer (buyer, deal team, IC, board) | Experience structural reality through governed cognitive projection |
+| **Operator Interaction Surface (PI Co-Pilot)** | Operator (advisor, founder, certified partner) | Interrogate PI knowledge graph; produce consumption artifacts |
+| **Platform Surface** | System | CIP → PICR → PICP → PRE, Pipeline, SQO, Vault, Governance |
+
+Nesting rule: no surface may access data from a surface that does not contain it.
+
+### PI Co-Pilot (Frozen 2026-06-02)
+
+Universal intelligence interaction surface for Program Intelligence. Operator-only. NOT a feature — an operator cognition surface. Progressive context continuity IS the product.
+
+**Progressive Context Model:**
+- Level 0: Doctrine + Commercial + Vault + Runtime (no specimen required)
+- Level 1: + Specimen (topology, signals, findings, qualification)
+- Level 2: + Verdict (9-chapter content, posture, operational ceiling)
+- Level 3: + Publishing assets (previously generated consumption artifacts)
+
+**Interaction Hierarchy:** 3 tiers, 9 modes:
+- Understand: Query (L0+), Explore (L0+), Explain (L0+)
+- Curate: Compare (L0+), Curate (L0+ — source material changes per level, not the capability), Challenge (L1+)
+- Publish: Visualize (L2+), Package (L2+), Position (L0+)
+
+**PI Knowledge Graph:** 7 interrogable domains: Doctrine, Commercial, Runtime, Vault, Specimen, Verdict, Publishing
+
+**Constitutional invariant:** Co-Pilot never creates intelligence. Never changes findings, evidence, or qualification. Interrogates, explains, curates, and packages what exists.
+
+**Routes:** `/copilot` (Level 0), `/lens/{client}/{run}/copilot` (Level 1/2)
+
+**Implementation readiness:** SA delivery READY NOW (0 LOC). SA-DD hosting READY TO BUILD (~550 LOC). Co-Pilot Level 0 READY TO BUILD (~400 LOC, one design decision pending).
+
+### Consumption Maturity Levels
+
+| Level | Name | Identity | Hosting | SKU |
+|-------|------|----------|---------|-----|
+| 0 | Export Only | None | Operator-local | SA |
+| 1 | Guided Access | Workspace token | Single hosted instance | SA-DD |
+| 2 | Self-Service | Named users | Persistent hosted workspace | SC |
+| 3 | Platform | Role-based identity | Dedicated tenant | SE |
+
 ## Current Runtime Surfaces
 
 | Surface | Location | Purpose | Status |
@@ -199,6 +288,57 @@ DETERMINISTIC → INVESTIGATIVE → INTERPRETIVE
 | pallets-flask | S1 (permanent insufficiency acknowledged) | AUTHORITY WORKFLOW OPERATIONAL, posture-driven overview, semantic intake (Layer B) | PATH A structural onboarding complete, 15 clusters, 287 nodes, candidate CSR (L3), full client registration (client.yaml + source_manifest.json) |
 | NetBox | **S2 SEMANTIC QUALIFICATION COMPLETE** — CANONICAL REFERENCE SPECIMEN | SQO: S2 granted, all 7 blockers resolved, 12 governance events, CLUSTER_ARCHITECTURE rejection preserved; LENS: LIVE_BINDING_FAILED | **First formally governed semantic qualification specimen.** PATH A complete: 2,540 nodes, 3,614 IMPORTS, 1,089 ranked files. 13 CEU candidates (12 confirmed, 1 merged). **Evolved corpus:** 77 propositions (34 COUPLING_PATTERN, 12 STRUCTURAL_DOMINANCE, 12 TIER_GROUNDING, 12 AUTHORITY_TOPOLOGY [enriched via AST], 6 HERO_MOMENT_GROUNDING [5/6 reconciled], 1 CLUSTER_ARCHITECTURE [REJECTED — preserved in lineage]). 89.6% DIRECT_EVIDENCE, 89.6% ALIGNED, 0.897 mean confidence. **Governance lifecycle proven:** operator review (5 accepted, 1 rejected), arbitration (2 contested→resolved), 3-stream substrate strengthening (feasibility→enrichment→reconciliation), deterministic revalidation (48/48 PASS). **Frozen as constitutional reference** — no exploratory mutation. |
 | StackStorm | S0 STRUCTURAL ONLY | SQO: CEU Reconciliation seeded (11 EVIDENCE_ATTACHED, 4 PROPOSED, 13 obligations); LENS: structural topology | Second specimen. PATH A complete: 1,804 nodes, 3,087 IMPORTS, 920 ranked files. 22 evidence anchors (SETUP_PY, CROSS_PACKAGE_DEP, PACKAGE_README, REPO_README_MAP). LRNE-0001 resolved. |
+
+## Commercial Information Architecture
+
+**Established:** 2026-06-02
+**Authority:** [[../10_CANONICAL_RUNTIME_STATE/COMMERCIAL_INFORMATION_ARCHITECTURE]]
+
+Commercial documentation is organized by consumer purpose (`docs/commercial/`), not by governance stream origin (`docs/pios/`). The governance stream retains the historical execution record. The commercial tree is the operational working location.
+
+```
+docs/commercial/
+├── COMMERCIAL_AUTHORITY.md     ← Entry point
+├── offers/                      ← SA, SA-DD (SC, SE future)
+├── delivery/                    ← Intake, engagement, handoff
+├── reference/                   ← SKU model, catalog, product language
+├── investor/                    ← Strategic partner materials
+└── archive/                     ← Legacy pre-stream HTML
+```
+
+**Commercial readiness (2026-06-02):**
+- P0 GATE CLEARED — all delivery infrastructure formalized
+- P1-1 COMPLETE — SA-DD sellable
+- SA and SA-DD are sellable SKUs with full delivery process
+- SC and SE require P1/P2 engineering work
+
+## Open Product Gaps: 5
+
+**Established:** 2026-06-02
+**Authority:** [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_GAP_REGISTER]]
+
+Canonical register of gaps between commercial packaging and runtime implementation. Seeded from SKU capability audit against runtime code.
+
+| Disposition | Total | Open | Resolved |
+|-------------|-------|------|----------|
+| Runtime Truth Correction | 2 | 0 | 2 (PG-007, PG-008 — 2026-06-02) |
+| Commercial Gap | 4 | 0 | 4 (PG-006, PG-009, PG-010, PG-011 — 2026-06-02) |
+| Product Capability Gap | 5 | 5 | 0 |
+
+**SKU readiness:**
+- **SA:** Sellable. 0 blocking gaps. Commercial packaging matches runtime.
+- **SA-DD:** Sellable. 0 blocking gaps. Commercial packaging matches runtime.
+- **SC:** NOT sellable. 3 blocking gaps (PG-001, PG-002, PG-003).
+- **SE:** NOT sellable. 5 blocking gaps (PG-001–PG-005).
+
+**Open product capability gaps (blocking SC/SE):**
+- PG-001: Cross-session qualification progression (SC, SE)
+- PG-002: Multi-run comparison (SC, SE)
+- PG-003: SKU gating (SC, SE)
+- PG-004: Production RBAC (SE only)
+- PG-005: Multi-program intelligence (SE only)
+
+Full register: [[../10_CANONICAL_RUNTIME_STATE/PRODUCT_GAP_REGISTER]]
 
 ## Current Trustworthiness Model
 
@@ -636,6 +776,89 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 | PI.EXECUTIVE-COGNITION-RUNTIME.01 | G1 | 77% of "consulting craft" (T7) is latent PI cognition never formalized — only 6% is genuine rendering. Corrected composition to 55/20/19/6. Discovered ECP (9 cognition objects), ECR (9 materializers), PRE (projection rendering engine). Central insight: "executive intelligence is a runtime layer, not a document format." EIC superseded by ECR+PRE | COMPLETE |
 | PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | G1 | PICP canonicalization — ECP→PICP, ECR→PICR rename (0/9 objects executive-specific, 4/8 families non-executive). L0-L5 pipeline model. Two-axis marketplace (modules × projections). Consumer contract (9 objects, governed permissions, 13 prohibitions). Strategic positioning: Program Intelligence Cognition Platform. 38/38 PASS | COMPLETE |
 | PI.PICP-CONSTITUTION.01 | G1 | Cognition Object constitutional definition — 7-gate qualification test for PICP membership (Derivation, Evidence Binding, Audience Independence, Projection Freedom, Structural Novelty, Cognitive Question, Zero Authority). 9-candidate audit: 8 unconditional PASS, 1 reconstitution (competitive_intelligence → detection_boundary — Gate 4 failure). Immutability, versioning, governance locked. Gate governs admission, not fixed population count. 32/32 PASS | COMPLETE |
+| PI.COGNITION-AUTHORITY-CONSOLIDATION.01 | G1 | Consumer authority consolidation — single cognition authority (SSE→ConsequenceCompiler), all consumers consequence-native (THORR/LENS/EIR). 265 LOC legacy cognition deleted. 3 independent paths collapsed to 1. Runtime findings auto-propagate. Governance rule: consumers project, consumers do not synthesize | COMPLETE |
+| PI.RUNTIME-CONNECTIVITY-PROOF.01 | G1 | Visibility-layer completeness — Scenario C confirmed on BlueEdge (0/13 domains actually absent, all connected through MQTT/EventEmitter/WebSocket/API/DI). Validated on NetBox (same root cause, different shape). 5 forensic evidence graphs, system connectivity graph (19 edges), domain visibility reconciliation (17/17). Root cause: static import visibility ≠ structural coverage. Visibility-layer completeness check implemented (resolveVisibilityLayerCompleteness). Architecture profile detection operational. 4 new TERMINOLOGY_LOCK entries | COMPLETE |
+| PI.PICP-QUALIFICATION-STRESS-TEST.01 | G2 | PICP qualification stress test — 6 candidates tested against 7-gate qualification. 1 PASS (detection_boundary reconstitution), 5 FAIL. 3 rejection patterns discovered. Gate discriminates effectively | COMPLETE |
+| PI.PICP-CONSUMPTION-BASELINE-MAP.01 | G2 | PICP consumption baseline map — 9 object source-of-truth with line-level references, 4 formalization tiers (T1-T4), 6 de facto consumers identified in LENS, 8/9 objects already sourced. PICP is formalization not construction. 29/29 PASS | COMPLETE |
+| PI.COGNITION-ANATOMY.RECONCILIATION.01 | G1 | Constitutional reconciliation of 4 cognition lineages (Executive Cognition, Persona Forensics, GENESIS/Continuity, Runtime Constitution). Center of gravity = Governed Cognition (22 functions × 5 strata). Three dimensions (Cognitive Function, Temporal Continuity, Structured Packaging). Four satellites (Temporal, Packaged, Qualified, Projected). PICP repositioned to packaging satellite. DNA = metaphor. Neuron = does not exist. Architectural altitude restored. 29/29 PASS | COMPLETE |
+| PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01 | G2 | 6-phase implementation roadmap for consumer-generic cognition consumption architecture (CIP → PICR → PICP → PRE → Consumer). EIR = Reference Consumer #1, LENS = #2, Marketplace = #3+. Consumer-genericity invariant: PRE core must not change when adding new consumer. ~80% deterministic, ~14% governed AI (PRE Zone B), ~6% qualification. 25 files, ~2,370 LOC. 33/33 PASS | COMPLETE |
+
+## Consumer Authority Consolidation
+
+**Stream:** PI.COGNITION-AUTHORITY-CONSOLIDATION.01 (COMPLETE — 2026-06-05)
+**Classification:** G1 — Architecture-Mutating (Constitutional)
+
+Program Intelligence now operates with a single cognition authority and multiple projection consumers.
+
+**Canonical Authority:**
+
+```
+SignalSynthesisEngine → ConsequenceCompiler → Consequences / Cognition Objects
+```
+
+**Consumers (all consequence-native):**
+
+| Consumer | Projection Method | Status |
+|---|---|---|
+| THORR | forBoardroom() / forBalanced() | Consequence-native |
+| LENS Boardroom | consequencePosture | Consequence-native |
+| LENS Dense / Operator | consequencesToSurfaces() | Consequence-native |
+| LENS SVG | deriveTopologyCognitionState + consequence fallback | Consequence-native |
+| EIR | projectFromConsequences() | Consequence-native |
+
+**Governance Rule:**
+
+Consumers project cognition. Consumers do not synthesize cognition.
+
+Projection layers may: filter, rank, visualize, summarize, attach evidence detail.
+
+Projection layers may NOT: derive conditions, derive consequences, derive executive narratives, generate cognition from raw evidence.
+
+**Evidence Classes:**
+
+Static and runtime evidence classes enter the same authority chain. Runtime findings automatically propagate to all consumers once consequence formation occurs. No consumer-specific runtime logic required.
+
+**Historical outcome:**
+
+The consolidation originated from a runtime connectivity investigation ("Why does BlueEdge show 13 dark domains?") and resulted in:
+
+1. Runtime Visibility Layer — Scenario C confirmed, 0/13 domains actually absent
+2. Runtime Signal Derivation — 7 RSIG signals from event/MQTT/WebSocket/DI evidence
+3. Runtime Consequence Formation — runtime conditions enter ConsequenceCompiler alongside static
+4. Consumer Authority Consolidation — three independent cognition paths (THORR via ConsequenceCompiler, LENS via PICRRuntime surfaces, EIR via ExecutiveIntelligenceSynthesis) collapsed into one authority chain
+
+265 LOC of legacy cognition generation deleted. 11 independent EIR synthesis functions retired.
+
+## Visibility-Layer Completeness
+
+**Stream:** PI.RUNTIME-CONNECTIVITY-PROOF.01 (COMPLETE — 2026-06-05)
+**Classification:** G1 — Architecture-Mutating
+
+Program Intelligence now recognizes that static import analysis (40.3s) measures one visibility layer in systems that operate across multiple connectivity layers. A pre-verdict integrity gate classifies which visibility layers were measured and which the specimen's architecture requires.
+
+**Visibility layers identified:**
+
+| Layer | Evidence Source | PI Status |
+|---|---|---|
+| STATIC_IMPORT | 40.3s code graph | MEASURED (automated) |
+| EVENT_FLOW | EventEmitter/Django signals/pub-sub | FORENSIC (BlueEdge only) |
+| MQTT_TOPIC_FLOW | MQTT publish/subscribe | FORENSIC (BlueEdge only) |
+| WEBSOCKET_FLOW | WebSocket/Socket.IO channels | FORENSIC (BlueEdge only) |
+| API_BOUNDARY | REST/GraphQL controllers | FORENSIC (BlueEdge only) |
+| DI_MODULE_GRAPH | Framework DI container | FORENSIC (BlueEdge only) |
+| RUNTIME_WIRING | Docker/K8s/Terraform | NOT MEASURED |
+
+**Architecture profiles:** django-monolith, nestjs-event-driven, nestjs-iot, microservices, spa-api. Each profile defines which layers are required for structural completeness.
+
+**Proven findings:**
+- BlueEdge (nestjs-iot): 6/6 layers measured → SYSTEM_CONNECTIVITY (100%). 0 of 13 "dark" domains actually absent.
+- NetBox (django-monolith): 1/4 layers measured → CODE_CONNECTIVITY (25%), VISIBILITY_INCOMPLETE.
+
+**Root cause corrected:** Static import visibility ≠ structural coverage. The "13 dark domains" finding was a visibility-layer gap, not a coverage gap.
+
+**Implementation:** `resolveVisibilityLayerCompleteness()` in `PIKnowledgeGraphAccess.js`. Wired into verdict data for THORR consumption.
+
+**Maturity:** Forensic proof complete. Automated extraction not implemented. Pipeline integration (40.3r) not implemented.
 
 ## Domain Cognition Module Architecture
 
@@ -679,6 +902,50 @@ Program Intelligence operates through domain cognition modules — replaceable i
 | Graph-based progression intelligence | FUTURE — Phase 3 (GAP-08) |
 
 **Reference:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/` — 5 deliverable documents + 4 governance artifacts. Runtime artifacts in `app/execlens-demo/lib/sqo-cockpit/`.
+
+## Domain Cognition Engine Pattern (PROPOSED)
+
+**Stream:** PI.DOMAIN-COGNITION-ENGINE-PATTERN.01 (COMPLETE — 2026-06-04)
+**Classification:** G1 — Architecture-Mutating
+**Branch:** main
+
+Forensic analysis of the three SW-Intel cognition files (CognitionOntology.js ~700 lines, SignalSynthesisEngine.js ~1442 lines, ConsequenceCompiler.js ~1158 lines) discovered a canonical domain cognition engine pattern: **DOMAIN MODULE = VOCABULARY × RULES × ENGINE**.
+
+**Pattern separation (verified with line-level evidence):**
+- **VOCABULARY (~27%):** Authored, constitutional, static semantic inventory — condition types, consequence types, combination patterns, ontology classes, risk labels, cognition slices, guided interventions
+- **RULES (~35%):** Deterministic transformation logic — feature extraction, condition synthesis rules, consequence mapping functions
+- **ENGINE (~32%):** Domain-independent compilation machinery — deduplication, combination detection, compilation pipeline, relationship verb derivation, persona projection shapes
+
+**Minimum Engine Boundary (strict separation exercise):**
+- **Pure Engine:** ~300 lines with ZERO domain references — `deduplicateConsequences()`, `deriveRelationshipVerb()`, `forOperator()`, `forInvestigation()`, `resolveNode()`, `resolveConnections()`, severity/confidence/scope machinery
+- **Engine with Coupling:** ~760 lines of generic mechanism containing ~25 parameterizable coupling points where SW-Intel vocabulary is directly referenced through imports
+- **Constitutional finding:** The entanglement is implementational coupling (direct vocabulary imports), not architectural entanglement (mechanism changes). Every coupling point is a vocabulary import replaceable with a function parameter
+
+**Portability test (PMO pipeline trace):** PMO vocabulary/rules traced through all 8 pipeline stages — zero engine mechanism modifications required, only ~25 parameterization points
+
+**Engine API:**
+- Input: vocabulary registry + rule set + evidence
+- Output: conditions + consequences + risk profiles + persona projections ×4
+
+**Governance implications:**
+- ENGINE is PI Core governed infrastructure (G1 authority) — modifications affect ALL domain modules
+- VOCABULARY/RULES are Domain Module governed (G2 authority) — modifications affect single module only
+- Domain Modules do not create engines — they provide VOCABULARY + RULES to a shared ENGINE
+- Persona projections are reusable compression patterns, not domain-specific rendering
+
+**Maturity classification:**
+
+| Construct | Maturity |
+|---|---|
+| Domain Cognition Engine Pattern | PROPOSED — governance review required for CANONICAL promotion |
+| Minimum Engine Boundary (~1060 lines) | VERIFIED — forensic line-level evidence |
+| Engine portability (PMO trace) | VERIFIED — zero mechanism modifications |
+| Rule Contract (5 function types) | PROPOSED |
+| Vocabulary Contract (14 components) | PROPOSED |
+| Engine API | PROPOSED |
+| Engine extraction | NOT_STARTED — premature until second Domain Module needed |
+
+**Reference:** `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/` — 7 deliverable documents (ENGINE_PATTERN.md, SW_INTEL_ENGINE_INSTANCE.md, PMO_ENGINE_STUB.md, CONSTITUTIONAL_IMPLICATIONS.md, MINIMUM_ENGINE_BOUNDARY.md, execution_report.md, CLOSURE.md).
 
 ## Signal Derivation Spine — Canonical Signal Intelligence Doctrine
 
@@ -869,3 +1136,5 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - 9-slice topology cognition language: corridor cognition (DEPENDENCY_CHOKE_POINT, PROPAGATION_ASYMMETRY) + field/state cognition (PRESSURE_ZONE, STRUCTURAL_MASS_CONCENTRATION) + fragility/resilience (EXECUTION_FRAGILITY) + flow/constriction (EXECUTION_CONSTRICTION) + drift/instability (STRUCTURAL_BOUNDARY_DIVERGENCE) + coupling/inertia (COUPLING_INERTIA) + COMPOUND_CONVERGENCE composite + GOVERNANCE_COVERAGE_STATUS governance
 - Evidence classification taxonomy: EVIDENCE_DERIVED (semantic topology edges), STRUCTURAL_CENTRALITY_DERIVED (code graph centrality), PRESSURE_ZONE_DERIVED (pressure_zone_state artifact), TOPOLOGY_METRIC_DERIVED (DPSIG distribution metrics), MIXED (composite conditions with heterogeneous evidence origins)
 - Three-layer architecture: PI Core (truth — signal families, topology, governance) / Orchestration-Agentic Runtime (guided actions, SQO workflow) / Domain Cognition (SW-Intel module — condition synthesis, topology cognition projection)
+- Visibility-layer completeness check: pre-verdict integrity gate classifying measured vs required connectivity layers per architecture profile. 7 visibility layers defined (STATIC_IMPORT, EVENT_FLOW, MQTT_TOPIC_FLOW, WEBSOCKET_FLOW, API_BOUNDARY, DI_MODULE_GRAPH, RUNTIME_WIRING). 5 architecture profiles (django-monolith, nestjs-event-driven, nestjs-iot, microservices, spa-api). Verdict scope classification (CODE_CONNECTIVITY / PARTIAL_CONNECTIVITY / SYSTEM_CONNECTIVITY). VISIBILITY_INCOMPLETE qualifier modifier
+- THORR intent-driven context loading: 16,000 token budget enforcement, evidence class routing (POSTURE/GOVERNANCE/STRUCTURAL/DOCTRINE/FULL), persona-aware escalation. 10 THORR personas including Transformation Leader and GOD/Founder-Operator

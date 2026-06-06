@@ -1,0 +1,99 @@
+{
+  "evidence_type": "MQTT_TOPIC_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "protocol": "MQTTv5",
+  "broker": "mqtt.blueedge.network:8883",
+  "broker_aws": "a1b2c3-ats.iot.me-south-1.amazonaws.com",
+  "tls": true,
+  "auth": "mTLS (X.509 client certificates)",
+
+  "topic_channels": [
+    {
+      "topic_pattern": "blueedge/sensors/${device.hardware_id}/readings",
+      "direction": "EDGE_TO_CLOUD",
+      "publisher": "svg-agents/sensor-collector/sensor_collector.py",
+      "publisher_domain": "DOMAIN-01",
+      "subscriber_domain": "DOMAIN-02",
+      "qos": 1,
+      "payload": "JSON: sensor readings batch (id, type, value, unit, timestamp, quality)",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    },
+    {
+      "topic_pattern": "blueedge/hasi/${device.hardware_id}/capture",
+      "direction": "EDGE_TO_CLOUD",
+      "publisher": "svg-agents/hasi-bridge/hasi_bridge.py",
+      "publisher_domain": "DOMAIN-07",
+      "subscriber_domain": "DOMAIN-07",
+      "qos": 1,
+      "payload": "JSON: HASI network capture analysis results",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    },
+    {
+      "topic_pattern": "blueedge/hasi/${device.hardware_id}/threats",
+      "direction": "EDGE_TO_CLOUD",
+      "publisher": "svg-agents/hasi-bridge/hasi_bridge.py",
+      "publisher_domain": "DOMAIN-07",
+      "subscriber_domain": "DOMAIN-07",
+      "qos": 1,
+      "payload": "JSON: HASI threat detection results",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    },
+    {
+      "topic_pattern": "blueedge/telemetry/${device.hardware_id}",
+      "direction": "EDGE_TO_CLOUD",
+      "publisher": "svg-agents/sensor-collector/sensor_collector.py",
+      "publisher_domain": "DOMAIN-01",
+      "subscriber_domain": "DOMAIN-02",
+      "qos": 1,
+      "payload": "JSON: vehicle telemetry (GPS, speed, fuel, engine state)",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    },
+    {
+      "topic_pattern": "blueedge/commands/${device.hardware_id}",
+      "direction": "CLOUD_TO_EDGE",
+      "publisher": "backend/src/modules/devices/devices.controller.ts",
+      "publisher_domain": "DOMAIN-10",
+      "subscriber_domain": "DOMAIN-01",
+      "qos": 1,
+      "payload": "JSON: device commands (reboot, config update, diagnostic request)",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    },
+    {
+      "topic_pattern": "blueedge/ota/${device.hardware_id}",
+      "direction": "CLOUD_TO_EDGE",
+      "publisher": "backend/src/modules/ota",
+      "publisher_domain": "DOMAIN-10",
+      "subscriber_domain": "DOMAIN-01",
+      "qos": 1,
+      "payload": "JSON: OTA update instructions (package, version, checksum)",
+      "config_source": "svg-agents/config/blueedge.yaml"
+    }
+  ],
+
+  "edge_agents": [
+    {
+      "name": "sensor-collector",
+      "file": "svg-agents/sensor-collector/sensor_collector.py",
+      "language": "Python",
+      "runtime": "systemd service on SVG 2.0 hardware (NXP i.MX 95)",
+      "dependencies": ["paho-mqtt", "pymodbus", "pyyaml"],
+      "publishes_to": ["blueedge/sensors/*/readings", "blueedge/telemetry/*"],
+      "domain": "DOMAIN-01"
+    },
+    {
+      "name": "hasi-bridge",
+      "file": "svg-agents/hasi-bridge/hasi_bridge.py",
+      "language": "Python",
+      "runtime": "systemd service on SVG 2.0 hardware",
+      "dependencies": ["paho-mqtt", "pyyaml", "requests"],
+      "publishes_to": ["blueedge/hasi/*/capture", "blueedge/hasi/*/threats"],
+      "fallback": "REST API (https://api.blueedge.network/api/v1/hasi/captures)",
+      "domain": "DOMAIN-07"
+    }
+  ],
+
+  "architectural_note": "MQTT agents run on separate hardware (SVG 2.0 edge gateways). They are NOT in Docker Compose. They communicate with the cloud backend through MQTT over the network. This is a separate deployment boundary invisible to static import analysis."
+}

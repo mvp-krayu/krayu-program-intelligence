@@ -58,7 +58,57 @@ export async function getServerSideProps(context) {
     }
   } catch (_) { /* SQO workspace unavailable — graceful */ }
 
-  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run } } }
+  let runtimeConnectivityEdges = null
+  let visibilityLayerCompleteness = null
+  try {
+    const rcPath = `clients/${client}/psee/runs/${run}/structure/runtime_connectivity/system_connectivity_graph.json`
+    const rcResult = loadJSON(rcPath)
+    if (rcResult.ok && rcResult.data && rcResult.data.edges) {
+      runtimeConnectivityEdges = rcResult.data.edges
+    }
+
+    const vlcPath = `clients/${client}/psee/runs/${run}/structure/runtime_connectivity/visibility_layer_completeness.json`
+    const vlcResult = loadJSON(vlcPath)
+    if (vlcResult.ok && vlcResult.data) {
+      visibilityLayerCompleteness = vlcResult.data
+    }
+
+    if (!visibilityLayerCompleteness) {
+      const { resolveVisibilityLayerCompleteness } = require('../../../lib/copilot/PIKnowledgeGraphAccess')
+      const specimen = result.props && result.props.livePayload
+      if (specimen) {
+        const vlc = resolveVisibilityLayerCompleteness(specimen, client, run)
+        if (vlc) {
+          visibilityLayerCompleteness = vlc
+
+          const { resolveAllowedPath } = require('../../../lib/lens-v2/SemanticArtifactLoader')
+          try {
+            const fs = require('fs')
+            const path = require('path')
+            const rcDir = path.dirname(resolveAllowedPath(vlcPath))
+            if (!fs.existsSync(rcDir)) fs.mkdirSync(rcDir, { recursive: true })
+            fs.writeFileSync(resolveAllowedPath(vlcPath), JSON.stringify({ ...vlc, persisted_at: new Date().toISOString(), specimen: client, run_id: run }, null, 2))
+          } catch (_) { /* write failed */ }
+        }
+      }
+    }
+  } catch (_) { /* runtime connectivity not available */ }
+
+  let runtimeGraphs = null
+  try {
+    const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../../../lib/lens-v2/RuntimeSignalDerivation')
+    const { resolveAllowedPath } = require('../../../lib/lens-v2/SemanticArtifactLoader')
+    const path = require('path')
+    const repoRoot = path.dirname(resolveAllowedPath('clients'))
+    const graphs = loadRuntimeGraphs(client, run, repoRoot)
+    const hasAnyGraph = graphs && Object.values(graphs).some(v => v !== null)
+    if (hasAnyGraph) {
+      const derivedSignals = deriveRuntimeSignals(graphs)
+      runtimeGraphs = { _derived_signals: derivedSignals }
+    }
+  } catch (_) { /* runtime graphs not available */ }
+
+  return { props: { ...result.props, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding: { client, runId: run }, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs } }
 }
 
 export default LensV2FlagshipPage

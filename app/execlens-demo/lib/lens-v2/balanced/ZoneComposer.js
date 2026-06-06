@@ -164,7 +164,11 @@ function composeZone3(balancedProjection, fullReport) {
     title: story.title,
     text: story.text,
     is_combination: story.is_combination,
+    combination_pattern: story.combination_pattern,
     combination_explanation: story.combination_explanation,
+    contributing_condition_types: story.contributing_condition_types,
+    escalation_applied: story.escalation_applied,
+    escalation_reason: story.escalation_reason,
     source_conditions: story.source_conditions,
     facts: facts.facts,
     flow: {

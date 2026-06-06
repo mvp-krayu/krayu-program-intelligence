@@ -1,0 +1,51 @@
+{
+  "stream": "PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01",
+  "classification": "G2",
+  "changes": [
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/CONSUMER_PROJECTION_BOUNDARY.md",
+      "action": "CREATED",
+      "purpose": "Consumer-generic cognition consumption architecture: three-zone PRE model, AI boundary, T1-T7 tracing, consumer model, marketplace-protection invariant"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/GOVERNED_EIR_IMPLEMENTATION_ROADMAP.md",
+      "action": "CREATED",
+      "purpose": "6-phase roadmap (PICR → PICP → PRE → EIR → Graphics → LENS) with per-phase detail, AI boundary, architectural role preservation"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/PHASED_EXECUTION_PLAN.md",
+      "action": "CREATED",
+      "purpose": "Concrete file-level implementation plan: 25 files, ~2,370 LOC, DETERMINISTIC/GOVERNED_AI/QUALIFICATION classification, dependency graph"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/ARCHITECTURE_PRESERVATION_MATRIX.md",
+      "action": "CREATED",
+      "purpose": "18+ architectural concepts × 6 phases mapping with consumer-genericity verification for 8 consumers"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/LENS_NON_REGRESSION_MATRIX.md",
+      "action": "CREATED",
+      "purpose": "8 LENS surfaces × 6 phases impact analysis with Phase 6 regression test protocol"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/execution_report.md",
+      "action": "CREATED",
+      "purpose": "Stream execution report with pre-flight, architecture memory load, governance confirmation"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/validation_log.json",
+      "action": "CREATED",
+      "purpose": "33-check validation log — all PASS"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/file_changes.json",
+      "action": "CREATED",
+      "purpose": "File change manifest"
+    },
+    {
+      "path": "docs/pios/PI.GOVERNED-EIR-IMPLEMENTATION-ROADMAP.01/CLOSURE.md",
+      "action": "CREATED",
+      "purpose": "Stream closure document"
+    }
+  ]
+}

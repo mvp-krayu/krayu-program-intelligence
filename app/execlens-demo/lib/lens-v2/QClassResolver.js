@@ -118,14 +118,24 @@ function resolveQClass(input) {
   }
 
   const meta = Q_CLASSES[id];
+
+  const visibilityContext = input && input.visibility_layer_completeness;
+  let qualifiedNote = meta.executive_note;
+  if (visibilityContext && visibilityContext.verdict_scope === 'SYSTEM_CONNECTIVITY' && visibilityContext.completeness === 100) {
+    qualifiedNote = `Static-import backing: ${backed}/${total} domains. System visibility complete — ${visibilityContext.measured_count}/${visibilityContext.required_count} connectivity layers measured for ${visibilityContext.architecture_profile} profile.`;
+  } else if (visibilityContext && visibilityContext.qualifier_modifier === 'VISIBILITY_INCOMPLETE') {
+    qualifiedNote = `${meta.executive_note} ${visibilityContext.measured_count}/${visibilityContext.required_count} visibility layers measured — ${visibilityContext.layers_missing.map(l => l.name).join(', ')} not yet assessed.`;
+  }
+
   return {
     qualifier_class: id,
     qualifier_label: meta.executive_label,
-    qualifier_note: meta.executive_note,
+    qualifier_note: qualifiedNote,
     render_chip: meta.render_chip,
     render_absence_notice: meta.render_absence_notice,
     compat_legacy_class: meta.compat_legacy_class,
     semantic_projection_class: meta.name,
+    visibility_layer_completeness: visibilityContext || null,
     derivation_inputs: {
       backed_count: backed,
       total_count: total,

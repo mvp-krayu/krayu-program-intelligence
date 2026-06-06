@@ -26,8 +26,11 @@
     "test": "node --test validation/tests/*.test.js adapters/tests/adapters.test.js components/core-report-container/tests/coreReportContainer.test.js components/readiness-badge-system/tests/readinessBadgeSystem.test.js components/executive-narrative-rendering/tests/executiveNarrativeRendering.test.js components/propagation-explainability/tests/propagationExplainability.test.js components/experiential-realization/tests/executiveExperienceSurface.test.js flagship-experience/tests/flagshipExperience.test.js flagship-experience/tests/flagshipSpinoffSmoke.test.js flagship-experience/tests/sqo-cockpit-static-reader.test.js flagship-experience/tests/sqo-fastapi-maturation-workflow.test.js flagship-experience/tests/sqo-operational-ux-orchestration.test.js flagship-experience/tests/sqo-operational-severity-correction.test.js flagship-experience/tests/sqo-frontend-design-polish.test.js flagship-experience/tests/sqo-workspace-shell-architecture.test.js flagship-experience/tests/sqo-cockpit-final-stabilization.test.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "next": "14.0.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-markdown": "^8.0.7",
+    "remark-gfm": "^3.0.1"
   }
 }

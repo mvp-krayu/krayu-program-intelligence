@@ -1,0 +1,70 @@
+{
+  "architecture_profile": "nestjs-iot",
+  "layers_measured": [
+    {
+      "id": "STATIC_IMPORT",
+      "name": "Static Import Graph",
+      "enrichment": "40.3s"
+    },
+    {
+      "id": "EVENT_FLOW",
+      "name": "Event/Signal Flow",
+      "enrichment": null
+    },
+    {
+      "id": "MQTT_TOPIC_FLOW",
+      "name": "MQTT/Message Broker",
+      "enrichment": null
+    },
+    {
+      "id": "WEBSOCKET_FLOW",
+      "name": "WebSocket/Real-Time Streaming",
+      "enrichment": null
+    },
+    {
+      "id": "API_BOUNDARY",
+      "name": "API Boundary (REST/GraphQL)",
+      "enrichment": null
+    },
+    {
+      "id": "DI_MODULE_GRAPH",
+      "name": "DI/Framework Module Graph",
+      "enrichment": null
+    }
+  ],
+  "layers_required": [
+    {
+      "id": "STATIC_IMPORT",
+      "name": "Static Import Graph"
+    },
+    {
+      "id": "EVENT_FLOW",
+      "name": "Event/Signal Flow"
+    },
+    {
+      "id": "MQTT_TOPIC_FLOW",
+      "name": "MQTT/Message Broker"
+    },
+    {
+      "id": "WEBSOCKET_FLOW",
+      "name": "WebSocket/Real-Time Streaming"
+    },
+    {
+      "id": "API_BOUNDARY",
+      "name": "API Boundary (REST/GraphQL)"
+    },
+    {
+      "id": "DI_MODULE_GRAPH",
+      "name": "DI/Framework Module Graph"
+    }
+  ],
+  "layers_missing": [],
+  "completeness": 100,
+  "verdict_scope": "SYSTEM_CONNECTIVITY",
+  "qualifier_modifier": null,
+  "measured_count": 6,
+  "required_count": 6,
+  "persisted_at": "2026-06-05T06:23:37.869Z",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03"
+}

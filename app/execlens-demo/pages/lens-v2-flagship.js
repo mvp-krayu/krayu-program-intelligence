@@ -29,6 +29,8 @@ const {
 
 const { compileBoardroomProjection } = require('../lib/lens-v2/generic/BoardroomProjectionCompiler')
 const { deriveProjection, deriveModuleState, PROJECTION_STATUS } = require('../lib/lens-v2/SoftwareIntelligenceProjectionAdapter')
+const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForProjection } = require('../lib/lens-v2/SignalSynthesisEngine')
+const { compile: compileForProjection } = require('../lib/lens-v2/software-intelligence/ConsequenceCompiler')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
@@ -233,7 +235,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding }) {
+export default function LensV2FlagshipPage({ livePayload, livePropagationChains, liveBindingError, bindingClient, bindingRun, reconciliationAwareness, domainTraceability, substrateBinding, reportBinding, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs }) {
   const [densityClass, setDensityClass] = useState('EXECUTIVE_DENSE')
   const [boardroomMode, setBoardroomMode] = useState(false)
   const [operatorStage, setOperatorStage] = useState('SUMMARY')
@@ -268,8 +270,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
   const swIntelProjection = useMemo(() => {
     if (!reportObject) return null
-    return deriveProjection(reportObject)
-  }, [reportObject])
+    const qualified = qualifyForProjection(reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs)
+    const synResult = synthesizeForProjection(qualified)
+    const csqResult = synResult ? compileForProjection(synResult, qualified) : null
+    if (synResult) {
+      qualified._synthesisResult = synResult
+      reportObject._synthesisResult = synResult
+    }
+    return deriveProjection(qualified, synResult, csqResult)
+  }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
 
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
@@ -477,6 +486,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onSwIntelDeactivate={handleSwIntelDeactivate}
             sqoAuthorityWorkspace={sqoAuthorityWorkspace}
             sqoBinding={sqoBinding}
+            runtimeConnectivityEdges={runtimeConnectivityEdges}
+            visibilityLayerCompleteness={visibilityLayerCompleteness}
+            runtimeGraphs={runtimeGraphs}
           />
         </div>
       </div>
@@ -3527,6 +3539,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding-left: 16px;
           border-left: 2px solid rgba(255, 158, 74, 0.3);
         }
+        .balanced-sw-consequence-combination-chain {
+          margin: 0 0 12px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.35);
+        }
+        .balanced-sw-consequence-combination-flow {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 2px;
+        }
+        .balanced-sw-consequence-combination-primitive {
+          color: #a8b2d1;
+        }
+        .balanced-sw-consequence-combination-op {
+          color: #5e6d8a;
+          padding: 0 2px;
+        }
+        .balanced-sw-consequence-combination-result {
+          color: #ff9e4a;
+          font-weight: 600;
+        }
+        .balanced-sw-consequence-combination-explanation {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin: 6px 0 0;
+        }
+        .balanced-sw-consequence-escalation {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff6b6b;
+          margin: 4px 0 0;
+        }
         .balanced-sw-consequence-conditions {
           display: flex;
           flex-wrap: wrap;
@@ -4079,6 +4125,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-top: 10px;
           padding-left: 16px;
           border-left: 2px solid rgba(255, 158, 74, 0.3);
+        }
+        .balanced-briefing-combination-chain {
+          margin-top: 12px;
+          padding-left: 16px;
+          border-left: 2px solid rgba(255, 158, 74, 0.35);
+        }
+        .balanced-briefing-combination-flow {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 2px;
+        }
+        .balanced-briefing-combination-primitive {
+          color: #a8b2d1;
+        }
+        .balanced-briefing-combination-op {
+          color: #5e6d8a;
+          padding: 0 2px;
+        }
+        .balanced-briefing-combination-result {
+          color: #ff9e4a;
+          font-weight: 600;
+        }
+        .balanced-briefing-combination-explanation {
+          font: 400 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: #9aa8c7;
+          margin-top: 6px;
+        }
+        .balanced-briefing-combination-escalation {
+          font: 400 10px/1.4 'Courier New', monospace;
+          color: #ff6b6b;
+          margin-top: 4px;
         }
         .balanced-briefing-source-conditions {
           display: flex;
@@ -6392,6 +6472,58 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.18em;
           text-transform: uppercase;
         }
+        .support-block--visibility {
+          padding-top: 14px;
+          border-top: 1px solid #1a2030;
+        }
+        .support-visibility-scope {
+          font: 600 11px/1 'Courier New', monospace;
+          color: #64ffda;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .support-visibility-scope[data-scope="CODE_CONNECTIVITY"] {
+          color: #d29922;
+        }
+        .support-visibility-scope[data-scope="PARTIAL_CONNECTIVITY"] {
+          color: #ff9e4a;
+        }
+        .support-visibility-profile {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 4px;
+        }
+        .support-visibility-bar {
+          margin-top: 8px;
+          height: 3px;
+          background: #1a2030;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .support-visibility-bar-fill {
+          height: 100%;
+          background: #d29922;
+          border-radius: 2px;
+          transition: width 0.3s;
+        }
+        .support-visibility-bar-fill[data-complete="true"] {
+          background: #64ffda;
+        }
+        .support-visibility-ratio {
+          font: 400 10px/1 'Courier New', monospace;
+          color: #7a8aaa;
+          margin-top: 4px;
+        }
+        .support-visibility-missing {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          margin-top: 6px;
+        }
+        .support-visibility-missing-layer {
+          font: 400 9px/1.2 'Courier New', monospace;
+          color: #d29922;
+        }
         .support-block--conditions {
           padding-top: 14px;
           border-top: 1px solid #1a2030;
@@ -7101,6 +7233,39 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         /* ── Depth-escalated intelligence field indicator ── */
         .intelligence-field[data-depth-escalated="true"] {
           border-top: 1px solid rgba(74, 158, 255, 0.08);
+        }
+
+        /* ── Structural Assessment Export ── */
+        .support-block--assessment {
+          border-top: 1px solid #2a2f40;
+          padding-top: 8px;
+        }
+        .support-assessment-sub {
+          font-size: 10px;
+          color: #7a8aaa;
+          font-family: 'Courier New', monospace;
+          margin-top: 2px;
+          line-height: 1.4;
+        }
+        .assessment-export-trigger {
+          margin-top: 8px;
+          padding: 8px 12px;
+          background: rgba(74, 158, 255, 0.08);
+          border: 1px solid #4a9eff;
+          color: #4a9eff;
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: background 0.15s ease, color 0.15s ease;
+          width: 100%;
+          text-align: center;
+        }
+        .assessment-export-trigger:hover {
+          background: rgba(74, 158, 255, 0.16);
+          color: #ccd6f6;
         }
 
         /* ── Evidence Record Export ─── */
@@ -11584,6 +11749,19 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-left: auto;
         }
 
+        /* ─── Boardroom Narrative ─── */
+
+        .sw-intel-boardroom-narrative {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.55;
+          padding: 8px 10px;
+          margin-bottom: 10px;
+          background: rgba(74, 158, 255, 0.04);
+          border-left: 2px solid #4a9eff;
+          border-radius: 0 2px 2px 0;
+        }
+
         /* ─── Boardroom Surface Cards ─── */
 
         .sw-intel-boardroom-surface {
@@ -11878,8 +12056,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-sw-intel-posture-domain {
           display: flex;
+          flex-wrap: wrap;
           align-items: baseline;
-          gap: 10px;
+          gap: 6px 10px;
           min-width: 0;
         }
         .cockpit-sw-intel-posture-domain-name {
@@ -11896,6 +12075,14 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #7a8aaa;
           margin-left: auto;
           white-space: nowrap;
+        }
+        .cockpit-sw-intel-posture-domain-risk-shape {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #a8b2d1;
+          font-style: italic;
+          width: 100%;
+          padding-left: 1px;
         }
         .cockpit-sw-intel-posture-disclosure {
           margin-top: 12px;
@@ -12971,23 +13158,23 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cognition-gap-item {
           display: flex;
-          align-items: baseline;
-          gap: 8px;
-          padding: 4px 0;
+          flex-direction: column;
+          gap: 2px;
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(30,35,48,0.3);
         }
+        .cognition-gap-item:last-child { border-bottom: none; }
         .cognition-gap-label {
           font-family: 'Courier New', monospace;
           font-size: 11px;
           color: #ccd6f6;
-          flex: 1;
-          min-width: 0;
+          line-height: 1.4;
         }
         .cognition-gap-impact {
           font-family: 'Courier New', monospace;
           font-size: 10px;
           color: #ff9e4a;
-          flex-shrink: 0;
-          text-align: right;
+          line-height: 1.4;
         }
 
         .cognition-progression {
@@ -12997,9 +13184,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cognition-progression-item {
           display: flex;
-          align-items: baseline;
-          gap: 8px;
-          padding: 4px 0;
+          flex-direction: column;
+          gap: 2px;
+          padding: 6px 0;
           border-bottom: 1px solid rgba(30,35,48,0.4);
         }
         .cognition-progression-item:last-child { border-bottom: none; }
@@ -13007,16 +13194,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 11.5px;
           color: #ccd6f6;
-          flex: 1;
-          min-width: 0;
           line-height: 1.4;
         }
         .cognition-progression-effect {
           font-family: 'Courier New', monospace;
           font-size: 10px;
           color: #64ffda;
-          flex-shrink: 0;
-          text-align: right;
+          line-height: 1.4;
         }
 
         /* Left panel — cognition query answer overlay */
@@ -13874,6 +14058,16 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-family: 'Courier New', monospace;
           letter-spacing: 0.1em;
           color: #7a8aaa;
+        }
+        .sw-intel-balanced-causal-narrative {
+          font-size: 12.5px;
+          color: #ccd6f6;
+          line-height: 1.6;
+          padding: 10px 12px;
+          margin-bottom: 14px;
+          background: rgba(74, 158, 255, 0.04);
+          border-left: 2px solid #4a9eff;
+          border-radius: 0 2px 2px 0;
         }
         .sw-intel-balanced-section {
           margin-bottom: 12px;

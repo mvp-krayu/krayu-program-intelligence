@@ -684,6 +684,13 @@ const CONDITION_ONTOLOGY_CLASS = {
   CROSS_DOMAIN_COUPLING_PRESSURE:  { class_id: 'D', class_name: 'Reinforcement & Accumulation', class_question: 'Where are coupling patterns reinforcing structural rigidity?' },
   COUPLING_INERTIA:                { class_id: 'D', class_name: 'Reinforcement & Accumulation', class_question: 'Where are coupling patterns reinforcing structural rigidity?' },
   STRUCTURAL_BOUNDARY_DIVERGENCE:  { class_id: 'E', class_name: 'Drift & Instability', class_question: 'Where is structural drift undermining operational predictability?' },
+  EVENT_CONCENTRATION:             { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  RUNTIME_DEPENDENCY_CHOKE_POINT:  { class_id: 'B', class_name: 'Concentration & Saturation', class_question: 'Where is structural mass or dependency creating concentration risk?' },
+  BROKER_DEPENDENCY:               { class_id: 'C', class_name: 'Fragility & Resilience', class_question: 'Where does the structure lack resilience against change?' },
+  TOPIC_FANOUT_PRESSURE:           { class_id: 'A', class_name: 'Flow & Propagation', class_question: 'Where is operational flow concentrating or propagating beyond expected boundaries?' },
+  ASYNC_PROPAGATION_ASYMMETRY:     { class_id: 'A', class_name: 'Flow & Propagation', class_question: 'Where is operational flow concentrating or propagating beyond expected boundaries?' },
+  EDGE_CLOUD_PROPAGATION_RISK:     { class_id: 'A', class_name: 'Flow & Propagation', class_question: 'Where is operational flow concentrating or propagating beyond expected boundaries?' },
+  RUNTIME_OBSERVABILITY_GAP:       { class_id: 'E', class_name: 'Drift & Instability', class_question: 'Where is structural drift undermining operational predictability?' },
 }
 
 // ─── Exports ─────────────────────────────────────────

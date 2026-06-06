@@ -1,0 +1,129 @@
+{
+  "evidence_type": "API_BOUNDARY_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "framework": "NestJS @Controller",
+  "total_controllers": 63,
+
+  "controllers_by_domain": {
+    "DOMAIN-01": {
+      "domain_name": "Edge Data Acquisition",
+      "controllers": [
+        { "module": "devices", "route": "api/v1/devices", "file": "backend/src/modules/devices/devices.controller.ts" },
+        { "module": "sensors", "route": "api/v1/sensors", "file": "backend/src/modules/sensors/sensors.controller.ts" }
+      ]
+    },
+    "DOMAIN-03": {
+      "domain_name": "Fleet Core Operations",
+      "controllers": [
+        { "module": "vehicles", "route": "vehicles", "file": "backend/src/modules/vehicles/vehicles.controller.ts" },
+        { "module": "fleets", "route": "fleets", "file": "backend/src/modules/fleets/fleets.controller.ts" },
+        { "module": "drivers", "route": "drivers", "file": "backend/src/modules/drivers/drivers.controller.ts" },
+        { "module": "trips", "route": "trips", "file": "backend/src/modules/trips/trips.controller.ts" },
+        { "module": "alerts", "route": "alerts", "file": "backend/src/modules/alerts/alerts.controller.ts" },
+        { "module": "safety", "route": "safety", "file": "backend/src/modules/safety/safety.controller.ts" },
+        { "module": "maintenance", "route": "maintenance", "file": "backend/src/modules/maintenance/maintenance.controller.ts" },
+        { "module": "operations", "route": "operations", "file": "backend/src/modules/operations/operations.controller.ts" },
+        { "module": "ota", "route": "ota", "file": "backend/src/modules/ota/ota.controller.ts" },
+        { "module": "geofence-automation", "route": "geofence-automation", "file": "backend/src/modules/geofence-automation/geofence-automation.controller.ts" },
+        { "module": "compliance", "route": "compliance", "file": "backend/src/modules/compliance/compliance.controller.ts" },
+        { "module": "notifications", "route": "notifications", "file": "backend/src/modules/notifications/notifications.controller.ts" },
+        { "module": "vehicle-lifecycle", "route": "vehicle-lifecycle", "file": "backend/src/modules/vehicle-lifecycle/vehicle-lifecycle.controller.ts" },
+        { "module": "fleet-lifecycle", "route": "fleet-lifecycle", "file": "backend/src/modules/fleet-lifecycle/fleet-lifecycle.controller.ts" },
+        { "module": "permits", "route": "permits", "file": "backend/src/modules/permits/permits.controller.ts" }
+      ]
+    },
+    "DOMAIN-04": {
+      "domain_name": "Fleet Vertical Extensions",
+      "controllers": [
+        { "module": "tanker", "route": "tanker", "file": "backend/src/modules/tanker/tanker.controller.ts" },
+        { "module": "bus", "route": "bus", "file": "backend/src/modules/bus/bus.controller.ts" },
+        { "module": "taxi", "route": "taxi", "file": "backend/src/modules/taxi/taxi.controller.ts" },
+        { "module": "coldchain", "route": "coldchain", "file": "backend/src/modules/coldchain/coldchain.controller.ts" },
+        { "module": "fuel", "route": "fuel", "file": "backend/src/modules/fuel/fuel.controller.ts" }
+      ]
+    },
+    "DOMAIN-05": {
+      "domain_name": "Analytics and Intelligence",
+      "controllers": [
+        { "module": "analytics", "route": "analytics", "file": "backend/src/modules/analytics/analytics.controller.ts" },
+        { "module": "reports", "route": "reports", "file": "backend/src/modules/reports/reports.controller.ts" },
+        { "module": "executive", "route": "executive", "file": "backend/src/modules/executive/executive.controller.ts" },
+        { "module": "anomaly-detection", "route": "anomaly-detection", "file": "backend/src/modules/anomaly-detection/anomaly-detection.controller.ts" },
+        { "module": "diagnostics", "route": "diagnostics", "file": "backend/src/modules/diagnostics/diagnostics.controller.ts" },
+        { "module": "road-intelligence", "route": "road-intelligence", "file": "backend/src/modules/road-intelligence/road-intelligence.controller.ts" }
+      ]
+    },
+    "DOMAIN-06": {
+      "domain_name": "AI/ML Intelligence Layer",
+      "controllers": [
+        { "module": "agentic-ai", "route": "agentic-ai", "file": "backend/src/modules/agentic-ai/agentic-ai.controller.ts" },
+        { "module": "predictive-maintenance", "route": "predictive-maintenance", "file": "backend/src/modules/predictive-maintenance/predictive-maintenance.controller.ts" },
+        { "module": "fatigue-risk", "route": "fatigue-risk", "file": "backend/src/modules/fatigue-risk/fatigue-risk.controller.ts" },
+        { "module": "digital-twin", "route": "digital-twin", "file": "backend/src/modules/digital-twin/digital-twin.controller.ts" }
+      ]
+    },
+    "DOMAIN-07": {
+      "domain_name": "Sensor and Security Ingestion",
+      "controllers": [
+        { "module": "hasi", "route": "api/v1/hasi", "file": "backend/src/modules/hasi/hasi.controller.ts" }
+      ]
+    },
+    "DOMAIN-09": {
+      "domain_name": "Access Control and Identity",
+      "controllers": [
+        { "module": "auth", "route": "auth", "file": "backend/src/modules/auth/auth.controller.ts" },
+        { "module": "users", "route": "users", "file": "backend/src/modules/users/users.controller.ts" },
+        { "module": "multi-tenant", "route": "multi-tenant", "file": "backend/src/modules/multi-tenant/multi-tenant.controller.ts" }
+      ]
+    },
+    "DOMAIN-12": {
+      "domain_name": "SaaS Platform Layer",
+      "controllers": [
+        { "module": "billing", "route": "billing", "file": "backend/src/modules/billing/billing.controller.ts" },
+        { "module": "white-label", "route": "white-label", "file": "backend/src/modules/white-label/white-label.controller.ts" },
+        { "module": "customer-portal", "route": "customer-portal", "file": "backend/src/modules/customer-portal/customer-portal.controller.ts" },
+        { "module": "onboarding", "route": "onboarding", "file": "backend/src/modules/onboarding/onboarding.controller.ts" },
+        { "module": "finance", "route": "finance", "file": "backend/src/modules/finance/finance.controller.ts" },
+        { "module": "insurance", "route": "insurance", "file": "backend/src/modules/insurance/insurance.controller.ts" },
+        { "module": "data-monetization", "route": "data-monetization", "file": "backend/src/modules/data-monetization/data-monetization.controller.ts" }
+      ]
+    },
+    "DOMAIN-13": {
+      "domain_name": "External Integration",
+      "controllers": [
+        { "module": "erp-connectors", "route": "erp-connectors", "file": "backend/src/modules/erp-connectors/erp-connectors.controller.ts" },
+        { "module": "integration-hub", "route": "integration-hub", "file": "backend/src/modules/integration-hub/integration-hub.controller.ts" },
+        { "module": "integration-notifications", "route": "integration-notifications", "file": "backend/src/modules/integration-notifications/integration-notifications.controller.ts" },
+        { "module": "api-marketplace", "route": "api-marketplace", "file": "backend/src/modules/api-marketplace/api-marketplace.controller.ts" },
+        { "module": "blockchain", "route": "blockchain", "file": "backend/src/modules/blockchain/blockchain.controller.ts" }
+      ]
+    },
+    "DOMAIN-15": {
+      "domain_name": "EV and Electrification",
+      "controllers": [
+        { "module": "ev", "route": "ev", "file": "backend/src/modules/ev/ev.controller.ts" },
+        { "module": "v2g", "route": "v2g", "file": "backend/src/modules/v2g/v2g.controller.ts" },
+        { "module": "charging-stations", "route": "charging-stations", "file": "backend/src/modules/charging-stations/charging-stations.controller.ts" },
+        { "module": "depot-charging", "route": "depot-charging", "file": "backend/src/modules/depot-charging/depot-charging.controller.ts" },
+        { "module": "electrification", "route": "electrification", "file": "backend/src/modules/electrification/electrification.controller.ts" }
+      ]
+    },
+    "DOMAIN-17": {
+      "domain_name": "Extended Operations and Driver Services",
+      "controllers": [
+        { "module": "driver-sessions", "route": "driver-sessions", "file": "backend/src/modules/driver-sessions/driver-sessions.controller.ts" },
+        { "module": "driver-scoring", "route": "driver-scoring", "file": "backend/src/modules/driver-scoring/driver-scoring.controller.ts" },
+        { "module": "driver-incentives", "route": "driver-incentives", "file": "backend/src/modules/driver-incentives/driver-incentives.controller.ts" },
+        { "module": "driver-mobile", "route": "driver-mobile", "file": "backend/src/modules/driver-mobile/driver-mobile.controller.ts" },
+        { "module": "surge-pricing", "route": "surge-pricing", "file": "backend/src/modules/surge-pricing/surge-pricing.controller.ts" },
+        { "module": "cross-border", "route": "cross-border", "file": "backend/src/modules/cross-border/cross-border.controller.ts" },
+        { "module": "messaging", "route": "messaging", "file": "backend/src/modules/messaging/messaging.controller.ts" },
+        { "module": "parts-marketplace", "route": "parts-marketplace", "file": "backend/src/modules/parts-marketplace/parts-marketplace.controller.ts" },
+        { "module": "aftersales", "route": "aftersales", "file": "backend/src/modules/aftersales/aftersales.controller.ts" }
+      ]
+    }
+  }
+}

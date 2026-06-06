@@ -1325,6 +1325,42 @@ function ruleCompoundConvergence(primitiveConditions, registry) {
 
 // ─── Main Synthesis Pipeline ───────────────────────────────────────
 
+function runtimeSignalToCondition(rsig, registry) {
+  const resolve = buildDomainResolver(registry)
+  const domains = (rsig.affected_domains || []).map(d => resolve(d) || d).filter(Boolean)
+
+  return {
+    condition_id: 'rt-' + rsig.signal_type.toLowerCase().replace(/_/g, '-'),
+    condition_type: rsig.signal_type,
+    internal_condition_id: rsig.signal_type,
+    technical_semantic_label: rsig.l2,
+    operator_cognition_title: rsig.l3,
+    operational_consequence: rsig.operational_consequence,
+    governance_boundary: rsig.governance_boundary || 'RUNTIME_STRUCTURAL',
+    topology_effect: 'Runtime connectivity evidence — ' + rsig.evidence_class,
+    severity: rsig.severity,
+    supporting_signal_ids: [rsig.signal_id],
+    shared_topology_targets: { domains: rsig.affected_domains || [], clusters: [], files: [] },
+    pressure_zone_ids: [],
+    evidence_mode: 'RUNTIME_EVIDENCE',
+    evidence_class: rsig.evidence_class,
+    measurement_basis: rsig.measurement_basis,
+    signal_value: rsig.signal_value,
+    topology_overlay: {
+      overlay_mode: 'RUNTIME_' + rsig.evidence_class,
+      emphasis_domains: rsig.affected_domains || [],
+      dim_domains: [],
+      advisory_zones: [],
+      signal_overlays: [{ signal_id: rsig.signal_id, signal_name: rsig.signal_name, severity: rsig.severity, type: 'runtime' }],
+      corridor_paths: [],
+    },
+    guided_interventions: [],
+    orchestration_hooks: [],
+    contributing_features: ['runtime_' + rsig.signal_type.toLowerCase()],
+    derivation_trace: rsig.signal_id + ' (' + rsig.evidence_class + ', value=' + rsig.signal_value + ') → ' + rsig.signal_type,
+  }
+}
+
 function synthesize(fullReport) {
   if (!fullReport) return { conditions: [], active: [], suppressed: [], summary: null }
 
@@ -1342,7 +1378,7 @@ function synthesize(fullReport) {
     features: extractFeatures(signal, pressureZoneState, structuralEnrichment),
   }))
 
-  const primitives = [
+  const staticPrimitives = [
     ...ruleDeliveryPressureConcentration(taggedSignals, pressureZoneState, registry),
     ...ruleDependencyChokePoint(taggedSignals, registry, pressureZoneState, topologyEdges),
     ...rulePropagationAsymmetry(taggedSignals, registry, pressureZoneState, topologyEdges, structuralEnrichment),
@@ -1354,6 +1390,11 @@ function synthesize(fullReport) {
     ...ruleCouplingInertia(taggedSignals, registry, structuralEnrichment, pressureZoneState),
     ...ruleGovernanceCoverageStatus(taggedSignals, pressureZoneState, registry),
   ]
+
+  const runtimeSignals = fullReport._runtime_signals || []
+  const runtimePrimitives = runtimeSignals.map(rsig => runtimeSignalToCondition(rsig, registry))
+
+  const primitives = [...staticPrimitives, ...runtimePrimitives]
 
   const composites = ruleCompoundConvergence(primitives, registry)
 
@@ -1383,12 +1424,16 @@ function synthesize(fullReport) {
     primitives,
     composites,
     primary: primaryCondition,
+    runtime_signal_count: runtimeSignals.length,
+    runtime_condition_count: runtimePrimitives.length,
     summary: {
-      total_signals: signals.length,
+      total_signals: signals.length + runtimeSignals.length,
       total_conditions: allConditions.length,
       active_count: active.length,
       suppressed_count: suppressed.length,
       composite_count: composites.length,
+      static_condition_count: staticPrimitives.length,
+      runtime_condition_count: runtimePrimitives.length,
       primary_condition: primaryCondition ? primaryCondition.operator_cognition_title : null,
       primary_severity: primaryCondition ? primaryCondition.severity : null,
     },
@@ -1438,4 +1483,76 @@ function synthesizeTeaser(fullReport) {
   }
 }
 
-module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS }
+// ─── VISIBILITY-LAYER DOMAIN QUALIFICATION ──────────────────────
+// Augments specimen domain backing with runtime connectivity evidence.
+// Must run BEFORE synthesize() so condition formation reflects
+// actual system connectivity, not static-import-only backing.
+
+const BACKING_STATUS = {
+  STATIC_BACKED: 'STATIC_BACKED',
+  RUNTIME_BACKED: 'RUNTIME_BACKED',
+  SYSTEM_BACKED: 'SYSTEM_BACKED',
+  SEMANTIC_ONLY: 'SEMANTIC_ONLY',
+  UNRESOLVED: 'UNRESOLVED',
+}
+
+function qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs) {
+  if (!fullReport) return fullReport
+  if (!visibilityLayerCompleteness && !runtimeConnectivityEdges) return fullReport
+
+  const qualified = { ...fullReport }
+  const registry = [...(fullReport.semantic_domain_registry || [])]
+
+  if (runtimeGraphs && runtimeGraphs._derived_signals) {
+    qualified._runtime_signals = runtimeGraphs._derived_signals
+  }
+
+  const runtimeConnectedDomains = new Set()
+  if (runtimeConnectivityEdges) {
+    for (const edge of runtimeConnectivityEdges) {
+      if (edge.source_domain) runtimeConnectedDomains.add(edge.source_domain)
+      if (edge.target_domain) runtimeConnectedDomains.add(edge.target_domain)
+    }
+  }
+
+  let backedCount = 0
+  let runtimeBackedCount = 0
+
+  qualified.semantic_domain_registry = registry.map(d => {
+    const dom = { ...d }
+    if (d.structurally_backed) {
+      dom.backing_status = BACKING_STATUS.STATIC_BACKED
+      if (runtimeConnectedDomains.has(d.domain_id)) {
+        dom.backing_status = BACKING_STATUS.SYSTEM_BACKED
+      }
+      backedCount++
+    } else if (runtimeConnectedDomains.has(d.domain_id)) {
+      dom.backing_status = BACKING_STATUS.RUNTIME_BACKED
+      dom.runtime_visible = true
+      runtimeBackedCount++
+      backedCount++
+    } else {
+      dom.backing_status = BACKING_STATUS.SEMANTIC_ONLY
+    }
+    return dom
+  })
+
+  if (runtimeBackedCount > 0 && fullReport.topology_summary) {
+    const totalDomains = registry.length
+    qualified.topology_summary = {
+      ...fullReport.topology_summary,
+      structurally_backed_count: backedCount,
+      semantic_only_count: totalDomains - backedCount,
+      grounding_ratio: totalDomains > 0 ? backedCount / totalDomains : 0,
+      runtime_backed_count: runtimeBackedCount,
+      static_backed_count: backedCount - runtimeBackedCount,
+      coverage_classification: backedCount / totalDomains >= 0.8 ? 'HIGH'
+        : backedCount / totalDomains >= 0.5 ? 'MEDIUM' : 'LOW',
+      backing_qualification: 'VISIBILITY_LAYER_QUALIFIED',
+    }
+  }
+
+  return qualified
+}
+
+module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS, qualifyDomainBacking, BACKING_STATUS }

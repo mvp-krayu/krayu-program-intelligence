@@ -1,0 +1,68 @@
+{
+  "stream_id": "PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01",
+  "classification": "G1",
+  "validation_date": "2026-06-02",
+  "checks": [
+    {
+      "name": "doctrine_derivation",
+      "description": "Architecture derived from frozen commercial contracts (SA, SA-DD, SC, SE) and cognition chain (CIP → PICR → PICP → PRE → Consumer)",
+      "result": "PASS"
+    },
+    {
+      "name": "three_surface_architecture",
+      "description": "Customer ⊂ Operator ⊂ Platform nesting rule defined and enforced",
+      "result": "PASS"
+    },
+    {
+      "name": "consumption_maturity_levels",
+      "description": "4 levels defined (Export Only → Guided Access → Self-Service → Platform) with SKU mapping",
+      "result": "PASS"
+    },
+    {
+      "name": "hosting_maturity_model",
+      "description": "SA-DD MVP hosting defined with full hosting evolution path",
+      "result": "PASS"
+    },
+    {
+      "name": "governance_boundaries",
+      "description": "3 boundaries defined: Customer↔Operator, Co-Pilot↔PI Truth, Constitutional Prohibitions",
+      "result": "PASS"
+    },
+    {
+      "name": "sku_readiness_assessment",
+      "description": "SA and SA-DD sellable (zero blockers). SC and SE require gap closure.",
+      "result": "PASS"
+    },
+    {
+      "name": "customer_route_model",
+      "description": "Per-SKU route sets defined with progressive inclusion",
+      "result": "PASS"
+    },
+    {
+      "name": "operator_route_model",
+      "description": "Co-Pilot routes defined: /copilot (Level 0), /lens/{client}/{run}/copilot (Level 1/2)",
+      "result": "PASS"
+    },
+    {
+      "name": "baseline_frozen",
+      "description": "CONSUMPTION_ARCHITECTURE_BASELINE.md produced as frozen derivative — no conceptual reopening",
+      "result": "PASS"
+    },
+    {
+      "name": "no_runtime_mutation",
+      "description": "Stream produces documentation artifacts only — no code changes",
+      "result": "PASS"
+    },
+    {
+      "name": "cross_reference_integrity",
+      "description": "All cross-references point to existing or co-produced artifacts",
+      "result": "PASS"
+    },
+    {
+      "name": "13_prohibitions_preserved",
+      "description": "Both surfaces operate under same 13 absolute prohibitions (LENS 75.x)",
+      "result": "PASS"
+    }
+  ],
+  "summary": "12/12 PASS"
+}

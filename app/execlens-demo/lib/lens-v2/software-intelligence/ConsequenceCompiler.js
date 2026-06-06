@@ -74,6 +74,48 @@ const CONSEQUENCE_VOCABULARY = {
     operator_consequence_title: 'Structural Gravity Well',
     operational_implication: 'The structurally dominant region attracts disproportionate operational stress.',
   },
+  RT_EVENT_CONCENTRATION: {
+    consequence_type_id: 'RT_EVENT_CONCENTRATION',
+    structural_consequence_label: 'Runtime Event Coordination Concentration',
+    operator_consequence_title: 'Event Coordination Concentration',
+    operational_implication: 'Event infrastructure carries disproportionate coordination load — all domain events route through a central bus.',
+  },
+  RT_RUNTIME_DEPENDENCY_CHOKE_POINT: {
+    consequence_type_id: 'RT_RUNTIME_DEPENDENCY_CHOKE_POINT',
+    structural_consequence_label: 'Runtime Channel Dependency Concentration',
+    operator_consequence_title: 'Runtime Dependency Choke Point',
+    operational_implication: 'A runtime channel or gateway is a dependency for multiple domains — failure disrupts cross-domain coordination.',
+  },
+  RT_BROKER_DEPENDENCY: {
+    consequence_type_id: 'RT_BROKER_DEPENDENCY',
+    structural_consequence_label: 'Shared Broker Single-Point Dependency',
+    operator_consequence_title: 'Broker Dependency Risk',
+    operational_implication: 'All edge-to-cloud communication depends on a single broker — a single point of failure for telemetry ingestion.',
+  },
+  RT_TOPIC_FANOUT_PRESSURE: {
+    consequence_type_id: 'RT_TOPIC_FANOUT_PRESSURE',
+    structural_consequence_label: 'Topic Fan-Out Propagation Surface',
+    operator_consequence_title: 'Topic Fanout Pressure',
+    operational_implication: 'Topic families feed multiple consumers — changes to topic structure propagate broadly across domains.',
+  },
+  RT_ASYNC_PROPAGATION_ASYMMETRY: {
+    consequence_type_id: 'RT_ASYNC_PROPAGATION_ASYMMETRY',
+    structural_consequence_label: 'Async Event Producer/Handler Imbalance',
+    operator_consequence_title: 'Async Propagation Asymmetry',
+    operational_implication: 'Broad event vocabulary converges on narrow handler surface — concentrated failure exposure.',
+  },
+  RT_EDGE_CLOUD_PROPAGATION_RISK: {
+    consequence_type_id: 'RT_EDGE_CLOUD_PROPAGATION_RISK',
+    structural_consequence_label: 'Edge-to-Cloud Dependency Path',
+    operator_consequence_title: 'Edge-Cloud Propagation Exposure',
+    operational_implication: 'Edge devices depend on cloud-side coordination through a single ingestion path — edge failure propagates to cloud visibility.',
+  },
+  RT_RUNTIME_OBSERVABILITY_GAP: {
+    consequence_type_id: 'RT_RUNTIME_OBSERVABILITY_GAP',
+    structural_consequence_label: 'Runtime Traceability Incompleteness',
+    operator_consequence_title: 'Runtime Observability Gap',
+    operational_implication: 'Runtime flows exist with weak traceability — event types defined without matching handlers.',
+  },
   SYSTEMIC_OP_FRAG: {
     consequence_type_id: 'SYSTEMIC_OP_FRAG',
     structural_consequence_label: 'Systemic Multi-Factor Operational Fragility',
@@ -199,6 +241,8 @@ function makeAtomic(typeId, condition, scope, isDefining, registry) {
     }],
     pressure_zone_id: condition.pressure_zone_id || null,
     temporal_marker: null,
+    evidence_class: condition.evidence_class || 'STATIC_IMPORT',
+    visibility_layer: condition.evidence_mode === 'RUNTIME_EVIDENCE' ? 'RUNTIME' : 'STATIC',
     _src_type: condition.condition_type,
     _src_boundary: condition.governance_boundary,
     _defining: isDefining,
@@ -314,6 +358,25 @@ function mapCC(cond, registry) {
   return [makeAtomic('STAB_RISK', cond, 'SYSTEMIC', true, registry)]
 }
 
+const RUNTIME_CANONICAL_FAMILY = {
+  EVENT_CONCENTRATION: 'COORD_FRAG',
+  RUNTIME_DEPENDENCY_CHOKE_POINT: 'DEP_AMP',
+  BROKER_DEPENDENCY: 'RESIL_DEF',
+  TOPIC_FANOUT_PRESSURE: 'PROP_EXP',
+  ASYNC_PROPAGATION_ASYMMETRY: 'COORD_FRAG',
+  EDGE_CLOUD_PROPAGATION_RISK: 'DEL_EXP',
+  RUNTIME_OBSERVABILITY_GAP: 'GOV_GAP',
+}
+
+function mapRuntimeCondition(cond, registry) {
+  const canonicalType = RUNTIME_CANONICAL_FAMILY[cond.condition_type] || 'COORD_FRAG'
+  if (!CONSEQUENCE_VOCABULARY[canonicalType]) return []
+  const domains = (cond.shared_topology_targets && cond.shared_topology_targets.domains) || []
+  const scope = domains.length > 2 ? 'SYSTEMIC' : domains.length > 0 ? 'REGIONAL' : 'LOCAL'
+
+  return [makeAtomic(canonicalType, cond, scope, true, registry)]
+}
+
 function mapCondition(cond, ctx, registry) {
   switch (cond.condition_type) {
     case 'DELIVERY_PRESSURE_CONCENTRATION': return mapDPC(cond, registry)
@@ -327,6 +390,14 @@ function mapCondition(cond, ctx, registry) {
     case 'COUPLING_INERTIA': return mapCI(cond, registry)
     case 'GOVERNANCE_COVERAGE_STATUS': return mapGCS(cond, registry)
     case 'COMPOUND_CONVERGENCE': return mapCC(cond, registry)
+    case 'EVENT_CONCENTRATION':
+    case 'RUNTIME_DEPENDENCY_CHOKE_POINT':
+    case 'BROKER_DEPENDENCY':
+    case 'TOPIC_FANOUT_PRESSURE':
+    case 'ASYNC_PROPAGATION_ASYMMETRY':
+    case 'EDGE_CLOUD_PROPAGATION_RISK':
+    case 'RUNTIME_OBSERVABILITY_GAP':
+      return mapRuntimeCondition(cond, registry)
     default: return []
   }
 }
@@ -354,6 +425,10 @@ function deduplicateConsequences(atomics) {
       g._defining = g._defining || csq._defining
       g.derivation_trace = [...(g.derivation_trace || []), ...(csq.derivation_trace || [])]
       g.evidence_refs = [...(g.evidence_refs || []), ...(csq.evidence_refs || [])]
+      if (csq.visibility_layer === 'RUNTIME') g.visibility_layer = 'MIXED'
+      if (csq.evidence_class && csq.evidence_class !== g.evidence_class) {
+        g.evidence_class = 'MIXED'
+      }
     }
   }
 
@@ -452,6 +527,12 @@ function makeCombination(patternId, contributing, lk, escalate, registry) {
     derivation_trace: [...allDerivationSteps, combinationStep],
     pressure_zone_id: first.pressure_zone_id || null,
     temporal_marker: null,
+    evidence_class: contributing.some(c => c.evidence_class === 'MIXED' || (c.visibility_layer === 'RUNTIME'))
+      ? (contributing.every(c => c.visibility_layer === 'RUNTIME') ? contributing[0].evidence_class : 'MIXED')
+      : (first.evidence_class || 'STATIC_IMPORT'),
+    visibility_layer: contributing.some(c => c.visibility_layer === 'RUNTIME')
+      ? (contributing.every(c => c.visibility_layer === 'RUNTIME') ? 'RUNTIME' : 'MIXED')
+      : 'STATIC',
   }
 }
 
@@ -647,12 +728,48 @@ const COGNITION_SLICE_VOCABULARY = {
   },
   COMPOUND_CONVERGENCE: { executive_name: null, localize: () => null, is_dynamic: false },
   GOVERNANCE_COVERAGE_STATUS: { executive_name: null, localize: () => null, is_dynamic: false },
+  EVENT_CONCENTRATION: {
+    executive_name: 'Event Coordination Concentration',
+    localize: (d) => `Event infrastructure concentrates coordination load — all domain events route through a central bus affecting ${d}.`,
+    is_dynamic: true,
+  },
+  RUNTIME_DEPENDENCY_CHOKE_POINT: {
+    executive_name: 'Runtime Dependency Choke Point',
+    localize: (d) => `A runtime channel or gateway serving ${d} is a dependency for multiple domains — failure disrupts cross-domain coordination.`,
+    is_dynamic: true,
+  },
+  BROKER_DEPENDENCY: {
+    executive_name: 'Broker Dependency Risk',
+    localize: (d) => `All edge-to-cloud communication depends on a single broker — a single point of failure for telemetry reaching ${d}.`,
+    is_dynamic: true,
+  },
+  TOPIC_FANOUT_PRESSURE: {
+    executive_name: 'Topic Fanout Pressure',
+    localize: (d) => `MQTT topic families feeding ${d} create broad propagation surface — topic structure changes propagate widely.`,
+    is_dynamic: true,
+  },
+  ASYNC_PROPAGATION_ASYMMETRY: {
+    executive_name: 'Async Propagation Asymmetry',
+    localize: (d) => `Broad event vocabulary converges on narrow handler surface at ${d} — many event types, few handlers, concentrated failure exposure.`,
+    is_dynamic: true,
+  },
+  EDGE_CLOUD_PROPAGATION_RISK: {
+    executive_name: 'Edge-Cloud Propagation Exposure',
+    localize: (d) => `Edge devices depend on cloud-side coordination at ${d} through a single ingestion path — edge failure propagates to cloud visibility.`,
+    is_dynamic: true,
+  },
+  RUNTIME_OBSERVABILITY_GAP: {
+    executive_name: 'Runtime Observability Gap',
+    localize: (d) => `Runtime flows at ${d} have weak traceability — event types exist without matching handlers.`,
+    is_dynamic: true,
+  },
 }
 
 const CONFIDENCE_EXECUTIVE = {
   GOVERNED: 'Governed',
   ADVISORY_BOUND: 'Advisory-bound',
   STRUCTURAL_ONLY: 'Structural only',
+  RUNTIME_STRUCTURAL: 'Runtime-structural',
 }
 
 // ─── Persona: BOARDROOM (§10.1) ────────────────────────
@@ -714,6 +831,12 @@ function deriveDomainRiskProfile(conditionTypes) {
   return { shape: 'stress', label: riskLabel, classes: classKey }
 }
 
+const RUNTIME_CONDITION_SET = new Set([
+  'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY',
+  'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY',
+  'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP',
+])
+
 function synthesizeBoardroomNarrative(domainConcentration, slices) {
   if (!domainConcentration || domainConcentration.length === 0) return { domain_narratives: [], executive_synthesis: null }
 
@@ -753,7 +876,13 @@ function synthesizeBoardroomNarrative(domainConcentration, slices) {
     synthesis = `${a.domain} ${aVerb} — ${a.risk_label}. ${b.domain} has a separate problem: ${b.risk_label}. These are distinct operational risks with different remediation shapes.`
   } else {
     const a = narratives[0]
-    synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. ${narratives.length - 1} other region${narratives.length - 1 > 1 ? 's' : ''} show independent structural stress.`
+    const runtimeDomains = narratives.filter((n, i) => i > 0 && slices.some(s => s.domain === n.domain && RUNTIME_CONDITION_SET.has(s.condition_type)))
+    if (runtimeDomains.length > 0) {
+      const rtNames = runtimeDomains.slice(0, 3).map(n => n.domain).join(', ')
+      synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. Runtime connectivity analysis reveals additional structural stress in ${rtNames}${runtimeDomains.length > 3 ? ` (+${runtimeDomains.length - 3} more)` : ''}. ${narratives.length - 1 - runtimeDomains.length > 0 ? (narratives.length - 1 - runtimeDomains.length) + ' other region' + (narratives.length - 1 - runtimeDomains.length > 1 ? 's' : '') + ' also show structural stress.' : ''}`
+    } else {
+      synthesis = `${a.domain} concentrates the dominant risk — ${a.risk_label}. ${narratives.length - 1} other region${narratives.length - 1 > 1 ? 's' : ''} show independent structural stress.`
+    }
   }
 
   return { domain_narratives: narratives, executive_synthesis: synthesis }
@@ -792,6 +921,8 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         severity: cond.severity,
         confidence: cond.governance_boundary,
         confidence_label: CONFIDENCE_EXECUTIVE[cond.governance_boundary] || cond.governance_boundary,
+        evidence_class: cond.evidence_class || 'STATIC_IMPORT',
+        evidence_mode: cond.evidence_mode || 'STATIC_EVIDENCE',
         evidence_refs: [{
           type: 'condition',
           id: cond.condition_id,
@@ -816,6 +947,10 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     ? `This dynamic indicates ${postureLabel} in ${primaryLocus}.${confidenceSuffix}`
     : null
 
+  const allAtomics = consequenceResult.atomic_consequences || []
+  const runtimeAtomicCount = allAtomics.filter(a => a.visibility_layer === 'RUNTIME').length
+  const totalAtomicCount = allAtomics.length
+
   const consequenceThemes = []
   const themeMap = {}
   for (const csq of csqs) {
@@ -830,6 +965,9 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         scope: csq.consequence_scope,
         source_count: (csq.source_conditions || []).length,
         is_combination: !!csq.combination_pattern,
+        _evidence_classes: new Set(),
+        _static_sources: 0,
+        _runtime_sources: 0,
       }
     } else {
       themeMap[tid].source_count += (csq.source_conditions || []).length
@@ -837,9 +975,37 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
         themeMap[tid].severity = csq.severity
       }
     }
+    if (csq.evidence_class) themeMap[tid]._evidence_classes.add(csq.evidence_class)
+    const srcTypes = csq.source_condition_types || []
+    const hasRuntimeSrc = srcTypes.some(t => RUNTIME_CONDITION_SET.has(t))
+    if (csq.visibility_layer === 'RUNTIME' || csq.visibility_layer === 'MIXED' || hasRuntimeSrc) {
+      themeMap[tid]._runtime_sources += (csq.source_conditions || []).length
+    } else {
+      themeMap[tid]._static_sources += (csq.source_conditions || []).length
+    }
   }
   for (const tid of Object.keys(themeMap)) {
-    consequenceThemes.push(themeMap[tid])
+    const t = themeMap[tid]
+    t.evidence_classes = [...t._evidence_classes]
+    t.static_sources = t._static_sources
+    t.runtime_sources = t._runtime_sources
+    if (t._runtime_sources > 0 && t._static_sources > 0) {
+      t.evidence_diversity = 'MIXED'
+      t.evidence_annotation = `${t.source_count} sources (${t._static_sources} static, ${t._runtime_sources} runtime)`
+    } else if (t._runtime_sources > 0) {
+      t.evidence_diversity = 'RUNTIME'
+      t.evidence_annotation = `${t.source_count} sources (runtime connectivity evidence)`
+    } else if (runtimeAtomicCount > 0) {
+      t.evidence_diversity = 'MIXED'
+      t.evidence_annotation = `${t.source_count} sources — system includes ${runtimeAtomicCount} runtime-derived findings across ${totalAtomicCount} total structural observations`
+    } else {
+      t.evidence_diversity = 'STATIC'
+      t.evidence_annotation = `${t.source_count} sources`
+    }
+    delete t._evidence_classes
+    delete t._static_sources
+    delete t._runtime_sources
+    consequenceThemes.push(t)
   }
   consequenceThemes.sort((a, b) => (SEVERITY_RANK[b.severity] || 0) - (SEVERITY_RANK[a.severity] || 0))
 
@@ -995,6 +1161,13 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
   const primary = csqs[0]
   const isCombination = !!primary.combination_pattern
 
+  const contributingTypes = isCombination
+    ? (primary.source_condition_types || []).map(ct => {
+        const vocab = COGNITION_SLICE_VOCABULARY[ct]
+        return { condition_type: ct, executive_name: vocab ? vocab.executive_name : ct }
+      })
+    : null
+
   const primaryStory = {
     consequence_type_id: primary.consequence_type_id,
     title: primary.operator_consequence_title,
@@ -1008,7 +1181,11 @@ function forBalanced(consequenceResult, synthesisResult, fullReport) {
     evidence_refs: primary.evidence_refs || [],
     source_signal_ids: primary.source_signal_ids || [],
     is_combination: isCombination,
+    combination_pattern: isCombination ? primary.combination_pattern : null,
     combination_explanation: isCombination ? deriveCombinationExplanation(primary) : null,
+    contributing_condition_types: contributingTypes,
+    escalation_applied: isCombination ? (primary.escalation_applied || false) : false,
+    escalation_reason: isCombination ? (primary.escalation_reason || null) : null,
   }
 
   const reinforcementFlow = csqs.slice(1).map(csq => {
@@ -1145,6 +1322,89 @@ function forInvestigation(consequenceResult, synthesisResult) {
 
 // ─── Exports ───────────────────────────────────────────
 
+function deriveArchitecturalFindings(consequenceResult, synthesisResult, fullReport) {
+  if (!consequenceResult || !synthesisResult) return []
+  const findings = []
+  const conditions = synthesisResult.conditions || []
+  const atomics = consequenceResult.atomic_consequences || []
+  const stAtomics = atomics.filter(a => a.visibility_layer !== 'RUNTIME')
+  const rtAtomics = atomics.filter(a => a.visibility_layer === 'RUNTIME')
+  const registry = (fullReport && fullReport.semantic_domain_registry) || []
+  const ts = (fullReport && fullReport.topology_summary) || {}
+
+  const stLoci = [...new Set(stAtomics.map(a => a.primary_locus_display).filter(Boolean))]
+  const rtLoci = [...new Set(rtAtomics.map(a => a.primary_locus_display).filter(Boolean))]
+  const sharedLoci = stLoci.filter(l => rtLoci.includes(l))
+  const rtOnlyLoci = rtLoci.filter(l => !stLoci.includes(l))
+
+  if (stLoci.length > 0 && rtLoci.length > 0 && rtOnlyLoci.length > 0) {
+    findings.push({
+      id: 'AF-001',
+      title: 'Structural vs Operational Gravity Divergence',
+      description: 'The code\'s structural center of mass and the system\'s operational center of mass do not fully coincide. Static gravity concentrates at ' + stLoci.slice(0, 2).join(', ') + '. Runtime operational gravity concentrates at ' + rtOnlyLoci.slice(0, 3).join(', ') + '.' + (sharedLoci.length > 0 ? ' Partial overlap at ' + sharedLoci.join(', ') + '.' : ''),
+      evidence: 'Static: ' + stAtomics.length + ' consequences across ' + stLoci.length + ' loci. Runtime: ' + rtAtomics.length + ' consequences across ' + rtLoci.length + ' loci. Divergent loci: ' + rtOnlyLoci.length + '.',
+      significance: 'CRITICAL',
+      impacted_domains: [...new Set([...stLoci, ...rtOnlyLoci])],
+      executive_implication: 'Transformation planning based solely on static code analysis targets the wrong center of mass for operational resilience. The runtime coordination backbone requires separate assessment.',
+    })
+  }
+
+  const totalDomains = registry.length
+  const runtimeBacked = registry.filter(d => d.backing_status === 'RUNTIME_BACKED' || d.runtime_visible).length
+  if (runtimeBacked > 0) {
+    findings.push({
+      id: 'AF-002',
+      title: 'Runtime Visibility Corrected Domain Coverage',
+      description: runtimeBacked + ' of ' + totalDomains + ' domains were invisible to static import analysis but operationally connected through runtime connectivity. The original Q-03 "semantic-only" classification was a visibility-layer gap, not a coverage gap.',
+      evidence: 'Static backing: ' + (totalDomains - runtimeBacked) + ' domains. Runtime backing: ' + runtimeBacked + ' domains. Evidence layers: EVENT_FLOW, MQTT_TOPIC_FLOW, WEBSOCKET_FLOW, API_BOUNDARY, DI_MODULE_GRAPH.',
+      significance: 'HIGH',
+      impacted_domains: registry.filter(d => d.backing_status === 'RUNTIME_BACKED' || d.runtime_visible).map(d => d.business_label || d.domain_name || d.domain_id),
+      executive_implication: 'Domain coverage is complete when measured across all visibility layers. The previous "13 dark domains" conclusion was a measurement limitation, not a system reality.',
+    })
+  }
+
+  const brokerCond = conditions.find(c => c.condition_type === 'BROKER_DEPENDENCY')
+  if (brokerCond) {
+    findings.push({
+      id: 'AF-003',
+      title: 'MQTT Broker Operational Single Point of Failure',
+      description: 'All edge-to-cloud telemetry routes through a single MQTT broker. Edge agents on separate hardware depend entirely on this endpoint. No import graph analysis can detect this dependency.',
+      evidence: brokerCond.measurement_basis || 'Single broker dependency detected via MQTT topology analysis.',
+      significance: 'HIGH',
+      impacted_domains: (brokerCond.shared_topology_targets && brokerCond.shared_topology_targets.domains) || [],
+      executive_implication: 'Broker failure disconnects all field telemetry. This is the highest-impact single point of failure in the system and is invisible to static code analysis.',
+    })
+  }
+
+  const eventCond = conditions.find(c => c.condition_type === 'EVENT_CONCENTRATION' && c.evidence_class === 'EVENT_FLOW')
+  if (eventCond) {
+    findings.push({
+      id: 'AF-004',
+      title: 'Event Coordination Backbone Concentration',
+      description: 'Domain event infrastructure concentrates coordination load through a narrow handler surface. ' + (eventCond.measurement_basis || ''),
+      evidence: 'Event concentration ratio: ' + eventCond.signal_value + ':1. Evidence class: EVENT_FLOW.',
+      significance: 'ELEVATED',
+      impacted_domains: (eventCond.shared_topology_targets && eventCond.shared_topology_targets.domains) || [],
+      executive_implication: 'Handler failure affects all operational domains simultaneously. The event bus is the coordination backbone, not the import graph.',
+    })
+  }
+
+  const edgeCloudCond = conditions.find(c => c.condition_type === 'EDGE_CLOUD_PROPAGATION_RISK')
+  if (edgeCloudCond) {
+    findings.push({
+      id: 'AF-005',
+      title: 'Edge-Cloud Dependency Chain',
+      description: 'Edge devices run on separate hardware and communicate with the cloud through MQTT. This dependency crosses deployment boundaries and is invisible to any single-codebase analysis. ' + (edgeCloudCond.measurement_basis || ''),
+      evidence: 'Evidence class: MQTT_TOPIC_FLOW. Edge agents: separate hardware (systemd services).',
+      significance: 'ELEVATED',
+      impacted_domains: (edgeCloudCond.shared_topology_targets && edgeCloudCond.shared_topology_targets.domains) || [],
+      executive_implication: 'The system boundary extends beyond the codebase. Static analysis sees the cloud application. Runtime analysis sees the edge-cloud dependency chain.',
+    })
+  }
+
+  return findings
+}
+
 module.exports = {
   compile,
   compileTeaser,
@@ -1152,7 +1412,8 @@ module.exports = {
   forBalanced,
   forOperator,
   forInvestigation,
+  deriveArchitecturalFindings,
   CONSEQUENCE_VOCABULARY,
   COGNITION_SLICE_VOCABULARY,
-  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE']),
+  MAP_CONDITION_KEYS: new Set(['DELIVERY_PRESSURE_CONCENTRATION', 'DEPENDENCY_CHOKE_POINT', 'PROPAGATION_ASYMMETRY', 'STRUCTURAL_MASS_CONCENTRATION', 'CROSS_DOMAIN_COUPLING_PRESSURE', 'EXECUTION_FRAGILITY', 'EXECUTION_CONSTRICTION', 'STRUCTURAL_BOUNDARY_DIVERGENCE', 'COUPLING_INERTIA', 'GOVERNANCE_COVERAGE_STATUS', 'COMPOUND_CONVERGENCE', 'EVENT_CONCENTRATION', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK', 'RUNTIME_OBSERVABILITY_GAP']),
 }

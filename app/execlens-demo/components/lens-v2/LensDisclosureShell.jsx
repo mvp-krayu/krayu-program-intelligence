@@ -107,6 +107,9 @@ export default function LensDisclosureShell({
   onSwIntelDeactivate,
   sqoAuthorityWorkspace,
   sqoBinding,
+  runtimeConnectivityEdges,
+  visibilityLayerCompleteness,
+  runtimeGraphs,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -161,6 +164,7 @@ export default function LensDisclosureShell({
             qualifierLabel={qualifierLabel}
             qualifierNote={qualifierNote}
             visible={qualifierVisible}
+            visibilityLayerCompleteness={visibilityLayerCompleteness}
           />
         )
       case 'GovernanceRibbon':
@@ -220,6 +224,9 @@ export default function LensDisclosureShell({
             onSwIntelDeactivate={onSwIntelDeactivate}
             sqoAuthorityWorkspace={sqoAuthorityWorkspace}
             sqoBinding={sqoBinding}
+            runtimeConnectivityEdges={runtimeConnectivityEdges}
+            visibilityLayerCompleteness={visibilityLayerCompleteness}
+            runtimeGraphs={runtimeGraphs}
           />
         )
       case 'SQOIntelligenceZone':

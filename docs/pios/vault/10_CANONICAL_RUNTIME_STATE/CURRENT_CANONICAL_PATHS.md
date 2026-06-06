@@ -253,8 +253,33 @@
 | PI.EXECUTIVE-COGNITION-RUNTIME.01 | docs/pios/PI.EXECUTIVE-COGNITION-RUNTIME.01/ | G1 | COMPLETE |
 | PI.PICP-STRATEGY-AND-CANONICALIZATION.01 | docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/ | G1 | COMPLETE |
 | PI.PICP-CONSTITUTION.01 | docs/pios/PI.PICP-CONSTITUTION.01/ | G1 | COMPLETE |
+| PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01 | docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/ | G1 | COMPLETE |
+| PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01 | docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/ | G1 | COMPLETE |
+| PI.DOMAIN-COGNITION-ENGINE-PATTERN.01 | docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/ | G1 | COMPLETE |
+
+## Commercial Tree
+
+> **Authority:** [[COMMERCIAL_INFORMATION_ARCHITECTURE]] — architectural decision (2026-06-02)
+
+Organized by consumer purpose, not governance stream origin. See [[COMMERCIAL_INFORMATION_ARCHITECTURE]] for full rationale.
+
+| Path | Purpose | Consumer |
+|------|---------|----------|
+| docs/commercial/COMMERCIAL_AUTHORITY.md | Entry point — what is Signäl, what are the offers, where is everything | All |
+| docs/commercial/offers/SA_PACKAGING.md | Structural Assessment offer packaging | Salesperson |
+| docs/commercial/offers/SA_DD_PACKAGING.md | Structural Due Diligence offer packaging | Salesperson |
+| docs/commercial/delivery/EVIDENCE_INTAKE_CHECKLIST.md | Customer evidence preparation | Customer / Operator |
+| docs/commercial/delivery/ENGAGEMENT_LETTER_TEMPLATE.md | Engagement agreement template | Salesperson / Legal |
+| docs/commercial/delivery/DELIVERABLE_HANDOFF_PROCESS.md | End-to-end delivery process | Operator / Advisory |
+| docs/commercial/reference/SKU_MODEL.md | Internal SKU architecture | Product team |
+| docs/commercial/reference/OFFER_CATALOG.md | All offers in one view | Product team |
+| docs/commercial/reference/PRODUCT_LANGUAGE_DECISIONS.md | Correct vs incorrect product language | All |
+| docs/commercial/investor/ | Strategic partner / investor materials (5 documents) | Executive |
+
+**Governance origin:** `docs/pios/PI.PRODUCT-MANAGEMENT.SIGNAL-GTM-AND-EXECUTION.01/` retains the governance execution record. The commercial tree is the operational working location.
 
 ## Cross-References
 
 - [[CURRENT_CANONICAL_OWNERSHIP]] — who owns what
 - [[CURRENT_CANONICAL_BOUNDARIES]] — what each layer may do
+- [[COMMERCIAL_INFORMATION_ARCHITECTURE]] — commercial tree architecture decision

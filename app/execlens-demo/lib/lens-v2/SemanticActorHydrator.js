@@ -54,6 +54,7 @@ function deriveQualifierClass(groundedCount, totalCount, opts) {
     total_count: totalCount || 0,
     semantic_continuity_status: semanticContinuityStatus,
     evidence_availability: evidenceAvailability,
+    visibility_layer_completeness: opts && opts.visibility_layer_completeness || null,
   });
   return {
     qualifier_class: q.qualifier_class,

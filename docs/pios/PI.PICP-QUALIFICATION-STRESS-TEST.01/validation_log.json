@@ -1,0 +1,37 @@
+{
+  "stream": "PI.PICP-QUALIFICATION-STRESS-TEST.01",
+  "classification": "G1",
+  "timestamp": "2026-05-31T17:00:00Z",
+  "checks": [
+    { "name": "preflight_contract_loaded", "status": "PASS" },
+    { "name": "preflight_branch_authorized", "status": "PASS" },
+    { "name": "preflight_canonical_state_loaded", "status": "PASS" },
+    { "name": "preflight_terminology_loaded", "status": "PASS" },
+    { "name": "preflight_qualification_test_loaded", "status": "PASS", "detail": "7-gate model from PI.PICP-CONSTITUTION.01" },
+    { "name": "prior_stream_constitution_loaded", "status": "PASS", "detail": "COGNITION_OBJECT_QUALIFICATION_TEST.md consumed" },
+    { "name": "prior_stream_object_model_loaded", "status": "PASS", "detail": "EXECUTIVE_COGNITION_OBJECT_MODEL.md consumed as evidence baseline" },
+    { "name": "runtime_evidence_loaded", "status": "PASS", "detail": "SignalSynthesisEngine.js CONDITION_VOCABULARY — 12 L2 condition types" },
+    { "name": "candidate_1_reinforcement_flow_map", "status": "PASS", "detail": "7/7 gates PASS — A (Cognition Object). Fills genuine gap: flow topology distinct from existence (constraint_inventory) and activation (tension_map)" },
+    { "name": "candidate_2_propagation_asymmetry", "status": "PASS", "detail": "FAIL at G5+G6 — L2 condition already consumed by 3 existing L4 objects (constraint_inventory, exposure_assessment, tension_map). Correct rejection" },
+    { "name": "candidate_3_execution_corridor", "status": "PASS", "detail": "FAIL at G5 — thin novelty over tension_map.cross_center_coupling + constraint_inventory bottleneck nodes. Correct rejection as D (Derived View)" },
+    { "name": "candidate_4_corridor_saturation", "status": "PASS", "detail": "FAIL at G1 — operational load data not in CIP. Correct rejection as E (wrong data source)" },
+    { "name": "candidate_5_coordination_fragility", "status": "PASS", "detail": "FAIL at G5+G6 — derived view of exposure_assessment (governance_exposure ∩ fragility_exposure). Correct rejection as D (Derived View)" },
+    { "name": "candidate_6_convergence_replay", "status": "PASS", "detail": "FAIL at G1 — temporal composite requiring multiple PICPs. Correct rejection as E (temporal composite)" },
+    { "name": "discrimination_confirmed", "status": "PASS", "detail": "1 PASS + 5 FAIL — gate discriminates. Not uniform" },
+    { "name": "multiple_failure_modes_confirmed", "status": "PASS", "detail": "3 distinct modes: wrong layer (G5+G6), derived view (G5), wrong data source (G1)" },
+    { "name": "false_positive_check", "status": "PASS", "detail": "Passing candidate (reinforcement_flow_map) fills genuine cognitive gap verified against object model" },
+    { "name": "false_negative_check", "status": "PASS", "detail": "Each rejection structurally justified against existing PICP coverage" },
+    { "name": "no_picp_membership_change", "status": "PASS", "detail": "reinforcement_flow_map identified but NOT added — requires separate G1 stream" },
+    { "name": "no_code_implementation", "status": "PASS" },
+    { "name": "no_report_modification", "status": "PASS" },
+    { "name": "no_pipeline_modification", "status": "PASS" },
+    { "name": "governance_no_data_mutation", "status": "PASS" },
+    { "name": "artifact_discipline_all_outputs_filed", "status": "PASS" }
+  ],
+  "summary": {
+    "total": 23,
+    "pass": 23,
+    "fail": 0
+  },
+  "verdict": "VALID"
+}

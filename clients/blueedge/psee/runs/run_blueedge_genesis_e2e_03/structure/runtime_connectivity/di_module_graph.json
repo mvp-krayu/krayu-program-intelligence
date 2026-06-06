@@ -1,0 +1,74 @@
+{
+  "evidence_type": "DI_MODULE_GRAPH",
+  "specimen": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "extraction_method": "FORENSIC_GREP",
+  "extraction_date": "2026-06-05",
+  "framework": "NestJS Dependency Injection",
+  "total_modules": 63,
+
+  "global_modules": [
+    {
+      "module": "FleetEventsModule",
+      "file": "backend/src/events/index.ts",
+      "decorator": "@Global()",
+      "domain": "DOMAIN-11",
+      "exports": ["FleetEventEmitter"],
+      "imports": ["EventEmitterModule", "GatewaysModule"],
+      "providers": ["FleetEventEmitter", "WebSocketBroadcastHandler", "CacheInvalidationHandler", "AuditLogHandler", "NotificationHandler"],
+      "note": "Global module — every module can inject FleetEventEmitter without explicit import"
+    },
+    {
+      "module": "AuthModule",
+      "file": "backend/src/modules/auth/auth.module.ts",
+      "domain": "DOMAIN-09",
+      "exports": ["AuthService"],
+      "note": "Guards applied globally via APP_GUARD — every route depends on auth at runtime"
+    }
+  ],
+
+  "infrastructure_modules": [
+    {
+      "module": "GatewaysModule",
+      "file": "backend/src/gateways/gateways.module.ts",
+      "domain": "DOMAIN-08",
+      "provides": ["FleetGateway"],
+      "note": "WebSocket gateway — consumed by FleetEventsModule for broadcast"
+    },
+    {
+      "module": "CacheModule",
+      "file": "backend/src/common/cache/cache.module.ts",
+      "domain": "DOMAIN-10",
+      "provides": ["CacheService"],
+      "note": "Redis-backed cache — consumed by CacheInvalidationHandler"
+    }
+  ],
+
+  "domain_modules": [
+    { "module": "DevicesModule", "domain": "DOMAIN-01", "exports": ["DevicesService"], "has_event_emitter": true },
+    { "module": "SensorsModule", "domain": "DOMAIN-01", "exports": ["SensorsService"], "has_event_emitter": true },
+    { "module": "HasiModule", "domain": "DOMAIN-07", "exports": ["HasiService"], "has_event_emitter": true },
+    { "module": "VehiclesModule", "domain": "DOMAIN-03", "exports": ["VehiclesService"], "has_event_emitter": false },
+    { "module": "FleetsModule", "domain": "DOMAIN-03", "exports": ["FleetsService"], "has_event_emitter": false },
+    { "module": "DriversModule", "domain": "DOMAIN-03", "exports": ["DriversService"], "has_event_emitter": false },
+    { "module": "TripsModule", "domain": "DOMAIN-03", "exports": ["TripsService"], "has_event_emitter": false },
+    { "module": "AlertsModule", "domain": "DOMAIN-03", "exports": ["AlertsService"], "has_event_emitter": false },
+    { "module": "TankerModule", "domain": "DOMAIN-04", "exports": ["TankerService"], "has_event_emitter": false },
+    { "module": "BusModule", "domain": "DOMAIN-04", "exports": ["BusService"], "has_event_emitter": false },
+    { "module": "TaxiModule", "domain": "DOMAIN-04", "exports": ["TaxiService"], "has_event_emitter": false },
+    { "module": "ColdchainModule", "domain": "DOMAIN-04", "exports": ["ColdchainService"], "has_event_emitter": false },
+    { "module": "AnalyticsModule", "domain": "DOMAIN-05", "exports": ["AnalyticsService"], "has_event_emitter": false },
+    { "module": "AgenticAIModule", "domain": "DOMAIN-06", "exports": ["AgenticAIService"], "has_event_emitter": false },
+    { "module": "PredictiveMaintenanceModule", "domain": "DOMAIN-06", "exports": ["PredictiveMaintenanceService"], "has_event_emitter": false },
+    { "module": "EvModule", "domain": "DOMAIN-15", "exports": ["EvService"], "has_event_emitter": false },
+    { "module": "V2gModule", "domain": "DOMAIN-15", "exports": ["V2gService"], "has_event_emitter": false },
+    { "module": "DriverSessionsModule", "domain": "DOMAIN-17", "exports": ["DriverSessionsService"], "has_event_emitter": false },
+    { "module": "DriverScoringModule", "domain": "DOMAIN-17", "exports": ["DriverScoringService"], "has_event_emitter": false },
+    { "module": "BillingModule", "domain": "DOMAIN-12", "exports": ["BillingService"], "has_event_emitter": false },
+    { "module": "ErpConnectorsModule", "domain": "DOMAIN-13", "exports": ["ErpConnectorsService"], "has_event_emitter": false },
+    { "module": "IntegrationHubModule", "domain": "DOMAIN-13", "exports": ["IntegrationHubService"], "has_event_emitter": false },
+    { "module": "ApiMarketplaceModule", "domain": "DOMAIN-13", "exports": ["ApiMarketplaceService"], "has_event_emitter": false }
+  ],
+
+  "injection_pattern": "All 63 modules use TypeORM repository injection. Cross-module service injection is minimal — modules are largely self-contained CRUD. Cross-module coordination occurs through FleetEventEmitter (global) and FleetGateway (WebSocket broadcast), not through direct service injection."
+}

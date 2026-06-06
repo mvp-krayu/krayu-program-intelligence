@@ -1,0 +1,54 @@
+{
+  "stream_id": "PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01",
+  "classification": "G1",
+  "changes": [
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/ENABLEMENT_PLAN.md",
+      "action": "CREATE",
+      "commit": "fac4fa7",
+      "purpose": "Full enablement plan — SA delivery playbook, PI Co-Pilot progressive context model, SA-DD hosting MVP, convergent consumption model"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/PI_COPILOT_CONCEPTUAL_BASELINE.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Frozen PI Co-Pilot conceptual model — definition, progressive context, interaction hierarchy, knowledge graph, governance boundaries, non-goals"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/IMPLEMENTATION_READINESS_ASSESSMENT.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Implementation readiness — 12 solved questions, 4 conceptual areas, 3 buildable workstreams, dependency graph, risk areas, build sequence"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/execution_report.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Stream execution report"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/validation_log.json",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Validation log"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/file_changes.json",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "File change manifest"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/CLOSURE.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Stream closure document"
+    },
+    {
+      "file": "docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/COPILOT_IMPLEMENTATION_ARCHITECTURE.md",
+      "action": "CREATE",
+      "commit": "pending",
+      "purpose": "Implementation architecture mapping frozen conceptual model onto codebase — 10 sections, 5 phases, ~2000 LOC, 7 architectural protections"
+    }
+  ]
+}

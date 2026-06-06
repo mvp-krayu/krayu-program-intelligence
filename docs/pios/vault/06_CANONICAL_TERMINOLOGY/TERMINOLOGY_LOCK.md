@@ -730,6 +730,25 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Source:** `docs/pios/PI.SOFTWARE-INTELLIGENCE.CONSTITUTIONAL-DEFINITION.01/MARKETPLACE_ARCHITECTURE.md`
 
+### Domain Cognition Engine Pattern
+
+**Definition:** The canonical pattern by which Domain Modules provide VOCABULARY and RULES to a shared ENGINE. Discovered from forensic analysis of the SW-Intel cognition triad (CognitionOntology.js, SignalSynthesisEngine.js, ConsequenceCompiler.js). The formula is: DOMAIN MODULE = VOCABULARY × RULES × ENGINE. VOCABULARY (~27%) is authored semantic inventory (condition types, consequence types, combination patterns, ontology classes). RULES (~35%) is deterministic transformation logic (feature extraction, condition synthesis, consequence mapping). ENGINE (~32%) is domain-independent compilation machinery (deduplication, combination detection, compilation pipeline, relationship verb derivation, persona projection shapes).
+
+**Status:** PROPOSED — governance review required for CANONICAL promotion (2026-06-04).
+
+**Minimum Engine Boundary:** ~1060 lines (~32% of 3295-line triad) of domain-independent machinery. Of this, ~300 lines are pure engine (zero domain references). ~25 coupling points identified — all parameterizable, zero mechanism changes required for portability.
+
+**Constitutional constraints (PROPOSED):**
+- ENGINE is PI Core governed infrastructure (G1 authority) — modifications affect ALL domain modules
+- VOCABULARY/RULES are Domain Module governed (G2 authority) — modifications affect single module only
+- If a proposed Domain Module requires modifying the ENGINE to function, either the engine has a gap (G1 resolution) or the proposed module is not a valid Domain Module
+
+**Relationship to Domain Cognition Module:** The Domain Cognition Engine Pattern reveals the internal structure of how Domain Modules operate. Domain Cognition Module defines WHAT a module is (interpretation layer). The Engine Pattern defines HOW modules provide their cognition (VOCABULARY + RULES to shared ENGINE). Extends, does not replace.
+
+**What it is NOT:** A second engine. A refactoring proposal. A module framework. The pattern describes the separation already present in the code — ENGINE extraction is explicitly deferred until a second Domain Module is needed.
+
+**Source:** `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/ENGINE_PATTERN.md`, `docs/pios/PI.DOMAIN-COGNITION-ENGINE-PATTERN.01/MINIMUM_ENGINE_BOUNDARY.md`
+
 ### SignalSynthesisEngine
 
 **Definition:** The deterministic cognition compiler that transforms signal families (PSIG, DPSIG, ISIG) and structural enrichment into operational conditions with topology overlays. Contains 11 primitive rules and 1 composite rule. Each rule maps specific signal severity patterns or structural enrichment to a condition type with operator-facing cognition title, severity, topology overlay, evidence classification, and supporting signal IDs. The engine is deterministic — same inputs produce same conditions. 12 condition types total (11 internal — GOVERNANCE_COVERAGE_STATUS shares internal GCC/GCG).
@@ -1034,6 +1053,99 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 **Status:** CANONICAL — canonicalized (2026-05-31).
 
 **Source:** `docs/pios/PI.PICP-STRATEGY-AND-CANONICALIZATION.01/PICP_CANONICAL_ARCHITECTURE.md`
+
+### PI Co-Pilot
+
+**Definition:** The universal intelligence interaction surface for Program Intelligence. An operator cognition surface that interrogates the full PI knowledge graph (7 domains: Doctrine, Commercial, Runtime, Vault, Specimen, Verdict, Publishing) from a single surface. Progressively contextual — always useful, increasingly rich as more knowledge becomes available.
+
+**Progressive Context Model:** Level 0 (doctrine+commercial, no specimen required) → Level 1 (+specimen) → Level 2 (+verdict) → Level 3 (+publishing assets). The continuity — same surface from "What is PI?" through "Generate a Board Pack" — IS the product.
+
+**Interaction Hierarchy:** 3 tiers, 9 modes. Understand (Query/Explore/Explain), Curate (Compare/Curate/Challenge), Publish (Visualize/Package/Position).
+
+**Status:** CANONICAL — conceptual model frozen (2026-06-02). Implementation pending.
+
+**What it is NOT:** Customer-facing. A consulting platform. A qualification engine. A pipeline operator. A replacement for LENS. A replacement for Assessment Package. A generic chatbot with PI docs. A copilot in the AI assistant sense.
+
+**Source:** `docs/pios/PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01/PI_COPILOT_CONCEPTUAL_BASELINE.md`
+
+### Consumption Artifact
+
+**Definition:** Audience-specific intelligence output produced by the PI Co-Pilot's Curate tier from governed verdict data. Replaces "audience-specific narrative" because the output includes more than text. Same verdict, different consumption.
+
+**Examples:** Investment Committee Brief, Board Summary, CTO Summary, Acquisition Risk Summary, Executive Summary, Operational Risk Summary, Transformation Summary, board pack, executive one-pager, slide deck, graphic narrative.
+
+**Status:** CANONICAL — terminology frozen (2026-06-02).
+
+**What it is NOT:** A new verdict. A modified finding. A replacement for the Assessment Package. Consumption artifacts are derivative — they transform governed intelligence into audience-adapted format without changing what is said.
+
+### Operator Cognition Surface
+
+**Definition:** An architectural category for the PI Co-Pilot. Distinguishes the Co-Pilot from a "feature" — a feature ships small and iterates; an operator cognition surface needs its role in the ecosystem defined first. The assembled operational context (progressive, pre-loaded, knowledge-graph-backed) is the moat — not retrieval.
+
+**Status:** CANONICAL — architectural concept frozen (2026-06-02).
+
+**What it is NOT:** Feature thinking. A chatbot. An AI assistant. The distinction is categorical: the progressive context continuity IS the product.
+
+### Three-Surface Architecture
+
+**Definition:** The consumption architecture nesting model. Customer ⊂ Operator ⊂ Platform. No surface may access data from a surface that does not contain it. Customer receives LENS (SKU-gated) and Assessment Package. Operator receives full LENS + PI Co-Pilot + pipeline/SQO visibility. Platform contains all intelligence production infrastructure.
+
+**Status:** CANONICAL — architecture frozen (2026-06-02).
+
+**Source:** `docs/pios/PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01/CONSUMPTION_ARCHITECTURE_BASELINE.md`
+
+### Consumption Maturity Level
+
+**Definition:** The 4-level model describing how customers access Program Intelligence output. Each level builds on the previous. No level requires the next.
+
+- Level 0 — Export Only: No identity, operator-local, SA
+- Level 1 — Guided Access: Workspace token, single hosted instance, SA-DD
+- Level 2 — Self-Service: Named users, persistent hosted workspace, SC
+- Level 3 — Platform: Role-based identity, dedicated tenant, SE
+
+**Status:** CANONICAL — architecture frozen (2026-06-02).
+
+### PIOperationalContext
+
+**Definition:** The assembled context object that carries PI knowledge graph data at each progressive context level. Named in the PI Co-Pilot conceptual model but not yet schema-defined. Contains doctrine, commercial, runtime, vault (Level 0), plus specimen data (Level 1), plus verdict data (Level 2), plus publishing assets (Level 3).
+
+**Status:** CANONICAL (named) / PENDING (schema). The schema definition is the load-bearing design decision before Co-Pilot implementation.
+
+### Visibility Layer
+
+**Definition:** A distinct class of structural connectivity evidence. Static import analysis (40.3s) measures one visibility layer — file-level import/require/from relationships. Modern architectures operate across multiple visibility layers: EVENT_FLOW (pub/sub, signals, event emitters), MQTT_TOPIC_FLOW (message broker pub/sub), WEBSOCKET_FLOW (real-time streaming channels), API_BOUNDARY (REST/GraphQL controller-to-consumer routes), DI_MODULE_GRAPH (framework dependency injection), RUNTIME_WIRING (infrastructure/deploy configuration). Static import visibility ≠ structural coverage. A domain that appears "dark" in one visibility layer may be fully connected in another.
+
+**Status:** CANONICAL — proven on BlueEdge (Scenario C confirmed, 0/13 domains actually absent), validated on NetBox (same root cause, different shape). Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Visibility-Layer Completeness Check
+
+**Definition:** A pre-verdict integrity gate that classifies which visibility layers were measured for a specimen and which the specimen's architecture requires. Produces: architecture_profile (detected framework type), layers_measured, layers_required, layers_missing, completeness percentage, verdict_scope (CODE_CONNECTIVITY / PARTIAL_CONNECTIVITY / SYSTEM_CONNECTIVITY), and qualifier_modifier (VISIBILITY_INCOMPLETE when completeness < 100%). Does not change Q-class — Q-class measures reconciliation quality within measured layers. This check measures whether the measured layers are sufficient for the architecture.
+
+**Status:** CANONICAL — implemented in PIKnowledgeGraphAccess.resolveVisibilityLayerCompleteness(). Operational on BlueEdge (100%, SYSTEM_CONNECTIVITY) and NetBox (25%, CODE_CONNECTIVITY, VISIBILITY_INCOMPLETE). Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Architecture Profile
+
+**Definition:** A classification of a specimen's framework and connectivity architecture used to determine which visibility layers are required for structural completeness. Known profiles: django-monolith (requires STATIC_IMPORT + EVENT_FLOW + API_BOUNDARY + DI_MODULE_GRAPH), nestjs-event-driven (adds WEBSOCKET_FLOW), nestjs-iot (adds MQTT_TOPIC_FLOW), microservices (adds RUNTIME_WIRING), spa-api (STATIC_IMPORT + API_BOUNDARY + WEBSOCKET_FLOW). Detected from specimen intake canonical_repo structure.
+
+**Status:** CANONICAL — implemented. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### System Connectivity Graph
+
+**Definition:** The merged structural connectivity artifact produced by combining all measured visibility layers into a single edge set. Each edge carries: source_domain, target_domain, edge_type (STATIC_IMPORT / EVENT_FLOW / MQTT_TOPIC_FLOW / WEBSOCKET_FLOW / API_BOUNDARY / DI_INJECTION / RUNTIME_WIRING), evidence_class, confidence, source_file, and evidence_snippet. The system connectivity graph is the structural truth of how the system is actually connected — the code connectivity graph (40.3s static imports) is a subset.
+
+**Status:** PROPOSED — forensic proof produced for BlueEdge (19 runtime edges). Automated extraction not yet implemented. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Dual-Axis Qualification
+
+**Definition:** The classification model that separates evidence quality (Q-class) from visibility completeness into two independent axes. Axis 1 (Evidence Quality Class) measures reconciliation quality within measured evidence layers — the existing Q-01 through Q-04 scale. Axis 2 (Visibility Completeness State) measures whether the measured evidence layers are sufficient for the specimen's architecture — values are SYSTEM_CONNECTIVITY_COMPLETE, VISIBILITY_INCOMPLETE, or UNKNOWN. Neither axis invalidates the other. A specimen can be Q-03 (low static reconciliation) and SYSTEM_CONNECTIVITY_COMPLETE (all required visibility layers present) simultaneously. The operational notation is: `Q-03_STATIC_HISTORICAL + SYSTEM_CONNECTIVITY_COMPLETE`.
+
+**Status:** PROPOSED — dual-axis model documented in verdict reclassification. Q-class doctrine not yet formally amended. The visibility-layer completeness check is implemented but does not modify Q-class output. Origin: PI.RUNTIME-CONNECTIVITY-PROOF.01.
+
+### Consumer Authority Consolidation
+
+**Definition:** The constitutional rule that establishes a single cognition authority for Program Intelligence. SignalSynthesisEngine → ConsequenceCompiler is the only path that may generate conditions, consequences, and cognition objects. All consumers (THORR, LENS, EIR) are consequence-native — they project cognition, they do not synthesize it. Projection layers may filter, rank, visualize, summarize, and attach evidence detail. Projection layers may NOT derive conditions, consequences, executive narratives, or cognition from raw evidence. Static and runtime evidence classes enter the same authority chain; runtime findings automatically propagate to all consumers once consequence formation occurs.
+
+**Status:** CANONICAL — implemented and enforced (2026-06-05). 265 LOC of legacy cognition generation deleted. 3 independent paths collapsed to 1. Origin: PI.COGNITION-AUTHORITY-CONSOLIDATION.01.
 
 ## Term Usage Rules
 

@@ -798,3 +798,162 @@ AMOps is self-hosting. Modifications to:
 MUST use the AMOps lifecycle. These changes are G1 streams by definition.
 
 Full self-application model: docs/pios/vault/operations/CLAUDE_RUNTIME_SELF_APPLICATION.md
+
+---
+
+## 17. EVIDENCE-TO-COGNITION DISCIPLINE
+
+### 17.1 Evidence Must Produce Cognition
+
+New evidence types MUST enter the signal → condition → consequence loop.
+Evidence that only changes domain backing labels (SEMANTIC_ONLY → RUNTIME_BACKED) without producing signal candidates is incomplete integration.
+Invoke SKILL: EVIDENCE_TO_COGNITION_AUDIT when integrating new evidence classes.
+
+### 17.2 Operating Posture After Context Compaction
+
+After reboot or context compaction, Claude tends to drift from PI Software Architect to Contract Executor.
+
+PI Software Architect asks:
+- Where does this evidence terminate in the cognition loop?
+- What downstream cognition must change?
+- Does the consequence posture reflect this evidence?
+
+Contract Executor asks:
+- Did the build pass?
+- Was the commit made?
+- Does the UI render?
+
+On PI cognition work: always operate as PI Software Architect. "Build passes" is not completion. "Cognition changed" is completion.
+
+### 17.3 No Prompt Suppression
+
+Never fix data contradictions with forbidden-phrase lists or "never say X" prompt instructions.
+If the consequence posture contradicts visibility-layer data, fix the condition formation chain — not the prompt.
+Data correction > prompt patching.
+
+### 17.4 Runtime Evidence Integration
+
+Runtime evidence classes (event, MQTT, WebSocket, API, DI, runtime wiring) must be able to:
+
+```
+EVIDENCE → SIGNALS → CONDITIONS → CONSEQUENCES → COGNITION → PROJECTION
+```
+
+Runtime evidence must never stop at:
+- domain backing correction
+- visibility-layer qualification
+- projection overlays
+
+Integration is only complete when runtime evidence can generate runtime-native signals, conditions, consequences, and cognition.
+
+Visibility-layer completeness must be evaluated before condition formation.
+
+Domain backing qualification must occur before signal synthesis and consequence formation.
+
+Runtime cognition must be subject to the same governance, qualification, and evidence standards as static cognition.
+
+### 17.5 Projection Reconciliation
+
+A projection surface must not silently diverge from cognition.
+
+When a new cognition source is introduced:
+
+```
+Evidence → Signals → Conditions → Consequences → Cognition
+```
+
+all projection systems must be audited.
+
+UI rendering alone is not proof of integration.
+
+Integration is complete only when cognition and projection remain semantically aligned.
+
+### 17.6 Capability Discovery Before Construction
+
+Before implementing new cognition logic, audit whether the capability already exists inside the PI spine.
+
+Check: ConsequenceCompiler outputs, ontology classes, consequence themes, persona contracts, existing projection functions, existing condition vocabulary, existing combination patterns.
+
+The work is almost always RECONNECT, not REBUILD. If the capability exists but is not consumed, the fix is wiring — not construction. If the capability exists but is not exposed, the fix is projection — not creation.
+
+Pattern: "I need to build X" → audit → "X already exists in forBoardroom / CognitionOntology / CONDITION_VOCABULARY" → reconnect existing output to consumer.
+
+This was proven repeatedly: consequence themes existed but were JSON-only. Ontology classes existed but lacked runtime entries. Persona contracts existed but were applied to slices not themes. The capability was present — the connection was missing.
+
+### 17.7 Authority-Chain Verification
+
+Before accepting any output as correct, verify the authority chain from evidence through cognition to projection.
+
+Trace: evidence → signals → conditions → consequences → themes → executive synthesis → consumer output. If any link produces METADATA_ONLY (labels change, cognition doesn't), the integration is incomplete.
+
+### 17.8 Consumer-Reconciliation Before Expansion
+
+Do not add more evidence types or signals until all consumers are reconciled on the current authority chain.
+
+When new cognition enters the system, verify: does THORR consume it? Does LENS consume it? Does EIR consume it? If any consumer doesn't, reconcile before expanding.
+
+### 17.9 Root-Cause Isolation Protocol
+
+When multiple consumers or personas fail, the defect is upstream. Do not debug persona-by-persona.
+
+Classify the failure as: (A) consequence hierarchy, (B) narrative consumption, (C) context isolation, (D) mode routing. Fix in that order. Do not fix individual consumers until the hierarchy is proven correct.
+
+### 17.10 Completion Definition Hierarchy
+
+1. Build passes → code compiles (lowest bar)
+2. Tests pass → existing contracts maintained
+3. Data changed → cognition objects reflect new evidence
+4. Authority verified → all consumers read from single authority
+5. Projection aligned → all consumers render consistent output
+6. Answer changed → THORR/LENS/EIR output reflects the cognition change
+
+Only level 6 is completion for cognition work. Do not stop at levels 1-5.
+
+### 17.11 Context Isolation for Focused Queries
+
+When a question classifies as a focused retrieval (RUNTIME_ONLY, TOPOLOGY_GRAVITY, EXECUTIVE_POSTURE), assemble a task-specific context bundle. Exclude sections that would allow the model to infer against the answer contract.
+
+Do not let focused queries receive contradictory generic context. The model will cross-read unrelated static sections and override intended answer contracts.
+
+### 17.12 Root Cause Closure Rule
+
+Never declare model behavior, nondeterminism, model hallucination, or model editorial choice as the root cause of a THORR/LENS/EIR output defect until the final prompt has been audited for:
+
+1. Stale raw-data contradictions (unqualified fields rendering alongside qualified fields)
+2. Prompt suppression phrases ("FORBIDDEN", "Do not claim", "never say" — these anchor the model on the forbidden content)
+3. Missing component names (runtime components absent from the prompt the model is asked to cite)
+4. Conflicting authority sections (two sections claiming "answer from these" with different evidence)
+5. Context ordering conflicts (400 lines of static evidence before runtime evidence causes narrative commitment)
+6. Missing evidence parity (one evidence class has file-level quantitative detail, the other has summary text)
+7. Unqualified vs qualified object mismatch (raw specimen says semantic-only, qualified registry says runtime-backed)
+8. Rendering defects (join('') collapsing structured objects into unreadable walls of text)
+9. System prompt framing (system prompt says "structural assessment" when VLC says SYSTEM_CONNECTIVITY)
+
+If any of these exist, the issue is a context assembly defect, not model behavior. Fix the context before attributing to the model.
+
+Data correction > prompt patching > output compensation. In that order.
+
+### 17.13 Live Endpoint Validation
+
+CLI proof is insufficient for UI proof. The same code path does not guarantee the same runtime context.
+
+For Next.js server code, never use `__dirname`-relative repo-root assumptions — `__dirname` resolves to `.next/server/` in compiled API routes, not to the source directory. Use `resolveRepoRoot()` or equivalent that probes for known markers (`clients/`, `docs/`).
+
+After any context-path fix, the live endpoint must be validated by capturing the actual prompt sent to the model and comparing it to the tested prompt. "Same function" is not proof — "same output" is proof.
+
+### 17.14 Runtime Evidence Projection
+
+Runtime evidence must be projected as business capability impact, not raw technical metrics.
+
+Required projection shape for runtime-derived answers:
+1. Business capability (what operational function depends on this node)
+2. Operational dependency (which runtime structure carries that capability)
+3. Runtime evidence (quantitative measurements from runtime graphs)
+4. Failure implication (what breaks, goes dark, or silently stops if this node fails)
+
+Pattern-based capability labels by evidence class:
+- EVENT_FLOW → cross-domain operational coordination
+- WEBSOCKET_FLOW → real-time operational visibility
+- MQTT_TOPIC_FLOW → field telemetry ingestion / edge-cloud data continuity
+
+Context assembly is part of cognition delivery. If the right cognition exists but reaches the model without business framing, the answer will be technically correct but operationally useless.
