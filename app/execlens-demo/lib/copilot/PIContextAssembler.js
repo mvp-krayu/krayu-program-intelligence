@@ -692,7 +692,7 @@ function formatOperationalGravityContext(assembled, budgetSections, domainLabels
     const staticSlices = (b.cognition_slices || []).filter(s => !RT_CONDITIONS.has(s.condition_type));
     const rtSlices = (b.cognition_slices || []).filter(s => RT_CONDITIONS.has(s.condition_type));
     const summaryLines = [];
-    summaryLines.push('### Static Gravity Summary (Code Center of Mass)');
+    summaryLines.push('### Code Center of Mass (Static Import Graph)');
     summaryLines.push('Primary locus: ' + b.primary_locus);
     summaryLines.push('Posture: ' + b.posture_label + ' [' + b.posture_severity + ']');
     summaryLines.push('');
@@ -717,7 +717,7 @@ function formatOperationalGravityContext(assembled, budgetSections, domainLabels
     }
     budgetSections.push({
       id: 'static_summary', priority: 3,
-      content: '\n---\n## Static Structural Evidence\n' + summaryLines.join('\n'),
+      content: '\n---\n## Code-Level Evidence (Static Import Graph)\n' + summaryLines.join('\n'),
     });
   }
 
