@@ -932,3 +932,28 @@ Never declare model behavior, nondeterminism, model hallucination, or model edit
 If any of these exist, the issue is a context assembly defect, not model behavior. Fix the context before attributing to the model.
 
 Data correction > prompt patching > output compensation. In that order.
+
+### 17.13 Live Endpoint Validation
+
+CLI proof is insufficient for UI proof. The same code path does not guarantee the same runtime context.
+
+For Next.js server code, never use `__dirname`-relative repo-root assumptions — `__dirname` resolves to `.next/server/` in compiled API routes, not to the source directory. Use `resolveRepoRoot()` or equivalent that probes for known markers (`clients/`, `docs/`).
+
+After any context-path fix, the live endpoint must be validated by capturing the actual prompt sent to the model and comparing it to the tested prompt. "Same function" is not proof — "same output" is proof.
+
+### 17.14 Runtime Evidence Projection
+
+Runtime evidence must be projected as business capability impact, not raw technical metrics.
+
+Required projection shape for runtime-derived answers:
+1. Business capability (what operational function depends on this node)
+2. Operational dependency (which runtime structure carries that capability)
+3. Runtime evidence (quantitative measurements from runtime graphs)
+4. Failure implication (what breaks, goes dark, or silently stops if this node fails)
+
+Pattern-based capability labels by evidence class:
+- EVENT_FLOW → cross-domain operational coordination
+- WEBSOCKET_FLOW → real-time operational visibility
+- MQTT_TOPIC_FLOW → field telemetry ingestion / edge-cloud data continuity
+
+Context assembly is part of cognition delivery. If the right cognition exists but reaches the model without business framing, the answer will be technically correct but operationally useless.
