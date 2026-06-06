@@ -1001,3 +1001,93 @@ FAIL CONDITIONS:
 - operating as Contract Executor on architecture-sensitive work
 
 ──────────────────────────────────────────────────
+
+## SKILL: THORR_PROMPT_FORENSICS
+
+Origin: PI.CLAUDE-OPERATING-SYSTEM-FORENSICS.01
+
+PURPOSE: Diagnose why THORR produces unexpected output by auditing the exact prompt. Enforces §17.12 before any model-behavior attribution.
+
+TRIGGER: THORR produces output that contradicts expected cognition.
+
+STEPS:
+
+1. Capture exact system prompt sent to model (save to /tmp/)
+2. Grep for 9 §17.12 defect categories: stale labels, prompt suppression, missing components, conflicting authority, context ordering, evidence parity, qualified/unqualified mismatch, rendering defects, system prompt framing
+3. Compare live prompt to CLI-assembled prompt with same parameters — if they differ, issue is context assembly
+4. Only if all 9 categories clean AND live matches CLI → investigate model behavior
+5. Report: defect category found, location in prompt, required fix
+
+GUARDRAILS:
+- Do NOT attribute to model until all 9 categories audited
+- Do NOT add prompt instructions to compensate
+- Do NOT retry hoping for different result
+- Fix data → fix context → fix rendering. In that order.
+
+──────────────────────────────────────────────────
+
+## SKILL: SPECIMEN_QUALIFICATION
+
+Origin: PI.CLAUDE-BOOTSTRAP-DOCTRINE.01
+
+PURPOSE: Gate specimen readiness before THORR/LENS/EIR wiring.
+
+TRIGGER: Before connecting any consumer to a new or modified specimen.
+
+STEPS:
+
+1. Check static evidence: code graph, canonical topology, file/relationship counts
+2. Check runtime evidence: runtime_connectivity/ directory, artifact inventory, VLC
+3. Check domain maturity: named domains, business labels, cluster labels, backed count
+4. Check pipeline: resolveSpecimen(), resolveVerdict(), deriveArchitecturalFindings(), determineNarrativeMode()
+5. Report readiness: NOT_READY / CODE_CONNECTIVITY_READY / SYSTEM_CONNECTIVITY_READY / DEMO_READY
+
+GUARDRAILS:
+- Do NOT wire consumers to NOT_READY specimens
+- Do NOT claim SYSTEM_CONNECTIVITY without runtime artifacts
+- Do NOT claim DEMO_READY without business-label domain names
+
+──────────────────────────────────────────────────
+
+## SKILL: EIR_NARRATIVE_MODE_VERIFICATION
+
+Origin: PI.CLAUDE-BOOTSTRAP-DOCTRINE.01
+
+PURPOSE: Verify determineNarrativeMode() result before generating or presenting EIR.
+
+TRIGGER: Before generating EIR. Before claiming Execution Blindness activation.
+
+STEPS:
+
+1. Load specimen through full pipeline: resolveSpecimen → VLC → qualifyDomainBacking → runtime signals → synthesize → compile → forBoardroom → deriveArchitecturalFindings
+2. Call determineNarrativeMode() with pipeline output
+3. Evaluate: if EXECUTION_BLINDNESS → verify all 4 criteria. If STRUCTURAL_INTELLIGENCE → identify failed criterion.
+4. Compare expected vs actual mode
+5. Report: mode, reason, criterion-by-criterion evaluation
+
+GUARDRAILS:
+- Do NOT present EIR in EXECUTION_BLINDNESS mode without verification
+- Do NOT claim Execution Blindness without running this skill
+- Do NOT override mode determination manually
+
+──────────────────────────────────────────────────
+
+## SKILL: RUNTIME_COGNITION_VALIDATION
+
+Origin: PI.RUNTIME-COGNITION-VALIDATION-MATRIX.01
+
+PURPOSE: Validate Runtime Cognition primitives on a new specimen with explicit pass/fail criteria.
+
+TRIGGER: When assessing whether Runtime Cognition applies to a new specimen.
+
+STEPS:
+
+1. For each Tier 1 primitive (DEPENDENCY, COORDINATION, CONCENTRATION, BOUNDARY_EXTENSION): state prediction, required evidence, pass criteria, fail criteria. Classify: PROVEN / OBSERVED / PLAUSIBLE / NOT_OBSERVABLE.
+2. For each Tier 2 primitive (SILENCE, GRAVITY): state Tier 1 prerequisites, classify: LIKELY / UNKNOWN / NOT_EXPECTED.
+3. Assess Execution Blindness activation: evidence layers, runtime conditions, divergence expected, blindness classes expected.
+4. Report: primitive-by-primitive classification, activation prediction, confidence.
+
+GUARDRAILS:
+- Source observation is NOT pipeline proof — classify OBSERVED, not PROVEN
+- Do NOT create new primitives to fit the specimen
+- Do NOT force activation — if call-graph-dominant, STRUCTURAL_INTELLIGENCE is correct

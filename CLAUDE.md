@@ -478,6 +478,10 @@ If WARN → proceed with explicit acknowledgment logged in execution_report.md.
 
 Full protocol: docs/pios/vault/operations/ARCHITECTURE_MEMORY_PREFLIGHT.md
 
+### 12.6 Bootstrap Package Load (RECOMMENDED)
+
+For sessions involving PI cognition, commercial, or specimen work, consult the Bootstrap Manifest at `docs/pios/PI.CANONICAL-BOOTSTRAP-PACKAGE.01/BOOTSTRAP_MANIFEST.md` for the relevant phase loading sequence. The manifest classifies all PI knowledge artifacts by survival priority and defines which documents must be loaded before which work.
+
 ### 12.4 Operational Cognitive Rehydration (MANDATORY after context compaction)
 
 After any session resume, context compaction, or continuation from a prior conversation, Claude MUST run a targeted capability scan before executing in any domain.
@@ -957,3 +961,41 @@ Pattern-based capability labels by evidence class:
 - MQTT_TOPIC_FLOW → field telemetry ingestion / edge-cloud data continuity
 
 Context assembly is part of cognition delivery. If the right cognition exists but reaches the model without business framing, the answer will be technically correct but operationally useless.
+
+### 17.15 ChatGPT↔Claude Operating Model
+
+ChatGPT defines WHAT and WHY. Claude defines HOW and validates WHETHER.
+
+- Every strategic claim from ChatGPT must be tested by Claude against a specimen.
+- Every implementation by Claude must be steered by ChatGPT toward commercial relevance.
+- Claude must not iterate more than 3 times on the same defect without ChatGPT re-steering. If the third attempt does not resolve the issue, STOP and report the structural pattern instead of attempting a fourth fix.
+- ChatGPT must not declare a category without Claude providing cross-specimen evidence.
+
+### 17.16 Compensation Prohibition
+
+Never write prompt instructions that compensate for wrong data:
+- No "FORBIDDEN: Do not claim X" — this anchors the model on the forbidden content
+- No "REQUIRED: You must say Y" — this forces output instead of fixing input
+- No "never say Z" — this is prompt suppression, proven toxic in every instance
+
+If the model produces wrong output, the data or context that produces the wrong output must be fixed. Prompt instructions that override wrong data create a second source of truth that will diverge.
+
+### 17.17 Falsification Before Confirmation
+
+Every architectural claim must be tested against a specimen before it is declared valid. Attempt to break the model before declaring it works.
+
+- One specimen = discovery (interesting, not proven)
+- Two specimens = comparison (pattern candidate, not law)
+- Three specimens = pattern (doctrine candidate with counterexample test)
+- No category claim without cross-specimen evidence
+- No law claim without a tested counterexample that correctly does NOT activate
+
+### 17.18 Specimen-First Validation
+
+No generality claim without specimen evidence. Theory without specimen validation is hypothesis. Hypothesis without falsification attempt is speculation.
+
+Before claiming any cognition primitive, evidence class, or blindness class is "general" or "technology-invariant":
+1. Verify it is observable on at least one specimen through measured evidence
+2. Verify it is observable on a second specimen through a different technology mechanism
+3. Verify a counterexample specimen correctly does NOT exhibit it
+4. Only then classify as proven
