@@ -244,6 +244,7 @@ async function* transformStream({
   });
 
   const systemPrompt = buildSystemPrompt(assembled, modeConfig);
+
   const messages = buildMessages(history, message);
 
   const anthropic = createClient();

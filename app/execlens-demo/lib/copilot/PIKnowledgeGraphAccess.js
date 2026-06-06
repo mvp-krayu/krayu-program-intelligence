@@ -7,7 +7,8 @@ const { resolveFlagshipBinding } = require('../lens-v2/flagshipBinding');
 const { compile, forBoardroom, forBalanced, deriveArchitecturalFindings } = require('../lens-v2/software-intelligence/ConsequenceCompiler');
 const { synthesize, qualifyDomainBacking } = require('../lens-v2/SignalSynthesisEngine');
 
-const REPO_ROOT = path.resolve(__dirname, '../../../../');
+const { resolveRepoRoot } = require('./resolveRepoRoot');
+const REPO_ROOT = resolveRepoRoot();
 
 const CONTEXT_LEVEL = {
   L0: 0,

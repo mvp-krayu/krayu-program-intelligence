@@ -466,8 +466,8 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
   if (client && runId && (needsTopology || questionType === 'RUNTIME_ONLY' || questionType === 'TOPOLOGY_GRAVITY' || questionType === 'OPERATIONAL_GRAVITY')) {
     try {
       const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../lens-v2/RuntimeSignalDerivation');
-      const REPO_ROOT = require('path').resolve(__dirname, '../../../..');
-      const graphs = loadRuntimeGraphs(client, runId, REPO_ROOT);
+      const { resolveRepoRoot } = require('./resolveRepoRoot');
+      const graphs = loadRuntimeGraphs(client, runId, resolveRepoRoot());
       if (graphs && Object.values(graphs).some(v => v !== null)) {
         runtimeGraphsForPrompt = { _derived_signals: deriveRuntimeSignals(graphs), _raw: graphs };
       }
