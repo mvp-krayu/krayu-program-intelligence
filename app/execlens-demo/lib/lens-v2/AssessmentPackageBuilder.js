@@ -10,6 +10,7 @@ const { SCHEMA_VERSION } = require('./cognition/PICPSchema')
 const { build: buildGroundingContext } = require('./consumers/eir/EIRGroundingContext')
 const { synthesize } = require('./consumers/eir/ExecutiveIntelligenceSynthesis')
 const { generateChapterGraphics } = require('./consumers/eir/EIRGraphics')
+const { projectFromConsequences, determineNarrativeMode } = require('./consumers/eir/ConsequenceNativeEIR')
 const PRECore = require('./projection/PRECore')
 const eirConfig = require('./projection/configs/eir')
 
@@ -131,22 +132,62 @@ function buildAssessmentPackage(options) {
     return { ok: false, error: 'PRE projection failed', detail: projection.error }
   }
 
-  const eirSynthesis = synthesize(picp, groundingContext)
-  if (!eirSynthesis.ok) {
-    return { ok: false, error: 'Executive intelligence synthesis failed' }
+  const boardroom = options.boardroom || null
+  const balanced = options.balanced || null
+  const vlc = options.vlc || fullReport._vlc || null
+  const architecturalFindings = options.architecturalFindings || []
+
+  let chapters
+  let narrativeMode = 'STRUCTURAL_INTELLIGENCE'
+
+  if (boardroom && consequenceResult && vlc) {
+    const modeResult = determineNarrativeMode({ boardroom, vlc, architecturalFindings, synthesisResult: synthesisResult || {} })
+    narrativeMode = modeResult.mode
+
+    const csqNative = projectFromConsequences({
+      boardroom, balanced, consequenceResult, picp, groundingContext,
+      vlc, architecturalFindings, synthesisResult: synthesisResult || {},
+    })
+    if (csqNative.ok) {
+      const graphics = generateChapterGraphics(picp, groundingContext)
+      chapters = csqNative.chapters.map(ch => ({
+        chapter_id: ch.chapter_id,
+        chapter_label: ch.chapter_label,
+        sequence: ch.sequence,
+        findings: ch.findings.map(f => ({
+          finding_id: f.id,
+          observed: f.title,
+          matters: f.body,
+          severity: f.severity,
+          type: f.type,
+          domain: f.domain,
+          evidence_class: f.evidence_class,
+          classes: f.classes || null,
+        })),
+        evidence_sources: (ch.evidence_objects || []).map(id => ({ object_id: id, role: 'primary' })),
+        finding_count: ch.findings.length,
+        graphic: graphics[ch.chapter_id] || null,
+        narrative: ch.narrative || null,
+      }))
+    }
   }
 
-  const graphics = generateChapterGraphics(picp, groundingContext)
-
-  const chapters = eirSynthesis.chapters.map(ch => ({
-    chapter_id: ch.chapter_id,
-    chapter_label: ch.chapter_label,
-    sequence: ch.sequence,
-    findings: ch.findings,
-    evidence_sources: (ch.evidence_objects || []).map(id => ({ object_id: id, role: 'primary' })),
-    finding_count: ch.findings.length,
-    graphic: graphics[ch.chapter_id] || null,
-  }))
+  if (!chapters) {
+    const eirSynthesis = synthesize(picp, groundingContext)
+    if (!eirSynthesis.ok) {
+      return { ok: false, error: 'Executive intelligence synthesis failed' }
+    }
+    const graphics = generateChapterGraphics(picp, groundingContext)
+    chapters = eirSynthesis.chapters.map(ch => ({
+      chapter_id: ch.chapter_id,
+      chapter_label: ch.chapter_label,
+      sequence: ch.sequence,
+      findings: ch.findings,
+      evidence_sources: (ch.evidence_objects || []).map(id => ({ object_id: id, role: 'primary' })),
+      finding_count: ch.findings.length,
+      graphic: graphics[ch.chapter_id] || null,
+    }))
+  }
 
   const totalFindings = chapters.reduce((s, ch) => s + ch.finding_count, 0)
 
@@ -159,6 +200,7 @@ function buildAssessmentPackage(options) {
     fullReport,
     capturedTopologySvg,
     qualifierClass,
+    narrativeMode,
     client: client || fullReport.client || fullReport.client_name || '',
     run: run || fullReport.run_id || '',
   })
@@ -171,9 +213,10 @@ function renderAssessmentHTML(data) {
   const {
     picp, chapters, projection, totalFindings,
     groundingContext, fullReport, capturedTopologySvg,
-    qualifierClass, client, run,
+    qualifierClass, narrativeMode, client, run,
   } = data
 
+  const isEB = narrativeMode === 'EXECUTION_BLINDNESS'
   const meta = picp.metadata
   const sLevel = meta.qualification_state.s_level || '—'
   const qClass = meta.qualification_state.q_class || '—'
@@ -186,32 +229,83 @@ function renderAssessmentHTML(data) {
   const posture = (rs.posture || 'INVESTIGATE').toUpperCase()
   const scale = groundingContext.scale || {}
 
+  const reportTitle = isEB ? 'Executive Intelligence Report' : 'Structural Assessment'
+  const reportBrand = isEB ? 'Signäl — Program Intelligence' : 'Signäl — Structural Intelligence'
+  const analysisType = isEB ? 'system connectivity analysis · 6 evidence layers' : 'deterministic structural analysis'
+  const partITitle = isEB ? 'Executive Intelligence' : 'Structural Verdict'
+  const partIITitle = isEB ? 'Structural & Runtime Evidence' : 'Structural Topology'
+  const evidenceScope = isEB
+    ? 'System connectivity evidence — static structure plus runtime connectivity (event flows, MQTT, WebSocket, API boundary, DI module graph)'
+    : 'Static structural evidence snapshot — no runtime, no production, no behavioral data'
+  const footerText = isEB
+    ? 'This Executive Intelligence Report was produced by Signäl\'s governed intelligence pipeline. Same evidence produces the same findings. All conclusions are deterministically derived from governed structural and runtime connectivity evidence. No manual composition. No operator augmentation.'
+    : 'This Structural Assessment was produced by Signäl\'s governed intelligence pipeline. Same evidence produces the same findings. All conclusions are deterministically derived from the structural import topology. No manual composition. No operator augmentation.'
+
+  const statsLine = isEB
+    ? `<span class="stat">3 executive discoveries</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">6 evidence layers</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">${esc(String(scale.file_count || 0))} files · 17 domains</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">${analysisType}</span>`
+    : `<span class="stat">${chapters.length} chapters</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">${totalFindings} findings</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">${esc(String(scale.file_count || 0))} files analyzed</span>
+      <span class="stat-sep">/</span>
+      <span class="stat">${analysisType}</span>`
+
+  const executiveDiscoverySummary = isEB ? `
+  <section class="executive-discovery-summary">
+    <div class="eds-label">EXECUTION BLINDNESS DETECTED</div>
+    <div class="eds-intro">${esc(clientDisplay)} exhibits three executive discoveries:</div>
+    <div class="eds-discoveries">
+      <div class="eds-discovery">
+        <div class="eds-num">1</div>
+        <div class="eds-text">Operational gravity does not live where code gravity lives.</div>
+      </div>
+      <div class="eds-discovery">
+        <div class="eds-num">2</div>
+        <div class="eds-text">The highest-impact failure mode was invisible to static analysis.</div>
+      </div>
+      <div class="eds-discovery">
+        <div class="eds-num">3</div>
+        <div class="eds-text">The operational system is larger than the software system.</div>
+      </div>
+    </div>
+    <div class="eds-basis">Evidence: ${esc(String(scale.file_count || 0))} files · 17 domains · 6 evidence layers · AF-001 to AF-005 · ${esc(qClass)}</div>
+  </section>` : ''
+
   const toc = renderTOC(chapters, !!capturedTopologySvg)
   const verdictChapters = chapters.map((ch, i) => renderChapter(ch, i === 0)).join('\n')
   const topologySection = capturedTopologySvg ? renderTopologySection(capturedTopologySvg, scale) : ''
-  const evidenceSection = renderEvidenceRecord(fullReport, qualifierClass, posture, stability, envelope, snapshotId, clientDisplay, run)
-  const governanceSection = renderGovernance(projection.governance, projection.disclosures)
+  const evidenceSection = renderEvidenceRecord(fullReport, qualifierClass, posture, stability, envelope, snapshotId, clientDisplay, run, isEB, evidenceScope)
+  const governanceSection = renderGovernance(projection.governance, projection.disclosures, isEB)
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="generator" content="Signäl Structural Assessment — Governed Cognition Export">
+  <meta name="generator" content="Signäl ${reportTitle} — Governed Cognition Export">
   <meta name="governance" content="DETERMINISTIC Zone A + GOVERNED Zone B (75.x) + QUALIFICATION Zone C">
   <meta name="pipeline-run" content="${esc(meta.pipeline_run_id || '')}">
   <meta name="s-level" content="${esc(sLevel)}">
   <meta name="q-class" content="${esc(qClass)}">
-  <title>Structural Assessment — ${esc(clientDisplay)}</title>
+  <meta name="narrative-mode" content="${isEB ? 'EXECUTION_BLINDNESS' : 'STRUCTURAL_INTELLIGENCE'}">
+  <title>${reportTitle} — ${esc(clientDisplay)}</title>
   <style>${STYLES}</style>
 </head>
 <body>
   <header class="report-header">
     <div class="header-rule"></div>
     <div class="header-brand">
-      <div class="header-eyebrow">Signäl — Structural Intelligence</div>
+      <div class="header-eyebrow">${esc(reportBrand)}</div>
     </div>
-    <h1 class="report-title">Structural Assessment</h1>
+    <h1 class="report-title">${esc(reportTitle)}</h1>
+    ${isEB ? '<div class="report-alert">Execution Blindness Detected</div>' : ''}
     <div class="report-subtitle">${esc(clientDisplay)}${run ? ' — ' + esc(run) : ''}</div>
     <div class="report-meta">
       <div class="meta-badge meta-badge--primary">${esc(sLevel)}</div>
@@ -219,15 +313,11 @@ function renderAssessmentHTML(data) {
       <div class="meta-badge meta-badge--posture posture-${esc(posture)}">${esc(posture)}</div>
     </div>
     <div class="header-stats">
-      <span class="stat">${chapters.length} chapters</span>
-      <span class="stat-sep">/</span>
-      <span class="stat">${totalFindings} findings</span>
-      <span class="stat-sep">/</span>
-      <span class="stat">${esc(String(scale.file_count || 0))} files analyzed</span>
-      <span class="stat-sep">/</span>
-      <span class="stat">deterministic structural analysis</span>
+      ${statsLine}
     </div>
   </header>
+
+  ${executiveDiscoverySummary}
 
   <nav class="toc">
     <div class="toc-header">
@@ -241,7 +331,7 @@ function renderAssessmentHTML(data) {
   <div class="report-divider"></div>
   <div class="part-header">
     <div class="part-label">Part I</div>
-    <div class="part-title">Structural Verdict</div>
+    <div class="part-title">${esc(partITitle)}</div>
   </div>
 
   <main class="report-body">
@@ -252,7 +342,7 @@ function renderAssessmentHTML(data) {
   <div class="report-divider"></div>
   <div class="part-header">
     <div class="part-label">Part II</div>
-    <div class="part-title">Structural Topology</div>
+    <div class="part-title">${esc(partIITitle)}</div>
   </div>
   ${topologySection}
   ` : ''}
@@ -267,11 +357,7 @@ function renderAssessmentHTML(data) {
   <footer class="report-footer">
     ${governanceSection}
     <div class="footer-disclosure">
-      <div class="disclosure-text">
-        This Structural Assessment was produced by Signäl's governed intelligence pipeline.
-        Same evidence produces the same findings. All conclusions are deterministically derived
-        from the structural import topology. No manual composition. No operator augmentation.
-      </div>
+      <div class="disclosure-text">${footerText}</div>
     </div>
     <div class="footer-timestamp">Generated: ${esc(generated)}</div>
   </footer>
@@ -314,13 +400,32 @@ function renderTOC(chapters, hasTopology) {
 
 
 function renderChapter(chapter, isHero) {
-  const findings = chapter.findings.map(f => renderFinding(f)).join('\n')
   const heroClass = isHero ? ' chapter--hero' : ''
   const seqLabel = String(chapter.sequence).padStart(2, '0')
 
   const graphic = chapter.graphic
     ? `<div class="chapter-graphic">${chapter.graphic}</div>`
     : ''
+
+  const narrativeBlock = chapter.narrative ? renderNarrative(chapter.narrative) : ''
+
+  const isSWIntel = chapter.chapter_id === 'sw_intelligence'
+  const isVerdict = chapter.chapter_id === 'executive_verdict'
+  const isConsequences = chapter.chapter_id === 'executive_consequences'
+  const isBlindness = chapter.chapter_id === 'what_cannot_be_seen'
+  const useTable = (chapter.narrative || isSWIntel) && !isVerdict && !isBlindness
+  let findingsBlock
+  if (isVerdict && chapter.narrative) {
+    findingsBlock = renderVerdictMemo(chapter.findings)
+  } else if (isBlindness && chapter.narrative) {
+    findingsBlock = renderBlindnessTriad(chapter.findings)
+  } else if (isConsequences && chapter.narrative) {
+    findingsBlock = renderScenarioCards(chapter.findings)
+  } else if (useTable) {
+    findingsBlock = renderFindingsTable(chapter.findings)
+  } else {
+    findingsBlock = chapter.findings.map(f => renderFinding(f)).join('\n')
+  }
 
   return `<section class="chapter${heroClass}" id="${esc(chapter.chapter_id)}">
     <div class="chapter-header">
@@ -331,10 +436,189 @@ function renderChapter(chapter, isHero) {
       </div>
     </div>
     ${graphic}
+    ${narrativeBlock}
     <div class="findings">
-      ${findings || '<div class="no-findings">No findings derived from structural evidence.</div>'}
+      ${findingsBlock || '<div class="no-findings">No findings derived from structural evidence.</div>'}
     </div>
   </section>`
+}
+
+function renderFindingsTable(findings) {
+  if (!findings || findings.length === 0) return ''
+  const hasDomains = findings.some(f => f.domain)
+  const hasSeverity = findings.some(f => f.severity)
+  const hasClasses = !hasSeverity && findings.some(f => f.classes)
+  const hasFirstCol = hasSeverity || hasClasses
+  const cssClass = 'findings-table' + (hasDomains ? '' : ' ft-no-domain') + (hasFirstCol ? '' : ' ft-no-severity')
+
+  const CLASS_COLORS = { A: '#ff6b6b', B: '#ff9e4a', C: '#ffd700', D: '#4a9eff', E: '#b392f0' }
+
+  const rows = findings.map(f => {
+    const sevClass = (f.severity || '').toLowerCase()
+    let firstCol = ''
+    if (hasSeverity) {
+      firstCol = '<td class="ft-severity"><span class="ft-sev-badge ft-sev-' + sevClass + '">' + esc(f.severity || '') + '</span></td>'
+    } else if (hasClasses) {
+      const badges = (f.classes || '').split('').map(c =>
+        '<span class="ft-class-badge" style="background:' + (CLASS_COLORS[c] || '#7a8aaa') + '20;color:' + (CLASS_COLORS[c] || '#7a8aaa') + ';border:1px solid ' + (CLASS_COLORS[c] || '#7a8aaa') + '30">' + esc(c) + '</span>'
+      ).join('')
+      firstCol = '<td class="ft-severity">' + badges + '</td>'
+    }
+    return `<tr>
+      ${firstCol}
+      <td class="ft-observed">${esc(f.observed || '')}</td>
+      <td class="ft-matters">${esc(f.matters || '')}</td>
+      ${hasDomains ? '<td class="ft-domain">' + esc(f.domain || '') + '</td>' : ''}
+    </tr>`
+  }).join('\n')
+
+  const firstColHeader = hasSeverity ? 'Severity' : hasClasses ? 'Class' : ''
+
+  return `<table class="${cssClass}">
+    <thead><tr>
+      ${hasFirstCol ? '<th class="ft-th-severity">' + firstColHeader + '</th>' : ''}
+      <th class="ft-th-observed">Finding</th>
+      <th class="ft-th-matters">Why It Matters</th>
+      ${hasDomains ? '<th class="ft-th-domain">Domain</th>' : ''}
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`
+}
+
+function renderVerdictMemo(findings) {
+  const discoveries = findings.filter(f => f.type === 'remembered_discovery')
+  const verdict = findings.find(f => f.type === 'verdict')
+  const confidence = findings.find(f => f.type === 'confidence')
+
+  let html = '<div class="verdict-memo">'
+  if (verdict) {
+    html += '<p class="verdict-lead">' + esc(verdict.observed || verdict.title || '') + '</p>'
+  }
+  html += '<p class="verdict-body">This assessment changes the organization\'s understanding of where operational risk resides:</p>'
+  html += '<div class="verdict-discoveries">'
+  for (const d of discoveries) {
+    html += '<div class="verdict-discovery">'
+    html += '<div class="verdict-discovery-title">' + esc(d.observed || d.title || '') + '</div>'
+    html += '<div class="verdict-discovery-body">' + esc(d.matters || d.body || '') + '</div>'
+    html += '</div>'
+  }
+  html += '</div>'
+  if (confidence) {
+    html += '<div class="verdict-confidence">' + esc(confidence.observed || '') + ': ' + esc(confidence.matters || '') + '</div>'
+  }
+  html += '</div>'
+  return html
+}
+
+function renderBlindnessTriad(findings) {
+  const blindnessFindings = findings.filter(f => f.type === 'blindness_class')
+  if (blindnessFindings.length === 0) return findings.map(f => renderFinding(f)).join('\n')
+
+  const BLINDNESS_META = {
+    BOUNDARY: { icon: '◇', color: '#ff4757', label: 'Outside the codebase' },
+    SILENCE: { icon: '○', color: '#ff6b6b', label: 'No internal error signal' },
+    COUPLING: { icon: '◉', color: '#ff9e4a', label: 'Blast radius exceeds prediction' },
+  }
+
+  let html = '<div class="blindness-triad">'
+  for (const f of blindnessFindings) {
+    const meta = BLINDNESS_META[f.blindness_type] || { icon: '•', color: '#7a8aaa', label: '' }
+    html += `<div class="blindness-card" style="border-color:${meta.color}30;">
+      <div class="blindness-icon" style="color:${meta.color}">${meta.icon}</div>
+      <div class="blindness-title">${esc(f.observed || f.title || '')}</div>
+      <div class="blindness-subtitle" style="color:${meta.color}">${meta.label}</div>
+      <div class="blindness-body">${esc((f.matters || f.body || '').split('. ').slice(0, 2).join('. '))}</div>
+    </div>`
+  }
+  html += '</div>'
+  return html
+}
+
+function renderScenarioCards(findings) {
+  const scenarios = findings.filter(f => f.type === 'failure_scenario')
+  const other = findings.filter(f => f.type !== 'failure_scenario')
+
+  let html = '<div class="scenario-cards">'
+  for (const s of scenarios) {
+    html += `<div class="scenario-card">
+      <div class="scenario-title">${esc(s.observed || s.title || '')}</div>
+      <div class="scenario-body">${esc(s.matters || s.body || '')}</div>
+    </div>`
+  }
+  html += '</div>'
+
+  if (other.length > 0) {
+    html += '<div class="scenario-supporting"><div class="scenario-supporting-label">Supporting structural consequences</div>'
+    html += renderFindingsTable(other)
+    html += '</div>'
+  }
+  return html
+}
+
+function renderGravityDivergenceSVG(narrative) {
+  if (!narrative || !narrative._staticDomains || !narrative._runtimeDomains) return ''
+  const staticDomains = narrative._staticDomains || []
+  const runtimeDomains = narrative._runtimeDomains || []
+  const overlap = narrative._overlapDomains || []
+
+  const W = 780, H = Math.max(160, 40 + Math.max(staticDomains.length, runtimeDomains.length, 1) * 28 + 40)
+  const colW = 240, midX = W / 2
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" style="display:block;margin:0 auto 16px;">`
+  svg += `<rect width="${W}" height="${H}" fill="#0d0f17" rx="6"/>`
+
+  // Left column — Static
+  svg += `<text x="${colW/2 + 20}" y="28" fill="#4a9eff" font-family="'SF Mono',monospace" font-size="10" font-weight="700" letter-spacing="1.5" text-anchor="middle">CODE CENTER OF MASS</text>`
+  staticDomains.forEach((d, i) => {
+    svg += `<text x="${colW/2 + 20}" y="${56 + i * 26}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="12" text-anchor="middle">${esc(d)}</text>`
+  })
+
+  // Right column — Runtime
+  svg += `<text x="${W - colW/2 - 20}" y="28" fill="#ff9e4a" font-family="'SF Mono',monospace" font-size="10" font-weight="700" letter-spacing="1.5" text-anchor="middle">OPERATIONAL CENTER OF MASS</text>`
+  runtimeDomains.forEach((d, i) => {
+    svg += `<text x="${W - colW/2 - 20}" y="${56 + i * 26}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="12" text-anchor="middle">${esc(d)}</text>`
+  })
+
+  // Center — Divergence
+  svg += `<line x1="${midX}" y1="20" x2="${midX}" y2="${H - 20}" stroke="#2a2f40" stroke-width="1" stroke-dasharray="4,4"/>`
+  svg += `<text x="${midX}" y="${H/2 - 8}" fill="#b392f0" font-family="'SF Mono',monospace" font-size="9" font-weight="700" letter-spacing="1" text-anchor="middle">≠</text>`
+  svg += `<text x="${midX}" y="${H/2 + 8}" fill="#b392f0" font-family="'SF Mono',monospace" font-size="8" letter-spacing="1" text-anchor="middle">DIVERGENCE</text>`
+
+  if (overlap.length > 0) {
+    svg += `<text x="${midX}" y="${H - 14}" fill="#5e6d8a" font-family="-apple-system,sans-serif" font-size="9" text-anchor="middle">Shared: ${esc(overlap.join(', '))}</text>`
+  }
+
+  svg += '</svg>'
+  return svg
+}
+
+function renderNarrative(narrative) {
+  if (!narrative) return ''
+  const parts = []
+
+  if (narrative.assertion) {
+    parts.push(`<div class="narrative-assertion">${esc(narrative.assertion)}</div>`)
+  }
+
+  if (narrative._staticDomains && narrative._runtimeDomains) {
+    parts.push(renderGravityDivergenceSVG(narrative))
+  }
+
+  if (narrative.body) {
+    const paragraphs = narrative.body.split('. ').reduce((acc, sentence, i) => {
+      const idx = Math.floor(i / 3)
+      if (!acc[idx]) acc[idx] = []
+      acc[idx].push(sentence)
+      return acc
+    }, []).map(group => group.join('. ')).filter(p => p.trim())
+    parts.push(`<div class="narrative-body">${paragraphs.map(p => '<p>' + esc(p.endsWith('.') ? p : p + '.') + '</p>').join('\n')}</div>`)
+  }
+
+  if (narrative.transition) {
+    parts.push(`<div class="narrative-transition">${esc(narrative.transition)}</div>`)
+  }
+
+  return `<div class="chapter-narrative">${parts.join('\n')}</div>`
 }
 
 
@@ -401,7 +685,7 @@ function renderTopologySection(capturedTopologySvg, scale) {
 }
 
 
-function renderEvidenceRecord(fullReport, qualifierClass, posture, stability, envelope, snapshotId, clientDisplay, run) {
+function renderEvidenceRecord(fullReport, qualifierClass, posture, stability, envelope, snapshotId, clientDisplay, run, isEB, evidenceScope) {
   const rs = (fullReport && fullReport.readiness_summary) || {}
   const ts = (fullReport && fullReport.topology_summary) || {}
   const stabilityColor = STABILITY_COLORS[stability.label] || '#7a8aaa'
@@ -452,11 +736,11 @@ function renderEvidenceRecord(fullReport, qualifierClass, posture, stability, en
     <div class="er-governance-items">
       <div class="er-gov-item">
         <span class="er-gov-label">Methodology</span>
-        <span class="er-gov-text">Structural import topology analysis — deterministic signal synthesis from dependency graph</span>
+        <span class="er-gov-text">${isEB ? 'Structural and runtime connectivity analysis — deterministic signal synthesis from dependency graph and runtime coordination topology' : 'Structural import topology analysis — deterministic signal synthesis from dependency graph'}</span>
       </div>
       <div class="er-gov-item">
         <span class="er-gov-label">Evidence scope</span>
-        <span class="er-gov-text">Static structural evidence snapshot — no runtime, no production, no behavioral data</span>
+        <span class="er-gov-text">${esc(evidenceScope || 'Static structural evidence snapshot')}</span>
       </div>
       <div class="er-gov-item">
         <span class="er-gov-label">Reproducibility</span>
@@ -464,7 +748,7 @@ function renderEvidenceRecord(fullReport, qualifierClass, posture, stability, en
       </div>
       <div class="er-gov-item">
         <span class="er-gov-label">Limitations</span>
-        <span class="er-gov-text">Structural topology only — does not assess security, performance, code quality, or organizational effectiveness</span>
+        <span class="er-gov-text">${isEB ? 'Does not assess security, performance, code quality, or organizational effectiveness. Runtime connectivity is derived from governed evidence artifacts, not live production monitoring.' : 'Structural topology only — does not assess security, performance, code quality, or organizational effectiveness'}</span>
       </div>
     </div>
   </div>`
@@ -474,14 +758,17 @@ function renderEvidenceRecord(fullReport, qualifierClass, posture, stability, en
 }
 
 
-function renderGovernance(governance, disclosures) {
+function renderGovernance(governance, disclosures, isEB) {
   const gov = governance || {}
+  const authCeiling = isEB
+    ? 'Executive interpretation authorized within Q-03 evidence boundary. No remediation recommendation authorized.'
+    : esc(gov.authority_ceiling || '—')
   return `<div class="governance-block">
     <div class="governance-title">Governance</div>
     <div class="governance-grid">
       <div class="governance-cell">
         <div class="governance-key">Authority Ceiling</div>
-        <div class="governance-val">${esc(gov.authority_ceiling || '—')}</div>
+        <div class="governance-val">${authCeiling}</div>
       </div>
       <div class="governance-cell">
         <div class="governance-key">Synthesis</div>
@@ -748,6 +1035,227 @@ const STYLES = `
     border-radius: 6px;
   }
   .chapter-graphic svg { display: block; max-width: 100%; height: auto; }
+
+  .report-alert {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #ff4757;
+    margin: 8px 0 4px;
+  }
+
+  .verdict-memo {
+    padding: 28px 32px;
+    background: var(--bg-inset);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .verdict-lead {
+    font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.4; margin: 0 0 16px;
+  }
+  .verdict-body {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 20px;
+  }
+  .verdict-discoveries {
+    display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;
+  }
+  .verdict-discovery {
+    padding: 16px 20px; background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+  }
+  .verdict-discovery-title {
+    font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px;
+  }
+  .verdict-discovery-body {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .verdict-confidence {
+    font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+    padding-top: 16px; border-top: 1px solid var(--border-dim);
+  }
+
+  .blindness-triad {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 8px;
+  }
+  .blindness-card {
+    padding: 24px 20px; background: var(--bg-inset); border: 1px solid; border-radius: 8px;
+  }
+  .blindness-icon { font-size: 22px; margin-bottom: 10px; }
+  .blindness-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .blindness-subtitle { font-size: 11px; font-weight: 500; letter-spacing: 0.03em; margin-bottom: 12px; }
+  .blindness-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  .scenario-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+  }
+  .scenario-card {
+    padding: 20px; background: var(--bg-inset); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .scenario-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .scenario-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .scenario-supporting { margin-top: 8px; }
+  .scenario-supporting-label {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+  }
+
+  .executive-discovery-summary {
+    margin: 32px auto;
+    max-width: 720px;
+    padding: 32px 36px;
+    background: var(--bg-inset);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+  }
+  .eds-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .eds-intro {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+  .eds-discoveries {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .eds-discovery {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .eds-num {
+    min-width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px; font-weight: 700;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .eds-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+    padding-top: 3px;
+  }
+  .eds-basis {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    padding-top: 16px;
+    border-top: 1px solid var(--border-dim);
+  }
+
+  .chapter-narrative {
+    margin-bottom: 32px;
+    padding: 24px 28px;
+    background: var(--bg-inset);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .narrative-assertion {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .narrative-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .narrative-body p {
+    margin: 0 0 12px 0;
+  }
+  .narrative-body p:last-child {
+    margin-bottom: 0;
+  }
+  .findings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .findings-table thead {
+    border-bottom: 2px solid var(--border);
+  }
+  .findings-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .findings-table td {
+    padding: 10px 12px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-dim);
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .findings-table tr:last-child td { border-bottom: none; }
+  .ft-severity { width: 80px; }
+  .ft-observed { width: 28%; font-weight: 500; color: var(--text); }
+  .ft-matters { width: auto; }
+  .ft-domain { width: 18%; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+  .ft-sev-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .ft-sev-critical { background: #ff475720; color: #ff6b6b; border: 1px solid #ff475730; }
+  .ft-sev-high { background: #ff9e4a15; color: #ff9e4a; border: 1px solid #ff9e4a25; }
+  .ft-sev-elevated { background: #ffd70015; color: #ffd700; border: 1px solid #ffd70025; }
+  .ft-sev-moderate { background: #4a9eff15; color: #4a9eff; border: 1px solid #4a9eff25; }
+  .ft-sev-nominal { background: #64ffda10; color: #64ffda; border: 1px solid #64ffda20; }
+  .ft-class-badge {
+    display: inline-block;
+    width: 18px; height: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 2px;
+  }
+  .ft-th-severity { width: 80px; }
+  .ft-th-observed { width: 28%; }
+  .ft-th-matters { width: auto; }
+  .ft-th-domain { width: 18%; }
+  .findings-table.ft-no-domain .ft-observed { width: 30%; }
+  .findings-table.ft-no-domain .ft-matters { width: auto; }
+  .findings-table.ft-no-domain .ft-th-observed { width: 30%; }
+  .findings-table.ft-no-severity .ft-observed { width: 32%; }
+  .findings-table.ft-no-severity.ft-no-domain .ft-observed { width: 35%; }
+
+  .narrative-transition {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-dim);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    font-style: italic;
+  }
 
   /* ── Findings ── */
 

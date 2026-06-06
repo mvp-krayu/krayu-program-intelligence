@@ -63,18 +63,24 @@ function generateChapterGraphics(picp, context) {
 // ── Convergence Center Map (Executive Brief hero graphic) ──
 
 function renderConvergenceMap(tension, ctx) {
-  const centers = tension.convergence_centers || []
-  if (centers.length === 0) return null
+  const allCenters = tension.convergence_centers || []
+  if (allCenters.length === 0) return null
 
+  const centers = allCenters.slice(0, 5)
+  const count = centers.length
   const W = 840
-  const H = centers.length === 1 ? 200 : 260
-  const centerY = centers.length === 1 ? 100 : 130
+  const H = count <= 2 ? 240 : 260
+  const centerY = count <= 2 ? 120 : 130
 
   const nodes = centers.map((c, i) => {
     const domainIds = c.domains || []
-    const name = domainIds.map(d => domainName(d, ctx)).join(' & ')
-    const x = centers.length === 1 ? W / 2 : (i === 0 ? W * 0.28 : W * 0.72)
-    return { ...c, name, x, y: centerY }
+    const firstName = domainIds.length > 0 ? domainName(domainIds[0], ctx) : 'Unknown'
+    const name = domainIds.length <= 1 ? firstName : firstName + ' (+' + (domainIds.length - 1) + ')'
+    let x
+    if (count === 1) x = W / 2
+    else if (count === 2) x = i === 0 ? W * 0.3 : W * 0.7
+    else x = W * (0.12 + (i * 0.76 / (count - 1)))
+    return { ...c, name, x, y: centerY, _nodeCount: count }
   })
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" style="display:block;margin:0 auto 8px;">`
@@ -109,7 +115,8 @@ function renderConvergenceNode(node) {
   const x = node.x
   const y = node.y
   const sevColor = SEV_COLOR[node.severity] || '#7a8aaa'
-  const r = 56
+  const nodeCount = node._nodeCount || 2
+  const r = nodeCount <= 2 ? 56 : nodeCount <= 3 ? 44 : 36
 
   let svg = ''
 
@@ -126,9 +133,17 @@ function renderConvergenceNode(node) {
   svg += `<text x="${x}" y="${y + 4}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="22" font-weight="700" text-anchor="middle">${node.contributing_count}</text>`
   svg += `<text x="${x}" y="${y + 18}" fill="#7a8aaa" font-family="'SF Mono','Courier New',monospace" font-size="9" text-anchor="middle">conditions</text>`
 
-  // Domain name below
-  const name = truncate(node.name, 32)
-  svg += `<text x="${x}" y="${y + r + 22}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="12" font-weight="500" text-anchor="middle">${esc(name)}</text>`
+  // Domain name below — split into two lines if long
+  const name = truncate(node.name, 40)
+  if (name.length > 22) {
+    const mid = name.lastIndexOf(' ', 22)
+    const line1 = mid > 0 ? name.slice(0, mid) : name.slice(0, 22)
+    const line2 = mid > 0 ? name.slice(mid + 1) : name.slice(22)
+    svg += `<text x="${x}" y="${y + r + 18}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="11" font-weight="500" text-anchor="middle">${esc(line1)}</text>`
+    svg += `<text x="${x}" y="${y + r + 32}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="11" font-weight="500" text-anchor="middle">${esc(line2)}</text>`
+  } else {
+    svg += `<text x="${x}" y="${y + r + 22}" fill="#ccd6f6" font-family="-apple-system,sans-serif" font-size="12" font-weight="500" text-anchor="middle">${esc(name)}</text>`
+  }
 
   // Class badges below domain name
   const classes = node.behavioral_classes || []

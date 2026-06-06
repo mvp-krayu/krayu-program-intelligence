@@ -10358,12 +10358,20 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       clone.removeAttribute('ref')
       capturedTopologySvg = clone.outerHTML
     }
-    const tempSynthesis = synthesize(fullReport)
-    const tempConsequences = tempSynthesis ? compileConsequences(tempSynthesis, fullReport) : null
+    const useSynth = synthesisResult || synthesize(qualifiedReport || fullReport)
+    const useConseq = consequenceResult || (useSynth ? compileConsequences(useSynth, qualifiedReport || fullReport) : null)
+    const useBoardroom = consequencePosture || (useConseq ? consequencesForBoardroom(useConseq, useSynth, qualifiedReport || fullReport) : null)
+    const useBalanced = balancedProjection || (useConseq ? consequencesForBalanced(useConseq, useSynth, qualifiedReport || fullReport) : null)
+    let useAF = []
+    try { const { deriveArchitecturalFindings } = require('../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'); useAF = deriveArchitecturalFindings(useConseq, useSynth, qualifiedReport || fullReport) } catch {}
     const result = buildAssessmentPackage({
-      fullReport,
-      synthesisResult: tempSynthesis,
-      consequenceResult: tempConsequences,
+      fullReport: qualifiedReport || fullReport,
+      synthesisResult: useSynth,
+      consequenceResult: useConseq,
+      boardroom: useBoardroom,
+      balanced: useBalanced,
+      vlc: visibilityLayerCompleteness,
+      architecturalFindings: useAF,
       capturedTopologySvg,
       qualifierClass,
       client: DEFAULT_BINDING_CLIENT,

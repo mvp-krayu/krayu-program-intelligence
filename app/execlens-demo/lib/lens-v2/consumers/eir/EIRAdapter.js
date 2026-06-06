@@ -65,7 +65,7 @@ function buildReportMetadata(picp, projection) {
     generated_at: new Date().toISOString(),
     s_level: projection.projection_summary.s_level,
     q_class: projection.projection_summary.q_class,
-    chapter_count: 9,
+    chapter_count: chapters.length,
     narrative_mode: projection.projection_summary.narrative_mode,
     narrative_status: 'ZONE_B_AWAITING_PROVIDER',
   }

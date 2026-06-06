@@ -180,6 +180,11 @@ function chapterExecutiveBrief(boardroom, ctx, narrativeMode) {
     sequence: 1,
     findings,
     evidence_objects: ['structural_posture', 'tension_map'],
+    narrative: isBlindness ? {
+      assertion: boardroom.primary_locus + ' is not primarily exposed because its codebase is structurally complex. It is exposed because the operational system depends on runtime coordination paths that are not visible from the code structure.',
+      body: 'Static analysis points the organization toward ' + boardroom.primary_locus + '. Runtime analysis shows that operational continuity is governed elsewhere. This creates Execution Blindness: the system can appear healthy while the operational backbone is failing. The findings that follow are organized not by severity, but by visibility — what the organization can see, what it cannot, and why that matters.',
+      transition: 'The assessment begins with what the organization currently understands.',
+    } : null,
   }
 }
 
@@ -275,6 +280,7 @@ function chapterSWIntelligence(narratives, themes, runtimeConsequences, boardroo
       title: n.domain,
       body: n.risk_label,
       evidence: ['domain_narratives'],
+      classes: n.classes || null,
       risk_shape: n.risk_shape,
       classes: n.classes,
     })
@@ -298,6 +304,11 @@ function chapterSWIntelligence(narratives, themes, runtimeConsequences, boardroo
     sequence: 5,
     findings,
     evidence_objects: ['tension_map', 'structural_posture'],
+    narrative: {
+      assertion: 'Software Intelligence identifies the visible structural pressures that remain valid after runtime evidence expands the system boundary.',
+      body: 'The static picture is not wrong. It is incomplete. Software Intelligence identifies the internal pressure zones that engineering can already observe: concentration, propagation, fragility, drift, and convergence. Execution Blindness does not replace these findings — it explains why they are insufficient for operational decision-making. Classes: A = Flow, B = Concentration, C = Fragility, D = Reinforcement, E = Drift.',
+      transition: null,
+    },
   }
 }
 
@@ -442,6 +453,11 @@ function chapterExecutiveVerdict(boardroom, balanced, ctx, narrativeMode) {
     sequence: isBlindness ? 8 : 9,
     findings,
     evidence_objects: ['structural_posture', 'tension_map', 'operational_ceiling'],
+    narrative: isBlindness ? {
+      assertion: 'This assessment changes the organization\'s understanding of where operational risk resides.',
+      body: 'Three discoveries emerge from the combined static and runtime analysis. Each is individually significant. Together, they indicate that the organization\'s current structural understanding — while technically accurate — is operationally incomplete. Transformation planning, resilience investment, and architectural prioritization must account for both the visible code structure and the invisible operational coordination backbone.',
+      transition: null,
+    } : null,
   }
 }
 
@@ -449,17 +465,18 @@ function chapterExecutiveVerdict(boardroom, balanced, ctx, narrativeMode) {
 
 function chapterWhatOrgBelieves(boardroom, slices, narratives, ctx) {
   const staticSlices = slices.filter(s => !isRuntimeType(s.condition_type))
-  const staticNarratives = narratives.filter(n => {
-    const staticTypes = slices.filter(s => !isRuntimeType(s.condition_type) && s.domain === n.domain)
-    return staticTypes.length > 0
-  })
+
+  const staticDomains = staticSlices.map(s => s.domain).filter(Boolean)
+  const domainCounts = {}
+  staticDomains.forEach(d => { domainCounts[d] = (domainCounts[d] || 0) + 1 })
+  const primaryDomain = Object.entries(domainCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || boardroom.primary_locus || 'the primary structural region'
 
   const findings = []
   findings.push({
     id: 'wob-frame',
     type: 'organizational_belief',
     severity: boardroom.posture_severity,
-    title: 'The visible picture: ' + (boardroom.primary_locus || 'structural concentration'),
+    title: 'The visible picture: ' + primaryDomain,
     body: 'Static code analysis identifies structural coupling, dependency concentration, and propagation risk. These are real findings. They represent what the organization can see and reason about today.',
     evidence: ['static_conditions'],
   })
@@ -482,6 +499,11 @@ function chapterWhatOrgBelieves(boardroom, slices, narratives, ctx) {
     sequence: 2,
     findings,
     evidence_objects: ['structural_posture', 'tension_map'],
+    narrative: {
+      assertion: 'Static code analysis identifies ' + primaryDomain + ' as the dominant structural center of gravity.',
+      body: 'This conclusion is supported by ' + staticSlices.length + ' structural conditions including coupling pressure, dependency concentration, and propagation risk. Viewed through a traditional architecture lens, ' + primaryDomain + ' appears to be the most critical operational region — it absorbs disproportionate structural mass and constrains cross-domain independence. An experienced engineering team would reasonably focus transformation efforts here. At this point, the structural picture appears complete.',
+      transition: 'Runtime connectivity evidence reveals a different operational reality.',
+    },
   }
 }
 
@@ -525,12 +547,27 @@ function chapterWhatGovernsExecution(boardroom, balanced, slices, narratives, ru
     })
   }
 
+  const rtDomains = [...new Set(runtimeSlices.map(s => s.domain).filter(Boolean))]
+  const staticSlicesHere = slices.filter(s => !isRuntimeType(s.condition_type))
+  const stDomains = [...new Set(staticSlicesHere.map(s => s.domain).filter(Boolean))]
+  const overlapDomains = stDomains.filter(d => rtDomains.includes(d))
+  const staticOnly = stDomains.filter(d => !rtDomains.includes(d))
+  const runtimeOnly = rtDomains.filter(d => !stDomains.includes(d))
+
   return {
     chapter_id: 'what_governs_execution',
     chapter_label: 'What Actually Governs Execution',
     sequence: 3,
     findings,
     evidence_objects: ['architectural_findings', 'runtime_conditions', 'tension_map'],
+    narrative: {
+      assertion: 'The operational center of mass resides in ' + (runtimeOnly.slice(0, 3).join(', ') || rtDomains.slice(0, 3).join(', ') || 'runtime coordination structures') + ' — not where the code is heaviest.',
+      body: (af001 ? af001.description + ' ' : '') + 'Runtime evidence from event flows, message brokers, and WebSocket streams reveals that operational coordination is governed by structures that do not appear as dominant nodes in the static import graph.',
+      transition: 'This divergence creates specific forms of organizational blindness.',
+      _staticDomains: staticOnly,
+      _runtimeDomains: runtimeOnly,
+      _overlapDomains: overlapDomains,
+    },
   }
 }
 
@@ -561,12 +598,23 @@ function chapterWhatCannotBeSeen(slices, runtimeConsequences, architecturalFindi
     }
   }
 
+  const activeTypes = Object.entries(blindnessGroups).filter(([, g]) => {
+    const matchingAFs = af.filter(f => g.afs.includes(f.id))
+    const matchingSlices = slices.filter(s => g.conditions.includes(s.condition_type))
+    return matchingAFs.length > 0 || matchingSlices.length > 0
+  }).map(([type]) => type.toLowerCase())
+
   return {
     chapter_id: 'what_cannot_be_seen',
     chapter_label: 'What Cannot Currently Be Seen',
     sequence: 4,
     findings,
     evidence_objects: ['architectural_findings', 'runtime_conditions'],
+    narrative: {
+      assertion: 'Three forms of execution blindness are evidenced: ' + activeTypes.join(', ') + '.',
+      body: 'Execution blindness occurs when a system can fail while the organization believes it is healthy. This assessment identifies ' + findings.length + ' distinct blindness classes, each representing a category of failure that produces no observable signal within the application boundary. These are not theoretical risks — each is supported by measured runtime evidence from the operational system.',
+      transition: 'The next question is why these conditions were not visible before.',
+    },
   }
 }
 
@@ -615,6 +663,11 @@ function chapterWhyTraditionalMissed(detection, runtimeConsequences, architectur
     sequence: 6,
     findings,
     evidence_objects: ['architectural_findings', 'detection_boundary'],
+    narrative: {
+      assertion: 'Static analysis measures code coupling. It does not measure operational coordination.',
+      body: (af002 ? af002.description + ' ' : '') + 'Runtime coordination mechanisms — event flows, message brokers, WebSocket streams, dependency injection — do not create import edges. They are structurally invisible to any tool that measures code structure alone. The findings below are concrete examples of structural risks that no static analysis tool can discover.',
+      transition: 'These invisible conditions carry specific executive consequences.',
+    },
   }
 }
 
@@ -668,6 +721,11 @@ function chapterExecutiveConsequences(allConsequences, runtimeConsequences, narr
     sequence: 7,
     findings,
     evidence_objects: ['architectural_findings', 'consequence_compiler'],
+    narrative: {
+      assertion: 'The failure modes identified above carry operational consequences that extend beyond the codebase boundary.',
+      body: 'Each blind spot corresponds to a specific failure scenario. These are not hypothetical — they are derived from measured runtime coordination topology. The consequences below describe what happens when these invisible dependencies fail: which domains are affected, whether the failure is detectable, and what operational capability is lost.',
+      transition: null,
+    },
   }
 }
 
