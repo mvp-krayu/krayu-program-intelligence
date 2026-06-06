@@ -18,6 +18,25 @@ const {
 } = require('./PIKnowledgeGraphAccess');
 const { routeIntent, classifyIntent, resolveEvidenceClass } = require('./topic-router');
 
+let _domainLabelMap = null;
+function buildDomainLabelMap(registry) {
+  if (!registry) return {};
+  const map = {};
+  for (const d of registry) {
+    map[d.domain_id] = d.business_label || d.domain_name || d.domain_id;
+  }
+  return map;
+}
+function resolveDomainLabel(idOrName, labelMap) {
+  if (!labelMap || !idOrName) return idOrName;
+  return labelMap[idOrName] || idOrName;
+}
+function resolveDomainList(ids, labelMap) {
+  if (!ids || !labelMap) return ids;
+  if (typeof ids === 'string') return ids;
+  return ids.map(id => resolveDomainLabel(id, labelMap));
+}
+
 const CONTEXT_TOKEN_BUDGET = 16000;
 const CHARS_PER_TOKEN = 4;
 
@@ -506,13 +525,15 @@ function formatContextForPrompt(assembled) {
   const isRuntimeOnly = qt === 'RUNTIME_ONLY';
   const isOpGravity = qt === 'OPERATIONAL_GRAVITY';
 
+  const domainLabels = buildDomainLabelMap(assembled._qualifiedRegistry);
+
   budgetSections.push({
     id: 'boot', priority: 1,
     content: assembled.bootContext || '',
   });
 
   if (isOpGravity) {
-    return formatOperationalGravityContext(assembled, budgetSections);
+    return formatOperationalGravityContext(assembled, budgetSections, domainLabels);
   }
 
   if (assembled.verdict) {
@@ -531,7 +552,7 @@ function formatContextForPrompt(assembled) {
         verdictParts.push('- Evidence: ' + af.evidence);
         verdictParts.push('- Executive implication: ' + af.executive_implication);
         if (af.impacted_domains) {
-          verdictParts.push('- Impacted domains: ' + af.impacted_domains.join(', '));
+          verdictParts.push('- Impacted domains: ' + resolveDomainList(af.impacted_domains, domainLabels).join(', '));
         }
         verdictParts.push('');
       }
@@ -571,7 +592,7 @@ function formatContextForPrompt(assembled) {
   }
 
   if (assembled.runtimeGraphs) {
-    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness);
+    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness, domainLabels);
     if (rtTopo) {
       const isGravityQ = qt === 'TOPOLOGY_GRAVITY';
       budgetSections.push({
@@ -632,7 +653,7 @@ function formatContextForPrompt(assembled) {
   return budgeted.map(s => s.content).join('\n');
 }
 
-function formatOperationalGravityContext(assembled, budgetSections) {
+function formatOperationalGravityContext(assembled, budgetSections, domainLabels) {
   const RT_CONDITIONS = new Set(['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']);
 
   // Section 1: Architectural findings — AF-001 is the authoritative cognition object
@@ -644,7 +665,7 @@ function formatOperationalGravityContext(assembled, budgetSections) {
       afParts.push('- Evidence: ' + af.evidence);
       afParts.push('- Executive implication: ' + af.executive_implication);
       if (af.impacted_domains) {
-        afParts.push('- Impacted domains: ' + af.impacted_domains.join(', '));
+        afParts.push('- Impacted domains: ' + resolveDomainList(af.impacted_domains, domainLabels).join(', '));
       }
       afParts.push('');
     }
@@ -656,7 +677,7 @@ function formatOperationalGravityContext(assembled, budgetSections) {
 
   // Section 2: Runtime topology — full detail, this is the operational gravity evidence
   if (assembled.runtimeGraphs) {
-    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness);
+    const rtTopo = formatRuntimeTopology(assembled.runtimeGraphs, assembled.verdict?.visibility_layer_completeness, domainLabels);
     if (rtTopo) {
       budgetSections.push({
         id: 'runtime_topology', priority: 2,
@@ -885,7 +906,9 @@ function formatStructuralTopology(st, qualifiedRegistry) {
   return parts.join('\n');
 }
 
-function formatRuntimeTopology(runtimeGraphs, vlc) {
+function formatRuntimeTopology(runtimeGraphs, vlc, domainLabels) {
+  const dl = domainLabels || {};
+  const resolveIds = (ids) => (ids || []).map(id => dl[id] || id);
   if (!runtimeGraphs) return '';
   const signals = runtimeGraphs._derived_signals || [];
   const parts = [];
@@ -914,7 +937,7 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push('### Event Topology');
     parts.push(`${eventSig.measurement_basis}`);
     parts.push(`Event concentration ratio: ${eventSig.signal_value} events per handler [${eventSig.severity}]`);
-    parts.push(`Affected domains: ${(eventSig.affected_domains || []).join(', ')}`);
+    parts.push(`Affected domains: ${resolveIds(eventSig.affected_domains).join(', ')}`);
     parts.push(`Evidence: ${eventSig.evidence_class} (${eventSig.evidence_snippet || ''})`);
     parts.push('');
   }
@@ -923,10 +946,10 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push('### MQTT / Broker Topology');
     parts.push(`${brokerSig.measurement_basis}`);
     parts.push(`Broker dependency: single broker [${brokerSig.severity}]`);
-    parts.push(`Affected domains: ${(brokerSig.affected_domains || []).join(', ')}`);
+    parts.push(`Affected domains: ${resolveIds(brokerSig.affected_domains).join(', ')}`);
     if (topicSig) {
       parts.push(`Topic fanout: ${topicSig.signal_value} topics per subscriber domain [${topicSig.severity}]`);
-      parts.push(`Topic domains: ${(topicSig.affected_domains || []).join(', ')}`);
+      parts.push(`Topic domains: ${resolveIds(topicSig.affected_domains).join(', ')}`);
     }
     if (edgeCloudSig) {
       parts.push(`Edge-cloud path: ${edgeCloudSig.measurement_basis}`);
@@ -939,7 +962,7 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push('### WebSocket / Real-Time Topology');
     parts.push(`${wsSig.measurement_basis}`);
     parts.push(`Stream count: ${wsSig.signal_value} real-time event streams [${wsSig.severity}]`);
-    parts.push(`Affected domains: ${(wsSig.affected_domains || []).join(', ')}`);
+    parts.push(`Affected domains: ${resolveIds(wsSig.affected_domains).join(', ')}`);
     parts.push('');
   }
 
@@ -947,7 +970,7 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push('### Async Propagation');
     parts.push(`${asyncSig.measurement_basis}`);
     parts.push(`Asymmetry ratio: ${asyncSig.signal_value}:1 events to handlers [${asyncSig.severity}]`);
-    parts.push(`Affected domains: ${(asyncSig.affected_domains || []).join(', ')}`);
+    parts.push(`Affected domains: ${resolveIds(asyncSig.affected_domains).join(', ')}`);
     parts.push('');
   }
 
@@ -955,7 +978,7 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
     parts.push('### DI / Module Graph');
     parts.push(`${diSig.measurement_basis}`);
     parts.push(`Global injection concentration: ${diSig.signal_value} providers [${diSig.severity}]`);
-    parts.push(`Affected domains: ${(diSig.affected_domains || []).join(', ')}`);
+    parts.push(`Affected domains: ${resolveIds(diSig.affected_domains).join(', ')}`);
     parts.push('');
   }
 
@@ -1011,7 +1034,7 @@ function formatRuntimeTopology(runtimeGraphs, vlc) {
   if (rtGravityCandidates.length > 0) {
     parts.push('### Runtime Gravity Candidates');
     rtGravityCandidates.forEach(s => {
-      parts.push(`- ${s.signal_name} [${s.severity}] — ${s.evidence_class} — domains: ${(s.affected_domains || []).slice(0, 4).join(', ')}`);
+      parts.push(`- ${s.signal_name} [${s.severity}] — ${s.evidence_class} — domains: ${resolveIds((s.affected_domains || []).slice(0, 4)).join(', ')}`);
     });
     parts.push('');
   }
