@@ -935,15 +935,18 @@ function formatRuntimeTopology(runtimeGraphs, vlc, domainLabels) {
 
   if (eventSig) {
     parts.push('### Event Topology');
+    parts.push('Business capability: cross-domain operational coordination');
     parts.push(`${eventSig.measurement_basis}`);
     parts.push(`Event concentration ratio: ${eventSig.signal_value} events per handler [${eventSig.severity}]`);
     parts.push(`Affected domains: ${resolveIds(eventSig.affected_domains).join(', ')}`);
     parts.push(`Evidence: ${eventSig.evidence_class} (${eventSig.evidence_snippet || ''})`);
+    parts.push(`Failure implication: event bus or handler failure interrupts coordination across all affected domains simultaneously`);
     parts.push('');
   }
 
   if (brokerSig) {
     parts.push('### MQTT / Broker Topology');
+    parts.push('Business capability: field telemetry ingestion and edge-cloud data continuity');
     parts.push(`${brokerSig.measurement_basis}`);
     parts.push(`Broker dependency: single broker [${brokerSig.severity}]`);
     parts.push(`Affected domains: ${resolveIds(brokerSig.affected_domains).join(', ')}`);
@@ -955,14 +958,17 @@ function formatRuntimeTopology(runtimeGraphs, vlc, domainLabels) {
       parts.push(`Edge-cloud path: ${edgeCloudSig.measurement_basis}`);
       parts.push(`Edge-cloud severity: ${edgeCloudSig.severity}`);
     }
+    parts.push(`Failure implication: cloud application may remain healthy while field telemetry silently stops arriving`);
     parts.push('');
   }
 
   if (wsSig) {
     parts.push('### WebSocket / Real-Time Topology');
+    parts.push('Business capability: real-time operational visibility for operators and frontend consumers');
     parts.push(`${wsSig.measurement_basis}`);
     parts.push(`Stream count: ${wsSig.signal_value} real-time event streams [${wsSig.severity}]`);
     parts.push(`Affected domains: ${resolveIds(wsSig.affected_domains).join(', ')}`);
+    parts.push(`Failure implication: backend processing may continue but live operational visibility goes dark`);
     parts.push('');
   }
 
