@@ -10348,7 +10348,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -10378,7 +10378,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={suppressedConditions.length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={(suppressedConditions || []).length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
       )}
     </>
   )
@@ -10928,6 +10928,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onDomainChipClick={setFocusedDomainId}
           activeConditionsForDomain={activeConditions}
           onOpenDeepDive={setDeepDiveModal}
+          suppressedConditions={suppressedConditions}
+          projectionAuthority={projectionAuthority}
         />
 
         {!boardroomMode && !isBalanced && (
