@@ -919,8 +919,8 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
               <span className="support-condition-title">{c.operator_cognition_title}</span>
               <span className="support-condition-severity">{c.severity}</span>
-              {c.domain_targets && c.domain_targets[0] && (
-                <span className="support-condition-domain">{c.domain_targets[0].display_name}</span>
+              {c.shared_topology_targets?.domains_display?.[0] && (
+                <span className="support-condition-domain">{c.shared_topology_targets.domains_display[0]}</span>
               )}
             </div>
           ))}
@@ -10079,7 +10079,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} />
       )}
     </>
   )
@@ -10177,7 +10177,30 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const synthesisResult = useMemo(() => swIntelActive ? synthesize(qualifiedReport) : null, [qualifiedReport, swIntelActive])
   const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(qualifiedReport) : null, [qualifiedReport, swIntelActive])
-  const activeConditions = synthesisResult ? synthesisResult.active : []
+
+  const domainLabelMap = useMemo(() => {
+    const map = {}
+    ;(qualifiedReport?.semantic_domain_registry || fullReport?.semantic_domain_registry || []).forEach(d => {
+      map[d.domain_id] = d.business_label || d.domain_name || d.domain_id
+    })
+    return map
+  }, [qualifiedReport, fullReport])
+
+  const resolveDomainLabel = useCallback((id) => domainLabelMap[id] || id, [domainLabelMap])
+
+  const activeConditions = useMemo(() => {
+    if (!synthesisResult) return []
+    return (synthesisResult.active || []).map(c => {
+      if (!c.shared_topology_targets?.domains) return c
+      return {
+        ...c,
+        shared_topology_targets: {
+          ...c.shared_topology_targets,
+          domains_display: c.shared_topology_targets.domains.map(id => domainLabelMap[id] || id),
+        },
+      }
+    })
+  }, [synthesisResult, domainLabelMap])
 
   const consequenceResult = useMemo(() => swIntelActive && synthesisResult ? compileConsequences(synthesisResult, qualifiedReport) : null, [synthesisResult, qualifiedReport, swIntelActive])
   const consequenceTeaser = useMemo(() => {

@@ -75,7 +75,7 @@ function QualificationContextStrip({ decomposition, qualification }) {
 // ─── COGNITION SURFACE CARD ─────────────────────────────────────────
 // Each surface is a compressed operational assessment, not a list panel
 
-function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions }) {
+function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
@@ -125,7 +125,7 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
       {expandable && surface.constituents && (
         <>
           {expanded && (
-            <CognitionSurfaceDetail surface={surface} />
+            <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
           )}
           <button className="sw-intel-surface-expand" onClick={() => setExpanded(p => !p)} type="button">
             {expanded ? '▴ collapse' : '▾ structural detail'}
@@ -139,7 +139,7 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
   )
 }
 
-function CognitionSurfaceDetail({ surface }) {
+function CognitionSurfaceDetail({ surface, resolveDomain }) {
   const c = surface.constituents
   if (!c) return null
 
@@ -148,7 +148,7 @@ function CognitionSurfaceDetail({ surface }) {
       <div className="sw-intel-surface-detail">
         {c.map(item => (
           <div key={item.domain} className="sw-intel-surface-detail-row">
-            <span className="sw-intel-surface-detail-label">{item.domain}</span>
+            <span className="sw-intel-surface-detail-label">{resolveDomain ? resolveDomain(item.domain) : item.domain}</span>
             <span className="sw-intel-surface-detail-value">
               {item.role} · {item.signal_count} signal{item.signal_count !== 1 ? 's' : ''}
               {item.peak_severity && <span style={{ color: SEVERITY_COLOR[item.peak_severity] }}> · {item.peak_severity}</span>}
@@ -344,7 +344,7 @@ function CognitionSurfaceDetail({ surface }) {
         {c.top_flows.map((f, i) => (
           <div key={i} className="sw-intel-surface-detail-row">
             <span className="sw-intel-surface-detail-label">{f.from_type_label || f.from_type}</span>
-            <span className="sw-intel-surface-detail-value">{f.verb} {f.to_type_label || f.to_type}{f.domain ? ` in ${f.domain}` : ''}</span>
+            <span className="sw-intel-surface-detail-value">{f.verb} {f.to_type_label || f.to_type}{f.domain ? ` in ${resolveDomain ? resolveDomain(f.domain) : f.domain}` : ''}</span>
           </div>
         ))}
       </div>
@@ -396,7 +396,7 @@ function CognitionSurfaceDetail({ surface }) {
           {c.chain.map((node, i) => (
             <div key={node.domain + i} className="sw-intel-surface-chain-node" data-role={node.role}>
               {i > 0 && <span className="sw-intel-surface-chain-arrow">→</span>}
-              <span className="sw-intel-surface-chain-domain">{node.domain}</span>
+              <span className="sw-intel-surface-chain-domain">{resolveDomain ? resolveDomain(node.domain) : node.domain}</span>
               <span className="sw-intel-surface-chain-role">{node.role.replace(/_/g, ' ')}</span>
             </div>
           ))}
@@ -469,7 +469,8 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap }) {
+  const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
   const surfaces = projection.surfaces || []
 
   return (
@@ -483,7 +484,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} />
         ))}
       </div>
 
