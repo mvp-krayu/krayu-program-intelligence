@@ -5534,16 +5534,82 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   const zoneInterp = activeZoneKey && densityClass === 'EXECUTIVE_DENSE' && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
   const zoneDerived = zoneInterp ? zoneInterp.derive(fullReport) : null
 
-  const evidenceQualification = useMemo(() => {
-    if (!fullReport) return null
+  const structuralContext = useMemo(() => {
+    if (!fullReport || !activeZoneKey) return null
     const sigs = fullReport.signal_interpretations || []
-    const isDerived = sigs.length > 0 && sigs[0].derived_from
-    const runtimeCount = sigs.filter(s => s.signal_family === 'RSIG').length
-    const condCount = sigs.filter(s => s.signal_family === 'DERIVED_CONDITION_SIGNAL').length
-    if (isDerived) return { qualifier: 'S1 · System Connectivity', detail: `${condCount} structural condition${condCount !== 1 ? 's' : ''} + ${runtimeCount} runtime signal${runtimeCount !== 1 ? 's' : ''} derived`, note: 'Full S2 signal registry not present. Intelligence derived from structural enrichment and runtime connectivity.' }
-    if (sigs.length > 0) return { qualifier: 'S2 · Governed signal registry', detail: `${sigs.length} canonical signal${sigs.length !== 1 ? 's' : ''} (PSIG/DPSIG/ISIG)`, note: null }
-    return null
-  }, [fullReport])
+    const isDerived = sigs.length > 0 && sigs[0] && sigs[0].derived_from
+    const hasRecon = fullReport.reconciliation_summary && fullReport.reconciliation_summary.available
+    const se = fullReport.structural_enrichment || {}
+    const hasCodeGraph = !!(se.code_graph || se.centrality)
+    const hasFrag = !!(se.fragility_surface)
+    const runtimeSigCount = sigs.filter(s => s.signal_family === 'RSIG').length
+    const qualifier = fullReport.qualifier_class || 'unknown'
+    const isS1 = isDerived || qualifier === 'Q-04' || qualifier === 'Q-03'
+    const substrate = isS1 ? 'structural substrate' : 'governed semantic topology'
+    const signalSource = isDerived ? 'derived from structural enrichment and runtime connectivity' : 'canonical PSIG/DPSIG/ISIG signal registry'
+    const reconNote = hasRecon ? 'Semantic reconciliation available.' : 'Semantic reconciliation not yet established.'
+
+    const ZONE_CONTEXT = {
+      clusterConcentration: {
+        whyThisView: isS1
+          ? 'This view shows structural cluster distribution because this specimen is S1 / structurally qualified. Domain cognition is calibrated from the code graph, but governed semantic narrative binding is not yet established.'
+          : 'This view shows cluster distribution across governed semantic domains. Structural mass concentration is visible at full semantic resolution.',
+        limitation: isS1 ? 'Cluster labels reflect calibrated directory topology, not S2 business-domain narrative.' : null,
+        nextStep: isS1 ? 'S2 qualification would add governed semantic domain binding and narrative signal decomposition.' : null,
+      },
+      signalAssessment: {
+        whyThisView: isDerived
+          ? `This view shows derived structural and runtime signals because the S2 signal registry is not populated for this specimen. ${runtimeSigCount > 0 ? `${runtimeSigCount} runtime signal${runtimeSigCount !== 1 ? 's' : ''} from connectivity evidence are included.` : ''} Conditions are synthesized from structural enrichment.`
+          : `This view shows canonical signal assessment from the governed signal registry. ${sigs.length} signals across PSIG, DPSIG, and ISIG families.`,
+        limitation: isDerived ? 'Signal grouping reflects condition types, not governed signal families. Full decomposition requires S2 signal registry.' : null,
+        nextStep: isDerived ? 'S2 qualification would populate PSIG/DPSIG/ISIG signal families with governed per-signal interpretation.' : null,
+      },
+      topologySurface: {
+        whyThisView: `This view shows ${substrate} evidence from ${hasCodeGraph ? 'code graph and centrality decomposition' : 'directory topology'}. Structural authority (import hubs, inheritance spines) is ${hasCodeGraph ? 'visible' : 'not yet resolved'}.`,
+        limitation: isS1 ? 'Topology reflects structural code relationships. Semantic domain narrative requires S2 binding.' : null,
+        nextStep: !hasCodeGraph ? 'Code graph enrichment (40.3s) would add resolved import authority and centrality metrics.' : null,
+      },
+      behavioralClassView: {
+        whyThisView: `Conditions are organized into behavioral classes from the ${substrate}. ${isDerived ? 'All classes are derived from structural enrichment and runtime evidence — not from governed signal patterns.' : 'Classes reflect governed condition patterns from canonical signals.'}`,
+        limitation: null,
+        nextStep: null,
+      },
+      semanticTopology: {
+        whyThisView: isS1
+          ? 'This view shows structural topology because semantic domain binding is not yet established. Cluster-to-domain mapping uses calibrated directory structure.'
+          : `This view shows governed semantic topology. ${reconNote}`,
+        limitation: isS1 ? 'Domain names reflect directory structure, not governed business semantics.' : null,
+        nextStep: isS1 ? 'Semantic topology model (41.x) would establish governed domain-to-cluster binding.' : null,
+      },
+      propagationFlow: {
+        whyThisView: `Propagation structure shows structural dependency flow through the ${substrate}. ${isS1 ? 'Flow is derived from import topology, not semantic narrative.' : 'Flow reflects governed semantic propagation chains.'}`,
+        limitation: isS1 ? 'Propagation roles (origin/pass-through/receiver) are structurally inferred.' : null,
+        nextStep: null,
+      },
+      pressureZoneFocus: {
+        whyThisView: `Pressure concentration is derived from the ${substrate}. ${hasFrag ? 'Fragility and constriction surfaces are active.' : 'Fragility surface is not available.'} ${runtimeSigCount > 0 ? 'Runtime connectivity evidence contributes to pressure assessment.' : ''}`,
+        limitation: null,
+        nextStep: null,
+      },
+      governanceLifecycle: {
+        whyThisView: `Governance lifecycle reflects the current qualification state (${qualifier}). ${hasRecon ? 'Semantic reconciliation is available but may not be fully exercised.' : 'No governance lifecycle artifacts are present.'} ${isS1 ? 'This specimen has not entered governed semantic qualification.' : 'Qualification progression is active.'}`,
+        limitation: null,
+        nextStep: null,
+      },
+      absorptionLoad: {
+        whyThisView: `Absorption load shows modules that absorb structural stress from surrounding components. This is derived from ${hasCodeGraph ? 'code graph cohesion and coupling analysis' : 'structural topology'}.`,
+        limitation: null,
+        nextStep: null,
+      },
+    }
+    const ctx = ZONE_CONTEXT[activeZoneKey]
+    if (!ctx) return null
+    return {
+      stateLabel: isS1 ? `${qualifier} · Structural substrate` : `${qualifier} · ${hasRecon ? 'Semantic topology' : 'Structural topology'}`,
+      signalLabel: isDerived ? 'Derived signals' : sigs.length > 0 ? 'Canonical signals' : 'No signals',
+      ...ctx,
+    }
+  }, [fullReport, activeZoneKey])
 
   if (zoneDerived) {
     return (
@@ -5605,19 +5671,24 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           )}
         </div>
 
-        <details className="interp-context-secondary">
+        <details className="interp-context-secondary" open={!!structuralContext}>
           <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
-          {evidenceQualification && (
-            <div className="interp-block interp-block--signal-context">
-              <div className="interp-section-label">EVIDENCE QUALIFICATION</div>
-              <div className="interp-signal-context-row">
-                <span className="interp-signal-context-qualifier">{evidenceQualification.qualifier}</span>
-                <span className="interp-signal-context-state">{evidenceQualification.detail}</span>
+          {structuralContext && (
+            <>
+              <div className="interp-block interp-block--signal-context">
+                <div className="interp-signal-context-row">
+                  <span className="interp-signal-context-qualifier">{structuralContext.stateLabel}</span>
+                  <span className="interp-signal-context-state">{structuralContext.signalLabel}</span>
+                </div>
+                <div className="interp-structural-context-body">{structuralContext.whyThisView}</div>
+                {structuralContext.limitation && (
+                  <div className="interp-signal-context-note">{structuralContext.limitation}</div>
+                )}
+                {structuralContext.nextStep && (
+                  <div className="interp-signal-context-note">{structuralContext.nextStep}</div>
+                )}
               </div>
-              {evidenceQualification.note && (
-                <div className="interp-signal-context-note">{evidenceQualification.note}</div>
-              )}
-            </div>
+            </>
           )}
           {narrative.executive_summary && (
             <div className="interp-block interp-block--lead">

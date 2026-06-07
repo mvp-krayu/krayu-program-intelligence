@@ -3518,10 +3518,17 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 12px;
           color: #9aa0bc;
         }
+        .interp-structural-context-body {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.6;
+          margin: 6px 0 4px;
+        }
         .interp-signal-context-note {
           font-size: 11px;
           color: #7a8aaa;
           font-style: italic;
+          margin-top: 4px;
         }
 
         /* ── BALANCED — Narrative-First Vertical Layout ──────────────── */
