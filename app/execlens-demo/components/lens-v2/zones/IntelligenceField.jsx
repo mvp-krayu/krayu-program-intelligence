@@ -1325,12 +1325,6 @@ const DENSE_ZONE_INTERPRETATIONS = {
       const isDerived = activated.length > 0 && activated[0].derived_from
       const isCanonical = activated.length > 0 && !activated[0].derived_from
 
-      const signalContext = isDerived
-        ? { qualifier: 'S1 · System Connectivity', state: 'Derived structural/runtime signals available', note: 'Full S2 signal registry not present.' }
-        : isCanonical
-          ? { qualifier: 'S2 · Governed signal registry', state: 'Canonical PSIG/DPSIG/ISIG signals available', note: null }
-          : null
-
       let signalDetail
       if (isDerived) {
         const SEV = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3 }
@@ -1372,7 +1366,6 @@ const DENSE_ZONE_INTERPRETATIONS = {
             ? `Structural conditions: ${critical.length + elevated.length} · Runtime signals: ${sigs.filter(s => s.signal_family === 'RSIG').length} · Total derived: ${activated.length}`
             : `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
           : null,
-        signalContext,
         signalDetail,
       }
     },
@@ -1455,6 +1448,72 @@ const DENSE_ZONE_INTERPRETATIONS = {
           + (rv && rv.available ? `Deterministic revalidation: ${rv.passed}/${rv.total_checks} PASS. ` : '')
           + (cc && cc.available ? `Chronicle certification: ${cc.passed}/${cc.total_checks} checks across ${cc.phase_count} phases.` : ''),
         structuralNote: `Provenance: ${gl.qualification_provenance || 'unknown'} · Ceiling: ${gl.authority_ceiling || 'unknown'} · Transitions: ${gl.transition_count || 0}`,
+      }
+    },
+  },
+  topologySurface: {
+    sectionLabel: 'TOPOLOGY INTERPRETATION',
+    code: 'TS',
+    derive: (fullReport) => {
+      const ts = (fullReport && fullReport.topology_summary) || {}
+      const se = (fullReport && fullReport.structural_enrichment) || {}
+      const centrality = se.centrality || {}
+      const spines = centrality.top_structural_spines || []
+      const roles = centrality.role_summary || {}
+      const clusterCount = ts.structural_cluster_count || 0
+      const nodeCount = ts.structural_node_count || 0
+      const edgeCount = ts.structural_edge_count || 0
+      return {
+        heading: 'What the structural topology reveals',
+        body: nodeCount > 0
+          ? `${clusterCount} structural clusters across ${nodeCount} files with ${edgeCount} edges. ${spines.length > 0 ? `${spines.length} structural spines carry authority — files with highest import or inheritance centrality.` : ''} ${Object.keys(roles).length > 0 ? `Structural role classification identifies ${Object.values(roles).reduce((a, v) => a + (v || 0), 0)} classified nodes.` : ''}`
+          : 'Topology surface requires structural evidence.',
+        structuralNote: spines.length > 0
+          ? `Top spine: ${spines[0].file || spines[0].path || '?'} (centrality ${spines[0].centrality || spines[0].score || '?'})`
+          : null,
+        signalDetail: spines.slice(0, 4).map(s => ({
+          id: s.file || s.path || 'spine',
+          severity: 'ELEVATED',
+          interpretation: `${(s.file || s.path || '').split('/').slice(-2).join('/')} — centrality ${s.centrality || s.score || '?'}${s.role ? ' · ' + s.role : ''}`,
+          concentration: null,
+        })),
+      }
+    },
+  },
+  behavioralClassView: {
+    sectionLabel: 'BEHAVIORAL CLASS INTERPRETATION',
+    code: 'BC',
+    derive: (fullReport) => {
+      const synResult = fullReport && fullReport._synthesisResult
+      if (!synResult) return { heading: 'Behavioral class view', body: 'Conditions not yet synthesized.', structuralNote: null, signalDetail: [] }
+      const conditions = (synResult.conditions || []).filter(c => c.severity !== 'NOMINAL')
+      const classes = { 'Flow & Propagation': 0, 'Concentration & Saturation': 0, 'Fragility & Resilience': 0, 'Drift & Instability': 0 }
+      const CLASS_MAP = {
+        DELIVERY_PRESSURE_CONCENTRATION: 'Concentration & Saturation', DEPENDENCY_CHOKE_POINT: 'Flow & Propagation',
+        PROPAGATION_ASYMMETRY: 'Flow & Propagation', STRUCTURAL_MASS_CONCENTRATION: 'Concentration & Saturation',
+        CROSS_DOMAIN_COUPLING_PRESSURE: 'Flow & Propagation', EXECUTION_FRAGILITY: 'Fragility & Resilience',
+        EXECUTION_CONSTRICTION: 'Concentration & Saturation', STRUCTURAL_BOUNDARY_DIVERGENCE: 'Drift & Instability',
+        COUPLING_INERTIA: 'Drift & Instability', COMPOUND_CONVERGENCE: 'Concentration & Saturation',
+        GOVERNANCE_COVERAGE_STATUS: 'Drift & Instability',
+        EVENT_CONCENTRATION: 'Concentration & Saturation', RUNTIME_DEPENDENCY_CHOKE_POINT: 'Flow & Propagation',
+        BROKER_DEPENDENCY: 'Flow & Propagation', TOPIC_FANOUT_PRESSURE: 'Concentration & Saturation',
+        ASYNC_PROPAGATION_ASYMMETRY: 'Flow & Propagation', EDGE_CLOUD_PROPAGATION_RISK: 'Flow & Propagation',
+        RUNTIME_OBSERVABILITY_GAP: 'Drift & Instability',
+      }
+      for (const c of conditions) { const cls = CLASS_MAP[c.condition_type]; if (cls) classes[cls]++ }
+      const sorted = Object.entries(classes).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
+      return {
+        heading: 'What the behavioral pattern distribution reveals',
+        body: sorted.length > 0
+          ? `${conditions.length} conditions organize into ${sorted.length} behavioral class${sorted.length !== 1 ? 'es' : ''}. Dominant pattern: ${sorted[0][0]} (${sorted[0][1]} condition${sorted[0][1] !== 1 ? 's' : ''}). ${sorted.length > 1 ? `Secondary: ${sorted[1][0]} (${sorted[1][1]}).` : ''}`
+          : 'No active conditions to classify.',
+        structuralNote: `${sorted.length} of 4 behavioral classes active`,
+        signalDetail: sorted.map(([cls, count]) => ({
+          id: cls,
+          severity: count >= 5 ? 'HIGH' : count >= 3 ? 'ELEVATED' : 'MODERATE',
+          interpretation: `${cls} — ${count} condition${count !== 1 ? 's' : ''}`,
+          concentration: null,
+        })),
       }
     },
   },
@@ -5475,6 +5534,17 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   const zoneInterp = activeZoneKey && densityClass === 'EXECUTIVE_DENSE' && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
   const zoneDerived = zoneInterp ? zoneInterp.derive(fullReport) : null
 
+  const evidenceQualification = useMemo(() => {
+    if (!fullReport) return null
+    const sigs = fullReport.signal_interpretations || []
+    const isDerived = sigs.length > 0 && sigs[0].derived_from
+    const runtimeCount = sigs.filter(s => s.signal_family === 'RSIG').length
+    const condCount = sigs.filter(s => s.signal_family === 'DERIVED_CONDITION_SIGNAL').length
+    if (isDerived) return { qualifier: 'S1 · System Connectivity', detail: `${condCount} structural condition${condCount !== 1 ? 's' : ''} + ${runtimeCount} runtime signal${runtimeCount !== 1 ? 's' : ''} derived`, note: 'Full S2 signal registry not present. Intelligence derived from structural enrichment and runtime connectivity.' }
+    if (sigs.length > 0) return { qualifier: 'S2 · Governed signal registry', detail: `${sigs.length} canonical signal${sigs.length !== 1 ? 's' : ''} (PSIG/DPSIG/ISIG)`, note: null }
+    return null
+  }, [fullReport])
+
   if (zoneDerived) {
     return (
       <aside className="intel-interp intel-interp--zone-active" data-tone={framing.tone} data-zone={activeZoneKey} aria-label="Zone-focused interpretation">
@@ -5537,15 +5607,15 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
         <details className="interp-context-secondary">
           <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
-          {zoneDerived && zoneDerived.signalContext && (
+          {evidenceQualification && (
             <div className="interp-block interp-block--signal-context">
               <div className="interp-section-label">EVIDENCE QUALIFICATION</div>
               <div className="interp-signal-context-row">
-                <span className="interp-signal-context-qualifier">{zoneDerived.signalContext.qualifier}</span>
-                <span className="interp-signal-context-state">{zoneDerived.signalContext.state}</span>
+                <span className="interp-signal-context-qualifier">{evidenceQualification.qualifier}</span>
+                <span className="interp-signal-context-state">{evidenceQualification.detail}</span>
               </div>
-              {zoneDerived.signalContext.note && (
-                <div className="interp-signal-context-note">{zoneDerived.signalContext.note}</div>
+              {evidenceQualification.note && (
+                <div className="interp-signal-context-note">{evidenceQualification.note}</div>
               )}
             </div>
           )}
