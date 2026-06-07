@@ -4559,7 +4559,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing, projectionAuthority, suppressedConditions }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -10973,6 +10973,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         swIntelTeaser={swIntelTeaser}
         consequenceTeaser={consequenceTeaser}
         balancedBriefing={balancedBriefing}
+        projectionAuthority={projectionAuthority}
+        suppressedConditions={suppressedConditions}
       />
 
       {focusedDomainId && domainProfileMap[focusedDomainId] && (
