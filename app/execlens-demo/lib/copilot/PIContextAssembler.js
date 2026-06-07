@@ -493,6 +493,34 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     } catch { /* runtime graphs not available */ }
   }
 
+  let projectionAuth = null;
+  try {
+    const { computeProjectionAuthority, P_LABEL } = require('../lens-v2/ProjectionAuthorityKernel');
+    if (rawSpecimen) {
+      projectionAuth = computeProjectionAuthority(rawSpecimen);
+      const isGodMode = audience && audience.includes('GOD');
+      if (projectionAuth && !isGodMode) {
+        systemPrompt += `\n\nPROJECTION AUTHORITY: ${projectionAuth.projectionLabel}. ` +
+          `Evidence: ${projectionAuth.evidenceCapabilities.join(' + ')}. ` +
+          (projectionAuth.hasViolations
+            ? `${projectionAuth.violationCount} conditions exceed evidence authority and must not be projected as operational findings. ` +
+              `Suppressed types: ${[...new Set(projectionAuth.violations.map(v => v.condition_type))].join(', ')}. ` +
+              `When asked about suppressed conditions, explain the authority boundary rather than projecting the finding.`
+            : 'All conditions are within projection authority.');
+      } else if (projectionAuth && isGodMode) {
+        systemPrompt += `\n\nPROJECTION AUTHORITY (GOD — constitutional inspection): ${projectionAuth.projectionLabel}. ` +
+          `Evidence: ${projectionAuth.evidenceCapabilities.join(' + ')}. ` +
+          `GOD mode: projection filtering bypassed. All conditions visible including suppressed. ` +
+          (projectionAuth.hasViolations
+            ? `${projectionAuth.violationCount} projection violation${projectionAuth.violationCount !== 1 ? 's' : ''}: ` +
+              projectionAuth.violations.slice(0, 5).map(v =>
+                `${v.condition_type} — requested ${P_LABEL[v.requested_level]}, proven ${P_LABEL[v.proven_level]} (${v.violation_type})`
+              ).join('; ') + '.'
+            : 'No projection violations.');
+      }
+    }
+  } catch { /* kernel not available */ }
+
   return {
     contextLevel,
     accessTier,
@@ -513,6 +541,7 @@ function assemble({ client, runId, intent, mode, audience, producedArtifacts }) 
     _qualifiedRegistry: qualifiedRegistry,
     runtimeGraphs: runtimeGraphsForPrompt,
     publishingAssets: tier2.publishingAssets,
+    projectionAuthority: projectionAuth,
 
     retrievedTopics: tier3.topics,
     retrievedDocuments: tier3.documents,

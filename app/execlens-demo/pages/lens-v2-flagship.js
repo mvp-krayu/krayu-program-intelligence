@@ -12938,6 +12938,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.06em;
         }
         .sw-intel-evidence-sep { color: #2a2f40; }
+        .sw-intel-suppression-notice {
+          padding: 6px 16px;
+          margin-top: 4px;
+          border-top: 1px solid rgba(255, 158, 74, 0.15);
+          font-size: 10px;
+          font-family: 'Courier New', monospace;
+          color: #ff9e4a;
+          letter-spacing: 0.04em;
+        }
 
         /* Qualification Context Strip — ambient one-line */
         .sw-intel-context-strip {

@@ -23,7 +23,12 @@ const BLINDNESS_CLASS_CONDITIONS = {
   COUPLING: ['EVENT_CONCENTRATION', 'TOPIC_FANOUT_PRESSURE'],
 }
 
-function determineNarrativeMode({ boardroom, vlc, architecturalFindings, synthesisResult }) {
+function determineNarrativeMode({ boardroom, vlc, architecturalFindings, synthesisResult, projectionAuthority }) {
+  // Criterion 0: Projection authority — EXECUTION_BLINDNESS requires P2
+  if (projectionAuthority && projectionAuthority.projectionLevel < 2) {
+    return { mode: 'STRUCTURAL_INTELLIGENCE', reason: 'projection authority P' + projectionAuthority.projectionLevel + ' — EXECUTION_BLINDNESS requires P2' }
+  }
+
   // Criterion 1: SYSTEM_CONNECTIVITY scope
   if (!vlc || vlc.verdict_scope !== 'SYSTEM_CONNECTIVITY') {
     return { mode: 'STRUCTURAL_INTELLIGENCE', reason: 'verdict_scope is not SYSTEM_CONNECTIVITY' }

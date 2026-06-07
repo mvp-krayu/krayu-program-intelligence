@@ -5183,7 +5183,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
             <div className="interp-block interp-block--module-teaser">
               <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
               {consequenceTeaser && consequenceTeaser.consequence_teaser && (
                 <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — {consequenceTeaser.consequence_teaser.top_consequence_severity} severity</div>
               )}
@@ -5773,7 +5773,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
         ) : !swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 ? (
           <div className="interp-block interp-block--module-teaser">
             <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
             <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
           </div>
         ) : null}
@@ -5823,7 +5823,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
         ) : !swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 ? (
           <div className="interp-block interp-block--module-teaser">
             <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
             {consequenceTeaser && consequenceTeaser.consequence_teaser && (
               <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — {consequenceTeaser.consequence_teaser.top_consequence_severity} severity</div>
             )}
@@ -6793,11 +6793,11 @@ function SynthesizedConditionSection({ fullReport, activeConditionId, onConditio
       <div className="actor actor--synthesized-conditions actor--module-teaser" data-zone-key="signalAssessment">
         <div className="actor-tag">
           <span className="actor-code">SW</span>
-          <span className="actor-name">Software Intelligence available · {swIntelTeaser.active_count} operational condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</span>
+          <span className="actor-name">Software Intelligence available · {swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</span>
         </div>
         <div className="module-teaser-body">
           <div className="module-teaser-headline">Software Intelligence available</div>
-          <div className="module-teaser-count">{swIntelTeaser.active_count} operational software condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected.</div>
+          <div className="module-teaser-count">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational software'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected.{swIntelTeaser._suppressed_count > 0 ? ` ${swIntelTeaser._suppressed_count} suppressed — evidence authority insufficient.` : ''}</div>
           <div className="module-teaser-prompt">Activate Software Intelligence to inspect:</div>
           <div className="module-teaser-list">
             {swIntelTeaser.top_conditions.map(c => (
@@ -10378,7 +10378,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={suppressedConditions.length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
       )}
     </>
   )
@@ -10495,7 +10495,29 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [fullReport, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
 
   const synthesisResult = useMemo(() => swIntelActive ? synthesize(qualifiedReport) : null, [qualifiedReport, swIntelActive])
-  const swIntelTeaser = useMemo(() => !swIntelActive ? synthesizeTeaser(qualifiedReport) : null, [qualifiedReport, swIntelActive])
+  const swIntelTeaser = useMemo(() => {
+    if (swIntelActive || !qualifiedReport) return null
+    const raw = synthesizeTeaser(qualifiedReport)
+    if (!raw || !projectionAuthority) return raw
+    const pLevel = projectionAuthority.projectionLevel
+    const { authorized } = authorizeConditionsByAuthority(
+      raw._allConditions || [],
+      pLevel
+    )
+    const authorizedCount = authorized.filter(c => c.severity !== 'NOMINAL').length
+    const isStructuralOnly = pLevel <= 1
+    return {
+      ...raw,
+      active_count: authorizedCount,
+      top_conditions: raw.top_conditions.filter(tc => {
+        const c = (raw._allConditions || []).find(x => x.condition_id === tc.condition_id)
+        return !c || authorized.includes(c)
+      }),
+      overflow: Math.max(0, authorizedCount - 3),
+      _suppressed_count: raw.active_count - authorizedCount,
+      _structural_only: isStructuralOnly,
+    }
+  }, [qualifiedReport, swIntelActive, projectionAuthority])
 
   const domainLabelMap = useMemo(() => {
     const map = {}

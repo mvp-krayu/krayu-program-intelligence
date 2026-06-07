@@ -1485,6 +1485,7 @@ function synthesizeTeaser(fullReport) {
       }
     }),
     overflow: Math.max(0, sorted.length - 3),
+    _allConditions: allConditions,
   }
 }
 

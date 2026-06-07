@@ -481,7 +481,7 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap, domainProfileMap, fullReport, onOpenDeepDive }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap, domainProfileMap, fullReport, onOpenDeepDive, suppressedCount, projectionLabel }) {
   const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
   const enrichedMap = useMemo(() => {
     const m = { ...(domainLabelMap || {}) }
@@ -540,6 +540,11 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
       </div>
 
       <CognitionEvidenceFooter surfaces={sorted} />
+      {suppressedCount > 0 && (
+        <div className="sw-intel-suppression-notice">
+          {suppressedCount} condition{suppressedCount !== 1 ? 's' : ''} suppressed — evidence authority insufficient at {projectionLabel || 'current level'}
+        </div>
+      )}
     </div>
   )
 }
