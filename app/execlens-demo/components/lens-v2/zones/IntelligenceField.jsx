@@ -10437,10 +10437,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
     if (!surface) return null
 
-    // Direct lookup by surface_id
+    // Try legacy contract: direct by surface_id
     let contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[cognitionState.activeSurface]
 
-    // Fallback: map consequence-derived surface to legacy contract via condition_type
+    // Try legacy contract: via condition_type mapping
     if (!contract && surface.condition_type) {
       const CONDITION_TO_CONTRACT = {}
       for (const [contractId, conds] of Object.entries(SURFACE_CONDITION_MAP)) {
@@ -10450,8 +10450,51 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       if (legacyId) contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[legacyId]
     }
 
-    if (!contract) return null
-    return { meta: contract.meta, surface, ...contract.resolve(fullReport, surface) }
+    // If legacy contract found, use it enriched with surface data
+    if (contract) {
+      return { meta: contract.meta, surface, ...contract.resolve(fullReport, surface) }
+    }
+
+    // Generic fallback: build panel content from surface object
+    const registry = fullReport.semantic_domain_registry || []
+    const resolveName = (id) => { const d = registry.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+    const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'Application', UTILITY: 'Utility' }
+    const domains = (surface.affected_domains || [])
+    const domainEvidence = domains.slice(0, 5).map(id => {
+      const d = registry.find(r => r.domain_id === id)
+      const role = d && d.role_classification ? (ROLE_SHORT[d.role_classification] || d.role_classification) : null
+      return { label: resolveName(id), value: role ? role + ' · ' + surface.severity : surface.severity, severity: surface.severity === 'CRITICAL' || surface.severity === 'HIGH' ? 'critical' : 'elevated' }
+    })
+
+    const condLabel = surface.condition_type ? surface.condition_type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) : null
+
+    return {
+      meta: { code: (surface.surface_name || '??').slice(0, 2).toUpperCase(), label: surface.surface_name || 'Cognition Surface', icon: '◆' },
+      surface,
+      interpretation: {
+        heading: (surface.surface_name || 'Cognition Surface') + ' — Active',
+        operationalMeaning: (surface.operational_summary || surface.consequence || 'This surface identifies a structural condition requiring attention.')
+          + (domains.length > 0 ? ` Affects ${domains.length} domain${domains.length !== 1 ? 's' : ''}: ${domains.slice(0, 3).map(resolveName).join(', ')}${domains.length > 3 ? ' +' + (domains.length - 3) + ' more' : ''}.` : ''),
+        structuralEvidence: domainEvidence.length > 0 ? domainEvidence : [
+          { label: 'Severity', value: surface.severity, severity: 'elevated' },
+          { label: 'Evidence density', value: String(surface.evidence_density || 0) + ' items', severity: 'nominal' },
+        ],
+      },
+      implications: {
+        orchestration: [
+          { action: 'Investigate affected domains for this condition', priority: surface.severity === 'CRITICAL' ? 'CRITICAL' : 'HIGH' },
+          { action: 'Assess structural impact before changes to affected regions', priority: 'HIGH' },
+        ],
+      },
+      guidedCognition: [
+        { question: `Why does ${surface.surface_name} affect these domains?`, tone: 'forensic', archetype: 'TRACE', depth: 'standard' },
+        { question: `Which domain carries the highest concentration for this condition?`, tone: 'structural', archetype: 'RISK', depth: 'standard' },
+        ...(condLabel ? [{ question: `What structural pattern drives ${condLabel}?`, tone: 'structural', archetype: 'TRACE', depth: 'standard' }] : []),
+      ],
+      actions: [
+        { label: 'Review affected domain structural profiles', type: 'assessment', priority: 'HIGH' },
+      ],
+    }
   }, [cognitionState.activeSurface, fullReport, swIntelProjection])
 
   const topologyCognitionOverlay = useMemo(() => {
