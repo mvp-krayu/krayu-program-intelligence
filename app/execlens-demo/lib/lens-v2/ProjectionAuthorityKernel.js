@@ -121,18 +121,51 @@ function classifyConditionAuthority(conditionType) {
   return CONDITION_AUTHORITY[conditionType] ?? null
 }
 
-function resolveCompoundAuthority(condition, allConditions) {
-  if (condition.condition_type !== 'COMPOUND_CONVERGENCE') return classifyConditionAuthority(condition.condition_type)
-  const contributingIds = condition.contributing_condition_ids || []
-  let maxP = P.P0
-  for (const id of contributingIds) {
-    const constituent = allConditions.find(c => c.condition_id === id || c.internal_condition_id === id)
-    if (constituent) {
-      const p = classifyConditionAuthority(constituent.condition_type)
-      if (p !== null && p > maxP) maxP = p
+// ─── Evidence Lineage → Proven Authority ───
+// Doctrine B: each condition must independently prove its authority
+// from its own evidence lineage, not from specimen-level capability.
+
+const EVIDENCE_MODE_AUTHORITY = {
+  STRUCTURAL_ENRICHMENT_DERIVED: P.P1,
+  TOPOLOGY_METRIC_DERIVED: P.P1,
+  TOPOLOGY_DRIVEN: P.P1,
+  PRESSURE_ZONE_DERIVED: P.P1,
+  STRUCTURAL_CENTRALITY_DERIVED: P.P1,
+  EVIDENCE_DERIVED: P.P1,
+  SIGNAL_DRIVEN: P.P3,
+  RUNTIME_DERIVED: P.P2,
+  RUNTIME_EVIDENCE: P.P2,
+  MIXED: null,
+}
+
+function resolveProvenAuthority(condition, allConditions) {
+  if (condition.condition_type === 'COMPOUND_CONVERGENCE') {
+    const contributingIds = condition.contributing_condition_ids || []
+    let maxP = P.P0
+    for (const id of contributingIds) {
+      const constituent = allConditions.find(c => c.condition_id === id || c.internal_condition_id === id)
+      if (constituent) {
+        const p = resolveProvenAuthority(constituent, allConditions)
+        if (p > maxP) maxP = p
+      }
     }
+    return maxP
   }
-  return maxP
+
+  const mode = condition.evidence_mode
+  if (!mode) return P.P1
+
+  if (mode === 'MIXED') {
+    const sources = condition.evidence_sources || []
+    let maxP = P.P1
+    for (const src of sources) {
+      const p = EVIDENCE_MODE_AUTHORITY[src]
+      if (p !== null && p !== undefined && p > maxP) maxP = p
+    }
+    return maxP
+  }
+
+  return EVIDENCE_MODE_AUTHORITY[mode] ?? P.P1
 }
 
 function authorizeConditions(conditions, projectionLevel) {
@@ -140,33 +173,51 @@ function authorizeConditions(conditions, projectionLevel) {
   const violations = []
 
   for (const c of conditions) {
-    const requiredP = c.condition_type === 'COMPOUND_CONVERGENCE'
-      ? resolveCompoundAuthority(c, conditions)
+    const requestedP = c.condition_type === 'COMPOUND_CONVERGENCE'
+      ? classifyConditionAuthority(c.contributing_condition_ids && c.contributing_condition_ids.length > 0
+          ? conditions.find(x => x.condition_id === c.contributing_condition_ids[0] || x.internal_condition_id === c.contributing_condition_ids[0])?.condition_type
+          : null) || P.P1
       : classifyConditionAuthority(c.condition_type)
 
-    if (requiredP === null) {
+    if (requestedP === null) {
       authorized.push(c)
       continue
     }
 
-    if (requiredP <= projectionLevel) {
+    const provenP = resolveProvenAuthority(c, conditions)
+
+    const specimenAuthorizes = requestedP <= projectionLevel
+    const lineageAuthorizes = provenP >= requestedP
+
+    if (specimenAuthorizes && lineageAuthorizes) {
       authorized.push(c)
     } else {
+      const reasons = []
+      if (!specimenAuthorizes) reasons.push(`specimen at ${P_LABEL[projectionLevel]}, requires ${P_LABEL[requestedP]}`)
+      if (!lineageAuthorizes) reasons.push(`evidence lineage proves ${P_LABEL[provenP]}, requires ${P_LABEL[requestedP]} (${c.evidence_mode || 'unknown'})`)
+
       violations.push({
         condition_id: c.condition_id || c.internal_condition_id,
         condition_type: c.condition_type,
         condition_label: c.operator_cognition_title || c.condition_label || c.condition_type,
         severity: c.severity,
-        required_level: requiredP,
-        required_label: P_LABEL[requiredP],
-        current_level: projectionLevel,
-        current_label: P_LABEL[projectionLevel],
-        violation: `${c.condition_type} requires ${P_LABEL[requiredP]} but specimen is at ${P_LABEL[projectionLevel]}`,
+        requested_level: requestedP,
+        requested_label: P_LABEL[requestedP],
+        proven_level: provenP,
+        proven_label: P_LABEL[provenP],
+        specimen_level: projectionLevel,
+        specimen_label: P_LABEL[projectionLevel],
+        violation_type: !specimenAuthorizes && !lineageAuthorizes ? 'BOTH' : !specimenAuthorizes ? 'SPECIMEN_AUTHORITY' : 'EVIDENCE_LINEAGE',
+        violation: reasons.join('; '),
       })
     }
   }
 
   return { authorized, violations }
+}
+
+function resolveCompoundAuthority(condition, allConditions) {
+  return resolveProvenAuthority(condition, allConditions)
 }
 
 // ─── Authorized Condition Type Set ───
@@ -285,9 +336,11 @@ module.exports = {
   detectQualificationState,
   classifyConditionAuthority,
   resolveCompoundAuthority,
+  resolveProvenAuthority,
 
   E,
   P,
   P_LABEL,
   CONDITION_AUTHORITY,
+  EVIDENCE_MODE_AUTHORITY,
 }

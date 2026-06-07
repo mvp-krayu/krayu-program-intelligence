@@ -14,6 +14,7 @@ const {
   isConditionTypeAuthorized,
   isNarrativeModeAuthorized,
   resolveCompoundAuthority,
+  resolveProvenAuthority,
   E, P,
 } = require('../../lib/lens-v2/ProjectionAuthorityKernel')
 const { resolveSpecimen, resolveVisibilityLayerCompleteness } = require('../../lib/copilot/PIKnowledgeGraphAccess')
@@ -124,8 +125,16 @@ describe('Condition Authorization', () => {
     assert.equal(violations[0].condition_type, 'EXECUTION_FRAGILITY')
   })
 
-  test('P2 accepts EXECUTION_FRAGILITY', () => {
-    const conditions = [{ condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH' }]
+  test('P2 rejects EXECUTION_FRAGILITY from structural enrichment (Doctrine B)', () => {
+    const conditions = [{ condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH', evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED' }]
+    const { authorized, violations } = authorizeConditions(conditions, P.P2)
+    assert.equal(authorized.length, 0, 'Structural enrichment cannot prove execution authority')
+    assert.equal(violations.length, 1)
+    assert.equal(violations[0].violation_type, 'EVIDENCE_LINEAGE')
+  })
+
+  test('P2 accepts EXECUTION_FRAGILITY from runtime evidence', () => {
+    const conditions = [{ condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH', evidence_mode: 'RUNTIME_EVIDENCE' }]
     const { authorized, violations } = authorizeConditions(conditions, P.P2)
     assert.equal(authorized.length, 1)
     assert.equal(violations.length, 0)
@@ -149,35 +158,60 @@ describe('Condition Authorization', () => {
 })
 
 describe('Full Projection Authority — StackStorm', () => {
-  test('StackStorm with runtime: P2, no violations', () => {
+  test('StackStorm with runtime: P2, evidence lineage violations for structural-derived execution claims', () => {
     const report = loadSpecimen('stackstorm', 'run_github_st2_20260520_131000')
     const auth = computeProjectionAuthority(report)
     assert.equal(auth.projectionLevel, P.P2)
     assert.equal(auth.qualificationState, 'S1')
-    assert.equal(auth.violationCount, 0)
     assert.ok(auth.runtimePresent)
     assert.ok(auth.runtimeQualified)
+    assert.ok(auth.violationCount > 0, 'Doctrine B: EXECUTION_FRAGILITY from structural enrichment must violate')
+    const lineageViolations = auth.violations.filter(v => v.violation_type === 'EVIDENCE_LINEAGE')
+    assert.ok(lineageViolations.length > 0, 'Must have EVIDENCE_LINEAGE violations')
+    const execFragViolation = lineageViolations.find(v => v.condition_type === 'EXECUTION_FRAGILITY')
+    assert.ok(execFragViolation, 'EXECUTION_FRAGILITY from structural enrichment must be flagged')
+    assert.equal(execFragViolation.proven_level, P.P1, 'Structural enrichment proves P1')
+    assert.equal(execFragViolation.requested_level, P.P2, 'EXECUTION_FRAGILITY requests P2')
   })
 
-  test('StackStorm without runtime: P1, violations flagged', () => {
+  test('StackStorm runtime-derived conditions are authorized', () => {
+    const report = loadSpecimen('stackstorm', 'run_github_st2_20260520_131000')
+    const auth = computeProjectionAuthority(report)
+    const runtimeViolation = auth.violations.find(v => v.condition_type === 'EVENT_CONCENTRATION' || v.condition_type === 'BROKER_DEPENDENCY')
+    assert.equal(runtimeViolation, undefined, 'Runtime-derived conditions with RUNTIME_EVIDENCE mode should be authorized at P2')
+  })
+
+  test('StackStorm without runtime: P1, all execution conditions violated', () => {
     const spec = resolveSpecimen('stackstorm', 'run_github_st2_20260520_131000')
     const noRuntime = qualifyDomainBacking(spec, null, [], {})
     const synResult = synthesize(noRuntime)
     noRuntime._synthesisResult = synResult
     const auth = computeProjectionAuthority(noRuntime)
     assert.equal(auth.projectionLevel, P.P1)
-    assert.ok(auth.violationCount > 0, 'P1 should have violations for EXECUTION_FRAGILITY etc.')
+    assert.ok(auth.violationCount > 0, 'P1 should have violations')
     assert.ok(!auth.runtimeQualified)
   })
 })
 
 describe('Full Projection Authority — BlueEdge', () => {
-  test('BlueEdge: P4, no violations', () => {
+  test('BlueEdge: P4, evidence lineage violations for structural-derived conditions', () => {
     const report = loadSpecimen('blueedge', 'run_blueedge_genesis_e2e_03')
     const auth = computeProjectionAuthority(report)
     assert.equal(auth.projectionLevel, P.P4)
-    assert.equal(auth.violationCount, 0)
     assert.ok(auth.evidenceCapabilities.includes(E.GOVERNED))
+    const lineageOnly = auth.violations.filter(v => v.violation_type === 'EVIDENCE_LINEAGE')
+    assert.ok(lineageOnly.length > 0, 'BlueEdge has structural-derived conditions claiming P2/P3 authority')
+    assert.equal(auth.violations.filter(v => v.violation_type === 'SPECIMEN_AUTHORITY').length, 0, 'No specimen-level violations at P4')
+  })
+
+  test('BlueEdge runtime-derived conditions are authorized', () => {
+    const report = loadSpecimen('blueedge', 'run_blueedge_genesis_e2e_03')
+    const auth = computeProjectionAuthority(report)
+    const runtimeTypes = ['EVENT_CONCENTRATION', 'BROKER_DEPENDENCY', 'TOPIC_FANOUT_PRESSURE', 'RUNTIME_DEPENDENCY_CHOKE_POINT', 'ASYNC_PROPAGATION_ASYMMETRY', 'EDGE_CLOUD_PROPAGATION_RISK']
+    for (const rt of runtimeTypes) {
+      const v = auth.violations.find(x => x.condition_type === rt)
+      if (v) assert.notEqual(v.proven_label, 'P2 — Runtime Interpretation', `Runtime condition ${rt} should prove P2 from RUNTIME_EVIDENCE`)
+    }
   })
 })
 
@@ -208,5 +242,40 @@ describe('Runtime Present vs Qualified', () => {
     assert.ok(auth.runtimePresent, 'runtime signals are present')
     assert.ok(!auth.runtimeQualified, 'no E-STRUCTURAL → E-RUNTIME not granted')
     assert.equal(auth.projectionLevel, P.P0)
+  })
+})
+
+describe('Doctrine B — Evidence Lineage Authority', () => {
+  test('proven authority derives from evidence_mode, not specimen level', () => {
+    const conditions = [
+      { condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH', evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED' },
+      { condition_type: 'EVENT_CONCENTRATION', severity: 'ELEVATED', evidence_mode: 'RUNTIME_EVIDENCE' },
+      { condition_type: 'STRUCTURAL_MASS_CONCENTRATION', severity: 'HIGH', evidence_mode: 'TOPOLOGY_DRIVEN' },
+    ]
+    assert.equal(resolveProvenAuthority(conditions[0], conditions), P.P1, 'Structural enrichment proves P1')
+    assert.equal(resolveProvenAuthority(conditions[1], conditions), P.P2, 'Runtime evidence proves P2')
+    assert.equal(resolveProvenAuthority(conditions[2], conditions), P.P1, 'Topology driven proves P1')
+  })
+
+  test('structural enrichment cannot prove execution authority', () => {
+    const conditions = [{ condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH', evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED' }]
+    const { violations } = authorizeConditions(conditions, P.P4)
+    assert.equal(violations.length, 1, 'Even at P4, structural evidence cannot prove P2 execution claims')
+    assert.equal(violations[0].violation_type, 'EVIDENCE_LINEAGE')
+  })
+
+  test('signal-driven evidence proves P3', () => {
+    const conditions = [{ condition_type: 'DELIVERY_PRESSURE_CONCENTRATION', severity: 'HIGH', evidence_mode: 'SIGNAL_DRIVEN' }]
+    const { authorized } = authorizeConditions(conditions, P.P3)
+    assert.equal(authorized.length, 1, 'Signal-driven evidence should prove P3 for P3-required condition')
+  })
+
+  test('violation includes both requested and proven levels', () => {
+    const conditions = [{ condition_type: 'EXECUTION_FRAGILITY', severity: 'HIGH', evidence_mode: 'STRUCTURAL_ENRICHMENT_DERIVED' }]
+    const { violations } = authorizeConditions(conditions, P.P2)
+    assert.equal(violations[0].requested_level, P.P2)
+    assert.equal(violations[0].proven_level, P.P1)
+    assert.equal(violations[0].specimen_level, P.P2)
+    assert.equal(violations[0].violation_type, 'EVIDENCE_LINEAGE')
   })
 })
