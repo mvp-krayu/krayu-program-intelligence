@@ -3104,6 +3104,22 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #5a6580;
           padding: 8px 0 4px;
         }
+        .sw-intel-surfaces-overflow {
+          display: block;
+          width: 100%;
+          padding: 10px;
+          font: 500 12px/1 'Courier New', monospace;
+          color: #4a9eff;
+          background: rgba(74, 158, 255, 0.04);
+          border: 1px dashed rgba(74, 158, 255, 0.2);
+          border-radius: 6px;
+          cursor: pointer;
+          text-align: center;
+          margin-top: 4px;
+        }
+        .sw-intel-surfaces-overflow:hover {
+          background: rgba(74, 158, 255, 0.08);
+        }
         .interp-condition-target {
           display: flex;
           align-items: baseline;

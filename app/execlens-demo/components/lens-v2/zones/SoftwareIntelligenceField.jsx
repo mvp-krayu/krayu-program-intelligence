@@ -487,7 +487,23 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
     m._profiles = domainProfileMap || {}
     return m
   }, [domainLabelMap, domainProfileMap])
-  const surfaces = projection.surfaces || []
+  const allSurfaces = projection.surfaces || []
+  const [showAll, setShowAll] = useState(false)
+
+  // Sort: category surfaces first (EB/GD), then strict severity descending
+  const sorted = useMemo(() => {
+    const SEV = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+    return [...allSurfaces].sort((a, b) => {
+      const aCat = a.is_category_surface ? -1 : 0
+      const bCat = b.is_category_surface ? -1 : 0
+      if (aCat !== bCat) return aCat - bCat
+      return (SEV[a.severity] ?? 5) - (SEV[b.severity] ?? 5)
+    })
+  }, [allSurfaces])
+
+  const DEFAULT_VISIBLE = 5
+  const surfaces = showAll ? sorted : sorted.slice(0, DEFAULT_VISIBLE)
+  const overflow = sorted.length - DEFAULT_VISIBLE
 
   return (
     <div className="sw-intel-view sw-intel-view--dense">
@@ -496,15 +512,25 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
         <QualificationContextStrip decomposition={projection.qualification_decomposition} qualification={projection.qualification_cognition} />
         <button className="sw-intel-deactivate-btn" onClick={onDeactivate} type="button">✕</button>
       </div>
-      <PeakSeverityStrip surfaces={surfaces} />
+      <PeakSeverityStrip surfaces={sorted} />
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
           <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
         ))}
+        {!showAll && overflow > 0 && (
+          <button className="sw-intel-surfaces-overflow" onClick={() => setShowAll(true)} type="button">
+            +{overflow} more cognition surface{overflow !== 1 ? 's' : ''}
+          </button>
+        )}
+        {showAll && overflow > 0 && (
+          <button className="sw-intel-surfaces-overflow" onClick={() => setShowAll(false)} type="button">
+            Show fewer
+          </button>
+        )}
       </div>
 
-      <CognitionEvidenceFooter surfaces={surfaces} />
+      <CognitionEvidenceFooter surfaces={sorted} />
     </div>
   )
 }
