@@ -10183,7 +10183,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} />
       )}
     </>
   )

@@ -75,7 +75,7 @@ function QualificationContextStrip({ decomposition, qualification }) {
 // ─── COGNITION SURFACE CARD ─────────────────────────────────────────
 // Each surface is a compressed operational assessment, not a list panel
 
-function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain }) {
+function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain, domainLabelMap }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
@@ -112,16 +112,27 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
       </div>
       <div className="sw-intel-surface-summary">{surface.operational_summary}</div>
       <div className="sw-intel-surface-consequence">{surface.consequence}</div>
-      {surface.affected_domains && surface.affected_domains.length > 0 && (
-        <div className="sw-intel-surface-domains">
-          {surface.affected_domains.slice(0, expanded ? undefined : 4).map(d => (
-            <span key={d} className="sw-intel-surface-domain-tag">{d}</span>
-          ))}
-          {!expanded && surface.affected_domains.length > 4 && (
-            <span className="sw-intel-surface-domain-more">+{surface.affected_domains.length - 4}</span>
-          )}
-        </div>
-      )}
+      {surface.affected_domains && surface.affected_domains.length > 0 && (() => {
+        const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'App', UTILITY: 'Utility' }
+        return (
+          <div className="sw-intel-surface-domains">
+            {surface.affected_domains.slice(0, expanded ? undefined : 4).map(d => {
+              const entry = domainLabelMap && domainLabelMap._profiles && domainLabelMap._profiles[d]
+              const name = resolveDomain ? resolveDomain(d) : d
+              const role = entry ? (ROLE_SHORT[entry.roleRaw] || null) : null
+              return (
+                <span key={d} className="domain-chip" data-severity={surface.severity} title={d}>
+                  {name}
+                  {role && <span className="domain-chip-role">{role}</span>}
+                </span>
+              )
+            })}
+            {!expanded && surface.affected_domains.length > 4 && (
+              <span className="sw-intel-surface-domain-more">+{surface.affected_domains.length - 4}</span>
+            )}
+          </div>
+        )
+      })()}
       {expandable && surface.constituents && (
         <>
           {expanded && (
@@ -469,8 +480,13 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap, domainProfileMap }) {
   const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
+  const enrichedMap = useMemo(() => {
+    const m = { ...(domainLabelMap || {}) }
+    m._profiles = domainProfileMap || {}
+    return m
+  }, [domainLabelMap, domainProfileMap])
   const surfaces = projection.surfaces || []
 
   return (
@@ -484,7 +500,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
         ))}
       </div>
 
