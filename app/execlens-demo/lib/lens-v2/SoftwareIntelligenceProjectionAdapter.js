@@ -425,6 +425,28 @@ function deriveProjection(fullReport, synthesisResult, consequenceResult) {
     (SEVERITY_ORDER[a.severity] ?? 5) - (SEVERITY_ORDER[b.severity] ?? 5)
   )
 
+  // Deduplicate surfaces by name — merge affected domains, keep highest severity
+  const deduped = []
+  const seen = {}
+  for (const s of surfaces) {
+    const key = s.surface_name
+    if (seen[key]) {
+      const existing = seen[key]
+      if ((SEVERITY_ORDER[s.severity] ?? 5) < (SEVERITY_ORDER[existing.severity] ?? 5)) {
+        existing.severity = s.severity
+      }
+      const newDomains = (s.affected_domains || []).filter(d => !(existing.affected_domains || []).includes(d))
+      existing.affected_domains = [...(existing.affected_domains || []), ...newDomains]
+      existing.evidence_density = (existing.evidence_density || 0) + (s.evidence_density || 0)
+      existing._merged_count = (existing._merged_count || 1) + 1
+    } else {
+      const merged = { ...s, _merged_count: 1 }
+      seen[key] = merged
+      deduped.push(merged)
+    }
+  }
+  surfaces = deduped
+
   const hasRuntimeConditions = synthesisResult && (synthesisResult.conditions || []).some(c =>
     ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP'].includes(c.condition_type)
   )
