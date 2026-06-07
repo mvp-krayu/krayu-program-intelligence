@@ -10,6 +10,7 @@ import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
 import { resolveCognitionContract as resolveContract, deriveAffectedDomainsFromPaths, formatLensMetric } from '../../../lib/lens-v2/CognitionContractModel'
+import { authorizeConditions as authorizeConditionsByAuthority } from '../../../lib/lens-v2/ProjectionAuthorityKernel'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
@@ -10383,7 +10384,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -10394,13 +10395,24 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const [deepDiveModal, setDeepDiveModal] = useState(null)
   const prevSwIntelActive = useRef(swIntelActive)
+  const prevDensityClass = useRef(densityClass)
+  const prevBoardroomMode = useRef(boardroomMode)
+  const clearCognitionState = useCallback(() => {
+    setCognitionState({ activeSurface: null, focusedDomain: null, activePressureZone: null, activeSignals: [], activeQueryIndex: null, activeConditionId: null })
+    setDeepDiveModal(null)
+  }, [])
   useEffect(() => {
-    if (prevSwIntelActive.current && !swIntelActive) {
-      setCognitionState({ activeSurface: null, focusedDomain: null, activePressureZone: null, activeSignals: [], activeQueryIndex: null, activeConditionId: null })
-      setDeepDiveModal(null)
-    }
+    if (prevSwIntelActive.current && !swIntelActive) clearCognitionState()
     prevSwIntelActive.current = swIntelActive
-  }, [swIntelActive])
+  }, [swIntelActive, clearCognitionState])
+  useEffect(() => {
+    if (prevDensityClass.current && prevDensityClass.current !== densityClass) clearCognitionState()
+    prevDensityClass.current = densityClass
+  }, [densityClass, clearCognitionState])
+  useEffect(() => {
+    if (prevBoardroomMode.current !== boardroomMode) clearCognitionState()
+    prevBoardroomMode.current = boardroomMode
+  }, [boardroomMode, clearCognitionState])
   const [cognitionState, setCognitionState] = useState({
     activeSurface: null,
     focusedDomain: null,
@@ -10522,9 +10534,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const resolveDomainLabel = useCallback((id) => domainLabelMap[id] || id, [domainLabelMap])
 
-  const activeConditions = useMemo(() => {
-    if (!synthesisResult) return []
-    return (synthesisResult.active || []).map(c => {
+  const { activeConditions, suppressedConditions } = useMemo(() => {
+    if (!synthesisResult) return { activeConditions: [], suppressedConditions: [] }
+    const all = (synthesisResult.active || []).map(c => {
       if (!c.shared_topology_targets?.domains) return c
       return {
         ...c,
@@ -10534,7 +10546,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         },
       }
     })
-  }, [synthesisResult, domainLabelMap])
+    if (!projectionAuthority || projectionAuthority.projectionLevel >= 4) return { activeConditions: all, suppressedConditions: [] }
+    const { authorized, violations } = authorizeConditionsByAuthority(all, projectionAuthority.projectionLevel)
+    return { activeConditions: authorized, suppressedConditions: violations }
+  }, [synthesisResult, domainLabelMap, projectionAuthority])
 
   const consequenceResult = useMemo(() => swIntelActive && synthesisResult ? compileConsequences(synthesisResult, qualifiedReport) : null, [synthesisResult, qualifiedReport, swIntelActive])
   const consequenceTeaser = useMemo(() => {

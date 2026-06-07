@@ -31,6 +31,7 @@ const { compileBoardroomProjection } = require('../lib/lens-v2/generic/Boardroom
 const { deriveProjection, deriveModuleState, PROJECTION_STATUS } = require('../lib/lens-v2/SoftwareIntelligenceProjectionAdapter')
 const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForProjection, backfillSignalInterpretations } = require('../lib/lens-v2/SignalSynthesisEngine')
 const { compile: compileForProjection } = require('../lib/lens-v2/software-intelligence/ConsequenceCompiler')
+const { computeProjectionAuthority } = require('../lib/lens-v2/ProjectionAuthorityKernel')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
@@ -272,15 +273,29 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     if (!reportObject) return null
     const qualified = qualifyForProjection(reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs)
     const synResult = synthesizeForProjection(qualified)
-    const csqResult = synResult ? compileForProjection(synResult, qualified) : null
     if (synResult) {
       qualified._synthesisResult = synResult
       reportObject._synthesisResult = synResult
       backfillSignalInterpretations(reportObject, synResult)
       backfillSignalInterpretations(qualified, synResult)
     }
-    return deriveProjection(qualified, synResult, csqResult)
+
+    const authority = computeProjectionAuthority(qualified)
+    let filteredSynResult = synResult
+    if (synResult && authority && authority.projectionLevel < 4) {
+      const { authorizeConditions } = require('../lib/lens-v2/ProjectionAuthorityKernel')
+      const { authorized } = authorizeConditions(synResult.conditions || [], authority.projectionLevel)
+      filteredSynResult = { ...synResult, conditions: authorized, active: authorized.filter(c => c.severity !== 'NOMINAL'), _unfilteredConditions: synResult.conditions, _authority: authority }
+    }
+
+    const csqResult = filteredSynResult ? compileForProjection(filteredSynResult, qualified) : null
+    return deriveProjection(qualified, filteredSynResult, csqResult)
   }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
+
+  const projectionAuthority = useMemo(() => {
+    if (!reportObject) return null
+    return computeProjectionAuthority(reportObject)
+  }, [reportObject])
 
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
@@ -491,6 +506,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             runtimeConnectivityEdges={runtimeConnectivityEdges}
             visibilityLayerCompleteness={visibilityLayerCompleteness}
             runtimeGraphs={runtimeGraphs}
+            projectionAuthority={projectionAuthority}
           />
         </div>
       </div>
