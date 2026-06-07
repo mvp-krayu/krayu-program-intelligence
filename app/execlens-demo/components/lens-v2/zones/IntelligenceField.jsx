@@ -10434,10 +10434,23 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   const resolvedCognitionContract = useMemo(() => {
     if (!cognitionState.activeSurface || !fullReport || !swIntelProjection) return null
-    const contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[cognitionState.activeSurface]
-    if (!contract) return null
     const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
     if (!surface) return null
+
+    // Direct lookup by surface_id
+    let contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[cognitionState.activeSurface]
+
+    // Fallback: map consequence-derived surface to legacy contract via condition_type
+    if (!contract && surface.condition_type) {
+      const CONDITION_TO_CONTRACT = {}
+      for (const [contractId, conds] of Object.entries(SURFACE_CONDITION_MAP)) {
+        for (const ct of conds) { CONDITION_TO_CONTRACT[ct] = contractId }
+      }
+      const legacyId = CONDITION_TO_CONTRACT[surface.condition_type]
+      if (legacyId) contract = SW_INTEL_DOMAIN_REASONING_CONTRACTS[legacyId]
+    }
+
+    if (!contract) return null
     return { meta: contract.meta, surface, ...contract.resolve(fullReport, surface) }
   }, [cognitionState.activeSurface, fullReport, swIntelProjection])
 
