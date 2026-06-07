@@ -137,6 +137,13 @@ function assembleDomainCognition(fullReport) {
     const runtimeRoles = resolveRuntimeRole(d.domain_id, d.domain_name, runtimeSignals, activeConditions)
     const { role: pressureRole, conditionCount, peakSeverity } = resolvePressureRole(d.domain_id, d.domain_name, activeConditions, pressureZoneState)
 
+    const nameLower = (d.domain_name || '').toLowerCase()
+    const domainSpines = spines.filter(s => (s.path || s.file || '').toLowerCase().includes(nameLower)).slice(0, 3)
+    const domainFrag = fragHotspots.filter(h => (h.path || h.file || '').toLowerCase().includes(nameLower))
+    const domainConstr = constrHotspots.filter(h => (h.path || h.file || '').toLowerCase().includes(nameLower))
+    const bd = se.boundary_divergence || {}
+    const domainDivergence = (bd.divergent_modules || []).find(m => (m.module_prefix || '').toLowerCase().includes(nameLower))
+
     return {
       domain_id: d.domain_id,
       technical_name: d.domain_name || d.domain_id,
@@ -155,12 +162,22 @@ function assembleDomainCognition(fullReport) {
       inbound_imports: d.inbound_imports || null,
       outbound_imports: d.outbound_imports || null,
 
+      measurement_evidence: {
+        spine_count: domainSpines.length,
+        top_spine: domainSpines[0] ? { path: domainSpines[0].path, in_degree: domainSpines[0].in_degree || domainSpines[0].import_in_degree, out_degree: domainSpines[0].out_degree || domainSpines[0].import_out_degree } : null,
+        fragility_count: domainFrag.length,
+        peak_fragility: domainFrag.length > 0 ? Math.max(...domainFrag.map(h => h.fragility_score || 0)) : 0,
+        constriction_count: domainConstr.length,
+        divergence: domainDivergence ? { score: domainDivergence.divergence_score, file_count: domainDivergence.file_count, is_orphaned: domainDivergence.is_orphaned } : null,
+      },
+
       evidence_basis: [
         d.role_classification ? 'role_classification' : null,
         d.backing_status ? 'domain_backing' : null,
         structuralRoles ? 'structural_enrichment' : null,
         runtimeRoles ? 'runtime_connectivity' : null,
         conditionCount > 0 ? 'condition_targets' : null,
+        domainDivergence ? 'boundary_divergence' : null,
       ].filter(Boolean),
     }
   })

@@ -9861,7 +9861,13 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             {swIntelActive && consequencePosture
               ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices ? consequencePosture.cognition_slices.length + ' software dynamics reinforce systemic fragility.' : ''}`
               : isGoverned ? bpTs.tension_narrative
-              : `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${bpDc.total_domains || totalDomains} domains. ${bpTs.tension_count || 0} structural tension${(bpTs.tension_count || 0) !== 1 ? 's' : ''} — pressure is ${dcPrimaryLabel ? `concentrated around "${dcPrimaryLabel}"` : pressureZone ? `concentrated around "${pressureZone}"` : 'distributed'}.${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`}
+              : (() => {
+                const dc = domainCognition
+                const azCount = dc ? dc.attention_zones.length : 0
+                const primary = dc && dc.attention_zones[0]
+                const rtCount = dc ? dc.pressure_summary.domains_with_runtime : 0
+                return `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${dc ? dc.pressure_summary.total_domains : totalDomains} domains. ${azCount} executive attention zone${azCount !== 1 ? 's' : ''}${primary ? ` — "${primary.executive_label}" concentrates ${primary.severity} pressure` : ''}.${rtCount > 0 ? ` ${rtCount} domain${rtCount !== 1 ? 's' : ''} carry runtime coordination evidence.` : ''}${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`
+              })()}
           </div>
         </div>
 
@@ -10018,23 +10024,44 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
 
           <div className="cockpit-pressure-panel">
-            <div className="cockpit-pressure-label">STRUCTURAL PRESSURE</div>
-            {pressureDimensions.map(dim => (
-              <div key={dim.key} className="cockpit-pressure-dim" data-severity={dim.severity} data-active={String(dim.severity !== 'NOMINAL')}>
-                <div className="cockpit-pressure-dim-visual">
-                  <StructuralGlyph type={PRESSURE_GLYPH_TYPE[dim.key]} severity={dim.severity} size={32} />
-                </div>
-                <div className="cockpit-pressure-dim-content">
+            <div className="cockpit-pressure-label">EXECUTIVE ATTENTION</div>
+            {domainCognition && domainCognition.attention_zones.map(az => (
+              <div key={az.domain_id} className="cockpit-pressure-dim" data-severity={az.severity} data-active="true">
+                <div className="cockpit-pressure-dim-content" style={{ paddingLeft: 0 }}>
                   <div className="cockpit-pressure-dim-head">
-                    <span className="cockpit-pressure-dim-name">{dim.name}</span>
-                    <span className="cockpit-pressure-dim-severity" data-severity={dim.severity}>{dim.severity !== 'NOMINAL' ? dim.severity : '—'}</span>
+                    <span className="cockpit-pressure-dim-name">{az.executive_label}</span>
+                    <span className="cockpit-pressure-dim-severity" data-severity={az.severity}>{az.severity}</span>
                   </div>
-                  <div className="cockpit-pressure-dim-locale">{PLOCALE[dim.key]}</div>
+                  <div className="cockpit-pressure-dim-locale">{az.reason}</div>
+                  <div className="cockpit-pressure-dim-locale" style={{ color: '#5e6d8a', fontSize: '10px' }}>{az.technical_name}</div>
                 </div>
               </div>
             ))}
-            {pressureSynthesis && (
-              <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>
+            {domainCognition && domainCognition.attention_zones.length > 0 && (
+              <div className="cockpit-pressure-synthesis">
+                {domainCognition.attention_zones.filter(az => az.severity === 'CRITICAL' || az.severity === 'HIGH').length} critical/high attention zone{domainCognition.attention_zones.filter(az => az.severity === 'CRITICAL' || az.severity === 'HIGH').length !== 1 ? 's' : ''} across {domainCognition.pressure_summary.total_domains} domains.
+                {domainCognition.pressure_summary.domains_with_runtime > 0 ? ` ${domainCognition.pressure_summary.domains_with_runtime} carry runtime coordination evidence.` : ''}
+              </div>
+            )}
+            {isGoverned && pressureDimensions.length > 0 && (
+              <>
+                <div className="cockpit-pressure-label" style={{ marginTop: 16 }}>GOVERNED SIGNAL PRESSURE</div>
+                {pressureDimensions.map(dim => (
+                  <div key={dim.key} className="cockpit-pressure-dim" data-severity={dim.severity} data-active={String(dim.severity !== 'NOMINAL')}>
+                    <div className="cockpit-pressure-dim-visual">
+                      <StructuralGlyph type={PRESSURE_GLYPH_TYPE[dim.key]} severity={dim.severity} size={32} />
+                    </div>
+                    <div className="cockpit-pressure-dim-content">
+                      <div className="cockpit-pressure-dim-head">
+                        <span className="cockpit-pressure-dim-name">{dim.name}</span>
+                        <span className="cockpit-pressure-dim-severity" data-severity={dim.severity}>{dim.severity !== 'NOMINAL' ? dim.severity : '—'}</span>
+                      </div>
+                      <div className="cockpit-pressure-dim-locale">{PLOCALE[dim.key]}</div>
+                    </div>
+                  </div>
+                ))}
+                {pressureSynthesis && <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>}
+              </>
             )}
             {isGoverned && (
               <div className="cockpit-governance-chips">
@@ -10070,13 +10097,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               </svg>
             </div>
             <div className="cockpit-coverage-meta">
-              {isGoverned && sec.proposition_review && sec.proposition_review.available && (
-                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{sec.proposition_review.detail.accepted} propositions accepted</div>
-              )}
-              {isGoverned && sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
-                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{sec.evidence_enrichment.detail.enrichment_events} evidence corrections</div>
-              )}
-              {!isGoverned && domainCognition && domainCognition.attention_zones.length > 0 && (
+              {domainCognition && (
                 <>
                   <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{domainCognition.pressure_summary.domains_under_pressure} under pressure</div>
                   {domainCognition.pressure_summary.domains_with_runtime > 0 && (
@@ -10084,25 +10105,15 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                   )}
                 </>
               )}
+              {isGoverned && sec.proposition_review && sec.proposition_review.available && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{sec.proposition_review.detail.accepted} propositions accepted</div>
+              )}
+              {isGoverned && sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{sec.evidence_enrichment.detail.enrichment_events} evidence corrections</div>
+              )}
             </div>
           </div>
         </div>
-
-        {!isGoverned && domainCognition && domainCognition.attention_zones.length > 0 && (
-          <div className="cockpit-attention-zones">
-            <div className="cockpit-attention-zones-label">EXECUTIVE ATTENTION ZONES</div>
-            {domainCognition.attention_zones.map(az => (
-              <div key={az.domain_id} className="cockpit-attention-zone" data-severity={az.severity}>
-                <div className="cockpit-attention-zone-head">
-                  <span className="cockpit-attention-zone-label">{az.executive_label}</span>
-                  <span className="cockpit-attention-zone-severity" data-severity={az.severity}>{az.severity}</span>
-                </div>
-                <div className="cockpit-attention-zone-reason">{az.reason}</div>
-                <div className="cockpit-attention-zone-anchor">{az.technical_name}</div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
           <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
