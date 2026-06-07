@@ -2238,11 +2238,14 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
                 summary: frag.length > 0
                   ? `${frag.length} file${frag.length !== 1 ? 's' : ''} exceed fragility threshold. These files combine high coupling with low cohesion — the structural signature of change amplification.`
                   : 'No fragility hotspots at current threshold.',
-                evidence: frag.slice(0, 6).map(h => ({
-                  label: (h.file || h.path || '').split('/').slice(-2).join('/'),
-                  value: `${Math.round((h.fragility_score || h.score || 0) * 100)}% fragility`,
-                  severity: (h.fragility_score || h.score || 0) > 0.7 ? 'critical' : 'elevated',
-                })),
+                evidence: frag.slice(0, 6).map(h => {
+                  const score = h.fragility_score || h.score || 0
+                  return {
+                    label: (h.path || h.file || '').split('/').slice(-2).join('/'),
+                    value: `fragility ${score}${h.coupling ? ' · coupling ' + h.coupling : ''}`,
+                    severity: score > 70 ? 'critical' : score > 40 ? 'elevated' : 'nominal',
+                  }
+                }),
                 structuralContext: 'Fragility = f(coupling, cohesion). High coupling + low cohesion = structural joint that amplifies change impact.',
               }
             },
@@ -2275,18 +2278,23 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
             answer_derive: (fr) => {
               const frag = ((fr.structural_enrichment || {}).fragility_surface || {}).fragility_hotspots || []
               const reg = fr.semantic_domain_registry || []
-              const affectedDomains = new Set()
+              const affectedDomains = new Map()
               for (const h of frag) {
-                const fp = h.file || h.path || ''
-                const match = reg.find(d => fp.includes(d.domain_name || ''))
-                if (match) affectedDomains.add(match.business_label || match.domain_name)
+                const fp = (h.path || h.file || '').toLowerCase()
+                const match = reg.find(d => fp.includes((d.domain_name || '').toLowerCase()))
+                if (match) {
+                  const label = match.business_label || match.domain_name
+                  affectedDomains.set(label, (affectedDomains.get(label) || 0) + 1)
+                }
               }
               return {
-                summary: `Fragility hotspots span ${affectedDomains.size} domain${affectedDomains.size !== 1 ? 's' : ''}. Changes to these ${frag.length} file${frag.length !== 1 ? 's' : ''} propagate unpredictably due to high coupling — blast radius extends beyond the file's apparent scope.`,
-                evidence: [...affectedDomains].map(d => ({
+                summary: affectedDomains.size > 0
+                  ? `Fragility hotspots span ${affectedDomains.size} domain${affectedDomains.size !== 1 ? 's' : ''}. Changes to these ${frag.length} file${frag.length !== 1 ? 's' : ''} propagate unpredictably due to high coupling — blast radius extends beyond the file's apparent scope.`
+                  : `${frag.length} fragility hotspot${frag.length !== 1 ? 's' : ''} detected but domain mapping is unavailable at current resolution.`,
+                evidence: [...affectedDomains.entries()].sort((a, b) => b[1] - a[1]).map(([d, count]) => ({
                   label: d,
-                  value: 'contains fragility hotspots',
-                  severity: 'elevated',
+                  value: `${count} fragile file${count !== 1 ? 's' : ''}`,
+                  severity: count > 10 ? 'critical' : 'elevated',
                 })),
                 structuralContext: 'Blast radius bounded by coupling edges from fragile files. High coupling means more downstream consumers of changes.',
               }
