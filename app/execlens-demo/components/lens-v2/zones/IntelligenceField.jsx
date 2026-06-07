@@ -8,7 +8,7 @@ import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBu
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
-import { ExecutionBlindnessModal, GravityDivergenceModal, ExecutionBlindnessInline, GravityDivergenceInline } from './ExecutionBlindnessModal'
+import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
@@ -3106,9 +3106,30 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
           ],
         },
         guidedCognition: [
-          { question: 'Which failure modes produce silence instead of errors?', tone: 'forensic', archetype: 'TRACE', depth: 'deep' },
-          { question: 'Where does the operational system extend beyond the codebase?', tone: 'forensic', archetype: 'BOUNDARY', depth: 'standard' },
-          { question: 'Which runtime coordination paths carry the highest blast radius?', tone: 'structural', archetype: 'RISK', depth: 'standard' },
+          { question: 'Which failure modes produce silence instead of errors?', tone: 'forensic', archetype: 'TRACE', depth: 'deep', boundary: 'Structural derivation only — no inferred failure scenarios',
+            answer_derive: (report) => {
+              const conds = (report._synthesisResult?.conditions || []).filter(c => ['RUNTIME_DEPENDENCY_CHOKE_POINT','ASYNC_PROPAGATION_ASYMMETRY'].includes(c.condition_type) && c.severity !== 'NOMINAL')
+              return { summary: conds.length > 0 ? `${conds.length} condition${conds.length !== 1 ? 's' : ''} produce silence instead of errors. These failures create absence of signal rather than observable error — the system appears healthy while operational visibility degrades.` : 'No silence-producing conditions detected in current evidence.',
+                evidence: conds.map(c => ({ label: c.operator_cognition_title || c.condition_type, value: c.severity + ' · ' + (c.shared_topology_targets?.domains || []).length + ' domains', severity: c.severity === 'HIGH' || c.severity === 'CRITICAL' ? 'critical' : 'elevated' })),
+                structuralContext: 'Silence blindness is the most dangerous blindness class — it produces no alert, no error, no signal. Monitoring must look for absence, not presence.' }
+            }},
+          { question: 'Where does the operational system extend beyond the codebase?', tone: 'forensic', archetype: 'BOUNDARY', depth: 'standard', boundary: 'Evidence from runtime connectivity graphs only',
+            answer_derive: (report) => {
+              const conds = (report._synthesisResult?.conditions || []).filter(c => ['BROKER_DEPENDENCY','EDGE_CLOUD_PROPAGATION_RISK'].includes(c.condition_type) && c.severity !== 'NOMINAL')
+              const reg = report.semantic_domain_registry || []
+              const rl = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+              const doms = [...new Set(conds.flatMap(c => c.shared_topology_targets?.domains || []))]
+              return { summary: doms.length > 0 ? `The operational system extends beyond the codebase at ${doms.length} domain${doms.length !== 1 ? 's' : ''}: ${doms.slice(0, 4).map(rl).join(', ')}${doms.length > 4 ? ' +' + (doms.length - 4) + ' more' : ''}. These domains depend on infrastructure (message brokers, edge gateways) that exists outside the code repository.` : 'No boundary extensions detected.',
+                evidence: conds.map(c => ({ label: c.operator_cognition_title || c.condition_type, value: c.severity, severity: 'elevated' })) }
+            }},
+          { question: 'Which runtime coordination paths carry the highest blast radius?', tone: 'structural', archetype: 'RISK', depth: 'standard', boundary: 'Blast radius from event/topic concentration analysis',
+            answer_derive: (report) => {
+              const conds = (report._synthesisResult?.conditions || []).filter(c => ['EVENT_CONCENTRATION','TOPIC_FANOUT_PRESSURE'].includes(c.condition_type) && c.severity !== 'NOMINAL')
+              const reg = report.semantic_domain_registry || []
+              const rl = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+              return { summary: conds.length > 0 ? `${conds.length} coordination path${conds.length !== 1 ? 's' : ''} carry concentrated blast radius. A single event bus or topic failure at these points interrupts coordination across multiple domains simultaneously.` : 'No concentrated coordination paths detected.',
+                evidence: conds.map(c => ({ label: c.operator_cognition_title || c.condition_type, value: c.severity + ' · ' + (c.shared_topology_targets?.domains || []).slice(0, 3).map(rl).join(', '), severity: c.severity === 'HIGH' || c.severity === 'CRITICAL' ? 'critical' : 'elevated' })) }
+            }},
         ],
         actions: [
           { label: 'Identify silent failure scenarios', type: 'assessment', priority: 'HIGH' },
@@ -3149,9 +3170,43 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
           ],
         },
         guidedCognition: [
-          { question: 'Where does the import graph concentrate and where does runtime coordination concentrate?', tone: 'structural', archetype: 'COMPARE', depth: 'standard' },
-          { question: 'Would refactoring the static hub reduce operational risk?', tone: 'forensic', archetype: 'TRACE', depth: 'deep' },
-          { question: 'Which domains appear structurally insignificant but carry operational load?', tone: 'structural', archetype: 'RISK', depth: 'standard' },
+          { question: 'Where does the import graph concentrate and where does runtime coordination concentrate?', tone: 'structural', archetype: 'COMPARE', depth: 'standard', boundary: 'Derived from static topology and runtime connectivity graphs',
+            answer_derive: (report) => {
+              const RT = ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']
+              const conds = (report._synthesisResult?.conditions || [])
+              const reg = report.semantic_domain_registry || []
+              const rl = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+              const sDoms = [...new Set(conds.filter(c => !RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+              const rDoms = [...new Set(conds.filter(c => RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+              return { summary: `Import graph concentrates on ${sDoms.slice(0, 3).map(rl).join(', ')}${sDoms.length > 3 ? ' +' + (sDoms.length - 3) + ' more' : ''}. Runtime coordination concentrates on ${rDoms.slice(0, 3).map(rl).join(', ')}${rDoms.length > 3 ? ' +' + (rDoms.length - 3) + ' more' : ''}. Where these sets diverge, operational risk is invisible to static analysis.`,
+                evidence: [
+                  { label: 'Static gravity', value: sDoms.slice(0, 4).map(rl).join(', '), severity: 'nominal' },
+                  { label: 'Runtime gravity', value: rDoms.slice(0, 4).map(rl).join(', '), severity: 'elevated' },
+                  { label: 'Divergent count', value: String(rDoms.filter(d => !sDoms.includes(d)).length) + ' runtime-only', severity: rDoms.filter(d => !sDoms.includes(d)).length > 0 ? 'critical' : 'nominal' },
+                ] }
+            }},
+          { question: 'Would refactoring the static hub reduce operational risk?', tone: 'forensic', archetype: 'TRACE', depth: 'deep', boundary: 'Structural correlation only — not a recommendation',
+            answer_derive: (report) => {
+              const RT = ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']
+              const conds = (report._synthesisResult?.conditions || [])
+              const rDoms = [...new Set(conds.filter(c => RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+              const sDoms = [...new Set(conds.filter(c => !RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+              const runtimeOnly = rDoms.filter(d => !sDoms.includes(d))
+              return { summary: runtimeOnly.length > 0 ? `Refactoring the static hub alone would not address ${runtimeOnly.length} domain${runtimeOnly.length !== 1 ? 's' : ''} that carry operational gravity without static code weight. These domains need runtime-aware investment — static refactoring targets the wrong center of mass.` : 'Static and runtime gravity are aligned — refactoring the static hub would address operational risk.',
+                structuralContext: 'This is a structural correlation, not a recommendation. Investment decisions require governance review.' }
+            }},
+          { question: 'Which domains appear structurally insignificant but carry operational load?', tone: 'structural', archetype: 'RISK', depth: 'standard', boundary: 'Evidence from runtime connectivity only',
+            answer_derive: (report) => {
+              const RT = ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']
+              const conds = (report._synthesisResult?.conditions || [])
+              const reg = report.semantic_domain_registry || []
+              const rl = (id) => { const d = reg.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+              const sDoms = new Set(conds.filter(c => !RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))
+              const rDoms = [...new Set(conds.filter(c => RT.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+              const hidden = rDoms.filter(d => !sDoms.has(d))
+              return { summary: hidden.length > 0 ? `${hidden.length} domain${hidden.length !== 1 ? 's appear' : ' appears'} structurally insignificant but ${hidden.length !== 1 ? 'carry' : 'carries'} operational load: ${hidden.map(rl).join(', ')}. These are invisible to import-graph-based analysis.` : 'All operationally loaded domains also carry static code weight — no hidden operational load detected.',
+                evidence: hidden.map(d => ({ label: rl(d), value: 'Runtime gravity · no static weight', severity: 'critical' })) }
+            }},
         ],
         actions: [
           { label: 'Compare static and runtime investment targets', type: 'assessment', priority: 'HIGH' },
@@ -10267,13 +10322,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} />
-      )}
-      {swIntelActive && cognitionState && cognitionState.activeSurface === 'EXECUTION_BLINDNESS' && fullReport && (
-        <ExecutionBlindnessInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('EXECUTION_BLINDNESS') : undefined} />
-      )}
-      {swIntelActive && cognitionState && cognitionState.activeSurface === 'GRAVITY_DIVERGENCE' && fullReport && (
-        <GravityDivergenceInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('GRAVITY_DIVERGENCE') : undefined} />
+        <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} />
       )}
     </>
   )
@@ -10494,9 +10543,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         ],
       },
       guidedCognition: [
-        { question: `Why does ${surface.surface_name} affect these domains?`, tone: 'forensic', archetype: 'TRACE', depth: 'standard' },
-        { question: `Which domain carries the highest concentration for this condition?`, tone: 'structural', archetype: 'RISK', depth: 'standard' },
-        ...(condLabel ? [{ question: `What structural pattern drives ${condLabel}?`, tone: 'structural', archetype: 'TRACE', depth: 'standard' }] : []),
+        { question: `Why does ${surface.surface_name} affect these domains?`, tone: 'forensic', archetype: 'TRACE', depth: 'standard', boundary: 'Structural derivation from condition evidence',
+          answer_derive: () => ({ summary: `${surface.surface_name} affects ${domains.length} domain${domains.length !== 1 ? 's' : ''} because ${(surface.operational_summary || 'structural conditions concentrate in these regions').toLowerCase()}`,
+            evidence: domainEvidence.slice(0, 5) }) },
+        { question: `Which domain carries the highest concentration for this condition?`, tone: 'structural', archetype: 'RISK', depth: 'standard', boundary: 'Evidence density from condition targets',
+          answer_derive: () => ({ summary: domains.length > 0 ? `${resolveName(domains[0])} carries the highest concentration for this condition across the affected region.` : 'No domain concentration data available.',
+            evidence: domainEvidence.slice(0, 3) }) },
+        ...(condLabel ? [{ question: `What structural pattern drives ${condLabel}?`, tone: 'structural', archetype: 'TRACE', depth: 'standard', boundary: 'Structural pattern from condition classification',
+          answer_derive: () => ({ summary: `${condLabel} is driven by structural patterns that ${(surface.consequence || 'create operational risk in affected regions').toLowerCase()}` }) }] : []),
       ],
       actions: [
         { label: 'Review affected domain structural profiles', type: 'assessment', priority: 'HIGH' },

@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { TermHint } from './OperatorReadingGuide'
+import { ExecutionBlindnessInline, GravityDivergenceInline } from './ExecutionBlindnessModal'
 
 const SEVERITY_COLOR = {
   HIGH: '#ff6b6b',
@@ -480,7 +481,7 @@ function SoftwareIntelligenceModuleToggle({ active, available, onToggle }) {
 
 // ─── VIEW EXPORTS ───────────────────────────────────────────────────
 
-export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap, domainProfileMap }) {
+export function SoftwareIntelligenceDenseView({ projection, onDeactivate, activeSurface, onSurfaceSelect, activeConditions, domainLabelMap, domainProfileMap, fullReport, onOpenDeepDive }) {
   const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
   const enrichedMap = useMemo(() => {
     const m = { ...(domainLabelMap || {}) }
@@ -516,7 +517,15 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
+          <React.Fragment key={s.surface_id}>
+            <CognitionSurfaceCard surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
+            {activeSurface === s.surface_id && s.surface_id === 'EXECUTION_BLINDNESS' && fullReport && (
+              <ExecutionBlindnessInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('EXECUTION_BLINDNESS') : undefined} />
+            )}
+            {activeSurface === s.surface_id && s.surface_id === 'GRAVITY_DIVERGENCE' && fullReport && (
+              <GravityDivergenceInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('GRAVITY_DIVERGENCE') : undefined} />
+            )}
+          </React.Fragment>
         ))}
         {!showAll && overflow > 0 && (
           <button className="sw-intel-surfaces-overflow" onClick={() => setShowAll(true)} type="button">
