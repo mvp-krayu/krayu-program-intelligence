@@ -1322,6 +1322,44 @@ const DENSE_ZONE_INTERPRETATIONS = {
       const activated = sigs.filter(s => s.severity !== 'NOMINAL')
       const critical = activated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
       const elevated = activated.filter(s => s.severity === 'ELEVATED')
+      const isDerived = activated.length > 0 && activated[0].derived_from
+      const isCanonical = activated.length > 0 && !activated[0].derived_from
+
+      const signalContext = isDerived
+        ? { qualifier: 'S1 · System Connectivity', state: 'Derived structural/runtime signals available', note: 'Full S2 signal registry not present.' }
+        : isCanonical
+          ? { qualifier: 'S2 · Governed signal registry', state: 'Canonical PSIG/DPSIG/ISIG signals available', note: null }
+          : null
+
+      let signalDetail
+      if (isDerived) {
+        const SEV = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3 }
+        const groups = new Map()
+        for (const s of activated) {
+          const key = s.source_condition_type || s.signal_name || s.signal_id
+          if (!groups.has(key)) groups.set(key, { key, title: s.signal_name || key, severity: s.severity, count: 0, domains: [], family: s.signal_family })
+          const g = groups.get(key)
+          g.count++
+          if ((SEV[s.severity] ?? 4) < (SEV[g.severity] ?? 4)) g.severity = s.severity
+          for (const d of (s.affected_domains || [])) { if (!g.domains.includes(d)) g.domains.push(d) }
+        }
+        const sorted = [...groups.values()].sort((a, b) => (SEV[a.severity] ?? 4) - (SEV[b.severity] ?? 4))
+        const MAX_VISIBLE = 5
+        const visible = sorted.slice(0, MAX_VISIBLE)
+        const overflow = sorted.length - MAX_VISIBLE
+        signalDetail = visible.map(g => ({
+          id: g.key,
+          severity: g.severity,
+          interpretation: g.domains.length > 0
+            ? `${g.count > 1 ? g.count + ' derived signals · ' : ''}${g.domains.slice(0, 3).join(', ')}${g.domains.length > 3 ? ' +' + (g.domains.length - 3) : ''}`
+            : g.count > 1 ? `${g.count} derived signals` : (g.title || ''),
+          concentration: g.domains[0] || null,
+        }))
+        if (overflow > 0) signalDetail.push({ id: '_overflow', severity: 'NOMINAL', interpretation: `+${overflow} additional derived signal group${overflow !== 1 ? 's' : ''}`, concentration: null })
+      } else {
+        signalDetail = activated.map(s => ({ id: s.signal_id, severity: s.severity, interpretation: s.interpretation, concentration: s.concentration }))
+      }
+
       return {
         heading: 'What the signal landscape reveals',
         body: activated.length > 0
@@ -1330,12 +1368,8 @@ const DENSE_ZONE_INTERPRETATIONS = {
         structuralNote: sigs.length > 0
           ? `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
           : null,
-        signalDetail: activated.map(s => ({
-          id: s.signal_id,
-          severity: s.severity,
-          interpretation: s.interpretation,
-          concentration: s.concentration,
-        })),
+        signalContext,
+        signalDetail,
       }
     },
   },
@@ -5456,6 +5490,20 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-zone-structural">{zoneDerived.structuralNote}</div>
           )}
 
+          {zoneDerived.signalContext && (
+            <div className="interp-zone-signals interp-zone-signals--context">
+              <div className="interp-zone-signals-label">SIGNAL CONTEXT</div>
+              <div className="interp-zone-signal interp-zone-signal--context">
+                <span className="interp-zone-signal-severity">{zoneDerived.signalContext.qualifier}</span>
+                <span className="interp-zone-signal-text">{zoneDerived.signalContext.state}</span>
+              </div>
+              {zoneDerived.signalContext.note && (
+                <div className="interp-zone-signal interp-zone-signal--note">
+                  <span className="interp-zone-signal-text">{zoneDerived.signalContext.note}</span>
+                </div>
+              )}
+            </div>
+          )}
           {zoneDerived.signalDetail && zoneDerived.signalDetail.length > 0 && (
             <div className="interp-zone-signals">
               <div className="interp-zone-signals-label">SIGNAL DECOMPOSITION</div>
