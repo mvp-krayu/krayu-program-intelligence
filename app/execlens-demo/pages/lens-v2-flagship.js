@@ -2997,6 +2997,33 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           flex-direction: column;
           gap: 4px;
         }
+        .interp-condition-target-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        .domain-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 4px;
+          font: 600 11px/1 'Courier New', monospace;
+          color: #ccd6f6;
+          background: rgba(74, 158, 255, 0.08);
+          border: 1px solid rgba(74, 158, 255, 0.2);
+          cursor: default;
+        }
+        .domain-chip[data-severity="CRITICAL"] { background: rgba(255, 107, 107, 0.1); border-color: rgba(255, 107, 107, 0.25); }
+        .domain-chip[data-severity="HIGH"] { background: rgba(255, 107, 107, 0.08); border-color: rgba(255, 107, 107, 0.2); }
+        .domain-chip[data-severity="ELEVATED"] { background: rgba(255, 158, 74, 0.08); border-color: rgba(255, 158, 74, 0.2); }
+        .domain-chip[data-severity="MODERATE"] { background: rgba(255, 215, 0, 0.06); border-color: rgba(255, 215, 0, 0.15); }
+        .domain-chip-role {
+          font: 400 9px/1 -apple-system, sans-serif;
+          color: #7a8aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
         .interp-condition-target {
           display: flex;
           align-items: baseline;

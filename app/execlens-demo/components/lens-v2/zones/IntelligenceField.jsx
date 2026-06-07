@@ -920,7 +920,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               <span className="support-condition-title">{c.operator_cognition_title}</span>
               <span className="support-condition-severity">{c.severity}</span>
               {c.shared_topology_targets?.domains_display?.[0] && (
-                <span className="support-condition-domain">{c.shared_topology_targets.domains_display[0]}</span>
+                <span className="domain-chip" data-severity={c.severity} title={c.shared_topology_targets.domains?.[0]}>{c.shared_topology_targets.domains_display[0]}</span>
               )}
             </div>
           ))}
@@ -4616,13 +4616,14 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           {targets.length > 0 && (
             <div className="interp-condition-targets">
               <div className="interp-section-label">AFFECTED DOMAINS</div>
+              <div className="interp-condition-target-chips">
               {targets.map(t => (
-                <div key={t.id} className="interp-condition-target">
-                  <span className="interp-condition-target-name">{t.display_name}</span>
-                  <span className="interp-condition-target-id">{t.id}</span>
-                  <span className="interp-condition-target-role">{t.condition_role}</span>
-                </div>
+                <span key={t.id} className="domain-chip" data-severity={c.severity} title={t.id}>
+                  {t.display_name || t.id}
+                  {t.condition_role && <span className="domain-chip-role">{t.condition_role}</span>}
+                </span>
               ))}
+              </div>
             </div>
           )}
 
