@@ -9,7 +9,7 @@ import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from 
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
-import { resolveCognitionContract as resolveContract } from '../../../lib/lens-v2/CognitionContractModel'
+import { resolveCognitionContract as resolveContract, deriveAffectedDomainsFromPaths, formatLensMetric } from '../../../lib/lens-v2/CognitionContractModel'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
@@ -2242,7 +2242,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
                   const score = h.fragility_score || h.score || 0
                   return {
                     label: (h.path || h.file || '').split('/').slice(-2).join('/'),
-                    value: `fragility ${score}${h.coupling ? ' · coupling ' + h.coupling : ''}`,
+                    value: `fragility ${formatLensMetric(score, 'score')}${h.coupling ? ' · coupling ' + formatLensMetric(h.coupling, 'score') : ''}`,
                     severity: score > 70 ? 'critical' : score > 40 ? 'elevated' : 'nominal',
                   }
                 }),
@@ -2278,15 +2278,7 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
             answer_derive: (fr) => {
               const frag = ((fr.structural_enrichment || {}).fragility_surface || {}).fragility_hotspots || []
               const reg = fr.semantic_domain_registry || []
-              const affectedDomains = new Map()
-              for (const h of frag) {
-                const fp = (h.path || h.file || '').toLowerCase()
-                const match = reg.find(d => fp.includes((d.domain_name || '').toLowerCase()))
-                if (match) {
-                  const label = match.business_label || match.domain_name
-                  affectedDomains.set(label, (affectedDomains.get(label) || 0) + 1)
-                }
-              }
+              const affectedDomains = deriveAffectedDomainsFromPaths(frag.map(h => h.path || h.file || ''), reg)
               return {
                 summary: affectedDomains.size > 0
                   ? `Fragility hotspots span ${affectedDomains.size} domain${affectedDomains.size !== 1 ? 's' : ''}. Changes to these ${frag.length} file${frag.length !== 1 ? 's' : ''} propagate unpredictably due to high coupling — blast radius extends beyond the file's apparent scope.`

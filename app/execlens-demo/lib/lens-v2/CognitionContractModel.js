@@ -63,6 +63,36 @@ function conditionLabel(condType) {
   return condType.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
 }
 
+function resolveDomainForPath(filePath, registry) {
+  if (!filePath || !registry || !registry.length) return null
+  const fp = filePath.toLowerCase()
+  return registry.find(d => fp.includes((d.domain_name || '').toLowerCase())) || null
+}
+
+function deriveAffectedDomainsFromPaths(paths, registry) {
+  const map = new Map()
+  for (const p of paths) {
+    const match = resolveDomainForPath(p, registry)
+    if (match) {
+      const label = match.business_label || match.domain_name
+      map.set(label, (map.get(label) || 0) + 1)
+    }
+  }
+  return map
+}
+
+function formatLensMetric(value, metricType) {
+  if (value == null || value === '') return '—'
+  const n = Number(value)
+  if (Number.isNaN(n)) return String(value)
+  if (metricType === 'percent_normalized') return Math.round(n * 100) + '%'
+  if (metricType === 'percent') return Math.round(n) + '%'
+  if (metricType === 'score') return String(Math.round(n))
+  if (metricType === 'count') return String(n)
+  if (n > 0 && n <= 1) return Math.round(n * 100) + '%'
+  return String(Math.round(n))
+}
+
 function domainListSummary(ids, registry, limit) {
   const n = limit || 3
   const labels = ids.slice(0, n).map(id => resolveDomainLabel(id, registry))
@@ -295,5 +325,10 @@ module.exports = {
   ROLE_SHORT,
   resolveDomainLabel,
   resolveDomainRole,
+  resolveDomainForPath,
+  deriveAffectedDomainsFromPaths,
   buildDomainEvidence,
+  formatLensMetric,
+  conditionLabel,
+  domainListSummary,
 }

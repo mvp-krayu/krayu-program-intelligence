@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test:cognition": "node --test validation/tests/cognitionContract.test.js",
     "test:validation": "node --test validation/tests/*.test.js",
     "test:adapters": "node --test adapters/tests/adapters.test.js",
     "test:container": "node --test components/core-report-container/tests/coreReportContainer.test.js",
