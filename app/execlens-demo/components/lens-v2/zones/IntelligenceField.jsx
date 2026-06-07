@@ -5093,6 +5093,64 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       )
     }
 
+    if (boardroomMode && boardroomProjection && !boardroomProjection.qualification_posture.governed) {
+      const bp = boardroomProjection
+      const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0'
+      const eLabels = projectionAuthority ? projectionAuthority.evidenceCapabilities.join(' + ') : ''
+      const sState = projectionAuthority ? projectionAuthority.qualificationState : 'S0'
+      const suppressedN = (suppressedConditions || []).length
+      const tension = bp.tension_summary || {}
+      const domCov = bp.domain_coverage || {}
+      const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+
+      return (
+        <aside className="intel-interp intel-interp--executive-posture" data-tone={framing.tone} aria-label="Executive intelligence briefing">
+          <div className="interp-tag">
+            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
+            <span className="interp-tag-state">{sState}</span>
+          </div>
+
+          <div className="interp-block interp-block--lead">
+            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
+            <div className="interp-synthesis">
+              {pLevel >= 2
+                ? `${pLabel}. Structural and runtime intelligence across ${domCov.total_domains || 0} domains. ${tension.tension_count || 0} structural tension${(tension.tension_count || 0) !== 1 ? 's' : ''} active.`
+                : `${pLabel}. Structural intelligence across ${domCov.total_domains || 0} domains.`
+              }
+            </div>
+            <div className="interp-synthesis-meta">{eLabels}</div>
+          </div>
+
+          {tension.tension_count > 0 && (
+            <div className="interp-block">
+              <div className="interp-section-label">STRUCTURAL TENSION</div>
+              <div className="interp-synthesis">{tension.tension_label || `${tension.tension_count} tensions active`}</div>
+            </div>
+          )}
+
+          {suppressedN > 0 && (
+            <div className="interp-block">
+              <div className="interp-section-label">SUPPRESSED INTELLIGENCE</div>
+              <div className="interp-synthesis" style={{ color: '#ff9e4a' }}>{suppressedN} condition{suppressedN !== 1 ? 's' : ''} exceed evidence authority. Governed narrative requires P3+ semantic qualification.</div>
+            </div>
+          )}
+
+          {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
+            <div className="interp-block interp-block--module-teaser">
+              <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
+              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+              <div className="interp-module-teaser-cta">Activate Software Intelligence for posture</div>
+            </div>
+          )}
+
+          <div className="interp-block">
+            <div className="interp-section-label">DEPTH</div>
+            <div className="interp-synthesis">Descend into DENSE for structural topology cognition. Descend into OPERATOR for evidence inspection.</div>
+          </div>
+        </aside>
+      )
+    }
+
     if (boardroomMode && swIntelActive && boardroomProjection && boardroomProjection.qualification_posture.governed) {
       const qp = boardroomProjection.qualification_posture
       const primaryDynamic = activeConditions && activeConditions.length > 0
@@ -9635,7 +9693,7 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
@@ -9657,27 +9715,78 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
     }
   }, [swIntelActive, consequencePosture, fullReport])
 
-  // LEGACY PRE-PROJECTION PATH: S1 narrative rendering — governed S2+ runs (genesis_e2e_03) never enter this branch
   const isS1 = fullReport && fullReport.qualification_level === 'S1'
   const governedNarrative = fullReport && fullReport.governed_narrative
+  const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+  const hasRuntime = projectionAuthority && projectionAuthority.runtimeQualified
+  const suppressedCount = (suppressedConditions || []).length
 
-  if (isS1) {
-    const narrativeAvailable = governedNarrative && governedNarrative.available
+  if (isS1 || (pLevel < 3 && !(governedNarrative && governedNarrative.available))) {
+    const ts = (fullReport && fullReport.topology_summary) || {}
+    const bp = boardroomProjection || {}
+    const tension = bp.tension_summary || {}
+    const domCov = bp.domain_coverage || {}
+    const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0 — Topology Only'
+    const eLabels = projectionAuthority ? projectionAuthority.evidenceCapabilities.join(' + ') : ''
+    const sState = projectionAuthority ? projectionAuthority.qualificationState : 'S0'
+
     return (
       <div className="rep-field rep-field--boardroom rep-field--narrative">
         <RepModeTag
           label="Boardroom lens"
-          sub="Board · governed executive narrative"
-          zones={[{ id: 'Z1', name: 'Executive Narrative' }, { id: 'Z2', name: 'Structural Authority' }]}
+          sub={`Board · ${pLevel >= 2 ? 'structural + runtime intelligence' : 'structural intelligence posture'}`}
+          zones={[
+            { id: 'Z1', name: pLevel >= 2 ? 'Structural + Runtime Posture' : 'Structural Posture' },
+            { id: 'Z2', name: 'Topology' },
+          ]}
         />
 
-        {narrativeAvailable
-          ? <NarrativeEnvelope governedNarrative={governedNarrative} qualificationLevel="S1" selectedArc={selectedNarrativeArc} onArcSelect={onNarrativeSelect} />
-          : <BoardroomStructuralPosture fullReport={fullReport} />
-        }
+        <div className="narrative-envelope narrative-envelope--posture">
+          <div className="narrative-header">
+            <div className="narrative-header-state">
+              <span className="narrative-header-s-state">{pLabel}</span>
+              <span className="narrative-header-label">{eLabels}</span>
+            </div>
+          </div>
+          <div className="narrative-body">
+            <div className="narrative-paragraph" data-arc="POSTURE">
+              <p className="narrative-paragraph-text">
+                {pLevel >= 2
+                  ? `Structural and runtime intelligence active across ${domCov.total_domains || ts.semantic_domain_count || 0} domains. ${tension.tension_count || 0} structural tension${(tension.tension_count || 0) !== 1 ? 's' : ''} identified. Runtime connectivity evidence provides operational visibility beyond static code analysis.`
+                  : `Structural intelligence active across ${domCov.total_domains || ts.semantic_domain_count || 0} domains with ${ts.cluster_count || 0} structural clusters. Intelligence is structurally derived.`
+                }
+              </p>
+            </div>
+            {suppressedCount > 0 && (
+              <div className="narrative-paragraph" data-arc="AUTHORITY">
+                <p className="narrative-paragraph-text" style={{ color: '#ff9e4a' }}>
+                  {suppressedCount} condition{suppressedCount !== 1 ? 's' : ''} suppressed — evidence authority insufficient for operational claims at current maturity. Governed narrative requires semantic qualification (P3+).
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="narrative-provenance">
+            <span className="narrative-provenance-method">{sState} · {pLevel >= 2 ? 'Structural + Runtime' : 'Structural'} authority</span>
+            <span className="narrative-provenance-sep">·</span>
+            <span className="narrative-provenance-contract">{pLevel >= 3 ? 'Governed narrative available' : 'Governed narrative requires P3+ (semantic qualification)'}</span>
+          </div>
+        </div>
+
+        <div className="boardroom-topology-anchor">
+          <TopologyGraph
+            scope={scope}
+            fullReport={fullReport}
+            adapted={adapted}
+            overlay={swIntelTopoOverlay}
+            onSignalTrace={setSignalTraceId}
+            runtimeConnectivityEdges={runtimeConnectivityEdges}
+          />
+        </div>
 
         <div className="cockpit-footer">
-          All outputs structurally derived — governed narrative composition under 75.x bounded authority. No inference, no AI-generated assessment beyond structural evidence.
+          {pLevel >= 2
+            ? 'Structural and runtime evidence active. Governed narrative composition requires semantic qualification. All claims trace to evidence.'
+            : 'All outputs structurally derived. No inference, no AI-generated assessment beyond structural evidence.'}
         </div>
       </div>
     )
@@ -10351,7 +10460,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
 function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority }) {
   if (boardroomMode) {
     return (
-      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
+      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} />
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {

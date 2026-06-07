@@ -466,7 +466,22 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         />
 
         <div className="v2-body">
-          {isBlocked && <BlockedDeclaration adapted={adaptedDisplay} />}
+          {isBlocked && projectionAuthority && projectionAuthority.projectionLevel >= 1 ? (
+            <div className="blocked-declaration blocked-declaration--authority" role="status">
+              <div className="blocked-icon" style={{ color: '#4a9eff' }}>◆</div>
+              <div className="blocked-content">
+                <div className="blocked-headline" style={{ color: '#8ab4f8' }}>{projectionAuthority.projectionLabel.toUpperCase()}</div>
+                <div className="blocked-detail">
+                  {projectionAuthority.projectionLevel >= 2
+                    ? 'Structural and runtime intelligence available. Governed narrative requires semantic qualification (P3+).'
+                    : 'Structural intelligence available. Operational and narrative projection requires additional evidence authority.'}
+                  {projectionAuthority.hasViolations ? ` ${projectionAuthority.violationCount} conditions suppressed.` : ''}
+                </div>
+              </div>
+            </div>
+          ) : isBlocked ? (
+            <BlockedDeclaration adapted={adaptedDisplay} />
+          ) : null}
           {isDiagnostic && !isBlocked && <DiagnosticDeclaration />}
 
           <LensDisclosureShell
