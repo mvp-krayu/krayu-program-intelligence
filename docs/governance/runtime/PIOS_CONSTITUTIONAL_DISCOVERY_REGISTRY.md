@@ -2,16 +2,17 @@
 
 **Status:** ACTIVE — discovery lineage for vault propagation  
 **Authority:** PI.STATE-ENGINE-AND-PROJECTION-GOVERNANCE.01  
-**Purpose:** Authoritative bridge between conversational discovery and permanent constitutional doctrine  
+**Governed by:** [PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md](PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md)  
+**Purpose:** Authoritative staging ground between conversational discovery and permanent constitutional doctrine  
 **Propagation:** G1 stream required to move matured discoveries into `docs/pios/vault/constitutional/pios/`  
 
-This registry captures constitutional discoveries — findings that change the operating model of Program Intelligence, not merely its implementation. Each entry preserves the discovery path because the reasoning is as valuable as the outcome.
+This registry captures constitutional discoveries governed under the PiOS Discovery Governance Doctrine. Each entry follows the Discovery Record Contract (Doctrine Section 5) and progresses through the Discovery Lifecycle (Doctrine Section 4).
 
-A constitutional discovery is not a design decision. Design decisions can be reversed. Constitutional discoveries become part of the intellectual property of Program Intelligence.
+Discoveries at LOCKED status have constitutional force even before vault propagation — they bind implementation. Vault propagation adds permanence and cross-session discoverability.
 
 ---
 
-## Discovery 1: Topology-First Doctrine
+## PCD-001: Topology-First Doctrine
 
 | | |
 |---|---|
@@ -22,11 +23,11 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 | **Constitutional Impact** | `canonical_topology` elevated from L0 evidence artifact to constitutional projection substrate. All consumers (LENS, THORR, EIR) must anchor projection on topology. All other intelligence (signals, conditions, consequences, narratives) are annotations on topology. |
 | **Affected Components** | LENS (projection anchor), THORR (explanation anchor), EIR (narrative anchor), SoftwareIntelligenceProjectionAdapter, ConsequenceCompiler |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_TOPOLOGY_FIRST_DOCTRINE.md` |
-| **Maturity State** | PROVEN — validated on StackStorm and BlueEdge. Documented in PI_STATE_MACHINE_CONTRACT.md Section 4. |
+| **Maturity State** | LOCKED — validated on StackStorm and BlueEdge. Documented in PI_STATE_MACHINE_CONTRACT.md Section 4. Binds all projection implementation. |
 
 ---
 
-## Discovery 2: S / E / P Three-Axis Separation
+## PCD-002: S / E / P Three-Axis Separation
 
 | | |
 |---|---|
@@ -37,11 +38,11 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 | **Constitutional Impact** | Foundational PiOS law. All projection governance derives from this separation. The P-axis — not the S-axis — is the governing authority for what consumers may render. |
 | **Affected Components** | ProjectionAuthorityKernel (implements the model), PI_STATE_MACHINE_CONTRACT.md (documents it), all consumers (LENS, THORR, EIR, SW-INTEL) |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_AUTHORITY_MODEL.md` |
-| **Maturity State** | PROVEN — implemented in ProjectionAuthorityKernel.js, validated with 32 tests across both specimens. |
+| **Maturity State** | LOCKED — implemented in ProjectionAuthorityKernel.js, validated with 32 tests across both specimens. Documented in PI_STATE_MACHINE_CONTRACT.md Sections 1-3. Binds all authority computation. |
 
 ---
 
-## Discovery 3: Projection Violation Doctrine
+## PCD-003: Projection Violation Doctrine
 
 | | |
 |---|---|
@@ -52,11 +53,11 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 | **Constitutional Impact** | Introduces `violations[]` as first-class output of the authority kernel. Enables "Suppressed Intelligence" as a governance feature: "14 conditions suppressed. Reason: Projection authority exceeded." Evidence is preserved. Only projection is constrained. |
 | **Affected Components** | ProjectionAuthorityKernel (violation detection), future LENS rendering (suppression), future THORR (refusal with explanation), future EIR (chapter gating) |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_VIOLATION_DOCTRINE.md` |
-| **Maturity State** | PROVEN — kernel detects three violation classes (SPECIMEN_AUTHORITY, EVIDENCE_LINEAGE, BOTH). Validated: StackStorm P1 produces 14 violations, StackStorm P2 produces 14 lineage violations, BlueEdge P4 produces 4 lineage violations. |
+| **Maturity State** | LOCKED — kernel detects three violation classes (SPECIMEN_AUTHORITY, EVIDENCE_LINEAGE, BOTH). Validated on both specimens. Documented in PI_STATE_MACHINE_CONTRACT.md Section 3.2. Binds all projection output. |
 
 ---
 
-## Discovery 4: Evidence-Governed Projection (Doctrine B)
+## PCD-004: Evidence-Governed Projection (Doctrine B)
 
 | | |
 |---|---|
@@ -67,11 +68,11 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 | **Constitutional Impact** | Transforms projection governance from capability-based to evidence-based. Prevents P-level from "magically upgrading" evidence. A weakly proven condition remains weakly proven regardless of specimen maturity. Three independent validation axes: requested authority, proven authority, specimen authority. |
 | **Affected Components** | ProjectionAuthorityKernel (Doctrine B implementation), all condition producers (SignalSynthesisEngine rule functions), all consumers |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_EVIDENCE_GOVERNED_PROJECTION.md` |
-| **Maturity State** | PROVEN — implemented and tested. StackStorm: 12/26 authorized under Doctrine B (vs 26/26 under Doctrine A). BlueEdge: 17/21 authorized. |
+| **Maturity State** | LOCKED — implemented and tested. StackStorm: 12/26 authorized under Doctrine B. BlueEdge: 17/21 authorized. Documented in ProjectionAuthorityKernel.js. Binds all condition authorization. |
 
 ---
 
-## Discovery 5: Measurement Layer
+## PCD-005: Measurement Layer
 
 | | |
 |---|---|
@@ -86,7 +87,7 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 
 ---
 
-## Discovery 6: Consumer / Application Separation
+## PCD-006: Consumer / Application Separation
 
 | | |
 |---|---|
@@ -101,7 +102,7 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 
 ---
 
-## Discovery 7: PiOS Kernel Emergence
+## PCD-007: PiOS Kernel Emergence
 
 | | |
 |---|---|
@@ -128,9 +129,11 @@ A constitutional discovery is not a design decision. Design decisions can be rev
 
 ## Maturity Classification
 
-| State | Meaning | Count |
-|---|---|---|
-| PROVEN | Implemented, tested, validated on both specimens | 4 |
-| VALIDATED | Taxonomy complete, not yet implemented as separate layer | 1 |
-| ARCHITECTURAL | Design locked, implementation pending | 1 |
-| OPERATIONAL | Running in production code, location/naming may evolve | 1 |
+| State | Meaning | Count | Discoveries |
+|---|---|---|---|
+| LOCKED | Constitutional doctrine, binds implementation | 4 | PCD-001, PCD-002, PCD-003, PCD-004 |
+| VALIDATED | Taxonomy complete, not yet implemented as separate layer | 1 | PCD-005 |
+| ARCHITECTURAL | Design locked, implementation pending | 1 | PCD-006 |
+| OPERATIONAL | Running in production code, location/naming may evolve | 1 | PCD-007 |
+
+All discoveries governed under [PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md](PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md).
