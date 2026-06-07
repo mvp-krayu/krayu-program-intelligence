@@ -23,7 +23,7 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | **Constitutional Impact** | `canonical_topology` elevated from L0 evidence artifact to constitutional projection substrate. All consumers (LENS, THORR, EIR) must anchor projection on topology. All other intelligence (signals, conditions, consequences, narratives) are annotations on topology. |
 | **Affected Components** | LENS (projection anchor), THORR (explanation anchor), EIR (narrative anchor), SoftwareIntelligenceProjectionAdapter, ConsequenceCompiler |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_TOPOLOGY_FIRST_DOCTRINE.md` |
-| **Maturity State** | LOCKED — validated on StackStorm and BlueEdge. Documented in PI_STATE_MACHINE_CONTRACT.md Section 4. Binds all projection implementation. |
+| **Maturity State** | PROPAGATED — vault node: `docs/pios/vault/constitutional/pios/PIOS_TOPOLOGY_FIRST_DOCTRINE.md` |
 
 ---
 
@@ -38,7 +38,7 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | **Constitutional Impact** | Foundational PiOS law. All projection governance derives from this separation. The P-axis — not the S-axis — is the governing authority for what consumers may render. |
 | **Affected Components** | ProjectionAuthorityKernel (implements the model), PI_STATE_MACHINE_CONTRACT.md (documents it), all consumers (LENS, THORR, EIR, SW-INTEL) |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_AUTHORITY_MODEL.md` |
-| **Maturity State** | LOCKED — implemented in ProjectionAuthorityKernel.js, validated with 32 tests across both specimens. Documented in PI_STATE_MACHINE_CONTRACT.md Sections 1-3. Binds all authority computation. |
+| **Maturity State** | PROPAGATED — vault node: `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_AUTHORITY_MODEL.md` |
 
 ---
 
@@ -53,7 +53,7 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | **Constitutional Impact** | Introduces `violations[]` as first-class output of the authority kernel. Enables "Suppressed Intelligence" as a governance feature: "14 conditions suppressed. Reason: Projection authority exceeded." Evidence is preserved. Only projection is constrained. |
 | **Affected Components** | ProjectionAuthorityKernel (violation detection), future LENS rendering (suppression), future THORR (refusal with explanation), future EIR (chapter gating) |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_VIOLATION_DOCTRINE.md` |
-| **Maturity State** | LOCKED — kernel detects three violation classes (SPECIMEN_AUTHORITY, EVIDENCE_LINEAGE, BOTH). Validated on both specimens. Documented in PI_STATE_MACHINE_CONTRACT.md Section 3.2. Binds all projection output. |
+| **Maturity State** | PROPAGATED — vault node: `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_VIOLATION_DOCTRINE.md` (covers PCD-003 + PCD-004) |
 
 ---
 
@@ -68,7 +68,7 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | **Constitutional Impact** | Transforms projection governance from capability-based to evidence-based. Prevents P-level from "magically upgrading" evidence. A weakly proven condition remains weakly proven regardless of specimen maturity. Three independent validation axes: requested authority, proven authority, specimen authority. |
 | **Affected Components** | ProjectionAuthorityKernel (Doctrine B implementation), all condition producers (SignalSynthesisEngine rule functions), all consumers |
 | **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_EVIDENCE_GOVERNED_PROJECTION.md` |
-| **Maturity State** | LOCKED — implemented and tested. StackStorm: 12/26 authorized under Doctrine B. BlueEdge: 17/21 authorized. Documented in ProjectionAuthorityKernel.js. Binds all condition authorization. |
+| **Maturity State** | PROPAGATED — vault node: `docs/pios/vault/constitutional/pios/PIOS_PROJECTION_VIOLATION_DOCTRINE.md` (Doctrine B section, covers PCD-003 + PCD-004) |
 
 ---
 
@@ -131,7 +131,7 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 
 | State | Meaning | Count | Discoveries |
 |---|---|---|---|
-| LOCKED | Constitutional doctrine, binds implementation | 4 | PCD-001, PCD-002, PCD-003, PCD-004 |
+| PROPAGATED | In vault, permanent constitutional memory | 4 | PCD-001, PCD-002, PCD-003, PCD-004 |
 | VALIDATED | Taxonomy complete, not yet implemented as separate layer | 1 | PCD-005 |
 | ARCHITECTURAL | Design locked, implementation pending | 1 | PCD-006 |
 | OPERATIONAL | Running in production code, location/naming may evolve | 1 | PCD-007 |
