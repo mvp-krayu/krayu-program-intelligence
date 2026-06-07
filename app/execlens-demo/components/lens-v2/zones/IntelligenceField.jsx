@@ -9721,76 +9721,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   const hasRuntime = projectionAuthority && projectionAuthority.runtimeQualified
   const suppressedCount = (suppressedConditions || []).length
 
-  if (isS1 || (pLevel < 3 && !(governedNarrative && governedNarrative.available))) {
-    const ts = (fullReport && fullReport.topology_summary) || {}
-    const bp = boardroomProjection || {}
-    const tension = bp.tension_summary || {}
-    const domCov = bp.domain_coverage || {}
-    const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0 — Topology Only'
-    const eLabels = projectionAuthority ? projectionAuthority.evidenceCapabilities.join(' + ') : ''
-    const sState = projectionAuthority ? projectionAuthority.qualificationState : 'S0'
-
-    return (
-      <div className="rep-field rep-field--boardroom rep-field--narrative">
-        <RepModeTag
-          label="Boardroom lens"
-          sub={`Board · ${pLevel >= 2 ? 'structural + runtime intelligence' : 'structural intelligence posture'}`}
-          zones={[
-            { id: 'Z1', name: pLevel >= 2 ? 'Structural + Runtime Posture' : 'Structural Posture' },
-            { id: 'Z2', name: 'Topology' },
-          ]}
-        />
-
-        <div className="narrative-envelope narrative-envelope--posture">
-          <div className="narrative-header">
-            <div className="narrative-header-state">
-              <span className="narrative-header-s-state">{pLabel}</span>
-              <span className="narrative-header-label">{eLabels}</span>
-            </div>
-          </div>
-          <div className="narrative-body">
-            <div className="narrative-paragraph" data-arc="POSTURE">
-              <p className="narrative-paragraph-text">
-                {pLevel >= 2
-                  ? `Structural and runtime intelligence active across ${domCov.total_domains || ts.semantic_domain_count || 0} domains. ${tension.tension_count || 0} structural tension${(tension.tension_count || 0) !== 1 ? 's' : ''} identified. Runtime connectivity evidence provides operational visibility beyond static code analysis.`
-                  : `Structural intelligence active across ${domCov.total_domains || ts.semantic_domain_count || 0} domains with ${ts.cluster_count || 0} structural clusters. Intelligence is structurally derived.`
-                }
-              </p>
-            </div>
-            {suppressedCount > 0 && (
-              <div className="narrative-paragraph" data-arc="AUTHORITY">
-                <p className="narrative-paragraph-text" style={{ color: '#ff9e4a' }}>
-                  {suppressedCount} condition{suppressedCount !== 1 ? 's' : ''} suppressed — evidence authority insufficient for operational claims at current maturity. Governed narrative requires semantic qualification (P3+).
-                </p>
-              </div>
-            )}
-          </div>
-          <div className="narrative-provenance">
-            <span className="narrative-provenance-method">{sState} · {pLevel >= 2 ? 'Structural + Runtime' : 'Structural'} authority</span>
-            <span className="narrative-provenance-sep">·</span>
-            <span className="narrative-provenance-contract">{pLevel >= 3 ? 'Governed narrative available' : 'Governed narrative requires P3+ (semantic qualification)'}</span>
-          </div>
-        </div>
-
-        <div className="boardroom-topology-anchor">
-          <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
-            clusters={fullReport.semantic_cluster_registry || []}
-            edges={fullReport.semantic_topology_edges || []}
-            pressureZoneLabel={(fullReport.propagation_summary || {}).primary_zone_business_label}
-            pressureZoneState={fullReport.pressure_zone_state}
-          />
-        </div>
-
-        <div className="cockpit-footer">
-          {pLevel >= 2
-            ? 'Structural and runtime evidence active. Governed narrative composition requires semantic qualification. All claims trace to evidence.'
-            : 'All outputs structurally derived. No inference, no AI-generated assessment beyond structural evidence.'}
-        </div>
-      </div>
-    )
-  }
-
   const rs = (fullReport && fullReport.readiness_summary) || {}
   const ts = (fullReport && fullReport.topology_summary) || {}
   const qs = (fullReport && fullReport.qualifier_summary) || {}
@@ -9814,6 +9744,8 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
     ISIG: 'Import dependency tension',
     DPSIG: 'Structural concentration pressure',
     PSIG: 'Architectural binding stress',
+    DERIVED_CONDITION_SIGNAL: 'Structural condition signal',
+    RSIG: 'Runtime connectivity signal',
   }
 
   const signalFamilies = sigs.reduce((acc, s) => {
@@ -9824,18 +9756,21 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   }, {})
   const familyKeys = Object.keys(signalFamilies)
 
-  if (boardroomProjection && boardroomProjection.qualification_posture.governed) {
+  if (boardroomProjection) {
     const bp = boardroomProjection
-    const qp = bp.qualification_posture
-    const bpTs = bp.tension_summary
-    const bpSi = bp.signal_intelligence
-    const bpDc = bp.domain_coverage
-    const bpGl = bp.governance_legitimacy
-    const sec = bpGl.sections
+    const qp = bp.qualification_posture || {}
+    const bpTs = bp.tension_summary || {}
+    const bpSi = bp.signal_intelligence || { families: [] }
+    const bpDc = bp.domain_coverage || {}
+    const bpGl = bp.governance_legitimacy || { available: false }
+    const sec = (bpGl && bpGl.sections) || {}
+    const isGoverned = qp.governed
+    const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0'
+    const eLabels = projectionAuthority ? projectionAuthority.evidenceCapabilities.join(' + ') : ''
 
     const tensionPct = bpTs.total_signals > 0 ? Math.round((bpTs.activated_count / bpTs.total_signals) * 100) : 0
 
-    const PDIM = { DPSIG: 'Concentration', ISIG: 'Dependency', PSIG: 'Propagation' }
+    const PDIM = { DPSIG: 'Concentration', ISIG: 'Dependency', PSIG: 'Propagation', DERIVED_CONDITION_SIGNAL: 'Structural Conditions', RSIG: 'Runtime Connectivity' }
     const SRANK_LOCAL = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
     const pressureDimensions = bpSi.families
       .filter(fam => PDIM[fam.family])
@@ -9857,6 +9792,8 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       DPSIG: bpTs.pressure_zone ? `Convergence around ${bpTs.pressure_zone}` : 'Cluster pressure distributed',
       ISIG: (pressureDimensions.find(d => d.key === 'ISIG') || {}).activated > 0 ? 'Import hub amplifies dependency risk' : 'Dependency distribution balanced',
       PSIG: (pressureDimensions.find(d => d.key === 'PSIG') || {}).activated > 0 ? 'Outbound change propagation asymmetric' : 'Propagation within normal parameters',
+      DERIVED_CONDITION_SIGNAL: pressureZone ? `Structural conditions concentrated around ${pressureZone}` : 'Structural conditions distributed',
+      RSIG: hasRuntime ? 'Runtime coordination paths active' : 'No runtime evidence',
       RESILIENCE: covRatio >= 1 ? 'Complete structural grounding' : `${bpDc.total_domains - bpDc.structurally_backed} domain${bpDc.total_domains - bpDc.structurally_backed !== 1 ? 's' : ''} without structural grounding`,
     }
     const activatedDimNames = pressureDimensions.filter(d => d.severity !== 'NOMINAL').map(d => d.name.toLowerCase())
@@ -9865,23 +9802,29 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       : null
 
     return (
-      <div className="rep-field rep-field--boardroom rep-field--cockpit rep-field--governed">
+      <div className={`rep-field rep-field--boardroom rep-field--cockpit${isGoverned ? ' rep-field--governed' : ''}`}>
         <RepModeTag
           label="Boardroom lens"
-          sub={swIntelActive && consequencePosture ? 'Board · governed intelligence · software intelligence active' : 'Board · governed intelligence posture'}
-          zones={[{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
+          sub={isGoverned
+            ? (swIntelActive && consequencePosture ? 'Board · governed intelligence · software intelligence active' : 'Board · governed intelligence posture')
+            : `Board · ${pLevel >= 2 ? 'structural + runtime' : 'structural'} intelligence`}
+          zones={isGoverned
+            ? [{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]
+            : [{ id: 'Z1', name: pLevel >= 2 ? 'Structural + Runtime Intelligence' : 'Structural Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
         />
 
-        <div className="cockpit-finding" data-found={String(bpTs.activated_count > 0)} data-governed="true">
+        <div className="cockpit-finding" data-found={String((bpTs.activated_count || activatedSignals.length) > 0)} data-governed={String(isGoverned)}>
           <div className="cockpit-finding-verdict">
             {swIntelActive && consequencePosture
-              ? `${qp.s_level} GOVERNED · OPERATIONAL TENSION${bpTs.pressure_zone ? ` IN ${bpTs.pressure_zone.toUpperCase()}` : ''}`
-              : bpTs.finding_headline}
+              ? `${qp.s_level || pLabel} · OPERATIONAL TENSION${bpTs.pressure_zone ? ` IN ${bpTs.pressure_zone.toUpperCase()}` : ''}`
+              : isGoverned ? bpTs.finding_headline
+              : `${pLabel} · ${bpTs.tension_count || 0} STRUCTURAL TENSION${(bpTs.tension_count || 0) !== 1 ? 'S' : ''}`}
           </div>
           <div className="cockpit-finding-summary">
             {swIntelActive && consequencePosture
-              ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices.length} software dynamics reinforce systemic fragility.`
-              : bpTs.tension_narrative}
+              ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices ? consequencePosture.cognition_slices.length + ' software dynamics reinforce systemic fragility.' : ''}`
+              : isGoverned ? bpTs.tension_narrative
+              : `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${bpDc.total_domains || totalDomains} domains. ${bpTs.tension_count || 0} structural tension${(bpTs.tension_count || 0) !== 1 ? 's' : ''} — pressure is ${pressureZone ? `concentrated around "${pressureZone}"` : 'distributed'}.${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`}
           </div>
         </div>
 
@@ -10002,7 +9945,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               )}
             </div>
           </div>
-        ) : (
+        ) : isGoverned ? (
           <div className="cockpit-synthesis">
             <div className="cockpit-synthesis-conclusion">{bpGl.governance_narrative}</div>
             {sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0 && (
@@ -10011,15 +9954,23 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               </div>
             )}
           </div>
+        ) : (
+          <div className="cockpit-synthesis">
+            <div className="cockpit-synthesis-conclusion">
+              {pLevel >= 2
+                ? `Structural and runtime intelligence active. ${eLabels}. Governed narrative requires semantic qualification.`
+                : `Structural intelligence active. ${eLabels}. Governed narrative requires semantic qualification.`}
+            </div>
+          </div>
         )}
 
         <div className="cockpit-instruments">
           <div className="cockpit-gauge-panel">
-            <CockpitRadialGauge governedLevel={qp.s_level} tensionPct={tensionPct} />
+            <CockpitRadialGauge governedLevel={qp.s_level || (pLevel >= 2 ? 'P2' : 'P1')} tensionPct={tensionPct} />
             <div className="cockpit-gauge-meta">
-              <span className="cockpit-gauge-band">{qp.s_level}</span>
+              <span className="cockpit-gauge-band">{isGoverned ? qp.s_level : (projectionAuthority ? projectionAuthority.qualificationState : 'S1')}</span>
               <span className="cockpit-gauge-sep">·</span>
-              <span className="cockpit-gauge-posture">{(qp.provenance_summary || '').replace(/\.$/, '')}</span>
+              <span className="cockpit-gauge-posture">{isGoverned ? (qp.provenance_summary || '').replace(/\.$/, '') : eLabels}</span>
             </div>
           </div>
 
@@ -10042,21 +9993,29 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             {pressureSynthesis && (
               <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>
             )}
-            <div className="cockpit-governance-chips">
-              {sec.deterministic_replay && sec.deterministic_replay.available && (
-                <span className="cockpit-gov-chip" data-status={sec.deterministic_replay.detail.status}>{sec.deterministic_replay.detail.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + sec.deterministic_replay.detail.status}</span>
-              )}
-              {sec.constitutional_anchor && sec.constitutional_anchor.available && (
-                <span className="cockpit-gov-chip" data-status={sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}>{sec.constitutional_anchor.detail.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
-              )}
-              {sec.replay_certification && sec.replay_certification.available && (
-                <span className="cockpit-gov-chip" data-status={sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'CERTIFIED' : sec.replay_certification.detail.certification_status}</span>
-              )}
-            </div>
+            {isGoverned && (
+              <div className="cockpit-governance-chips">
+                {sec.deterministic_replay && sec.deterministic_replay.available && (
+                  <span className="cockpit-gov-chip" data-status={sec.deterministic_replay.detail.status}>{sec.deterministic_replay.detail.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + sec.deterministic_replay.detail.status}</span>
+                )}
+                {sec.constitutional_anchor && sec.constitutional_anchor.available && (
+                  <span className="cockpit-gov-chip" data-status={sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}>{sec.constitutional_anchor.detail.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
+                )}
+                {sec.replay_certification && sec.replay_certification.available && (
+                  <span className="cockpit-gov-chip" data-status={sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'CERTIFIED' : sec.replay_certification.detail.certification_status}</span>
+                )}
+              </div>
+            )}
+            {!isGoverned && suppressedCount > 0 && (
+              <div className="cockpit-governance-chips">
+                <span className="cockpit-gov-chip" data-status="WARN">{suppressedCount} SUPPRESSED</span>
+                <span className="cockpit-gov-chip" data-status="INFO">{pLabel}</span>
+              </div>
+            )}
           </div>
 
           <div className="cockpit-coverage-panel">
-            <div className="cockpit-coverage-label">GOVERNED DOMAINS</div>
+            <div className="cockpit-coverage-label">{isGoverned ? 'GOVERNED DOMAINS' : 'STRUCTURAL DOMAINS'}</div>
             <div className="cockpit-coverage-ring">
               <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${bpDc.structurally_backed} of ${bpDc.total_domains} governed`}>
                 <circle cx="40" cy="40" r="32" fill="none" stroke="#1e2330" strokeWidth="6" />
@@ -10088,18 +10047,20 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               pressureZoneState={fullReport.pressure_zone_state}
               cognitionOverlay={swIntelTopoOverlay}
             />
-            <div className="cockpit-topology-hint">{swIntelActive ? 'Topology reflects operational posture — click to explore' : 'Click to explore governed topology'}</div>
+            <div className="cockpit-topology-hint">{swIntelActive ? 'Topology reflects operational posture — click to explore' : isGoverned ? 'Click to explore governed topology' : 'Structural domain topology — click to explore'}</div>
           </div>
         )}
 
         {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
 
-        {!(swIntelActive && consequencePosture) && (
+        {isGoverned && !(swIntelActive && consequencePosture) && (
           <BoardroomGovernanceIntelligence fullReport={fullReport} boardroomProjection={boardroomProjection} />
         )}
 
         <div className="cockpit-footer">
-          {swIntelActive ? 'Structural derivation primary · 75.x bounded authority · All claims trace to evidence' : 'Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.'}
+          {isGoverned
+            ? (swIntelActive ? 'Structural derivation primary · 75.x bounded authority · All claims trace to evidence' : 'Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.')
+            : `${pLevel >= 2 ? 'Structural + runtime' : 'Structural'} evidence · ${pLabel} · All claims trace to evidence.`}
         </div>
       </div>
     )
