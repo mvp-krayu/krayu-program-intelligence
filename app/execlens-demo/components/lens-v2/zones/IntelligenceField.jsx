@@ -10032,8 +10032,11 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     <span className="cockpit-pressure-dim-name">{az.executive_label}</span>
                     <span className="cockpit-pressure-dim-severity" data-severity={az.severity}>{az.severity}</span>
                   </div>
-                  <div className="cockpit-pressure-dim-locale">{az.reason}</div>
-                  <div className="cockpit-pressure-dim-locale" style={{ color: '#5e6d8a', fontSize: '10px' }}>{az.technical_name}</div>
+                  <div className="cockpit-pressure-dim-locale" style={{ color: '#9aa0bc', fontStyle: 'italic', fontSize: '11px' }}>{az.executive_role}</div>
+                  <div className="cockpit-pressure-dim-locale">{az.why_it_matters}</div>
+                  {az.evidence_anchors && az.evidence_anchors.length > 0 && (
+                    <div className="cockpit-pressure-dim-locale" style={{ color: '#5e6d8a', fontSize: '9px', marginTop: 2 }}>{az.evidence_anchors.join(' · ')}</div>
+                  )}
                 </div>
               </div>
             ))}

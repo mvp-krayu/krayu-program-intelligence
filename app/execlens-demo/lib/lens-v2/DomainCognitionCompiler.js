@@ -116,6 +116,89 @@ function resolvePressureRole(domainId, domainName, conditions, pressureZoneState
   return { role, conditionCount: domConds.length, peakSeverity }
 }
 
+function inferExecutiveRole(domain) {
+  const sr = domain.structural_roles || []
+  const rr = domain.runtime_roles || []
+  const me = domain.measurement_evidence || {}
+  const inbound = domain.inbound_imports || 0
+  const outbound = domain.outbound_imports || 0
+
+  const isSpine = sr.includes('structural spine')
+  const isHub = sr.includes('dependency hub') || inbound > 500
+  const isFragile = sr.includes('fragility concentration') || me.fragility_count > 10
+  const isConstriction = sr.includes('constriction point') || me.constriction_count > 5
+  const isOutbound = sr.includes('outbound-dominant') || (outbound > 200 && inbound < 50)
+  const isDivergent = me.divergence && me.divergence.score > 5
+  const isRuntimeHub = rr.includes('event coordination hub')
+  const isBrokerDep = rr.includes('broker-dependent')
+  const isChokePoint = rr.includes('runtime choke point')
+  const isEdgeBoundary = rr.includes('edge-cloud boundary')
+  const isFanout = rr.includes('topic fanout surface')
+
+  if (isSpine && isHub && isFragile) return 'operational gravity center'
+  if (isSpine && isHub) return 'structural dependency anchor'
+  if (isRuntimeHub && isBrokerDep && isFanout) return 'runtime coordination hub'
+  if (isRuntimeHub && isChokePoint) return 'runtime dependency bottleneck'
+  if (isRuntimeHub && isEdgeBoundary) return 'edge integration corridor'
+  if (isRuntimeHub && isBrokerDep) return 'runtime coordination surface'
+  if (isRuntimeHub) return 'event coordination surface'
+  if (isHub && isFragile) return 'fragile dependency center'
+  if (isOutbound && isFragile) return 'propagation exposure surface'
+  if (isOutbound && isRuntimeHub) return 'outbound coordination engine'
+  if (isOutbound) return 'propagation corridor'
+  if (isFragile && isConstriction) return 'structural stress concentrator'
+  if (isFragile) return 'fragility exposure zone'
+  if (isDivergent) return 'boundary drift zone'
+  if (isChokePoint) return 'runtime bottleneck'
+  if (isBrokerDep) return 'broker-dependent surface'
+  if (isEdgeBoundary) return 'edge boundary surface'
+  if (domain.condition_count >= 4) return 'pressure concentrator'
+  if (domain.condition_count >= 2) return 'multi-pressure target'
+  return 'structural participant'
+}
+
+function synthesizeWhyItMatters(domain) {
+  const parts = []
+  const sr = domain.structural_roles || []
+  const rr = domain.runtime_roles || []
+  const me = domain.measurement_evidence || {}
+
+  if (sr.includes('structural spine') || sr.includes('dependency hub')) {
+    parts.push(`structural authority — ${domain.inbound_imports ? domain.inbound_imports + ' inbound dependencies' : 'high centrality'}`)
+  }
+  if (me.fragility_count > 0) {
+    parts.push(`${me.fragility_count} fragile file${me.fragility_count !== 1 ? 's' : ''} (peak ${me.peak_fragility})`)
+  }
+  if (rr.length > 0) {
+    const rtSummary = rr.slice(0, 2).join(', ')
+    parts.push(`runtime: ${rtSummary}`)
+  }
+  if (me.divergence) {
+    parts.push(`boundary divergence ${me.divergence.score.toFixed(1)}`)
+  }
+  if (sr.includes('outbound-dominant')) {
+    parts.push(`outbound-dominant — changes propagate widely`)
+  }
+
+  if (parts.length === 0) {
+    return `${domain.condition_count} structural condition${domain.condition_count !== 1 ? 's' : ''} concentrate here.`
+  }
+
+  return parts.join('. ') + '.'
+}
+
+function buildEvidenceAnchors(domain) {
+  const anchors = []
+  const me = domain.measurement_evidence || {}
+  if (me.top_spine) anchors.push(`spine: ${me.top_spine.path.split('/').slice(-2).join('/')} (in:${me.top_spine.in_degree})`)
+  if (me.fragility_count > 0) anchors.push(`fragility: ${me.fragility_count} hotspots`)
+  if (me.constriction_count > 0) anchors.push(`constriction: ${me.constriction_count} points`)
+  if (me.divergence) anchors.push(`divergence: ${me.divergence.score.toFixed(1)}`)
+  if (domain.runtime_roles && domain.runtime_roles.length > 0) anchors.push(`runtime: ${domain.runtime_roles.length} role${domain.runtime_roles.length !== 1 ? 's' : ''}`)
+  if (domain.backing_status) anchors.push(domain.backing_status.toLowerCase().replace(/_/g, ' '))
+  return anchors
+}
+
 function assembleDomainCognition(fullReport) {
   if (!fullReport) return { domains: [], attention_zones: [], pressure_summary: null }
 
@@ -187,19 +270,27 @@ function assembleDomainCognition(fullReport) {
   const attentionZones = domains
     .filter(d => d.condition_count >= 2 || d.peak_severity === 'CRITICAL' || d.peak_severity === 'HIGH')
     .slice(0, 5)
-    .map(d => ({
-      domain_id: d.domain_id,
-      technical_name: d.technical_name,
-      executive_label: d.executive_label,
-      reason: d.condition_count >= 4
-        ? `${d.condition_count} conditions converge — ${d.pressure_role || 'pressure concentrator'}`
-        : d.runtime_roles
-          ? `Runtime: ${d.runtime_roles.slice(0, 2).join(', ')}`
-          : d.structural_roles
-            ? `Structural: ${d.structural_roles.slice(0, 2).join(', ')}`
-            : `${d.condition_count} condition${d.condition_count !== 1 ? 's' : ''} — ${d.peak_severity}`,
-      severity: d.peak_severity,
-    }))
+    .map(d => {
+      const execRole = inferExecutiveRole(d)
+      const whyItMatters = synthesizeWhyItMatters(d)
+      return {
+        domain_id: d.domain_id,
+        technical_name: d.technical_name,
+        executive_label: d.executive_label,
+        executive_role: execRole,
+        why_it_matters: whyItMatters,
+        severity: d.peak_severity,
+        evidence_anchors: buildEvidenceAnchors(d),
+      }
+    })
+
+  const labelCounts = {}
+  attentionZones.forEach(az => { labelCounts[az.executive_label] = (labelCounts[az.executive_label] || 0) + 1 })
+  attentionZones.forEach(az => {
+    if (labelCounts[az.executive_label] > 1 && az.technical_name !== az.executive_label) {
+      az.executive_label = az.executive_label + ' — ' + az.technical_name
+    }
+  })
 
   const pressureZoneName = (pressureZoneState.zones && pressureZoneState.zones[0])
     ? (pressureZoneState.zones[0].anchor_business_label || pressureZoneState.zones[0].anchor_id || null)
