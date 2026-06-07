@@ -1474,11 +1474,14 @@ function synthesizeTeaser(fullReport) {
   return {
     active_count: active.length,
     total_count: allConditions.length,
-    top_conditions: sorted.slice(0, 3).map(c => ({
-      condition_id: c.condition_id,
-      title: c.operator_cognition_title,
-      severity: c.severity,
-    })),
+    top_conditions: sorted.slice(0, 3).map(c => {
+      const target = (c.shared_topology_targets?.domains_display || [])[0]
+      return {
+        condition_id: c.condition_id,
+        title: c.operator_cognition_title + (target ? ' — ' + target : ''),
+        severity: c.severity,
+      }
+    }),
     overflow: Math.max(0, sorted.length - 3),
   }
 }

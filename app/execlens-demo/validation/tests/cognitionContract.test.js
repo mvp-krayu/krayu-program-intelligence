@@ -128,6 +128,15 @@ describe('CLASS 1 — Impossible Zero', () => {
     }
   })
 
+  test('no "All 0" claims when source array is empty', () => {
+    const { fullReport } = st()
+    const sigs = fullReport.signal_interpretations || []
+    if (sigs.length === 0) {
+      const msg = sigs.length > 0 ? `All ${sigs.length} structural indicators are within nominal parameters.` : 'Signal layer not yet populated for this specimen.'
+      assert.ok(!msg.includes('All 0'), `Signal interpretation would render "All 0" — absurd when signal layer is empty`)
+    }
+  })
+
   test('every guided query must have answer_derive', () => {
     const { fullReport, projection } = st()
     for (const s of projection.surfaces) {

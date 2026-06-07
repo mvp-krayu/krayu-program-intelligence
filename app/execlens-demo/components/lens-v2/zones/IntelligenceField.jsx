@@ -1326,7 +1326,7 @@ const DENSE_ZONE_INTERPRETATIONS = {
         heading: 'What the signal landscape reveals',
         body: activated.length > 0
           ? `${activated.length} signal${activated.length !== 1 ? 's' : ''} elevated above nominal threshold${critical.length > 0 ? ` — ${critical.length} at critical/high severity` : ''}. ${elevated.length > 0 ? `${elevated.length} at elevated tier.` : ''}`
-          : `All ${sigs.length} structural indicators are within nominal parameters.`,
+          : sigs.length > 0 ? `All ${sigs.length} structural indicators are within nominal parameters.` : 'Signal layer not yet populated for this specimen.',
         structuralNote: sigs.length > 0
           ? `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
           : null,
@@ -3500,7 +3500,7 @@ const GUIDED_QUERY_ANSWERS = {
         return {
           summary: activated.length > 0
             ? `${activated.length} of ${sigs.length} signals are elevated. ${critical.length > 0 ? `${critical.length} at critical/high severity require structural attention.` : 'No critical-tier signals detected.'}`
-            : `All ${sigs.length} signals are within nominal parameters. No structural elevation detected.`,
+            : sigs.length > 0 ? `All ${sigs.length} signals are within nominal parameters. No structural elevation detected.` : 'Signal layer not yet populated for this specimen.',
           evidence: activated.length > 0
             ? activated.map(s => ({
               label: s.signal_id || 'Signal',
@@ -5652,7 +5652,7 @@ function SignalNarrativeBlock({ fullReport }) {
 
   const leadIn = activated.length > 0
     ? `Structural assessment identified ${activated.length} elevated signal${activated.length > 1 ? 's' : ''} across the semantic topology.`
-    : `Structural assessment found no elevated signals — all ${sigs.length} structural indicators are within normal parameters.`
+    : sigs.length > 0 ? `Structural assessment found no elevated signals — all ${sigs.length} structural indicators are within normal parameters.` : 'Signal layer not yet populated for this specimen.'
 
   return (
     <div className="signal-narrative" aria-label="Structural signal narrative">
@@ -10202,6 +10202,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
 
   const [deepDiveModal, setDeepDiveModal] = useState(null)
+  const prevSwIntelActive = useRef(swIntelActive)
+  useEffect(() => {
+    if (prevSwIntelActive.current && !swIntelActive) {
+      setCognitionState({ activeSurface: null, focusedDomain: null, activePressureZone: null, activeSignals: [], activeQueryIndex: null, activeConditionId: null })
+      setDeepDiveModal(null)
+    }
+    prevSwIntelActive.current = swIntelActive
+  }, [swIntelActive])
   const [cognitionState, setCognitionState] = useState({
     activeSurface: null,
     focusedDomain: null,
