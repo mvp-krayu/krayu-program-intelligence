@@ -423,6 +423,7 @@ Claude MUST load the following vault pages before execution of any G1 or G2 stre
 **Phase 1 — Constitution (existing, automatic):**
 - CLAUDE.md
 - docs/governance/runtime/git_structure_contract.md
+- docs/governance/runtime/PI_STATE_MACHINE_CONTRACT.md (when stream involves projection, consumers, or authority)
 
 **Phase 2 — Canonical State (MANDATORY):**
 - docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md
@@ -760,6 +761,17 @@ Vault updates MUST be committed before stream closure.
 Incomplete propagation → FAIL CLOSED (unless classified as acceptable partial per protocol).
 
 Full protocol: docs/pios/vault/operations/STREAM_CLOSURE_AND_MEMORY_PROPAGATION.md
+
+### 16.4.1 Discovery Review (G1 and Constitutional Streams)
+
+At closure of any G1 or constitutional stream, Claude MUST perform a Discovery Review per `docs/governance/runtime/PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md`.
+
+Review:
+1. What findings emerged during this stream?
+2. Which affect: state model, evidence capability, projection authority, topology doctrine, measurement model, condition taxonomy, persona/consumer contracts, or PiOS operating semantics?
+3. For each candidate: register in `docs/governance/runtime/PIOS_CONSTITUTIONAL_DISCOVERY_REGISTRY.md` with discovery ID and full record contract.
+
+During execution (not only at closure): if a finding matches discovery candidate triggers, Claude MUST propose capture: "Discovery candidate detected: [description]. Trigger: [doctrine area]." Do not wait for operator declaration.
 
 ### 16.5 Fail-Closed Enforcement
 
