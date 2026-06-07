@@ -32,6 +32,7 @@ const { deriveProjection, deriveModuleState, PROJECTION_STATUS } = require('../l
 const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForProjection, backfillSignalInterpretations } = require('../lib/lens-v2/SignalSynthesisEngine')
 const { compile: compileForProjection } = require('../lib/lens-v2/software-intelligence/ConsequenceCompiler')
 const { computeProjectionAuthority } = require('../lib/lens-v2/ProjectionAuthorityKernel')
+const { assembleDomainCognition } = require('../lib/lens-v2/DomainCognitionCompiler')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
@@ -292,6 +293,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     return { swIntelProjection: deriveProjection(qualified, filteredSynResult, csqResult), projectionAuthority: authority }
   }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
 
+  const domainCognition = useMemo(() => {
+    if (!reportObject) return null
+    return assembleDomainCognition(reportObject)
+  }, [reportObject])
+
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
   const handleSwIntelDeactivate = useCallback(() => setSwIntelActive(false), [])
@@ -517,6 +523,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             visibilityLayerCompleteness={visibilityLayerCompleteness}
             runtimeGraphs={runtimeGraphs}
             projectionAuthority={projectionAuthority}
+            domainCognition={domainCognition}
           />
         </div>
       </div>
@@ -1271,6 +1278,64 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
+
+        /* Cockpit Attention Zones (domain cognition) */
+        .cockpit-attention-zones {
+          padding: 12px 20px;
+          margin-bottom: 12px;
+        }
+        .cockpit-attention-zones-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          color: #6a7a9a;
+          letter-spacing: 0.1em;
+          margin-bottom: 10px;
+        }
+        .cockpit-attention-zone {
+          padding: 10px 14px;
+          margin-bottom: 6px;
+          background: #12151f;
+          border-radius: 6px;
+          border-left: 3px solid #3a4060;
+        }
+        .cockpit-attention-zone[data-severity="CRITICAL"] { border-left-color: #ff4757; }
+        .cockpit-attention-zone[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .cockpit-attention-zone[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
+        .cockpit-attention-zone[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .cockpit-attention-zone-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 4px;
+        }
+        .cockpit-attention-zone-label {
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          font-weight: 600;
+          color: #ccd6f6;
+        }
+        .cockpit-attention-zone-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+        }
+        .cockpit-attention-zone-severity[data-severity="CRITICAL"] { color: #ff4757; }
+        .cockpit-attention-zone-severity[data-severity="HIGH"] { color: #ff6b6b; }
+        .cockpit-attention-zone-severity[data-severity="ELEVATED"] { color: #ff9e4a; }
+        .cockpit-attention-zone-severity[data-severity="MODERATE"] { color: #ffd700; }
+        .cockpit-attention-zone-reason {
+          font-size: 12px;
+          color: #9aa0bc;
+          line-height: 1.4;
+        }
+        .cockpit-attention-zone-anchor {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #5e6d8a;
+          margin-top: 4px;
+        }
 
         /* Cockpit Topology Preview (compact, clickable) */
         .cockpit-topology-preview {

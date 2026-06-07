@@ -9693,7 +9693,7 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges, domainCognition }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
@@ -9824,8 +9824,10 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       ISIG: (pressureDimensions.find(d => d.key === 'ISIG') || {}).activated > 0 ? 'Import hub amplifies dependency risk' : 'Dependency distribution balanced',
       PSIG: (pressureDimensions.find(d => d.key === 'PSIG') || {}).activated > 0 ? 'Outbound change propagation asymmetric' : 'Propagation within normal parameters',
     }
+    const dcPrimary = domainCognition && domainCognition.attention_zones && domainCognition.attention_zones[0]
+    const dcPrimaryLabel = dcPrimary ? dcPrimary.executive_label : pressureZone
     const PLOCALE_BEHAVIORAL = {
-      CONCENTRATION: pressureZone ? `Structural mass concentrated around ${pressureZone}` : 'Structural mass distributed',
+      CONCENTRATION: dcPrimaryLabel ? `Structural mass concentrated around "${dcPrimaryLabel}"` : 'Structural mass distributed',
       COUPLING: 'Cross-domain coupling and dependency pressure',
       DRIFT: 'Boundary alignment and governance coverage',
       RUNTIME: hasRuntime ? `Runtime coordination across ${(fullReport._runtime_signals || []).length} evidence paths` : 'No runtime evidence',
@@ -9859,7 +9861,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             {swIntelActive && consequencePosture
               ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices ? consequencePosture.cognition_slices.length + ' software dynamics reinforce systemic fragility.' : ''}`
               : isGoverned ? bpTs.tension_narrative
-              : `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${bpDc.total_domains || totalDomains} domains. ${bpTs.tension_count || 0} structural tension${(bpTs.tension_count || 0) !== 1 ? 's' : ''} — pressure is ${pressureZone ? `concentrated around "${pressureZone}"` : 'distributed'}.${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`}
+              : `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${bpDc.total_domains || totalDomains} domains. ${bpTs.tension_count || 0} structural tension${(bpTs.tension_count || 0) !== 1 ? 's' : ''} — pressure is ${dcPrimaryLabel ? `concentrated around "${dcPrimaryLabel}"` : pressureZone ? `concentrated around "${pressureZone}"` : 'distributed'}.${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`}
           </div>
         </div>
 
@@ -10068,15 +10070,39 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               </svg>
             </div>
             <div className="cockpit-coverage-meta">
-              {sec.proposition_review && sec.proposition_review.available && (
+              {isGoverned && sec.proposition_review && sec.proposition_review.available && (
                 <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{sec.proposition_review.detail.accepted} propositions accepted</div>
               )}
-              {sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
+              {isGoverned && sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
                 <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{sec.evidence_enrichment.detail.enrichment_events} evidence corrections</div>
+              )}
+              {!isGoverned && domainCognition && domainCognition.attention_zones.length > 0 && (
+                <>
+                  <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{domainCognition.pressure_summary.domains_under_pressure} under pressure</div>
+                  {domainCognition.pressure_summary.domains_with_runtime > 0 && (
+                    <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{domainCognition.pressure_summary.domains_with_runtime} with runtime evidence</div>
+                  )}
+                </>
               )}
             </div>
           </div>
         </div>
+
+        {!isGoverned && domainCognition && domainCognition.attention_zones.length > 0 && (
+          <div className="cockpit-attention-zones">
+            <div className="cockpit-attention-zones-label">EXECUTIVE ATTENTION ZONES</div>
+            {domainCognition.attention_zones.map(az => (
+              <div key={az.domain_id} className="cockpit-attention-zone" data-severity={az.severity}>
+                <div className="cockpit-attention-zone-head">
+                  <span className="cockpit-attention-zone-label">{az.executive_label}</span>
+                  <span className="cockpit-attention-zone-severity" data-severity={az.severity}>{az.severity}</span>
+                </div>
+                <div className="cockpit-attention-zone-reason">{az.reason}</div>
+                <div className="cockpit-attention-zone-anchor">{az.technical_name}</div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
           <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
@@ -10461,7 +10487,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
 function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority }) {
   if (boardroomMode) {
     return (
-      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} />
+      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} />
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {
@@ -10494,7 +10520,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
