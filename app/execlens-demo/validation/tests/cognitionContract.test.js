@@ -16,7 +16,7 @@ const {
   RT_CONDITION_TYPES,
 } = require('../../lib/lens-v2/CognitionContractModel')
 const { resolveSpecimen, resolveVisibilityLayerCompleteness } = require('../../lib/copilot/PIKnowledgeGraphAccess')
-const { synthesize, qualifyDomainBacking } = require('../../lib/lens-v2/SignalSynthesisEngine')
+const { synthesize, qualifyDomainBacking, backfillSignalInterpretations } = require('../../lib/lens-v2/SignalSynthesisEngine')
 const { compile } = require('../../lib/lens-v2/software-intelligence/ConsequenceCompiler')
 const { loadRuntimeGraphs, deriveRuntimeSignals } = require('../../lib/lens-v2/RuntimeSignalDerivation')
 const { resolveRepoRoot } = require('../../lib/copilot/resolveRepoRoot')
@@ -145,6 +145,56 @@ describe('CLASS 1 — Impossible Zero', () => {
         assert.equal(typeof q.answer_derive, 'function', `Surface ${s.surface_id} query "${q.question}" lacks answer_derive`)
       }
     }
+  })
+})
+
+// ─── TEST CLASS 1B: Signal Layer Backfill ───
+
+describe('CLASS 1B — Signal Layer Backfill', () => {
+  test('S1 specimen with conditions gets derived signal_interpretations', () => {
+    const { fullReport } = st()
+    const originalSigs = fullReport.signal_interpretations || []
+    if (originalSigs.length === 0) {
+      const synResult = fullReport._synthesisResult
+      assert.ok(synResult, 'Fixture must have _synthesisResult')
+      const conditions = synResult.conditions.filter(c => c.severity !== 'NOMINAL')
+      assert.ok(conditions.length > 0, 'Fixture must have active conditions')
+      const copy = { ...fullReport, signal_interpretations: [] }
+      backfillSignalInterpretations(copy, synResult)
+      assert.ok(copy.signal_interpretations.length > 0, `Backfill produced 0 signals from ${conditions.length} conditions`)
+    }
+  })
+
+  test('derived signals are marked with correct families', () => {
+    const { fullReport } = st()
+    const copy = { ...fullReport, signal_interpretations: [] }
+    backfillSignalInterpretations(copy, fullReport._synthesisResult)
+    const families = new Set(copy.signal_interpretations.map(s => s.signal_family))
+    assert.ok(families.has('DERIVED_CONDITION_SIGNAL'), 'Missing DERIVED_CONDITION_SIGNAL family')
+    if ((fullReport._runtime_signals || []).length > 0) {
+      assert.ok(families.has('RSIG'), 'Missing RSIG family despite runtime signals')
+    }
+  })
+
+  test('derived signals have required fields', () => {
+    const { fullReport } = st()
+    const copy = { ...fullReport, signal_interpretations: [] }
+    backfillSignalInterpretations(copy, fullReport._synthesisResult)
+    for (const s of copy.signal_interpretations) {
+      assert.ok(s.signal_id, 'Missing signal_id')
+      assert.ok(s.signal_family, 'Missing signal_family')
+      assert.ok(s.severity, 'Missing severity')
+      assert.ok(s.derived_from, 'Missing derived_from')
+      assert.ok(!s.signal_id.includes('undefined'), `signal_id contains undefined: ${s.signal_id}`)
+    }
+  })
+
+  test('backfill does not overwrite existing S2 signals', () => {
+    const fakeSigs = [{ signal_id: 'PSIG-001', signal_family: 'PSIG', severity: 'HIGH' }]
+    const report = { signal_interpretations: fakeSigs }
+    backfillSignalInterpretations(report, { conditions: [{ severity: 'HIGH', condition_type: 'TEST' }] })
+    assert.equal(report.signal_interpretations.length, 1, 'Backfill overwrote existing signals')
+    assert.equal(report.signal_interpretations[0].signal_id, 'PSIG-001')
   })
 })
 

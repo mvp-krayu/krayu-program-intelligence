@@ -1560,4 +1560,80 @@ function qualifyDomainBacking(fullReport, visibilityLayerCompleteness, runtimeCo
   return qualified
 }
 
-module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS, qualifyDomainBacking, BACKING_STATUS }
+// ─── SIGNAL LAYER BACKFILL ──────────────────────────────────────
+// For S1 specimens where signal_interpretations is empty but conditions
+// and runtime signals exist, derive signal_interpretation objects so
+// downstream consumers see intelligence. Does NOT overwrite real S2 signals.
+
+const EVIDENCE_MODE_LABEL = {
+  STRUCTURAL_ENRICHMENT_DERIVED: 'Structural enrichment',
+  SIGNAL_DRIVEN: 'Signal-driven',
+  RUNTIME_DERIVED: 'Runtime connectivity',
+  MIXED: 'Mixed',
+}
+
+function backfillSignalInterpretations(fullReport, synthesisResult) {
+  if (!fullReport || !synthesisResult) return
+  const existing = fullReport.signal_interpretations || []
+  if (existing.length > 0) return
+
+  const conditions = synthesisResult.conditions || []
+  const runtimeSignals = fullReport._runtime_signals || []
+  if (conditions.length === 0 && runtimeSignals.length === 0) return
+
+  const registry = fullReport.semantic_domain_registry || []
+  const rl = (id) => { const d = registry.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+
+  const derived = []
+  let idx = 0
+
+  for (const c of conditions) {
+    if (c.severity === 'NOMINAL') continue
+    const domains = (c.shared_topology_targets?.domains || []).slice(0, 3).map(rl)
+    derived.push({
+      signal_id: `DCSI-${String(++idx).padStart(3, '0')}`,
+      signal_name: c.operator_cognition_title || c.condition_label || c.condition_type,
+      signal_family: 'DERIVED_CONDITION_SIGNAL',
+      derivation_level: 'Condition',
+      signal_value: null,
+      severity: c.severity,
+      activation_state: c.severity !== 'NOMINAL' ? 'ACTIVATED' : 'NOMINAL',
+      interpretation: c.operational_consequence || null,
+      boardroom_interpretation: c.operational_consequence || null,
+      engineering_detail: c.measurement_basis || null,
+      concentration: domains[0] || null,
+      co_presence: null,
+      source_condition_type: c.condition_type,
+      evidence_mode: c.evidence_mode || 'STRUCTURAL_ENRICHMENT_DERIVED',
+      evidence_source: EVIDENCE_MODE_LABEL[c.evidence_mode] || c.evidence_mode || 'Derived',
+      derived_from: 'condition',
+      affected_domains: domains,
+    })
+  }
+
+  for (const rs of runtimeSignals) {
+    derived.push({
+      signal_id: rs.signal_id || `RSIG-${String(++idx).padStart(3, '0')}`,
+      signal_name: rs.signal_name || rs.condition_type || 'Runtime Signal',
+      signal_family: 'RSIG',
+      derivation_level: 'Runtime',
+      signal_value: rs.signal_value || null,
+      severity: rs.severity || 'ELEVATED',
+      activation_state: 'ACTIVATED',
+      interpretation: rs.interpretation || rs.operational_consequence || null,
+      boardroom_interpretation: rs.boardroom_interpretation || rs.interpretation || null,
+      engineering_detail: rs.evidence_class || null,
+      concentration: rs.concentration_domain || null,
+      co_presence: null,
+      source_condition_type: rs.condition_type || null,
+      evidence_mode: 'RUNTIME_DERIVED',
+      evidence_source: 'Runtime connectivity',
+      derived_from: 'runtime_signal',
+      affected_domains: (rs.affected_domains || []).slice(0, 3).map(rl),
+    })
+  }
+
+  fullReport.signal_interpretations = derived
+}
+
+module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS, qualifyDomainBacking, BACKING_STATUS, backfillSignalInterpretations }

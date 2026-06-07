@@ -29,7 +29,7 @@ const {
 
 const { compileBoardroomProjection } = require('../lib/lens-v2/generic/BoardroomProjectionCompiler')
 const { deriveProjection, deriveModuleState, PROJECTION_STATUS } = require('../lib/lens-v2/SoftwareIntelligenceProjectionAdapter')
-const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForProjection } = require('../lib/lens-v2/SignalSynthesisEngine')
+const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForProjection, backfillSignalInterpretations } = require('../lib/lens-v2/SignalSynthesisEngine')
 const { compile: compileForProjection } = require('../lib/lens-v2/software-intelligence/ConsequenceCompiler')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
@@ -276,6 +276,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     if (synResult) {
       qualified._synthesisResult = synResult
       reportObject._synthesisResult = synResult
+      backfillSignalInterpretations(reportObject, synResult)
+      backfillSignalInterpretations(qualified, synResult)
     }
     return deriveProjection(qualified, synResult, csqResult)
   }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
