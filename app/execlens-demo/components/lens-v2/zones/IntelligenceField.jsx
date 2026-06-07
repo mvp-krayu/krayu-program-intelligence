@@ -3075,6 +3075,90 @@ const SW_INTEL_DOMAIN_REASONING_CONTRACTS = {
       }
     },
   },
+
+  EXECUTION_BLINDNESS: {
+    meta: { code: 'EB', label: 'Execution Blindness', icon: '◆' },
+    resolve: (fullReport, surface) => {
+      const registry = fullReport.semantic_domain_registry || []
+      const synResult = fullReport._synthesisResult || {}
+      const conditions = synResult.conditions || []
+      const RT_TYPES = ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']
+      const rtConditions = conditions.filter(c => RT_TYPES.includes(c.condition_type) && c.severity !== 'NOMINAL')
+      const rtDomains = [...new Set(rtConditions.flatMap(c => (c.shared_topology_targets?.domains || [])))]
+
+      return {
+        interpretation: {
+          heading: 'Execution Blindness — What Cannot Be Seen',
+          operationalMeaning: rtConditions.length > 0
+            ? `${rtConditions.length} runtime-derived condition${rtConditions.length !== 1 ? 's' : ''} identify failure modes invisible to static analysis. ${rtDomains.length} domain${rtDomains.length !== 1 ? 's are' : ' is'} affected. The platform can report healthy while operational capabilities silently fail.`
+            : 'No runtime conditions detected — execution blindness analysis requires runtime connectivity evidence.',
+          structuralEvidence: rtConditions.slice(0, 5).map(c => ({
+            label: c.operator_cognition_title || c.condition_type,
+            value: c.severity + (c.shared_topology_targets?.domains_display?.[0] ? ' · ' + c.shared_topology_targets.domains_display[0] : ''),
+            severity: c.severity === 'HIGH' || c.severity === 'CRITICAL' ? 'critical' : 'elevated',
+          })),
+        },
+        implications: {
+          orchestration: [
+            { action: 'Map runtime coordination dependencies before transformation', priority: 'CRITICAL' },
+            { action: 'Establish monitoring for silent failure modes (data freshness, coordination health)', priority: 'HIGH' },
+            { action: 'Verify broker redundancy and failover paths', priority: 'HIGH' },
+          ],
+        },
+        guidedCognition: [
+          { question: 'Which failure modes produce silence instead of errors?', tone: 'forensic', archetype: 'TRACE', depth: 'deep' },
+          { question: 'Where does the operational system extend beyond the codebase?', tone: 'forensic', archetype: 'BOUNDARY', depth: 'standard' },
+          { question: 'Which runtime coordination paths carry the highest blast radius?', tone: 'structural', archetype: 'RISK', depth: 'standard' },
+        ],
+        actions: [
+          { label: 'Identify silent failure scenarios', type: 'assessment', priority: 'HIGH' },
+          { label: 'Map boundary dependencies (brokers, external infrastructure)', type: 'assessment', priority: 'HIGH' },
+        ],
+      }
+    },
+  },
+
+  GRAVITY_DIVERGENCE: {
+    meta: { code: 'GD', label: 'Gravity Divergence', icon: '◆' },
+    resolve: (fullReport, surface) => {
+      const synResult = fullReport._synthesisResult || {}
+      const conditions = synResult.conditions || []
+      const RT_TYPES = ['EVENT_CONCENTRATION','RUNTIME_DEPENDENCY_CHOKE_POINT','BROKER_DEPENDENCY','TOPIC_FANOUT_PRESSURE','ASYNC_PROPAGATION_ASYMMETRY','EDGE_CLOUD_PROPAGATION_RISK','RUNTIME_OBSERVABILITY_GAP']
+      const staticDomains = [...new Set(conditions.filter(c => !RT_TYPES.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+      const runtimeDomains = [...new Set(conditions.filter(c => RT_TYPES.includes(c.condition_type) && c.severity !== 'NOMINAL').flatMap(c => c.shared_topology_targets?.domains || []))]
+      const divergent = runtimeDomains.filter(d => !staticDomains.includes(d))
+      const registry = fullReport.semantic_domain_registry || []
+      const resolveName = (id) => { const d = registry.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
+
+      return {
+        interpretation: {
+          heading: 'Gravity Divergence — Code vs Operational Center of Mass',
+          operationalMeaning: divergent.length > 0
+            ? `The code center of mass and the operational center of mass do not coincide. ${divergent.length} domain${divergent.length !== 1 ? 's carry' : ' carries'} operational gravity without corresponding static code weight: ${divergent.slice(0, 3).map(resolveName).join(', ')}${divergent.length > 3 ? ' +' + (divergent.length - 3) + ' more' : ''}. Transformation planning based solely on static code analysis targets the wrong center of mass.`
+            : 'No divergence detected between static and runtime gravity — both gravity fields appear aligned.',
+          structuralEvidence: [
+            { label: 'Static gravity loci', value: staticDomains.slice(0, 3).map(resolveName).join(', '), severity: 'nominal' },
+            { label: 'Runtime gravity loci', value: runtimeDomains.slice(0, 3).map(resolveName).join(', '), severity: 'elevated' },
+            { label: 'Divergent domains', value: String(divergent.length), severity: divergent.length > 0 ? 'critical' : 'nominal' },
+          ],
+        },
+        implications: {
+          orchestration: [
+            { action: 'Assess whether refactoring targets align with operational gravity', priority: 'CRITICAL' },
+            { action: 'Include runtime topology in architectural investment decisions', priority: 'HIGH' },
+          ],
+        },
+        guidedCognition: [
+          { question: 'Where does the import graph concentrate and where does runtime coordination concentrate?', tone: 'structural', archetype: 'COMPARE', depth: 'standard' },
+          { question: 'Would refactoring the static hub reduce operational risk?', tone: 'forensic', archetype: 'TRACE', depth: 'deep' },
+          { question: 'Which domains appear structurally insignificant but carry operational load?', tone: 'structural', archetype: 'RISK', depth: 'standard' },
+        ],
+        actions: [
+          { label: 'Compare static and runtime investment targets', type: 'assessment', priority: 'HIGH' },
+        ],
+      }
+    },
+  },
 }
 
 const GUIDED_QUERY_ANSWERS = {
