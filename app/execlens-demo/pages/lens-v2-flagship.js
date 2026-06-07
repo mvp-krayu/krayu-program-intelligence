@@ -33,6 +33,7 @@ const { synthesize: synthesizeForProjection, qualifyDomainBacking: qualifyForPro
 const { compile: compileForProjection } = require('../lib/lens-v2/software-intelligence/ConsequenceCompiler')
 const { computeProjectionAuthority } = require('../lib/lens-v2/ProjectionAuthorityKernel')
 const { assembleDomainCognition } = require('../lib/lens-v2/DomainCognitionCompiler')
+const { assembleSubstrate } = require('../lib/lens-v2/PiOSCognitionSubstrate')
 
 /* Live binding migration — PI.LENS.V2.BLUEEDGE-LIVE-BINDING.01
  * Productized — PI.LENS.V2.GENERIC-SEMANTIC-PAYLOAD-RESOLVER.01
@@ -298,6 +299,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     return assembleDomainCognition(reportObject)
   }, [reportObject])
 
+  const cognitionSubstrate = useMemo(() => {
+    if (!reportObject) return null
+    return assembleSubstrate(reportObject)
+  }, [reportObject])
+
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
   const handleSwIntelDeactivate = useCallback(() => setSwIntelActive(false), [])
@@ -524,6 +530,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             runtimeGraphs={runtimeGraphs}
             projectionAuthority={projectionAuthority}
             domainCognition={domainCognition}
+            cognitionSubstrate={cognitionSubstrate}
           />
         </div>
       </div>
