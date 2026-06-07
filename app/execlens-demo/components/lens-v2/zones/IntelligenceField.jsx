@@ -6650,15 +6650,64 @@ function SynthesizedConditionSection({ fullReport, activeConditionId, onConditio
         </div>
       )}
 
-      {activePrimitives.length > 0 && (
-        <div className="condition-group" data-group="primitive">
-          {!hasActiveSelection && <div className="condition-group-head">
-            <span className="condition-group-label">Structural Conditions</span>
-            <span className="condition-group-count">{activePrimitives.length}</span>
-          </div>}
-          {activePrimitives.map(c => <SynthesizedConditionEntry key={c.condition_id} condition={c} isComposite={false} isActive={effectiveActiveId === c.condition_id} isCollapsed={hasActiveSelection && effectiveActiveId !== c.condition_id} onSelect={onConditionSelect} onIntervention={onConditionIntervention} />)}
-        </div>
-      )}
+      {activePrimitives.length > 0 && (() => {
+        const registry = (fullReport && fullReport.semantic_domain_registry) || []
+        const domainRoleMap = {}
+        registry.forEach(d => {
+          const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API Boundary', AUTH_BOUNDARY: 'Auth Boundary', TEST_INFRASTRUCTURE: 'Test Infra', CLIENT_INTERFACE: 'Client Interface', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build Infra', APPLICATION_DOMAIN: 'Application', UTILITY: 'Utility' }
+          domainRoleMap[d.domain_id] = { name: d.business_label || d.domain_name || d.domain_id, role: d.role_classification ? (ROLE_SHORT[d.role_classification] || d.role_classification.replace(/_/g, ' ')) : null }
+        })
+
+        const grouped = {}
+        activePrimitives.forEach(c => {
+          const key = c.condition_type
+          if (!grouped[key]) grouped[key] = { type: key, title: c.operator_cognition_title, peakSeverity: c.severity, conditions: [] }
+          grouped[key].conditions.push(c)
+          if ((SEVERITY_RANK[c.severity] ?? 5) < (SEVERITY_RANK[grouped[key].peakSeverity] ?? 5)) grouped[key].peakSeverity = c.severity
+        })
+        const groups = Object.values(grouped).sort((a, b) => (SEVERITY_RANK[a.peakSeverity] ?? 5) - (SEVERITY_RANK[b.peakSeverity] ?? 5))
+
+        if (hasActiveSelection) {
+          const selectedCondition = activePrimitives.find(c => c.condition_id === effectiveActiveId)
+          if (selectedCondition) return (
+            <div className="condition-group" data-group="primitive">
+              <SynthesizedConditionEntry condition={selectedCondition} isComposite={false} isActive={true} isCollapsed={false} onSelect={onConditionSelect} onIntervention={onConditionIntervention} />
+            </div>
+          )
+        }
+
+        return (
+          <div className="condition-group" data-group="primitive">
+            <div className="condition-group-head">
+              <span className="condition-group-label">Structural Conditions</span>
+              <span className="condition-group-count">{activePrimitives.length} across {groups.length} types</span>
+            </div>
+            {groups.slice(0, 5).map(g => (
+              <div key={g.type} className="condition-grouped-entry" data-severity={g.peakSeverity}>
+                <div className="condition-grouped-header" onClick={onConditionSelect ? () => onConditionSelect(g.conditions[0].condition_id) : undefined} style={{ cursor: onConditionSelect ? 'pointer' : 'default' }}>
+                  <span className="condition-title">{g.title}</span>
+                  <span className="condition-severity" data-severity={g.peakSeverity}>{g.peakSeverity}</span>
+                </div>
+                <div className="condition-grouped-domains">
+                  {g.conditions.map(c => {
+                    const did = c.shared_topology_targets?.domains?.[0]
+                    const prof = did && domainRoleMap[did]
+                    return (
+                      <span key={c.condition_id} className="domain-chip" data-severity={c.severity} title={did}>
+                        {prof ? prof.name : (c.domain_targets?.[0]?.display_name || did || '?')}
+                        {prof?.role && <span className="domain-chip-role">{prof.role}</span>}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+            {groups.length > 5 && (
+              <div className="condition-grouped-overflow">+{groups.length - 5} more condition types</div>
+            )}
+          </div>
+        )
+      })()}
 
       {suppressed.length > 0 && (
         <div className="condition-group condition-group--suppressed" data-group="suppressed">

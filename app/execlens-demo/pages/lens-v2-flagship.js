@@ -3077,6 +3077,33 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font: 400 11px/1.4 'Courier New', monospace;
           color: #7a8aaa;
         }
+        .condition-grouped-entry {
+          padding: 10px 14px;
+          margin-bottom: 6px;
+          background: #12151f;
+          border-radius: 6px;
+          border-left: 3px solid #2a2f40;
+        }
+        .condition-grouped-entry[data-severity="CRITICAL"] { border-left-color: #ff6b6b; }
+        .condition-grouped-entry[data-severity="HIGH"] { border-left-color: #ff8a8a; }
+        .condition-grouped-entry[data-severity="ELEVATED"] { border-left-color: #ffb57a; }
+        .condition-grouped-entry[data-severity="MODERATE"] { border-left-color: #ffd700; }
+        .condition-grouped-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+        }
+        .condition-grouped-domains {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+        }
+        .condition-grouped-overflow {
+          font: 400 12px/1 'Courier New', monospace;
+          color: #5a6580;
+          padding: 8px 0 4px;
+        }
         .interp-condition-target {
           display: flex;
           align-items: baseline;
