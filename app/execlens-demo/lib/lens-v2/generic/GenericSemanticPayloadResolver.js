@@ -1173,6 +1173,10 @@ function resolveSemanticPayload(manifest) {
         semantic_only: false,
         crosswalk_resolution: null,
         node_count: c.node_count || 0,
+        role_classification: c.role_classification || null,
+        source_name: c.source_name || null,
+        inbound_imports: c.inbound_imports || 0,
+        outbound_imports: c.outbound_imports || 0,
       }))
     : (semanticTopology.domains || []).map((d) => {
         const dominantDomId = d.dominant_dom_id || null;

@@ -919,9 +919,18 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
               <span className="support-condition-title">{c.operator_cognition_title}</span>
               <span className="support-condition-severity">{c.severity}</span>
-              {c.shared_topology_targets?.domains_display?.[0] && (
-                <span className="domain-chip" data-severity={c.severity} title={c.shared_topology_targets.domains?.[0]}>{c.shared_topology_targets.domains_display[0]}</span>
-              )}
+              {c.shared_topology_targets?.domains_display?.[0] && (() => {
+                const did = c.shared_topology_targets.domains?.[0]
+                const prof = domainProfileMap[did]
+                return (
+                  <span className="domain-chip" data-severity={c.severity} title={did}
+                    onClick={(e) => { e.stopPropagation(); setFocusedDomainId(did) }}
+                    style={{ cursor: 'pointer' }}>
+                    {c.shared_topology_targets.domains_display[0]}
+                    {prof?.role && <span className="domain-chip-role">{prof.role}</span>}
+                  </span>
+                )
+              })()}
             </div>
           ))}
           {activeConditions.length > 4 && (
@@ -4617,12 +4626,16 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-condition-targets">
               <div className="interp-section-label">AFFECTED DOMAINS</div>
               <div className="interp-condition-target-chips">
-              {targets.map(t => (
-                <span key={t.id} className="domain-chip" data-severity={c.severity} title={t.id}>
-                  {t.display_name || t.id}
-                  {t.condition_role && <span className="domain-chip-role">{t.condition_role}</span>}
-                </span>
-              ))}
+              {targets.map(t => {
+                const prof = domainProfileMap[t.id]
+                return (
+                  <span key={t.id} className="domain-chip" data-severity={c.severity} title={t.id}
+                    onClick={() => setFocusedDomainId(t.id)} style={{ cursor: 'pointer' }}>
+                    {t.display_name || t.id}
+                    {prof?.role && <span className="domain-chip-role">{prof.role}</span>}
+                  </span>
+                )
+              })}
               </div>
             </div>
           )}
@@ -10050,7 +10063,60 @@ function BoardroomGovernanceIntelligence({ fullReport, boardroomProjection }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap }) {
+function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
+  if (!domainId || !profile) return null
+  const affectingConditions = (conditions || []).filter(c =>
+    c.shared_topology_targets?.domains?.includes(domainId)
+  )
+  const conditionGroups = {}
+  affectingConditions.forEach(c => {
+    const type = c.condition_type || 'UNKNOWN'
+    if (!conditionGroups[type]) conditionGroups[type] = { type, label: c.operator_cognition_title || type.replace(/_/g, ' '), severity: c.severity, count: 0 }
+    conditionGroups[type].count++
+    if (['CRITICAL','HIGH'].includes(c.severity) && !['CRITICAL','HIGH'].includes(conditionGroups[type].severity)) conditionGroups[type].severity = c.severity
+  })
+  const groups = Object.values(conditionGroups).sort((a, b) => {
+    const sev = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3 }
+    return (sev[a.severity] ?? 4) - (sev[b.severity] ?? 4)
+  })
+
+  return (
+    <aside className="intel-interp intel-interp--domain-focus" data-tone="structural" aria-label="Domain focus panel">
+      <div className="interp-tag">
+        <span className="interp-tag-label">DOMAIN PROFILE</span>
+        <button className="interp-condition-dismiss" onClick={onClose} type="button" aria-label="Close domain panel">✕</button>
+      </div>
+      <div className="domain-focus-header">
+        <div className="domain-focus-name">{profile.name}</div>
+        {profile.role && <div className="domain-focus-role">{profile.role}</div>}
+      </div>
+      <div className="domain-focus-stats">
+        <span className="domain-focus-stat">{profile.fileCount} files</span>
+        <span className="domain-focus-stat">{profile.inbound} inbound</span>
+        <span className="domain-focus-stat">{profile.outbound} outbound</span>
+      </div>
+      {groups.length > 0 && (
+        <div className="domain-focus-section">
+          <div className="interp-section-label">CONDITIONS ({affectingConditions.length})</div>
+          {groups.map(g => (
+            <div key={g.type} className="domain-focus-condition" data-severity={g.severity}>
+              <span className="domain-focus-condition-name">{g.label}</span>
+              <span className="domain-focus-condition-sev">{g.severity}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {profile.sourceName && (
+        <div className="domain-focus-section">
+          <div className="interp-section-label">SOURCE</div>
+          <div className="domain-focus-source">{profile.sourceName}/</div>
+        </div>
+      )}
+    </aside>
+  )
+}
+
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -10186,6 +10252,33 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     })
     return map
   }, [qualifiedReport, fullReport])
+
+  const domainProfileMap = useMemo(() => {
+    const map = {}
+    const ROLE_DISPLAY = {
+      FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine',
+      API_BOUNDARY: 'API Boundary', AUTH_BOUNDARY: 'Auth Boundary', TEST_INFRASTRUCTURE: 'Test Infrastructure',
+      CLIENT_INTERFACE: 'Client Interface', STREAMING_INTERFACE: 'Streaming Interface',
+      BUILD_INFRASTRUCTURE: 'Build Infrastructure', APPLICATION_DOMAIN: 'Application Domain',
+      UTILITY: 'Utility', GOVERNANCE_ARTIFACT: 'Governance',
+    }
+    ;(qualifiedReport?.semantic_domain_registry || fullReport?.semantic_domain_registry || []).forEach(d => {
+      map[d.domain_id] = {
+        id: d.domain_id,
+        name: d.business_label || d.domain_name || d.domain_id,
+        role: d.role_classification ? (ROLE_DISPLAY[d.role_classification] || d.role_classification.replace(/_/g, ' ')) : null,
+        roleRaw: d.role_classification || null,
+        fileCount: d.node_count || 0,
+        inbound: d.inbound_imports || 0,
+        outbound: d.outbound_imports || 0,
+        backed: d.structurally_backed,
+        sourceName: d.source_name || null,
+      }
+    })
+    return map
+  }, [qualifiedReport, fullReport])
+
+  const [focusedDomainId, setFocusedDomainId] = useState(null)
 
   const resolveDomainLabel = useCallback((id) => domainLabelMap[id] || id, [domainLabelMap])
 
@@ -10498,6 +10591,15 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         balancedBriefing={balancedBriefing}
       />
 
+      {focusedDomainId && domainProfileMap[focusedDomainId] && (
+        <DomainFocusPanel
+          domainId={focusedDomainId}
+          profile={domainProfileMap[focusedDomainId]}
+          conditions={activeConditionsForDomain}
+          onClose={() => onDomainChipClick(null)}
+        />
+      )}
+
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
         <RepresentationField
           boardroomMode={boardroomMode}
@@ -10546,6 +10648,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           onVerificationReopen={handleVerificationReopen}
           runtimeConnectivityEdges={runtimeConnectivityEdges}
           domainLabelMap={domainLabelMap}
+          domainProfileMap={domainProfileMap}
+          focusedDomainId={focusedDomainId}
+          onDomainChipClick={setFocusedDomainId}
+          activeConditionsForDomain={activeConditions}
         />
 
         {!boardroomMode && !isBalanced && (

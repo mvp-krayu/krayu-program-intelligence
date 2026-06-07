@@ -3024,6 +3024,59 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           text-transform: uppercase;
           letter-spacing: 0.05em;
         }
+        .intel-interp--domain-focus {
+          border-left: 2px solid #4a9eff;
+          padding: 12px 14px;
+          margin-bottom: 12px;
+        }
+        .domain-focus-header { margin-bottom: 10px; }
+        .domain-focus-name {
+          font: 600 15px/1.3 -apple-system, sans-serif;
+          color: #ccd6f6;
+        }
+        .domain-focus-role {
+          font: 500 11px/1 'Courier New', monospace;
+          color: #4a9eff;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-top: 4px;
+        }
+        .domain-focus-stats {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 12px;
+        }
+        .domain-focus-stat {
+          font: 400 11px/1 'Courier New', monospace;
+          color: #7a8aaa;
+        }
+        .domain-focus-section {
+          margin-top: 10px;
+        }
+        .domain-focus-condition {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 4px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.5);
+        }
+        .domain-focus-condition:last-child { border-bottom: none; }
+        .domain-focus-condition-name {
+          font: 400 12px/1.4 -apple-system, sans-serif;
+          color: #c5cce3;
+        }
+        .domain-focus-condition-sev {
+          font: 600 10px/1 'Courier New', monospace;
+          letter-spacing: 0.05em;
+        }
+        .domain-focus-condition[data-severity="CRITICAL"] .domain-focus-condition-sev { color: #ff6b6b; }
+        .domain-focus-condition[data-severity="HIGH"] .domain-focus-condition-sev { color: #ff8a8a; }
+        .domain-focus-condition[data-severity="ELEVATED"] .domain-focus-condition-sev { color: #ffb57a; }
+        .domain-focus-condition[data-severity="MODERATE"] .domain-focus-condition-sev { color: #ffd700; }
+        .domain-focus-source {
+          font: 400 11px/1.4 'Courier New', monospace;
+          color: #7a8aaa;
+        }
         .interp-condition-target {
           display: flex;
           align-items: baseline;
