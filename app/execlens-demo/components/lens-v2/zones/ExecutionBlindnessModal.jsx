@@ -43,6 +43,191 @@ function resolveLabel(domainId, registry) {
   return d ? (d.business_label || d.domain_name || domainId) : domainId
 }
 
+function resolveRole(domainId, registry) {
+  if (!registry) return null
+  const d = registry.find(r => r.domain_id === domainId)
+  if (!d || !d.role_classification) return null
+  const SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'Application', UTILITY: 'Utility' }
+  return SHORT[d.role_classification] || d.role_classification
+}
+
+export function useBlindnessData(fullReport) {
+  const registry = fullReport?.semantic_domain_registry || []
+  const conditions = (fullReport?._synthesisResult?.conditions || [])
+
+  return useMemo(() => {
+    const result = {}
+    for (const [type, config] of Object.entries(BLINDNESS_CONFIG)) {
+      const matched = conditions.filter(c => config.conditions.includes(c.condition_type) && c.severity !== 'NOMINAL')
+      const domainIds = [...new Set(matched.flatMap(c => (c.shared_topology_targets?.domains || [])))]
+      result[type] = {
+        ...config,
+        conditions: matched,
+        domains: domainIds.map(id => ({ id, label: resolveLabel(id, registry), role: resolveRole(id, registry) })),
+        domainCount: domainIds.length,
+      }
+    }
+    const totalAffected = new Set(
+      Object.values(result).flatMap(b => b.conditions.flatMap(c => c.shared_topology_targets?.domains || []))
+    ).size
+    const activeTypes = Object.values(result).filter(b => b.conditions.length > 0).length
+    return { blindnessTypes: result, totalAffected, activeTypes }
+  }, [conditions, registry])
+}
+
+export function useGravityData(fullReport) {
+  const registry = fullReport?.semantic_domain_registry || []
+  const conditions = (fullReport?._synthesisResult?.conditions || [])
+
+  return useMemo(() => {
+    const staticDomains = new Set()
+    const runtimeDomains = new Set()
+
+    for (const c of conditions) {
+      if (c.severity === 'NOMINAL') continue
+      const domains = (c.shared_topology_targets?.domains || [])
+      if (RT_CONDITION_TYPES.has(c.condition_type)) {
+        domains.forEach(id => runtimeDomains.add(id))
+      } else {
+        domains.forEach(id => staticDomains.add(id))
+      }
+    }
+
+    const overlap = [...staticDomains].filter(id => runtimeDomains.has(id))
+    const staticOnly = [...staticDomains].filter(id => !runtimeDomains.has(id))
+    const runtimeOnly = [...runtimeDomains].filter(id => !staticDomains.has(id))
+
+    return {
+      staticOnly: staticOnly.map(id => ({ id, label: resolveLabel(id, registry), role: resolveRole(id, registry) })),
+      runtimeOnly: runtimeOnly.map(id => ({ id, label: resolveLabel(id, registry), role: resolveRole(id, registry) })),
+      overlap: overlap.map(id => ({ id, label: resolveLabel(id, registry), role: resolveRole(id, registry) })),
+      staticConditions: conditions.filter(c => !RT_CONDITION_TYPES.has(c.condition_type) && c.severity !== 'NOMINAL'),
+      runtimeConditions: conditions.filter(c => RT_CONDITION_TYPES.has(c.condition_type) && c.severity !== 'NOMINAL'),
+    }
+  }, [conditions, registry])
+}
+
+export function ExecutionBlindnessInline({ fullReport, onOpenDeepDive }) {
+  const { blindnessTypes, totalAffected, activeTypes } = useBlindnessData(fullReport)
+
+  return (
+    <div className="rt-inline-detail rt-inline-detail--eb">
+      <div className="rt-inline-header">
+        <span className="rt-inline-stat"><strong className="rt-inline-stat-value rt-inline-stat--critical">{totalAffected}</strong> domains affected</span>
+        <span className="rt-inline-sep">·</span>
+        <span className="rt-inline-stat">{activeTypes} blindness types active</span>
+        <span className="rt-inline-sep">·</span>
+        <span className="rt-inline-stat">Evidence: EVENT_FLOW, MQTT, WEBSOCKET</span>
+      </div>
+      <div className="rt-inline-blindness-grid">
+        {Object.entries(blindnessTypes).map(([type, data]) => (
+          <div key={type} className={`rt-inline-blindness-type${data.conditions.length === 0 ? ' rt-inline-blindness-type--inactive' : ''}`} style={{ '--blindness-color': data.color }}>
+            <div className="rt-inline-blindness-label">
+              <span className="rt-inline-blindness-icon">{data.icon}</span>
+              <span className="rt-inline-blindness-name">{data.label}</span>
+            </div>
+            {data.conditions.length > 0 ? (
+              <>
+                <div className="rt-inline-blindness-conditions">
+                  {data.conditions.map((c, i) => (
+                    <div key={i} className="rt-inline-blindness-condition">
+                      <span className="rt-inline-blindness-condition-name">{c.condition_label || c.condition_type}</span>
+                      <span className="rt-inline-blindness-condition-sev">{c.severity}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="rt-inline-blindness-domains">
+                  {data.domains.map((d, i) => (
+                    <span key={i} className="domain-chip" data-severity="CRITICAL" style={{ '--chip-color': data.color }}>
+                      {d.label}
+                      {d.role && <span className="domain-chip-role">{d.role}</span>}
+                    </span>
+                  ))}
+                </div>
+                <div className="rt-inline-blindness-failure">{data.failure}</div>
+              </>
+            ) : (
+              <div className="rt-inline-blindness-absent">No evidence in current assessment</div>
+            )}
+          </div>
+        ))}
+      </div>
+      {onOpenDeepDive && (
+        <button className="rt-inline-deep-dive" onClick={onOpenDeepDive} type="button">Open deep dive</button>
+      )}
+    </div>
+  )
+}
+
+export function GravityDivergenceInline({ fullReport, onOpenDeepDive }) {
+  const gravityData = useGravityData(fullReport)
+
+  const DomainList = ({ items, color }) => (
+    <div className="rt-inline-gravity-domains">
+      {items.length > 0 ? items.map((d, i) => (
+        <span key={i} className="domain-chip" data-severity="CRITICAL" style={{ '--chip-color': color }}>
+          {d.label}
+          {d.role && <span className="domain-chip-role">{d.role}</span>}
+        </span>
+      )) : (
+        <span className="rt-inline-gravity-none">None</span>
+      )}
+    </div>
+  )
+
+  return (
+    <div className="rt-inline-detail rt-inline-detail--gd">
+      <div className="rt-inline-gravity-columns">
+        <div className="rt-inline-gravity-col" style={{ '--gravity-color': '#4a9eff' }}>
+          <div className="rt-inline-gravity-col-title">Code Gravity</div>
+          <div className="rt-inline-gravity-col-sub">Where the import graph is heavy</div>
+          <DomainList items={gravityData.staticOnly} color="#4a9eff" />
+          {gravityData.staticConditions.length > 0 && (
+            <div className="rt-inline-gravity-conditions">
+              {gravityData.staticConditions.slice(0, 3).map((c, i) => (
+                <div key={i} className="rt-inline-gravity-condition">
+                  <span style={{ color: '#4a9eff' }}>{c.severity}</span> · {c.condition_label || c.condition_type}
+                </div>
+              ))}
+              {gravityData.staticConditions.length > 3 && <div className="rt-inline-gravity-more">+{gravityData.staticConditions.length - 3} more</div>}
+            </div>
+          )}
+        </div>
+        <div className="rt-inline-gravity-col" style={{ '--gravity-color': '#b392f0' }}>
+          <div className="rt-inline-gravity-col-title">Shared</div>
+          <div className="rt-inline-gravity-col-sub">Both gravity fields present</div>
+          <DomainList items={gravityData.overlap} color="#b392f0" />
+        </div>
+        <div className="rt-inline-gravity-col" style={{ '--gravity-color': '#ff9e4a' }}>
+          <div className="rt-inline-gravity-col-title">Operational Gravity</div>
+          <div className="rt-inline-gravity-col-sub">Where the system actually runs</div>
+          <DomainList items={gravityData.runtimeOnly} color="#ff9e4a" />
+          {gravityData.runtimeConditions.length > 0 && (
+            <div className="rt-inline-gravity-conditions">
+              {gravityData.runtimeConditions.slice(0, 3).map((c, i) => (
+                <div key={i} className="rt-inline-gravity-condition">
+                  <span style={{ color: '#ff9e4a' }}>{c.severity}</span> · {c.condition_label || c.condition_type}
+                </div>
+              ))}
+              {gravityData.runtimeConditions.length > 3 && <div className="rt-inline-gravity-more">+{gravityData.runtimeConditions.length - 3} more</div>}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="rt-inline-gravity-summary">
+        {gravityData.runtimeOnly.length > 0 ? (
+          <>Code center of mass and operational center of mass diverge. <strong style={{ color: '#ff9e4a' }}>{gravityData.runtimeOnly.length}</strong> domain{gravityData.runtimeOnly.length !== 1 ? 's carry' : ' carries'} operational gravity without corresponding static code weight.</>
+        ) : (
+          'Static and operational gravity coincide — no divergence detected.'
+        )}
+      </div>
+      {onOpenDeepDive && (
+        <button className="rt-inline-deep-dive" onClick={onOpenDeepDive} type="button">Open deep dive</button>
+      )}
+    </div>
+  )
+}
+
 function ModalPortal({ children, onClose }) {
   useEffect(() => {
     const onKey = e => { if (e.key === 'Escape') onClose() }
@@ -56,27 +241,7 @@ function ModalPortal({ children, onClose }) {
 }
 
 export function ExecutionBlindnessModal({ fullReport, onClose }) {
-  const registry = fullReport?.semantic_domain_registry || []
-  const conditions = (fullReport?._synthesisResult?.conditions || [])
-
-  const blindnessData = useMemo(() => {
-    const result = {}
-    for (const [type, config] of Object.entries(BLINDNESS_CONFIG)) {
-      const matched = conditions.filter(c => config.conditions.includes(c.condition_type) && c.severity !== 'NOMINAL')
-      const domains = [...new Set(matched.flatMap(c => (c.shared_topology_targets?.domains || [])))]
-      result[type] = {
-        ...config,
-        conditions: matched,
-        domains: domains.map(id => resolveLabel(id, registry)),
-        domainCount: domains.length,
-      }
-    }
-    return result
-  }, [conditions, registry])
-
-  const totalAffected = new Set(
-    Object.values(blindnessData).flatMap(b => b.conditions.flatMap(c => c.shared_topology_targets?.domains || []))
-  ).size
+  const { blindnessTypes, totalAffected } = useBlindnessData(fullReport)
 
   return (
     <ModalPortal onClose={onClose}>
@@ -111,7 +276,7 @@ export function ExecutionBlindnessModal({ fullReport, onClose }) {
           </span>
           <span style={{ color: '#2a2f40' }}>|</span>
           <span style={{ fontSize: 13, color: '#7a8aaa' }}>
-            {Object.values(blindnessData).filter(b => b.conditions.length > 0).length} blindness types active
+            {Object.values(blindnessTypes).filter(b => b.conditions.length > 0).length} blindness types active
           </span>
           <span style={{ color: '#2a2f40' }}>|</span>
           <span style={{ fontSize: 13, color: '#7a8aaa' }}>
@@ -120,7 +285,7 @@ export function ExecutionBlindnessModal({ fullReport, onClose }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-          {Object.entries(blindnessData).map(([type, data]) => (
+          {Object.entries(blindnessTypes).map(([type, data]) => (
             <div key={type} style={{
               background: '#141720', borderRadius: 10, border: `1px solid ${data.conditions.length > 0 ? data.color + '30' : '#1e2333'}`,
               padding: 24, opacity: data.conditions.length > 0 ? 1 : 0.4,
@@ -157,7 +322,7 @@ export function ExecutionBlindnessModal({ fullReport, onClose }) {
                         <span key={i} style={{
                           fontSize: 11, padding: '3px 8px', borderRadius: 4,
                           background: data.color + '15', color: data.color, border: `1px solid ${data.color}30`,
-                        }}>{d}</span>
+                        }}>{d.label}</span>
                       ))}
                     </div>
                   </div>
@@ -190,7 +355,7 @@ export function ExecutionBlindnessModal({ fullReport, onClose }) {
         }}>
           <div style={{ fontSize: 13, color: '#e0e6f0', fontWeight: 500, marginBottom: 8 }}>The Executive Summary</div>
           <div style={{ fontSize: 14, color: '#9aa4c0', lineHeight: 1.6 }}>
-            This system has {Object.values(blindnessData).filter(b => b.conditions.length > 0).length} active
+            This system has {Object.values(blindnessTypes).filter(b => b.conditions.length > 0).length} active
             forms of execution blindness across {totalAffected} operational domains.
             The platform can report healthy while its operational backbone is failing.
             Static code analysis cannot detect these conditions — they are only visible through
@@ -204,35 +369,7 @@ export function ExecutionBlindnessModal({ fullReport, onClose }) {
 }
 
 export function GravityDivergenceModal({ fullReport, onClose }) {
-  const registry = fullReport?.semantic_domain_registry || []
-  const conditions = (fullReport?._synthesisResult?.conditions || [])
-
-  const gravityData = useMemo(() => {
-    const staticDomains = new Set()
-    const runtimeDomains = new Set()
-
-    for (const c of conditions) {
-      if (c.severity === 'NOMINAL') continue
-      const domains = (c.shared_topology_targets?.domains || [])
-      if (RT_CONDITION_TYPES.has(c.condition_type)) {
-        domains.forEach(id => runtimeDomains.add(id))
-      } else {
-        domains.forEach(id => staticDomains.add(id))
-      }
-    }
-
-    const overlap = [...staticDomains].filter(id => runtimeDomains.has(id))
-    const staticOnly = [...staticDomains].filter(id => !runtimeDomains.has(id))
-    const runtimeOnly = [...runtimeDomains].filter(id => !staticDomains.has(id))
-
-    return {
-      staticOnly: staticOnly.map(id => resolveLabel(id, registry)),
-      runtimeOnly: runtimeOnly.map(id => resolveLabel(id, registry)),
-      overlap: overlap.map(id => resolveLabel(id, registry)),
-      staticConditions: conditions.filter(c => !RT_CONDITION_TYPES.has(c.condition_type) && c.severity !== 'NOMINAL'),
-      runtimeConditions: conditions.filter(c => RT_CONDITION_TYPES.has(c.condition_type) && c.severity !== 'NOMINAL'),
-    }
-  }, [conditions, registry])
+  const gravityData = useGravityData(fullReport)
 
   const Column = ({ title, subtitle, color, domains, conditions: conds }) => (
     <div style={{
@@ -250,7 +387,7 @@ export function GravityDivergenceModal({ fullReport, onClose }) {
               <span key={i} style={{
                 fontSize: 13, padding: '5px 10px', borderRadius: 5,
                 background: color + '12', color, border: `1px solid ${color}25`,
-              }}>{d}</span>
+              }}>{d.label}</span>
             ))}
           </div>
         ) : (

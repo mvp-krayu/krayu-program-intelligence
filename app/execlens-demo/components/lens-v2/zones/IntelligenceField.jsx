@@ -8,7 +8,7 @@ import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBu
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from './SoftwareIntelligenceField'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
-import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
+import { ExecutionBlindnessModal, GravityDivergenceModal, ExecutionBlindnessInline, GravityDivergenceInline } from './ExecutionBlindnessModal'
 import { synthesize, synthesizeTeaser, SEVERITY_RANK, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, CONDITION_INTERVENTIONS, qualifyDomainBacking } from '../../../lib/lens-v2/SignalSynthesisEngine'
 import { compile as compileConsequences, compileTeaser as compileConsequenceTeaser, forBoardroom as consequencesForBoardroom, forBalanced as consequencesForBalanced, forInvestigation as consequencesForInvestigation, COGNITION_SLICE_VOCABULARY, MAP_CONDITION_KEYS } from '../../../lib/lens-v2/software-intelligence/ConsequenceCompiler'
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
@@ -10237,7 +10237,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} />
@@ -10269,6 +10269,12 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} />
       )}
+      {swIntelActive && cognitionState && cognitionState.activeSurface === 'EXECUTION_BLINDNESS' && fullReport && (
+        <ExecutionBlindnessInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('EXECUTION_BLINDNESS') : undefined} />
+      )}
+      {swIntelActive && cognitionState && cognitionState.activeSurface === 'GRAVITY_DIVERGENCE' && fullReport && (
+        <GravityDivergenceInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('GRAVITY_DIVERGENCE') : undefined} />
+      )}
     </>
   )
 }
@@ -10282,6 +10288,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [piRuntimeActive, setPiRuntimeActive] = useState(false)
   const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
 
+  const [deepDiveModal, setDeepDiveModal] = useState(null)
   const [cognitionState, setCognitionState] = useState({
     activeSurface: null,
     focusedDomain: null,
@@ -10829,6 +10836,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           focusedDomainId={focusedDomainId}
           onDomainChipClick={setFocusedDomainId}
           activeConditionsForDomain={activeConditions}
+          onOpenDeepDive={setDeepDiveModal}
         />
 
         {!boardroomMode && !isBalanced && (
@@ -10873,11 +10881,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         swIntelActive={swIntelActive}
         visibilityLayerCompleteness={visibilityLayerCompleteness}
       />
-      {cognitionState.activeSurface === 'EXECUTION_BLINDNESS' && fullReport && (
-        <ExecutionBlindnessModal fullReport={fullReport} onClose={() => handleSurfaceSelect(null)} />
+      {deepDiveModal === 'EXECUTION_BLINDNESS' && fullReport && (
+        <ExecutionBlindnessModal fullReport={fullReport} onClose={() => setDeepDiveModal(null)} />
       )}
-      {cognitionState.activeSurface === 'GRAVITY_DIVERGENCE' && fullReport && (
-        <GravityDivergenceModal fullReport={fullReport} onClose={() => handleSurfaceSelect(null)} />
+      {deepDiveModal === 'GRAVITY_DIVERGENCE' && fullReport && (
+        <GravityDivergenceModal fullReport={fullReport} onClose={() => setDeepDiveModal(null)} />
       )}
     </div>
   )
