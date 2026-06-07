@@ -9774,12 +9774,11 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
         <div className="boardroom-topology-anchor">
           <TopologyGraph
-            scope={scope}
-            fullReport={fullReport}
-            adapted={adapted}
-            overlay={swIntelTopoOverlay}
-            onSignalTrace={setSignalTraceId}
-            runtimeConnectivityEdges={runtimeConnectivityEdges}
+            domains={fullReport.semantic_domain_registry}
+            clusters={fullReport.semantic_cluster_registry || []}
+            edges={fullReport.semantic_topology_edges || []}
+            pressureZoneLabel={(fullReport.propagation_summary || {}).primary_zone_business_label}
+            pressureZoneState={fullReport.pressure_zone_state}
           />
         </div>
 

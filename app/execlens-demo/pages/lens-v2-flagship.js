@@ -269,8 +269,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     return compileBoardroomProjection(reportObject)
   }, [reportObject, boardroomMode])
 
-  const swIntelProjection = useMemo(() => {
-    if (!reportObject) return null
+  const { swIntelProjection, projectionAuthority } = useMemo(() => {
+    if (!reportObject) return { swIntelProjection: null, projectionAuthority: null }
     const qualified = qualifyForProjection(reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs)
     const synResult = synthesizeForProjection(qualified)
     if (synResult) {
@@ -289,13 +289,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     }
 
     const csqResult = filteredSynResult ? compileForProjection(filteredSynResult, qualified) : null
-    return deriveProjection(qualified, filteredSynResult, csqResult)
+    return { swIntelProjection: deriveProjection(qualified, filteredSynResult, csqResult), projectionAuthority: authority }
   }, [reportObject, visibilityLayerCompleteness, runtimeConnectivityEdges, runtimeGraphs])
-
-  const projectionAuthority = useMemo(() => {
-    if (!reportObject) return null
-    return computeProjectionAuthority(reportObject)
-  }, [reportObject])
 
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
