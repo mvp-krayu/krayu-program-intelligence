@@ -919,18 +919,11 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
               <span className="support-condition-title">{c.operator_cognition_title}</span>
               <span className="support-condition-severity">{c.severity}</span>
-              {c.shared_topology_targets?.domains_display?.[0] && (() => {
-                const did = c.shared_topology_targets.domains?.[0]
-                const prof = domainProfileMap[did]
-                return (
-                  <span className="domain-chip" data-severity={c.severity} title={did}
-                    onClick={(e) => { e.stopPropagation(); setFocusedDomainId(did) }}
-                    style={{ cursor: 'pointer' }}>
-                    {c.shared_topology_targets.domains_display[0]}
-                    {prof?.role && <span className="domain-chip-role">{prof.role}</span>}
-                  </span>
-                )
-              })()}
+              {c.shared_topology_targets?.domains_display?.[0] && (
+                <span className="domain-chip" data-severity={c.severity} title={c.shared_topology_targets.domains?.[0]}>
+                  {c.shared_topology_targets.domains_display[0]}
+                </span>
+              )}
             </div>
           ))}
           {activeConditions.length > 4 && (
@@ -4626,16 +4619,11 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-condition-targets">
               <div className="interp-section-label">AFFECTED DOMAINS</div>
               <div className="interp-condition-target-chips">
-              {targets.map(t => {
-                const prof = domainProfileMap[t.id]
-                return (
-                  <span key={t.id} className="domain-chip" data-severity={c.severity} title={t.id}
-                    onClick={() => setFocusedDomainId(t.id)} style={{ cursor: 'pointer' }}>
-                    {t.display_name || t.id}
-                    {prof?.role && <span className="domain-chip-role">{prof.role}</span>}
-                  </span>
-                )
-              })}
+              {targets.map(t => (
+                <span key={t.id} className="domain-chip" data-severity={c.severity} title={t.id}>
+                  {t.display_name || t.id}
+                </span>
+              ))}
               </div>
             </div>
           )}
