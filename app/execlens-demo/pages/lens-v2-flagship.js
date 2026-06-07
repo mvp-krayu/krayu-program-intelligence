@@ -3497,6 +3497,32 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .interp-context-secondary .interp-block {
           opacity: 0.7;
         }
+        .interp-block--signal-context {
+          opacity: 1 !important;
+          margin-bottom: 10px;
+        }
+        .interp-signal-context-row {
+          display: flex;
+          gap: 8px;
+          align-items: baseline;
+          margin-bottom: 4px;
+        }
+        .interp-signal-context-qualifier {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #4a9eff;
+          letter-spacing: 0.04em;
+        }
+        .interp-signal-context-state {
+          font-size: 12px;
+          color: #9aa0bc;
+        }
+        .interp-signal-context-note {
+          font-size: 11px;
+          color: #7a8aaa;
+          font-style: italic;
+        }
 
         /* ── BALANCED — Narrative-First Vertical Layout ──────────────── */
         .intelligence-field--narrative-first {

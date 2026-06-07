@@ -1361,12 +1361,16 @@ const DENSE_ZONE_INTERPRETATIONS = {
       }
 
       return {
-        heading: 'What the signal landscape reveals',
+        heading: isDerived ? 'What structural and runtime intelligence reveals' : 'What the signal landscape reveals',
         body: activated.length > 0
-          ? `${activated.length} signal${activated.length !== 1 ? 's' : ''} elevated above nominal threshold${critical.length > 0 ? ` — ${critical.length} at critical/high severity` : ''}. ${elevated.length > 0 ? `${elevated.length} at elevated tier.` : ''}`
-          : sigs.length > 0 ? `All ${sigs.length} structural indicators are within nominal parameters.` : 'Signal layer not yet populated for this specimen.',
+          ? isDerived
+            ? `${critical.length} critical/high structural condition${critical.length !== 1 ? 's' : ''} and ${elevated.length} runtime-derived finding${elevated.length !== 1 ? 's' : ''} across the structural topology. Intelligence derived from structural enrichment and runtime connectivity evidence.`
+            : `${activated.length} signal${activated.length !== 1 ? 's' : ''} elevated above nominal threshold${critical.length > 0 ? ` — ${critical.length} at critical/high severity` : ''}. ${elevated.length > 0 ? `${elevated.length} at elevated tier.` : ''}`
+          : sigs.length > 0 ? `All ${sigs.length} structural indicators are within nominal parameters.` : 'No structural intelligence available for this specimen.',
         structuralNote: sigs.length > 0
-          ? `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
+          ? isDerived
+            ? `Structural conditions: ${critical.length + elevated.length} · Runtime signals: ${sigs.filter(s => s.signal_family === 'RSIG').length} · Total derived: ${activated.length}`
+            : `Total signals: ${sigs.length} · Activated: ${activated.length} · Nominal: ${sigs.length - activated.length}`
           : null,
         signalContext,
         signalDetail,
@@ -5490,20 +5494,6 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
             <div className="interp-zone-structural">{zoneDerived.structuralNote}</div>
           )}
 
-          {zoneDerived.signalContext && (
-            <div className="interp-zone-signals interp-zone-signals--context">
-              <div className="interp-zone-signals-label">SIGNAL CONTEXT</div>
-              <div className="interp-zone-signal interp-zone-signal--context">
-                <span className="interp-zone-signal-severity">{zoneDerived.signalContext.qualifier}</span>
-                <span className="interp-zone-signal-text">{zoneDerived.signalContext.state}</span>
-              </div>
-              {zoneDerived.signalContext.note && (
-                <div className="interp-zone-signal interp-zone-signal--note">
-                  <span className="interp-zone-signal-text">{zoneDerived.signalContext.note}</span>
-                </div>
-              )}
-            </div>
-          )}
           {zoneDerived.signalDetail && zoneDerived.signalDetail.length > 0 && (
             <div className="interp-zone-signals">
               <div className="interp-zone-signals-label">SIGNAL DECOMPOSITION</div>
@@ -5547,6 +5537,18 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
         <details className="interp-context-secondary">
           <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
+          {zoneDerived && zoneDerived.signalContext && (
+            <div className="interp-block interp-block--signal-context">
+              <div className="interp-section-label">EVIDENCE QUALIFICATION</div>
+              <div className="interp-signal-context-row">
+                <span className="interp-signal-context-qualifier">{zoneDerived.signalContext.qualifier}</span>
+                <span className="interp-signal-context-state">{zoneDerived.signalContext.state}</span>
+              </div>
+              {zoneDerived.signalContext.note && (
+                <div className="interp-signal-context-note">{zoneDerived.signalContext.note}</div>
+              )}
+            </div>
+          )}
           {narrative.executive_summary && (
             <div className="interp-block interp-block--lead">
               <div className="interp-section-label">{framing.assessmentLabel}</div>
