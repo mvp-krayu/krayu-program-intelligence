@@ -9770,32 +9770,67 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
     const tensionPct = bpTs.total_signals > 0 ? Math.round((bpTs.activated_count / bpTs.total_signals) * 100) : 0
 
-    const PDIM = { DPSIG: 'Concentration', ISIG: 'Dependency', PSIG: 'Propagation', DERIVED_CONDITION_SIGNAL: 'Structural Conditions', RSIG: 'Runtime Connectivity' }
     const SRANK_LOCAL = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
-    const pressureDimensions = bpSi.families
-      .filter(fam => PDIM[fam.family])
-      .map(fam => {
-        const maxSev = fam.signals.reduce((best, s) => (SRANK_LOCAL[s.severity] ?? 5) < (SRANK_LOCAL[best] ?? 5) ? s.severity : best, 'NOMINAL')
-        const activated = fam.activated_count || 0
-        const total = fam.signals.length
-        const pct = total > 0 ? Math.round((activated / total) * 100) : 0
-        return { key: fam.family, name: PDIM[fam.family], severity: maxSev, intensity: Math.max(pct, maxSev !== 'NOMINAL' ? 30 : 0), activated, total }
-      })
-    const covRatio = bpDc.total_domains > 0 ? bpDc.structurally_backed / bpDc.total_domains : 1
+    const hasCanonicalFamilies = bpSi.families.some(f => f.family === 'DPSIG' || f.family === 'PSIG' || f.family === 'ISIG')
+
+    let pressureDimensions
+    if (hasCanonicalFamilies) {
+      const PDIM = { DPSIG: 'Concentration', ISIG: 'Dependency', PSIG: 'Propagation' }
+      pressureDimensions = bpSi.families
+        .filter(fam => PDIM[fam.family])
+        .map(fam => {
+          const maxSev = fam.signals.reduce((best, s) => (SRANK_LOCAL[s.severity] ?? 5) < (SRANK_LOCAL[best] ?? 5) ? s.severity : best, 'NOMINAL')
+          const activated = fam.activated_count || 0
+          const total = fam.signals.length
+          const pct = total > 0 ? Math.round((activated / total) * 100) : 0
+          return { key: fam.family, name: PDIM[fam.family], severity: maxSev, intensity: Math.max(pct, maxSev !== 'NOMINAL' ? 30 : 0), activated, total }
+        })
+    } else {
+      const CLASS_MAP = {
+        STRUCTURAL_MASS_CONCENTRATION: 'CONCENTRATION', CROSS_DOMAIN_COUPLING_PRESSURE: 'COUPLING',
+        COUPLING_INERTIA: 'COUPLING', STRUCTURAL_BOUNDARY_DIVERGENCE: 'DRIFT',
+        GOVERNANCE_COVERAGE_STATUS: 'DRIFT',
+        EVENT_CONCENTRATION: 'RUNTIME', RUNTIME_DEPENDENCY_CHOKE_POINT: 'RUNTIME',
+        BROKER_DEPENDENCY: 'RUNTIME', TOPIC_FANOUT_PRESSURE: 'RUNTIME',
+        ASYNC_PROPAGATION_ASYMMETRY: 'RUNTIME', EDGE_CLOUD_PROPAGATION_RISK: 'RUNTIME',
+        RUNTIME_OBSERVABILITY_GAP: 'RUNTIME',
+      }
+      const CLASS_LABEL = { CONCENTRATION: 'Concentration', COUPLING: 'Coupling & Flow', DRIFT: 'Drift & Boundaries', RUNTIME: 'Runtime Coordination' }
+      const groups = {}
+      for (const sig of activatedSignals) {
+        const ct = sig.source_condition_type || sig.signal_name
+        const cls = CLASS_MAP[ct] || 'CONCENTRATION'
+        if (!groups[cls]) groups[cls] = { key: cls, name: CLASS_LABEL[cls] || cls, count: 0, maxSev: 'NOMINAL' }
+        groups[cls].count++
+        if ((SRANK_LOCAL[sig.severity] ?? 5) < (SRANK_LOCAL[groups[cls].maxSev] ?? 5)) groups[cls].maxSev = sig.severity
+      }
+      pressureDimensions = Object.values(groups).map(g => ({
+        key: g.key, name: g.name, severity: g.maxSev,
+        intensity: Math.max(30, Math.min(100, g.count * 15)),
+        activated: g.count, total: g.count,
+      }))
+    }
+
+    const covRatio = bpDc.total_domains > 0 ? (bpDc.structurally_backed || 0) / bpDc.total_domains : 1
     pressureDimensions.push({
       key: 'RESILIENCE', name: 'Resilience',
       severity: covRatio >= 1 ? 'NOMINAL' : covRatio >= 0.85 ? 'MODERATE' : 'ELEVATED',
       intensity: Math.max(Math.round((1 - covRatio) * 100), covRatio < 1 ? 20 : 0),
-      activated: bpDc.total_domains - bpDc.structurally_backed, total: bpDc.total_domains,
+      activated: bpDc.total_domains - (bpDc.structurally_backed || 0), total: bpDc.total_domains || 0,
     })
-    const PLOCALE = {
+
+    const PLOCALE_CANONICAL = {
       DPSIG: bpTs.pressure_zone ? `Convergence around ${bpTs.pressure_zone}` : 'Cluster pressure distributed',
       ISIG: (pressureDimensions.find(d => d.key === 'ISIG') || {}).activated > 0 ? 'Import hub amplifies dependency risk' : 'Dependency distribution balanced',
       PSIG: (pressureDimensions.find(d => d.key === 'PSIG') || {}).activated > 0 ? 'Outbound change propagation asymmetric' : 'Propagation within normal parameters',
-      DERIVED_CONDITION_SIGNAL: pressureZone ? `Structural conditions concentrated around ${pressureZone}` : 'Structural conditions distributed',
-      RSIG: hasRuntime ? 'Runtime coordination paths active' : 'No runtime evidence',
-      RESILIENCE: covRatio >= 1 ? 'Complete structural grounding' : `${bpDc.total_domains - bpDc.structurally_backed} domain${bpDc.total_domains - bpDc.structurally_backed !== 1 ? 's' : ''} without structural grounding`,
     }
+    const PLOCALE_BEHAVIORAL = {
+      CONCENTRATION: pressureZone ? `Structural mass concentrated around ${pressureZone}` : 'Structural mass distributed',
+      COUPLING: 'Cross-domain coupling and dependency pressure',
+      DRIFT: 'Boundary alignment and governance coverage',
+      RUNTIME: hasRuntime ? `Runtime coordination across ${(fullReport._runtime_signals || []).length} evidence paths` : 'No runtime evidence',
+    }
+    const PLOCALE = { ...(hasCanonicalFamilies ? PLOCALE_CANONICAL : PLOCALE_BEHAVIORAL), RESILIENCE: covRatio >= 1 ? 'Complete structural grounding' : `${bpDc.total_domains - (bpDc.structurally_backed || 0)} domain${(bpDc.total_domains - (bpDc.structurally_backed || 0)) !== 1 ? 's' : ''} without structural grounding` }
     const activatedDimNames = pressureDimensions.filter(d => d.severity !== 'NOMINAL').map(d => d.name.toLowerCase())
     const pressureSynthesis = activatedDimNames.length > 0
       ? `${activatedDimNames.join(', ')} pressure${activatedDimNames.length > 1 ? 's converge' : ' concentrates'}${bpTs.pressure_zone ? ` around ${bpTs.pressure_zone}` : ''}.`
@@ -9828,14 +9863,20 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         </div>
 
-        {bpSi.families.length > 0 && (
-          <div className="signal-field" data-pressure={bpTs.activated_count > 0 ? 'active' : 'nominal'}>
+        {(hasCanonicalFamilies ? bpSi.families.length > 0 : pressureDimensions.length > 1) && (
+          <div className="signal-field" data-pressure={(bpTs.activated_count || activatedSignals.length) > 0 ? 'active' : 'nominal'}>
             <div className="signal-field-families">
-              {bpSi.families.map(fam => (
+              {hasCanonicalFamilies ? bpSi.families.map(fam => (
                 <span key={fam.family} className="signal-field-family-chip" data-family={fam.family} data-active={String(fam.activated_count > 0)}>
-                  <span className="signal-field-family-name">{PDIM[fam.family] || fam.family}</span>
+                  <span className="signal-field-family-name">{fam.family === 'DPSIG' ? 'Concentration' : fam.family === 'PSIG' ? 'Propagation' : fam.family === 'ISIG' ? 'Dependency' : fam.family}</span>
                   <span className="signal-field-family-caption">{fam.family_label}</span>
                   {fam.activated_count > 0 && <span className="signal-field-family-count">{fam.activated_count} elevated</span>}
+                </span>
+              )) : pressureDimensions.filter(d => d.key !== 'RESILIENCE').map(dim => (
+                <span key={dim.key} className="signal-field-family-chip" data-family={dim.key} data-active={String(dim.severity !== 'NOMINAL')}>
+                  <span className="signal-field-family-name">{dim.name}</span>
+                  <span className="signal-field-family-caption">{PLOCALE[dim.key] || ''}</span>
+                  {dim.activated > 0 && <span className="signal-field-family-count">{dim.activated} elevated</span>}
                 </span>
               ))}
             </div>
