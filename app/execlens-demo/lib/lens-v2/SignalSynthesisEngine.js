@@ -1475,7 +1475,9 @@ function synthesizeTeaser(fullReport) {
     active_count: active.length,
     total_count: allConditions.length,
     top_conditions: sorted.slice(0, 3).map(c => {
-      const target = (c.shared_topology_targets?.domains_display || [])[0]
+      const domId = (c.shared_topology_targets?.domains || [])[0]
+      const domEntry = domId ? registry.find(r => r.domain_id === domId) : null
+      const target = domEntry ? (domEntry.business_label || domEntry.domain_name) : null
       return {
         condition_id: c.condition_id,
         title: c.operator_cognition_title + (target ? ' — ' + target : ''),
