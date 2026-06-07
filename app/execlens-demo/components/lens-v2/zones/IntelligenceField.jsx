@@ -6560,7 +6560,9 @@ function SynthesizedConditionEntry({ condition, isComposite, isActive, isCollaps
             onClick={(e) => { e.stopPropagation(); setShowTrace(p => !p) }}
             aria-expanded={showTrace}
           >
-            {showTrace ? '▾' : '▸'} {condition.supporting_signal_ids.length} contributing signal{condition.supporting_signal_ids.length !== 1 ? 's' : ''}
+            {showTrace ? '▾' : '▸'} {isComposite && condition.contributing_condition_ids && condition.contributing_condition_ids.length > 0
+              ? `${condition.contributing_condition_ids.length} contributing condition${condition.contributing_condition_ids.length !== 1 ? 's' : ''}`
+              : `${condition.supporting_signal_ids.length} contributing signal${condition.supporting_signal_ids.length !== 1 ? 's' : ''}`}
           </button>
           {showTrace && (
             <div className="condition-trace">

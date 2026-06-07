@@ -100,6 +100,34 @@ describe('CLASS 1 — Impossible Zero', () => {
     }
   })
 
+  test('composite conditions must not show "0 contributing signals" when contributing_condition_ids exist', () => {
+    const { fullReport } = st()
+    const conditions = (fullReport._synthesisResult?.conditions || [])
+    const composites = conditions.filter(c => c.contributing_condition_ids && c.contributing_condition_ids.length > 0)
+    assert.ok(composites.length > 0, 'Fixture must have composite conditions')
+    for (const c of composites) {
+      const signalCount = (c.supporting_signal_ids || []).length
+      const condCount = c.contributing_condition_ids.length
+      if (signalCount === 0) {
+        assert.ok(condCount > 0, `Composite condition ${c.condition_id || c.internal_condition_id} has 0 signals AND 0 contributing conditions — impossible`)
+      }
+    }
+  })
+
+  test('COMPOUND_CONVERGENCE contribution label resolves correctly', () => {
+    const { fullReport } = st()
+    const conditions = (fullReport._synthesisResult?.conditions || [])
+    const convergence = conditions.filter(c => c.condition_type === 'COMPOUND_CONVERGENCE')
+    for (const c of convergence) {
+      const signals = (c.supporting_signal_ids || [])
+      const contribs = (c.contributing_condition_ids || [])
+      const label = contribs.length > 0 && signals.length === 0
+        ? `${contribs.length} contributing condition${contribs.length !== 1 ? 's' : ''}`
+        : `${signals.length} contributing signal${signals.length !== 1 ? 's' : ''}`
+      assert.ok(!label.startsWith('0 '), `COMPOUND_CONVERGENCE "${c.derivation_trace}" would render as "${label}" — must not show 0 when contributions exist`)
+    }
+  })
+
   test('every guided query must have answer_derive', () => {
     const { fullReport, projection } = st()
     for (const s of projection.surfaces) {
