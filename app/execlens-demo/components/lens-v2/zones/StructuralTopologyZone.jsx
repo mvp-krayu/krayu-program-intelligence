@@ -415,10 +415,11 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
         {Object.entries(layouts).map(([cid, lay]) => {
           const cl = clusterMap[cid]
           const color = cl.color_accent || '#2a2f40'
+          const faded = boardroomMode && cl._pressureRelevant === false
           return (
-            <g key={cid}>
+            <g key={cid} opacity={faded ? 0.18 : 1} style={{ transition: 'opacity 0.3s' }}>
               <rect x={lay.x} y={lay.y} width={lay.w} height={lay.h} rx={9}
-                fill={color} fillOpacity={0.06} stroke={color} strokeWidth={1} strokeOpacity={0.35} />
+                fill={color} fillOpacity={0.06} stroke={color} strokeWidth={1} strokeOpacity={faded ? 0.15 : 0.35} />
               {(() => {
                 const label = (cl.cluster_label || cid).toUpperCase()
                 const maxCharsPerLine = Math.floor(lay.w / 7.5)
@@ -503,14 +504,15 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const sR = boardroomMode ? 28 : (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
           const tR = boardroomMode ? 28 : (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
 
-          const dimmed = highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
-          const bright = highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
+          const edgePressureFaded = boardroomMode && ((sD && sD._pressureRelevant === false) || (tD && tD._pressureRelevant === false))
+          const dimmed = edgePressureFaded ? true : highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
+          const bright = !edgePressureFaded && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
 
           return (
             <line key={`e-${i}`}
               x1={from.cx + ux * sR} y1={from.cy + uy * sR}
               x2={to.cx - ux * (tR + 4)} y2={to.cy - uy * (tR + 4)}
-              stroke={color} strokeOpacity={dimmed ? 0.12 : bright ? 0.95 : 0.6} strokeWidth={bright ? 2 : 1.5}
+              stroke={color} strokeOpacity={edgePressureFaded ? 0.08 : dimmed ? 0.12 : bright ? 0.95 : 0.6} strokeWidth={bright ? 2 : 1.5}
               markerEnd={`url(#arr-${markerKey})`}
               strokeDasharray={dash}
               style={{ transition: 'stroke-opacity 0.2s, stroke-width 0.2s' }}
@@ -599,7 +601,8 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const isCognitionDimmed = cognitionDim && cognitionDim.has(d.domain_id)
           const isAdvisory = cognitionAdvisory && cognitionAdvisory.has(d.domain_id)
 
-          const dimmed = cognitionOverlay
+          const pressureFaded = boardroomMode && d._pressureRelevant === false
+          const dimmed = pressureFaded ? true : cognitionOverlay
             ? isCognitionDimmed
             : (highlightSet && !highlightSet.has(d.domain_id))
           const nodeOpacity = dimmed ? 0.18 : 1
