@@ -9838,206 +9838,56 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       ? `${activatedDimNames.join(', ')} pressure${activatedDimNames.length > 1 ? 's converge' : ' concentrates'}${bpTs.pressure_zone ? ` around ${bpTs.pressure_zone}` : ''}.`
       : null
 
+    const cdc = crossDomainCognition
+    const themes = (cdc && cdc.consequence_themes) || []
+    const critHighThemes = themes.filter(t => t.severity === 'CRITICAL' || t.severity === 'HIGH')
+    const lowerThemes = themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH')
+    const domNarratives = (cdc && cdc.domain_narratives) || []
+
     return (
       <div className={`rep-field rep-field--boardroom rep-field--cockpit${isGoverned ? ' rep-field--governed' : ''}`}>
         <RepModeTag
           label="Boardroom lens"
-          sub={isGoverned
-            ? (swIntelActive && consequencePosture ? 'Board · governed intelligence · software intelligence active' : 'Board · governed intelligence posture')
-            : `Board · ${pLevel >= 2 ? 'structural + runtime' : 'structural'} intelligence`}
-          zones={isGoverned
-            ? [{ id: 'Z1', name: 'Governed Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]
-            : [{ id: 'Z1', name: pLevel >= 2 ? 'Structural + Runtime Intelligence' : 'Structural Intelligence' }, { id: 'Z2', name: 'Structural Tension' }]}
+          sub="Board · conclusion surface"
+          zones={[{ id: 'Z1', name: 'Board Findings' }, { id: 'Z2', name: 'Domain Grounding' }]}
         />
 
-        <div className="cockpit-finding" data-found={String((bpTs.activated_count || activatedSignals.length) > 0)} data-governed={String(isGoverned)}>
+        <div className="cockpit-finding" data-found={String(critHighThemes.length > 0)} data-governed={String(isGoverned)}>
           <div className="cockpit-finding-verdict">
-            {swIntelActive && consequencePosture
-              ? `${qp.s_level || pLabel} · OPERATIONAL TENSION${bpTs.pressure_zone ? ` IN ${bpTs.pressure_zone.toUpperCase()}` : ''}`
-              : isGoverned ? bpTs.finding_headline
-              : `${pLabel} · ${bpTs.tension_count || 0} STRUCTURAL TENSION${(bpTs.tension_count || 0) !== 1 ? 'S' : ''}`}
+            {cdc && cdc.posture_label ? cdc.posture_label : `${critHighThemes.length} CRITICAL FINDING${critHighThemes.length !== 1 ? 'S' : ''}`}
           </div>
           <div className="cockpit-finding-summary">
-            {swIntelActive && consequencePosture
-              ? `Operational pressure concentrated around "${bpTs.pressure_zone || 'system-wide'}" across ${bpTs.tension_count || bpTs.activated_count} pressure dimension${(bpTs.tension_count || bpTs.activated_count) !== 1 ? 's' : ''}. ${consequencePosture.cognition_slices ? consequencePosture.cognition_slices.length + ' software dynamics reinforce systemic fragility.' : ''}`
-              : isGoverned ? bpTs.tension_narrative
-              : (() => {
-                const dc = domainCognition
-                const azCount = dc ? dc.attention_zones.length : 0
-                const primary = dc && dc.attention_zones[0]
-                const rtCount = dc ? dc.pressure_summary.domains_with_runtime : 0
-                return `${pLevel >= 2 ? 'Structural and runtime' : 'Structural'} intelligence across ${dc ? dc.pressure_summary.total_domains : totalDomains} domains. ${azCount} executive attention zone${azCount !== 1 ? 's' : ''}${primary ? ` — "${primary.executive_label}" concentrates ${primary.severity} pressure` : ''}.${rtCount > 0 ? ` ${rtCount} domain${rtCount !== 1 ? 's' : ''} carry runtime coordination evidence.` : ''}${suppressedCount > 0 ? ` ${suppressedCount} conditions beyond evidence authority.` : ''}`
-              })()}
+            {cdc && cdc.executive_synthesis ? cdc.executive_synthesis : 'Structural intelligence active.'}
           </div>
         </div>
 
-        {crossDomainCognition && crossDomainCognition.consequence_themes && crossDomainCognition.consequence_themes.length > 0 && (
-          <div className="cockpit-cross-domain">
-            {crossDomainCognition.executive_synthesis && (
-              <div className="cockpit-cross-domain-synthesis">{crossDomainCognition.executive_synthesis}</div>
-            )}
-            <div className="cockpit-cross-domain-themes">
-              {crossDomainCognition.consequence_themes
-                .filter(t => t.severity === 'CRITICAL' || t.severity === 'HIGH')
-                .slice(0, 4)
-                .map((t, i) => (
-                  <div key={i} className="cockpit-cross-domain-theme" data-severity={t.severity}>
-                    <span className="cockpit-cross-domain-theme-severity" data-severity={t.severity}>{t.severity}</span>
-                    <span className="cockpit-cross-domain-theme-label">{t.theme_label}</span>
+        {critHighThemes.length > 0 && (
+          <div className="cockpit-board-findings">
+            {critHighThemes.slice(0, 5).map((t, i) => {
+              const domNarr = domNarratives.find(n => n.domain && t.description && n.risk_label)
+              return (
+                <div key={i} className="cockpit-board-finding" data-severity={t.severity}>
+                  <div className="cockpit-board-finding-head">
+                    <span className="cockpit-board-finding-severity" data-severity={t.severity}>{t.severity}</span>
+                    <span className="cockpit-board-finding-label">{t.theme_label}</span>
                   </div>
-                ))}
-              {crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length > 0 && (
-                <div className="cockpit-cross-domain-overflow">
-                  +{crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length} additional pattern{crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length !== 1 ? 's' : ''}
-                </div>
-              )}
-            </div>
-            {crossDomainCognition.combined_synthesis && (
-              <div className="cockpit-cross-domain-combined">{crossDomainCognition.combined_synthesis}</div>
-            )}
-          </div>
-        )}
-
-        {(hasCanonicalFamilies ? bpSi.families.length > 0 : pressureDimensions.length > 1) && (
-          <div className="signal-field" data-pressure={(bpTs.activated_count || activatedSignals.length) > 0 ? 'active' : 'nominal'}>
-            <div className="signal-field-families">
-              {hasCanonicalFamilies ? bpSi.families.map(fam => (
-                <span key={fam.family} className="signal-field-family-chip" data-family={fam.family} data-active={String(fam.activated_count > 0)}>
-                  <span className="signal-field-family-name">{fam.family === 'DPSIG' ? 'Concentration' : fam.family === 'PSIG' ? 'Propagation' : fam.family === 'ISIG' ? 'Dependency' : fam.family}</span>
-                  <span className="signal-field-family-caption">{fam.family_label}</span>
-                  {fam.activated_count > 0 && <span className="signal-field-family-count">{fam.activated_count} elevated</span>}
-                </span>
-              )) : pressureDimensions.filter(d => d.key !== 'RESILIENCE').map(dim => (
-                <span key={dim.key} className="signal-field-family-chip" data-family={dim.key} data-active={String(dim.severity !== 'NOMINAL')}>
-                  <span className="signal-field-family-name">{dim.name}</span>
-                  <span className="signal-field-family-caption">{PLOCALE[dim.key] || ''}</span>
-                  {dim.activated > 0 && <span className="signal-field-family-count">{dim.activated} elevated</span>}
-                </span>
-              ))}
-            </div>
-            <div className="signal-field-strip">
-              {bpSi.families.flatMap(fam => fam.signals).filter(s => s.severity !== 'NOMINAL' && s.severity !== 'CLUSTER_BALANCED').map(sig => (
-                <span key={sig.signal_id} className="signal-field-pip" data-severity={sig.severity} title={sig.signal_name} />
-              ))}
-              {bpTs.activated_count > 0 && (
-                <span className="signal-field-count">{bpTs.activated_count} activated</span>
-              )}
-              {(bpTs.total_signals - bpTs.activated_count) > 0 && (
-                <span className="signal-field-nominal">{bpTs.total_signals - bpTs.activated_count} nominal</span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {swIntelActive && consequencePosture && consequencePosture.executive_synthesis && (() => {
-          const cp = consequencePosture
-          const narratives = cp.domain_narratives || []
-          return (
-            <div className="cockpit-sw-intel-spine">
-              <div className="cockpit-sw-intel-spine-header">
-                <span className="cockpit-sw-intel-spine-badge">SW-INTEL</span>
-                <span className="cockpit-sw-intel-spine-posture" data-severity={cp.posture_severity}>{cp.posture_label}</span>
-              </div>
-
-              <div className="cockpit-sw-intel-posture-block">
-                <div className="cockpit-sw-intel-posture-narrative">{cp.executive_synthesis}</div>
-                {narratives.length > 0 && (
-                  <div className="cockpit-sw-intel-posture-domains">
-                    {narratives.map(n => (
-                      <div key={n.domain} className="cockpit-sw-intel-posture-domain">
-                        <span className="cockpit-sw-intel-posture-domain-name">{n.domain}</span>
-                        <span className="cockpit-sw-intel-posture-domain-weight">{n.consequence_count} consequence dimension{n.consequence_count !== 1 ? 's' : ''} · {n.condition_count} condition{n.condition_count !== 1 ? 's' : ''}</span>
-                        {n.risk_label && (
-                          <span className="cockpit-sw-intel-posture-domain-risk-shape" data-classes={n.classes}>{n.risk_label}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {cp.consequence_themes && cp.consequence_themes.length > 0 && (() => {
-                  const themes = cp.consequence_themes
-                  const domains = cp.domain_concentration || []
-                  const maxWeight = Math.max(...themes.map(t => t.source_count), 1)
-                  return (
-                    <div className="cockpit-sw-intel-posture-disclosure">
-                      <button className="cockpit-sw-intel-posture-disclosure-toggle" type="button" onClick={() => setConvergenceWebOpen(v => !v)}>
-                        {convergenceWebOpen ? '▾ Hide consequence breakdown' : '▸ Show consequence breakdown'}
-                      </button>
-                      {convergenceWebOpen && (
-                        <div className="cockpit-sw-intel-posture-detail">
-                          <div className="cockpit-sw-intel-themes">
-                            {themes.map(theme => {
-                              const barPct = Math.max(20, Math.round((theme.source_count / maxWeight) * 100))
-                              return (
-                                <div key={theme.theme_id} className="cockpit-sw-intel-theme" data-severity={theme.severity}>
-                                  <div className="cockpit-sw-intel-theme-head">
-                                    <span className="cockpit-sw-intel-theme-label">{theme.theme_label}</span>
-                                    <span className="cockpit-sw-intel-theme-severity" data-severity={theme.severity}>{theme.severity}</span>
-                                  </div>
-                                  <div className="cockpit-sw-intel-theme-bar">
-                                    <div className="cockpit-sw-intel-theme-bar-fill" data-severity={theme.severity} style={{ width: `${barPct}%` }} />
-                                  </div>
-                                  <div className="cockpit-sw-intel-theme-desc">{theme.description}</div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                          {domains.length > 0 && (
-                            <div className="cockpit-sw-intel-concentration">
-                              <div className="cockpit-sw-intel-concentration-label">DOMAIN CONCENTRATION</div>
-                              {domains.map(d => (
-                                <div key={d.domain} className="cockpit-sw-intel-concentration-row">
-                                  <span className="cockpit-sw-intel-concentration-domain">{d.domain}</span>
-                                  <span className="cockpit-sw-intel-concentration-weight">{Math.round(d.weight * 100)}%</span>
-                                  <div className="cockpit-sw-intel-concentration-bar">
-                                    <div className="cockpit-sw-intel-concentration-bar-fill" style={{ width: `${Math.round(d.weight * 100)}%` }} />
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                  <div className="cockpit-board-finding-desc">{t.description}</div>
+                  {domNarratives[i] && (
+                    <div className="cockpit-board-finding-domain">
+                      {domNarratives[i].domain} — {domNarratives[i].risk_label}
                     </div>
-                  )
-                })()}
-              </div>
-            </div>
-          )
-        })()}
-
-        {swIntelActive && consequencePosture ? (
-          <div className="cockpit-operational-confidence">
-            <div className="cockpit-operational-confidence-label">OPERATIONAL CONFIDENCE</div>
-            <div className="cockpit-operational-confidence-items">
-              <span className="cockpit-operational-confidence-item" data-level={consequencePosture.overall_confidence}>{consequencePosture.overall_confidence_label}</span>
-              <span className="cockpit-operational-confidence-sep">·</span>
-              <span className="cockpit-operational-confidence-item">Structural reconciliation incomplete</span>
-              {sec.deterministic_replay && sec.deterministic_replay.available && sec.deterministic_replay.detail.status === 'PASS' && (
-                <>
-                  <span className="cockpit-operational-confidence-sep">·</span>
-                  <span className="cockpit-operational-confidence-item" data-level="GOVERNED">Replay-certified evidence lineage active</span>
-                </>
-              )}
-            </div>
-          </div>
-        ) : isGoverned ? (
-          <div className="cockpit-synthesis">
-            <div className="cockpit-synthesis-conclusion">{bpGl.governance_narrative}</div>
-            {sec.cross_specimen && sec.cross_specimen.available && sec.cross_specimen.detail.total_observations > 0 && (
-              <div className="cockpit-synthesis-convergence">
-                Governance patterns confirmed across independent specimens — {sec.cross_specimen.detail.convergences} convergences observed.
-              </div>
+                  )}
+                </div>
+              )
+            })}
+            {lowerThemes.length > 0 && (
+              <div className="cockpit-board-finding-overflow">+{lowerThemes.length} additional finding{lowerThemes.length !== 1 ? 's' : ''} at ELEVATED/MODERATE</div>
             )}
           </div>
-        ) : (
-          <div className="cockpit-synthesis">
-            <div className="cockpit-synthesis-conclusion">
-              {pLevel >= 2
-                ? `Structural and runtime intelligence active. ${eLabels}. Governed narrative requires semantic qualification.`
-                : `Structural intelligence active. ${eLabels}. Governed narrative requires semantic qualification.`}
-            </div>
-          </div>
+        )}
+
+        {cdc && cdc.combined_synthesis && (
+          <div className="cockpit-convergence-synthesis">{cdc.combined_synthesis}</div>
         )}
 
         <div className="cockpit-instruments">
@@ -10051,48 +9901,17 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
 
           <div className="cockpit-pressure-panel">
-            <div className="cockpit-pressure-label">EXECUTIVE ATTENTION</div>
-            {domainCognition && domainCognition.attention_zones.map(az => (
-              <div key={az.domain_id} className="cockpit-pressure-dim" data-severity={az.severity} data-active="true">
+            <div className="cockpit-pressure-label">DOMAIN GROUNDING</div>
+            {domNarratives.slice(0, 4).map((n, i) => (
+              <div key={i} className="cockpit-pressure-dim" data-severity="ELEVATED" data-active="true">
                 <div className="cockpit-pressure-dim-content" style={{ paddingLeft: 0 }}>
                   <div className="cockpit-pressure-dim-head">
-                    <span className="cockpit-pressure-dim-name">{az.executive_label}</span>
-                    <span className="cockpit-pressure-dim-severity" data-severity={az.severity}>{az.severity}</span>
+                    <span className="cockpit-pressure-dim-name">{n.domain}</span>
                   </div>
-                  <div className="cockpit-pressure-dim-locale" style={{ color: '#9aa0bc', fontStyle: 'italic', fontSize: '11px' }}>{az.executive_role}</div>
-                  <div className="cockpit-pressure-dim-locale">{az.why_it_matters}</div>
-                  {az.evidence_anchors && az.evidence_anchors.length > 0 && (
-                    <div className="cockpit-pressure-dim-locale" style={{ color: '#5e6d8a', fontSize: '9px', marginTop: 2 }}>{az.evidence_anchors.join(' · ')}</div>
-                  )}
+                  <div className="cockpit-pressure-dim-locale">{n.risk_label}</div>
                 </div>
               </div>
             ))}
-            {domainCognition && domainCognition.attention_zones.length > 0 && (
-              <div className="cockpit-pressure-synthesis">
-                {domainCognition.attention_zones.filter(az => az.severity === 'CRITICAL' || az.severity === 'HIGH').length} critical/high attention zone{domainCognition.attention_zones.filter(az => az.severity === 'CRITICAL' || az.severity === 'HIGH').length !== 1 ? 's' : ''} across {domainCognition.pressure_summary.total_domains} domains.
-                {domainCognition.pressure_summary.domains_with_runtime > 0 ? ` ${domainCognition.pressure_summary.domains_with_runtime} carry runtime coordination evidence.` : ''}
-              </div>
-            )}
-            {isGoverned && pressureDimensions.length > 0 && (
-              <>
-                <div className="cockpit-pressure-label" style={{ marginTop: 16 }}>GOVERNED SIGNAL PRESSURE</div>
-                {pressureDimensions.map(dim => (
-                  <div key={dim.key} className="cockpit-pressure-dim" data-severity={dim.severity} data-active={String(dim.severity !== 'NOMINAL')}>
-                    <div className="cockpit-pressure-dim-visual">
-                      <StructuralGlyph type={PRESSURE_GLYPH_TYPE[dim.key]} severity={dim.severity} size={32} />
-                    </div>
-                    <div className="cockpit-pressure-dim-content">
-                      <div className="cockpit-pressure-dim-head">
-                        <span className="cockpit-pressure-dim-name">{dim.name}</span>
-                        <span className="cockpit-pressure-dim-severity" data-severity={dim.severity}>{dim.severity !== 'NOMINAL' ? dim.severity : '—'}</span>
-                      </div>
-                      <div className="cockpit-pressure-dim-locale">{PLOCALE[dim.key]}</div>
-                    </div>
-                  </div>
-                ))}
-                {pressureSynthesis && <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>}
-              </>
-            )}
             {isGoverned && (
               <div className="cockpit-governance-chips">
                 {sec.deterministic_replay && sec.deterministic_replay.available && (
@@ -10117,58 +9936,24 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           <div className="cockpit-coverage-panel">
             <div className="cockpit-coverage-label">{isGoverned ? 'GOVERNED DOMAINS' : 'STRUCTURAL DOMAINS'}</div>
             <div className="cockpit-coverage-ring">
-              <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${bpDc.structurally_backed} of ${bpDc.total_domains} governed`}>
+              <svg viewBox="0 0 80 80" className="cockpit-coverage-svg" aria-label={`${bpDc.structurally_backed || 0} of ${bpDc.total_domains || 0}`}>
                 <circle cx="40" cy="40" r="32" fill="none" stroke="#1e2330" strokeWidth="6" />
                 <circle cx="40" cy="40" r="32" fill="none" stroke="#64ffda" strokeWidth="6"
-                  strokeDasharray={`${(bpDc.structurally_backed / Math.max(1, bpDc.total_domains)) * 201} 201`}
+                  strokeDasharray={`${((bpDc.structurally_backed || 0) / Math.max(1, bpDc.total_domains || 1)) * 201} 201`}
                   strokeLinecap="round" transform="rotate(-90 40 40)" />
-                <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{bpDc.total_domains}</text>
+                <text x="40" y="37" textAnchor="middle" fontSize="16" fontWeight="600" fill="#ccd6f6" fontFamily="'Courier New', monospace">{bpDc.total_domains || 0}</text>
                 <text x="40" y="49" textAnchor="middle" fontSize="7" fill="#6a7a9a" fontFamily="-apple-system, sans-serif">domains</text>
               </svg>
             </div>
             <div className="cockpit-coverage-meta">
               {domainCognition && (
-                <>
-                  <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{domainCognition.pressure_summary.domains_under_pressure} under pressure</div>
-                  {domainCognition.pressure_summary.domains_with_runtime > 0 && (
-                    <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{domainCognition.pressure_summary.domains_with_runtime} with runtime evidence</div>
-                  )}
-                </>
+                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{domainCognition.pressure_summary.domains_under_pressure} under pressure</div>
               )}
               {isGoverned && sec.proposition_review && sec.proposition_review.available && (
                 <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--backed" />{sec.proposition_review.detail.accepted} propositions accepted</div>
               )}
-              {isGoverned && sec.evidence_enrichment && sec.evidence_enrichment.available && sec.evidence_enrichment.detail.enrichment_events > 0 && (
-                <div className="cockpit-coverage-row"><span className="cockpit-coverage-dot cockpit-coverage-dot--advisory" />{sec.evidence_enrichment.detail.enrichment_events} evidence corrections</div>
-              )}
             </div>
           </div>
-        </div>
-
-        {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-          <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-            <TopologyGraph
-              domains={fullReport.semantic_domain_registry}
-              clusters={fullReport.semantic_cluster_registry || []}
-              edges={fullReport.semantic_topology_edges || []}
-              pressureZoneLabel={bpTs.pressure_zone || ''}
-              pressureZoneState={fullReport.pressure_zone_state}
-              cognitionOverlay={swIntelTopoOverlay}
-            />
-            <div className="cockpit-topology-hint">{swIntelActive ? 'Topology reflects operational posture — click to explore' : isGoverned ? 'Click to explore governed topology' : 'Structural domain topology — click to explore'}</div>
-          </div>
-        )}
-
-        {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
-
-        {isGoverned && !(swIntelActive && consequencePosture) && (
-          <BoardroomGovernanceIntelligence fullReport={fullReport} boardroomProjection={boardroomProjection} />
-        )}
-
-        <div className="cockpit-footer">
-          {isGoverned
-            ? (swIntelActive ? 'Structural derivation primary · 75.x bounded authority · All claims trace to evidence' : 'Governed intelligence under 75.x bounded authority. Structural derivation primary. All claims trace to evidence.')
-            : `${pLevel >= 2 ? 'Structural + runtime' : 'Structural'} evidence · ${pLabel} · All claims trace to evidence.`}
         </div>
       </div>
     )

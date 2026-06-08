@@ -1286,6 +1286,65 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
 
+        /* Board Cognition Object Cards */
+        .cockpit-board-findings {
+          padding: 0 20px 12px;
+        }
+        .cockpit-board-finding {
+          padding: 14px 16px;
+          margin-bottom: 8px;
+          background: #12151f;
+          border-radius: 8px;
+          border-left: 3px solid #3a4060;
+        }
+        .cockpit-board-finding[data-severity="CRITICAL"] { border-left-color: #ff4757; }
+        .cockpit-board-finding[data-severity="HIGH"] { border-left-color: #ff6b6b; }
+        .cockpit-board-finding-head {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          margin-bottom: 6px;
+        }
+        .cockpit-board-finding-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          flex-shrink: 0;
+        }
+        .cockpit-board-finding-severity[data-severity="CRITICAL"] { color: #ff4757; }
+        .cockpit-board-finding-severity[data-severity="HIGH"] { color: #ff6b6b; }
+        .cockpit-board-finding-label {
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          font-weight: 600;
+          color: #ccd6f6;
+          letter-spacing: 0.01em;
+        }
+        .cockpit-board-finding-desc {
+          font-size: 13px;
+          color: #9aa0bc;
+          line-height: 1.5;
+          margin-bottom: 6px;
+        }
+        .cockpit-board-finding-domain {
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .cockpit-board-finding-overflow {
+          font-size: 10px;
+          color: #5e6d8a;
+          padding: 6px 16px;
+        }
+        .cockpit-convergence-synthesis {
+          padding: 10px 20px 14px;
+          font-size: 12px;
+          color: #7a8aaa;
+          font-style: italic;
+          line-height: 1.5;
+          border-bottom: 1px solid #1e2330;
+        }
+
         /* Cockpit Cross-Domain Cognition */
         .cockpit-cross-domain {
           padding: 14px 20px;
