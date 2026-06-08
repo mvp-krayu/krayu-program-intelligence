@@ -331,7 +331,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
 
   const legendH = 36
   const nodeSpX = 110, nodeSpY = 66
-  const cluPadTop = 24, cluPadLeft = 18
+  const cluPadTop = 32, cluPadLeft = 18
   const gap = 14
   const maxPerRow = isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
 
@@ -406,10 +406,25 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
             <g key={cid}>
               <rect x={lay.x} y={lay.y} width={lay.w} height={lay.h} rx={9}
                 fill={color} fillOpacity={0.06} stroke={color} strokeWidth={1} strokeOpacity={0.35} />
-              <text x={lay.x + lay.w / 2} y={lay.y + 16} textAnchor="middle"
-                fontSize={8.3} letterSpacing="0.12em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={0.55}>
-                {(cl.cluster_label || cid).toUpperCase()}
-              </text>
+              {(() => {
+                const label = (cl.cluster_label || cid).toUpperCase()
+                const maxCharsPerLine = Math.floor(lay.w / 7.5)
+                if (label.length <= maxCharsPerLine) {
+                  return <text x={lay.x + lay.w / 2} y={lay.y + 16} textAnchor="middle" fontSize={8} letterSpacing="0.1em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={0.55}>{label}</text>
+                }
+                const mid = Math.ceil(label.length / 2)
+                const spaceNearMid = label.lastIndexOf(' ', mid)
+                const splitAt = spaceNearMid > label.length * 0.25 ? spaceNearMid : mid
+                const line1 = label.slice(0, splitAt).trim()
+                const line2 = label.slice(splitAt).trim()
+                const fs = Math.max(6.5, Math.min(8, lay.w / (Math.max(line1.length, line2.length) * 0.95)))
+                return (
+                  <text x={lay.x + lay.w / 2} y={lay.y + 11} textAnchor="middle" fontSize={fs} letterSpacing="0.08em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={0.55}>
+                    <tspan x={lay.x + lay.w / 2} dy="0">{line1}</tspan>
+                    <tspan x={lay.x + lay.w / 2} dy={fs + 2}>{line2}</tspan>
+                  </text>
+                )
+              })()}
             </g>
           )
         })}
