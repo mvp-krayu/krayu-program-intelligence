@@ -500,8 +500,8 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const ux = dx / len, uy = dy / len
           const sD = (domains || []).find(dd => dd.domain_id === e.source_domain)
           const tD = (domains || []).find(dd => dd.domain_id === e.target_domain)
-          const sR = (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
-          const tR = (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
+          const sR = boardroomMode ? 28 : (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
+          const tR = boardroomMode ? 28 : (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
 
           const dimmed = highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
           const bright = highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
