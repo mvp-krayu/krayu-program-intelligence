@@ -9894,6 +9894,53 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         )}
 
+        {domNarratives.length > 0 && (
+          <div className="cockpit-where-section">
+            <div className="cockpit-where-label">WHERE IT MANIFESTS</div>
+            {domNarratives.slice(0, 4).map((n, i) => (
+              <div key={i} className="cockpit-where-row">
+                <span className="cockpit-where-domain">{n.domain}</span>
+                <span className="cockpit-where-risk">{n.risk_label}</span>
+              </div>
+            ))}
+            {domNarratives.length > 4 && (
+              <div className="cockpit-where-overflow">+{domNarratives.length - 4} more region{domNarratives.length - 4 !== 1 ? 's' : ''}</div>
+            )}
+          </div>
+        )}
+
+        {isGoverned && pressureDimensions.length > 0 && (
+          <div className="cockpit-signal-pressure-section">
+            <div className="cockpit-where-label">STRUCTURAL PRESSURE</div>
+            {pressureDimensions.map(dim => (
+              <div key={dim.key} className="cockpit-pressure-dim" data-severity={dim.severity} data-active={String(dim.severity !== 'NOMINAL')}>
+                <div className="cockpit-pressure-dim-visual">
+                  <StructuralGlyph type={PRESSURE_GLYPH_TYPE[dim.key]} severity={dim.severity} size={28} />
+                </div>
+                <div className="cockpit-pressure-dim-content">
+                  <div className="cockpit-pressure-dim-head">
+                    <span className="cockpit-pressure-dim-name">{dim.name}</span>
+                    <span className="cockpit-pressure-dim-severity" data-severity={dim.severity}>{dim.severity !== 'NOMINAL' ? dim.severity : '—'}</span>
+                  </div>
+                  <div className="cockpit-pressure-dim-locale">{PLOCALE[dim.key]}</div>
+                </div>
+              </div>
+            ))}
+            {pressureSynthesis && <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>}
+            <div className="cockpit-governance-chips">
+              {sec.deterministic_replay && sec.deterministic_replay.available && (
+                <span className="cockpit-gov-chip" data-status={sec.deterministic_replay.detail.status}>{sec.deterministic_replay.detail.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + sec.deterministic_replay.detail.status}</span>
+              )}
+              {sec.constitutional_anchor && sec.constitutional_anchor.available && (
+                <span className="cockpit-gov-chip" data-status={sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}>{sec.constitutional_anchor.detail.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
+              )}
+              {sec.replay_certification && sec.replay_certification.available && (
+                <span className="cockpit-gov-chip" data-status={sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'CERTIFIED' : sec.replay_certification.detail.certification_status}</span>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="cockpit-instruments">
           <div className="cockpit-gauge-panel">
             <CockpitRadialGauge governedLevel={isGoverned ? qp.s_level : (projectionAuthority ? projectionAuthority.qualificationState : 'S1')} tensionPct={tensionPct} governanceLabel={isGoverned ? 'GOVERNED' : (pLevel >= 2 ? 'STRUCTURAL + RUNTIME' : 'STRUCTURAL')} />

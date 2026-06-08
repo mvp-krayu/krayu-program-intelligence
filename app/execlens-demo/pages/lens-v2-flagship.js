@@ -1286,6 +1286,47 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
 
+        /* WHERE IT MANIFESTS section */
+        .cockpit-where-section, .cockpit-signal-pressure-section {
+          padding: 12px 20px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .cockpit-where-label {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          color: #6a7a9a;
+          letter-spacing: 0.1em;
+          margin-bottom: 8px;
+        }
+        .cockpit-where-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 5px 0;
+          border-bottom: 1px solid #12151f;
+          gap: 12px;
+        }
+        .cockpit-where-row:last-of-type { border-bottom: none; }
+        .cockpit-where-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          font-weight: 500;
+          color: #ccd6f6;
+          flex-shrink: 0;
+        }
+        .cockpit-where-risk {
+          font-size: 11px;
+          color: #9aa0bc;
+          text-align: right;
+          line-height: 1.4;
+        }
+        .cockpit-where-overflow {
+          font-size: 10px;
+          color: #5e6d8a;
+          padding-top: 6px;
+        }
+
         /* Board Cognition Object Cards */
         .cockpit-board-findings {
           padding: 0 20px 12px;
