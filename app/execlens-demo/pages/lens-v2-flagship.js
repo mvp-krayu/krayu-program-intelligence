@@ -1286,6 +1286,59 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
 
+        /* Cockpit Cross-Domain Cognition */
+        .cockpit-cross-domain {
+          padding: 14px 20px;
+          margin-bottom: 8px;
+          border-bottom: 1px solid #1e2330;
+        }
+        .cockpit-cross-domain-synthesis {
+          font-size: 13px;
+          color: #ccd6f6;
+          line-height: 1.6;
+          margin-bottom: 12px;
+        }
+        .cockpit-cross-domain-themes {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+        .cockpit-cross-domain-theme {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 4px;
+          border: 1px solid #1e2330;
+          background: #0d0f17;
+        }
+        .cockpit-cross-domain-theme[data-severity="CRITICAL"] { border-color: rgba(255, 71, 87, 0.3); }
+        .cockpit-cross-domain-theme[data-severity="HIGH"] { border-color: rgba(255, 107, 107, 0.25); }
+        .cockpit-cross-domain-theme-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+        }
+        .cockpit-cross-domain-theme-severity[data-severity="CRITICAL"] { color: #ff4757; }
+        .cockpit-cross-domain-theme-severity[data-severity="HIGH"] { color: #ff6b6b; }
+        .cockpit-cross-domain-theme-label {
+          font-size: 12px;
+          color: #9aa0bc;
+        }
+        .cockpit-cross-domain-overflow {
+          font-size: 10px;
+          color: #5e6d8a;
+          padding: 4px 10px;
+        }
+        .cockpit-cross-domain-combined {
+          font-size: 11px;
+          color: #7a8aaa;
+          font-style: italic;
+          line-height: 1.5;
+        }
+
         /* Cockpit Attention Zones (domain cognition) */
         .cockpit-attention-zones {
           padding: 12px 20px;

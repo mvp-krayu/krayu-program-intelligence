@@ -9693,7 +9693,7 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges, domainCognition, cognitionSubstrate }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges, domainCognition, cognitionSubstrate, crossDomainCognition }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
@@ -9870,6 +9870,33 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               })()}
           </div>
         </div>
+
+        {crossDomainCognition && crossDomainCognition.consequence_themes && crossDomainCognition.consequence_themes.length > 0 && (
+          <div className="cockpit-cross-domain">
+            {crossDomainCognition.executive_synthesis && (
+              <div className="cockpit-cross-domain-synthesis">{crossDomainCognition.executive_synthesis}</div>
+            )}
+            <div className="cockpit-cross-domain-themes">
+              {crossDomainCognition.consequence_themes
+                .filter(t => t.severity === 'CRITICAL' || t.severity === 'HIGH')
+                .slice(0, 4)
+                .map((t, i) => (
+                  <div key={i} className="cockpit-cross-domain-theme" data-severity={t.severity}>
+                    <span className="cockpit-cross-domain-theme-severity" data-severity={t.severity}>{t.severity}</span>
+                    <span className="cockpit-cross-domain-theme-label">{t.theme_label}</span>
+                  </div>
+                ))}
+              {crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length > 0 && (
+                <div className="cockpit-cross-domain-overflow">
+                  +{crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length} additional pattern{crossDomainCognition.consequence_themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH').length !== 1 ? 's' : ''}
+                </div>
+              )}
+            </div>
+            {crossDomainCognition.combined_synthesis && (
+              <div className="cockpit-cross-domain-combined">{crossDomainCognition.combined_synthesis}</div>
+            )}
+          </div>
+        )}
 
         {(hasCanonicalFamilies ? bpSi.families.length > 0 : pressureDimensions.length > 1) && (
           <div className="signal-field" data-pressure={(bpTs.activated_count || activatedSignals.length) > 0 ? 'active' : 'nominal'}>
@@ -10498,10 +10525,10 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition }) {
   if (boardroomMode) {
     return (
-      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} />
+      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} />
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {
@@ -10730,6 +10757,16 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     return tempSynthesis ? compileConsequenceTeaser(tempSynthesis, qualifiedReport) : null
   }, [fullReport, swIntelActive])
   const consequencePosture = useMemo(() => consequenceResult ? consequencesForBoardroom(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
+  const boardroomCrossDomainCognition = useMemo(() => {
+    if (consequencePosture) return consequencePosture
+    if (!fullReport || !qualifiedReport) return null
+    try {
+      const syn = synthesize(qualifiedReport)
+      if (!syn) return null
+      const csq = compileConsequences(syn, qualifiedReport)
+      return csq ? consequencesForBoardroom(csq, syn, qualifiedReport) : null
+    } catch { return null }
+  }, [consequencePosture, fullReport, qualifiedReport])
   const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
   const balancedBriefing = useMemo(() => balancedProjection ? composeBalancedBriefing(balancedProjection, synthesisResult, fullReport) : null, [balancedProjection, synthesisResult, fullReport])
 
@@ -11084,6 +11121,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           projectionAuthority={projectionAuthority}
           domainCognition={domainCognition}
           cognitionSubstrate={cognitionSubstrate}
+          crossDomainCognition={boardroomCrossDomainCognition}
         />
 
         {!boardroomMode && !isBalanced && (
