@@ -1331,29 +1331,29 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 11px;
           color: #7a8aaa;
         }
-        .cockpit-board-finding-grounding {
+        .cockpit-board-finding-evidence {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
           margin-top: 8px;
           padding-top: 8px;
           border-top: 1px solid #1a1e2a;
         }
-        .cockpit-board-finding-causal {
-          padding: 4px 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: baseline;
-          gap: 12px;
-        }
-        .cockpit-board-finding-causal-driver {
-          font-size: 12px;
-          color: #ccd6f6;
-          line-height: 1.4;
-        }
-        .cockpit-board-finding-causal-anchor {
+        .cockpit-board-finding-evidence-item {
           font-family: 'Courier New', monospace;
           font-size: 10px;
+          color: #7a8aaa;
+          padding: 2px 8px;
+          background: #0d0f17;
+          border-radius: 3px;
+          border: 1px solid #1a1e2a;
+          letter-spacing: 0.04em;
+        }
+        .cockpit-board-finding-annotation {
+          font-size: 11px;
           color: #5e6d8a;
-          flex-shrink: 0;
-          text-align: right;
+          margin-top: 6px;
+          line-height: 1.4;
         }
         .cockpit-board-finding-overflow {
           font-size: 10px;

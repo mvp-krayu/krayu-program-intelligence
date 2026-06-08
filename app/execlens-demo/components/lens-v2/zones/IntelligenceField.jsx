@@ -9872,20 +9872,18 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     <span className="cockpit-board-finding-label">{t.theme_label}</span>
                   </div>
                   <div className="cockpit-board-finding-desc">{t.description}</div>
-                  {swIntelActive ? (
-                    <div className="cockpit-board-finding-grounding">
-                      {domNarratives.filter(n => n.risk_label).slice(0, 3).map((n, ni) => (
-                        <div key={ni} className="cockpit-board-finding-causal">
-                          <span className="cockpit-board-finding-causal-driver">{n.risk_label}</span>
-                          <span className="cockpit-board-finding-causal-anchor">{n.domain}</span>
-                        </div>
-                      ))}
+                  {swIntelActive && (
+                    <div className="cockpit-board-finding-evidence">
+                      <span className="cockpit-board-finding-evidence-item">{t.source_count} source{t.source_count !== 1 ? 's' : ''}</span>
+                      {t.static_sources > 0 && <span className="cockpit-board-finding-evidence-item">{t.static_sources} structural</span>}
+                      {t.runtime_sources > 0 && <span className="cockpit-board-finding-evidence-item">{t.runtime_sources} runtime</span>}
+                      {t.scope && <span className="cockpit-board-finding-evidence-item">{t.scope.toLowerCase()}</span>}
+                      {t.is_combination && <span className="cockpit-board-finding-evidence-item">compound</span>}
                     </div>
-                  ) : domNarratives[0] ? (
-                    <div className="cockpit-board-finding-domain">
-                      {domNarratives[0].domain} — {domNarratives[0].risk_label}
-                    </div>
-                  ) : null}
+                  )}
+                  {swIntelActive && t.evidence_annotation && (
+                    <div className="cockpit-board-finding-annotation">{t.evidence_annotation}</div>
+                  )}
                 </div>
               )
             })}
