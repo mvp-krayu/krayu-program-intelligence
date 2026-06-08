@@ -1331,6 +1331,34 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 11px;
           color: #7a8aaa;
         }
+        .cockpit-board-finding-grounding {
+          margin-top: 8px;
+          padding-top: 8px;
+          border-top: 1px solid #1a1e2a;
+        }
+        .cockpit-board-finding-domain-detail {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 3px 0;
+        }
+        .cockpit-board-finding-domain-name {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #9aa0bc;
+          font-weight: 500;
+        }
+        .cockpit-board-finding-domain-risk {
+          font-size: 11px;
+          color: #7a8aaa;
+          text-align: right;
+          max-width: 60%;
+        }
+        .cockpit-board-finding-domain-more {
+          font-size: 10px;
+          color: #5e6d8a;
+          padding-top: 4px;
+        }
         .cockpit-board-finding-overflow {
           font-size: 10px;
           color: #5e6d8a;

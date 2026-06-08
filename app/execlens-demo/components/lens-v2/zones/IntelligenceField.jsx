@@ -9872,11 +9872,23 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     <span className="cockpit-board-finding-label">{t.theme_label}</span>
                   </div>
                   <div className="cockpit-board-finding-desc">{t.description}</div>
-                  {domNarratives[i] && (
+                  {swIntelActive ? (
+                    <div className="cockpit-board-finding-grounding">
+                      {domNarratives.slice(0, 3).map((n, ni) => (
+                        <div key={ni} className="cockpit-board-finding-domain-detail">
+                          <span className="cockpit-board-finding-domain-name">{n.domain}</span>
+                          <span className="cockpit-board-finding-domain-risk">{n.risk_label}</span>
+                        </div>
+                      ))}
+                      {domNarratives.length > 3 && (
+                        <div className="cockpit-board-finding-domain-more">+{domNarratives.length - 3} more domain{domNarratives.length - 3 !== 1 ? 's' : ''}</div>
+                      )}
+                    </div>
+                  ) : domNarratives[i] ? (
                     <div className="cockpit-board-finding-domain">
                       {domNarratives[i].domain} — {domNarratives[i].risk_label}
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )
             })}
@@ -9888,6 +9900,12 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
         {cdc && cdc.combined_synthesis && (
           <div className="cockpit-convergence-synthesis">{cdc.combined_synthesis}</div>
+        )}
+
+        {swIntelActive && consequencePosture && consequencePosture.executive_synthesis && (
+          <div className="cockpit-convergence-synthesis" style={{ borderTop: '1px solid #1e2330', paddingTop: 10 }}>
+            {consequencePosture.executive_synthesis}
+          </div>
         )}
 
         <div className="cockpit-instruments">
