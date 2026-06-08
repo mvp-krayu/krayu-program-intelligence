@@ -236,7 +236,10 @@ function getAuthorizedConditionTypes(projectionLevel) {
 function detectQualificationState(fullReport) {
   if (!fullReport) return 'S0'
   const gl = fullReport.governance_lifecycle
-  if (gl && gl.available) return 'S3'
+  if (gl && gl.available && gl.s_level) return gl.s_level
+  if (gl && gl.available) return 'S2'
+  const ql = fullReport.qualification_level
+  if (ql && ql !== 'S0') return ql
   const hasRecon = fullReport.reconciliation_summary && fullReport.reconciliation_summary.available
   const sigs = fullReport.signal_interpretations || []
   const hasCanonicalSignals = sigs.length > 0 && !sigs[0].derived_from

@@ -814,7 +814,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness, projectionAuthority, suppressedConditions, crossDomainCognition }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -846,198 +846,100 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
   const zonePaths = activeZoneKey && DENSE_ZONE_PATHS[activeZoneKey]
 
+  const pa = projectionAuthority
+  const suppressedN = (suppressedConditions || []).length
+  const hasRuntime = pa && pa.evidenceCapabilities && pa.evidenceCapabilities.some(e => e === 'E-RUNTIME' || e === 'E-GOVERNED')
+  const sLevel = pa ? pa.qualificationState : (fullReport && fullReport.qualification_level) || 'S0'
+  const hasSemantic = sLevel === 'S2' || sLevel === 'S3'
+
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
-      <div className="support-block">
-        <div className="support-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
-        <div className="support-readiness">{badge.state_label || '—'}</div>
-        <div className="support-coverage">
-          {(scope && scope.grounding_label) || 'Partial Coverage'}
-        </div>
-        <div className="support-coverage-meta">
-          {(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
-        </div>
-      </div>
 
-      {chip.renders && (
-        <div className="support-block support-block--qualifier">
-          <div className="support-label">QUALIFIER</div>
-          <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
-          <div className="support-qualifier-note">advisory bound</div>
-        </div>
-      )}
+      {boardroomMode ? (() => {
+        const cdc = crossDomainCognition
+        const themes = (cdc && cdc.consequence_themes) || []
+        const sliceCount = cdc && cdc.cognition_slices ? cdc.cognition_slices.length : 0
+        const surfacedFindings = themes.length
+        const SRANK = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+        const topSeverity = themes.length > 0 ? themes.reduce((best, t) => (SRANK[t.severity] ?? 5) < (SRANK[best] ?? 5) ? t.severity : best, themes[0].severity) : null
+        const domConc = (cdc && cdc.domain_concentration) || []
+        const blastRadius = domConc.filter(d => d.condition_count > 0).length
+        const gravityCenter = domConc.length > 0 ? domConc[0].domain : null
+        const pLevel = pa ? pa.projectionLevel : 0
+        const confidenceLabel = pLevel >= 4 ? 'Governed — full authority'
+          : pLevel >= 3 ? 'Governed — semantic authority'
+          : pLevel >= 2 ? 'Structural + Runtime'
+          : pLevel >= 1 ? 'Structural only'
+          : 'Topology only'
+        const isGoverned = pLevel >= 3
 
-      {visibilityLayerCompleteness && (
-        <div className="support-block support-block--visibility">
-          <div className="support-label">VISIBILITY COMPLETENESS</div>
-          <div className="support-visibility-scope" data-scope={visibilityLayerCompleteness.verdict_scope}>
-            {visibilityLayerCompleteness.verdict_scope.replace(/_/g, ' ')}
-          </div>
-          <div className="support-visibility-profile">{visibilityLayerCompleteness.architecture_profile}</div>
-          <div className="support-visibility-bar">
-            <div className="support-visibility-bar-fill" style={{ width: `${visibilityLayerCompleteness.completeness}%` }} data-complete={visibilityLayerCompleteness.completeness === 100} />
-          </div>
-          <div className="support-visibility-ratio">{visibilityLayerCompleteness.measured_count}/{visibilityLayerCompleteness.required_count} layers measured</div>
-          {visibilityLayerCompleteness.layers_missing.length > 0 && (
-            <div className="support-visibility-missing">
-              {visibilityLayerCompleteness.layers_missing.map(l => (
-                <span key={l.id} className="support-visibility-missing-layer">{l.name}</span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {!boardroomMode && swIntelActive && resolvedCondition ? (
-        <div className="support-block support-block--conditions support-block--condition-focus">
-          <div className="support-label">FOCUSED CONDITION</div>
-          <div className="support-condition-focus-title" data-severity={resolvedCondition.severity}>
-            {resolvedCondition.operator_cognition_title}
-          </div>
-          {resolvedCondition.guided_interventions && resolvedCondition.guided_interventions.length > 0 && (
-            <>
-              <div className="support-label" style={{ marginTop: 10 }}>INTERVENTIONS</div>
-              {resolvedCondition.guided_interventions.map(gi => (
-                <div key={gi.intervention_id} className="support-condition-intervention" data-type={gi.action_type}>
-                  <span className="support-condition-intervention-label">{gi.operator_label}</span>
-                  <span className="support-condition-intervention-effect">{gi.panel_mutation}</span>
-                </div>
-              ))}
-            </>
-          )}
-          {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).length > 0 && (
-            <>
-              <div className="support-label" style={{ marginTop: 10 }}>LINKED CAPABILITIES</div>
-              {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).map(sid => (
-                <div key={sid} className="support-condition-surface">{SURFACE_DISPLAY_NAME[sid] || sid}</div>
-              ))}
-            </>
-          )}
-        </div>
-      ) : !boardroomMode && swIntelActive && activeConditions && activeConditions.length > 0 ? (
-        <div className="support-block support-block--conditions">
-          <div className="support-label">ACTIVE CONDITIONS</div>
-          {activeConditions.slice(0, 4).map(c => (
-            <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
-              <span className="support-condition-title">{c.operator_cognition_title}</span>
-              <span className="support-condition-severity">{c.severity}</span>
-              {c.shared_topology_targets?.domains_display?.[0] && (
-                <span className="domain-chip" data-severity={c.severity} title={c.shared_topology_targets.domains?.[0]}>
-                  {c.shared_topology_targets.domains_display[0]}
-                </span>
-              )}
-            </div>
-          ))}
-          {activeConditions.length > 4 && (
-            <div className="support-condition-overflow">+{activeConditions.length - 4} more</div>
-          )}
-        </div>
-      ) : null}
-
-      {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (() => {
-        const emerged = Object.values(emergenceState).filter(n => n && n.narrative !== null)
-        return emerged.length > 0 ? (
-          <div className="support-block support-block--emergence support-block--balanced-compressed">
-            <div className="support-label">INTELLIGENCE STATE</div>
-            <div className="emergence-index">
-              {Object.values(BALANCED_INTERPRETIVE_NARRATIVES).map(fn => {
-                const state = emergenceState[fn.key]
-                const active = state && state.narrative !== null
-                return (
-                  <div key={fn.key} className="emergence-indicator" data-active={active} data-tier={fn.emergenceClass}>
-                    <span className="emergence-indicator-dot">{active ? '●' : '○'}</span>
-                    <span className="emergence-indicator-label">{active ? fn.emergenceLabel : fn.nominalLabel}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        ) : null
-      })()}
-
-      {boardroomMode && swIntelActive ? (
-        <div className="support-block support-block--executive-posture">
-          <div className="support-label">EXECUTIVE POSTURE</div>
-          <div className="support-posture-kv">
-            <div className="support-posture-row">
-              <span className="support-posture-key">Operational concentration</span>
-              <span className="support-posture-val">{activeConditions && activeConditions.length > 0 && activeConditions[0].shared_topology_targets ? activeConditions[0].shared_topology_targets.domains_display?.[0] || 'System-wide' : 'System-wide'}</span>
-            </div>
-            <div className="support-posture-row">
-              <span className="support-posture-key">Primary software dynamic</span>
-              <span className="support-posture-val">{activeConditions && activeConditions.length > 0 ? (activeConditions.find(c => c.severity === 'CRITICAL' || c.severity === 'HIGH') || activeConditions[0]).condition_type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) : '—'}</span>
-            </div>
-            <div className="support-posture-row">
-              <span className="support-posture-key">Propagation risk</span>
-              <span className="support-posture-val">{activeConditions && activeConditions.some(c => c.condition_type === 'PROPAGATION_ASYMMETRY') ? 'Asymmetric downstream spread' : 'Within normal parameters'}</span>
-            </div>
-            <div className="support-posture-row">
-              <span className="support-posture-key">Confidence</span>
-              <span className="support-posture-val" data-confidence={resolvedCondition ? resolvedCondition.governance_boundary : 'ADVISORY_BOUND'}>{resolvedCondition && resolvedCondition.governance_boundary === 'GOVERNED' ? 'Governed' : 'Advisory-bound'}</span>
-            </div>
-            <div className="support-posture-row support-posture-row--implication">
-              <span className="support-posture-key">Operational implication</span>
-              <span className="support-posture-val">{activeConditions && activeConditions.some(c => c.condition_type === 'DELIVERY_PRESSURE_CONCENTRATION') ? 'Delivery coordination structurally constrained' : 'No immediate structural constraint'}</span>
-            </div>
-          </div>
-          <div className="support-label" style={{ marginTop: 12 }}>DESCENT PATHS</div>
-          <div className="support-sw-intel-descent">
-            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">DENSE</span><span className="support-sw-intel-descent-purpose">Topology cognition</span></div>
-            <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">OPERATOR</span><span className="support-sw-intel-descent-purpose">Evidence inspection</span></div>
-          </div>
-        </div>
-      ) : boardroomMode && paths.length > 0 ? (
-        <div className="support-block support-block--paths">
-          <div className="support-label">AVAILABLE PATHS</div>
-          <div className="support-paths-list">
-            {paths.map((p, i) => (
-              <div key={i} className="support-path-item">
-                <span className="support-path-marker" />
-                <span className="support-path-text">{p.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {/* LEGACY-ONLY: S1 support section — governed S2+ runs never match qualification_level === 'S1' */}
-      {boardroomMode && fullReport && fullReport.qualification_level === 'S1' && (() => {
-        const gn = fullReport.governed_narrative
-        const gnAvail = gn && gn.available
-        const qc = gnAvail ? (gn.qualification_context || {}) : {}
-        const ss = gnAvail ? (gn.structural_summary || {}) : {}
-        const tm = fullReport.topology_maturity || {}
         return (
           <>
-            <div className="support-block support-block--qualification">
-              <div className="support-label">QUALIFICATION</div>
-              <div className="support-qualification-state">
-                <span className="support-qualification-s">{fullReport.qualification_level}</span>
-                <span className="support-qualification-gate">{qc.gate_status === 'OPEN' ? 'Gate Open' : 'Gate Pending'}</span>
+            <div className="support-block support-block--confidence">
+              <div className="support-label">CONFIDENCE</div>
+              <div className="support-confidence-primary" data-governed={isGoverned ? 'true' : 'false'}>
+                {confidenceLabel}
               </div>
-              <div className="support-qualification-detail">
-                Structural topology complete. Semantic qualification not yet established.
+              <div className="support-confidence-layers">
+                <span className="support-confidence-chip" data-status={pLevel >= 1 ? 'PASS' : 'PENDING'}>{pLevel >= 1 ? 'Structural' : 'Structural pending'}</span>
+                <span className="support-confidence-chip" data-status={pLevel >= 2 ? 'PASS' : 'PENDING'}>{pLevel >= 2 ? 'Runtime' : 'Runtime pending'}</span>
+                <span className="support-confidence-chip" data-status={pLevel >= 3 ? 'PASS' : 'PENDING'}>{pLevel >= 3 ? 'Semantic' : 'Semantic pending'}</span>
               </div>
             </div>
 
-            <div className="support-block support-block--structural-summary">
-              <div className="support-label">STRUCTURAL SUBSTRATE</div>
-              <div className="support-kv-list">
-                <div className="support-kv"><span className="support-kv-key">Clusters</span><span className="support-kv-val">{ss.cluster_count || (fullReport.topology_summary || {}).cluster_count || '—'}</span></div>
-                <div className="support-kv"><span className="support-kv-key">Files</span><span className="support-kv-val">{(ss.file_count || 0).toLocaleString()}</span></div>
-                <div className="support-kv"><span className="support-kv-key">Import edges</span><span className="support-kv-val">{(ss.import_edges || 0).toLocaleString()}</span></div>
-                <div className="support-kv"><span className="support-kv-key">Inheritance</span><span className="support-kv-val">{(ss.inheritance_edges || 0).toLocaleString()}</span></div>
+            {topSeverity && (
+              <div className="support-block support-block--severity">
+                <div className="support-label">SEVERITY</div>
+                <div className="support-severity-primary" data-severity={topSeverity}>{topSeverity}</div>
+                <div className="support-severity-detail">
+                  {surfacedFindings} material finding{surfacedFindings !== 1 ? 's' : ''} from {sliceCount} detected condition{sliceCount !== 1 ? 's' : ''}
+                </div>
               </div>
-              <div className="support-kv-maturity">{tm.label || 'Registry'}</div>
+            )}
+
+            {blastRadius > 0 && (
+              <div className="support-block support-block--blast-radius">
+                <div className="support-label">BLAST RADIUS</div>
+                <div className="support-blast-count">{blastRadius} domain{blastRadius !== 1 ? 's' : ''} affected</div>
+              </div>
+            )}
+
+            {gravityCenter && (() => {
+              const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
+              const centersMatch = !execCenter || execCenter === gravityCenter
+              return (
+                <div className="support-block support-block--gravity">
+                  {centersMatch ? (
+                    <>
+                      <div className="support-label">CENTER OF GRAVITY</div>
+                      <div className="support-gravity-domain">{gravityCenter}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="support-label">STRUCTURAL CENTER</div>
+                      <div className="support-gravity-domain">{gravityCenter}</div>
+                      <div className="support-label" style={{ marginTop: 8 }}>EXECUTION CENTER</div>
+                      <div className="support-gravity-domain support-gravity-domain--execution">{execCenter}</div>
+                    </>
+                  )}
+                </div>
+              )
+            })()}
+
+            <div className="support-block support-block--investigation">
+              <div className="support-label">INVESTIGATE</div>
+              <div className="support-sw-intel-descent">
+                <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">DENSE</span><span className="support-sw-intel-descent-purpose">Topology evidence</span></div>
+                <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">OPERATOR</span><span className="support-sw-intel-descent-purpose">Condition forensics</span></div>
+              </div>
             </div>
 
-            {gnAvail && (
-              <div className="support-block support-block--provenance">
-                <div className="support-label">COMPOSITION</div>
-                <div className="support-kv-list">
-                  <div className="support-kv"><span className="support-kv-key">Method</span><span className="support-kv-val">Deterministic</span></div>
-                  <div className="support-kv"><span className="support-kv-key">Contract</span><span className="support-kv-val">{(gn.composition_provenance || {}).governance_contract || '75.x'}</span></div>
-                  <div className="support-kv"><span className="support-kv-key">Replay</span><span className="support-kv-val">{(gn.composition_provenance || {}).replay_tier || 'EXACT'}</span></div>
+            {sLevel && (
+              <div className="support-block support-block--authority-compact">
+                <div className="support-label">AUTHORITY</div>
+                <div className="support-authority-compact-row">
+                  <span className="support-authority-s">{sLevel}</span>
+                  <span className="support-authority-p">{pa ? pa.projectionLabel : 'P0'}</span>
                 </div>
               </div>
             )}
@@ -1051,7 +953,116 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             )}
           </>
         )
-      })()}
+      })() : (
+        <>
+          <div className="support-block">
+            <div className="support-label"><TermHint term="EVIDENCE STATE">EVIDENCE STATE</TermHint></div>
+            <div className="support-readiness">{badge.state_label || '—'}</div>
+            <div className="support-coverage">
+              {(scope && scope.grounding_label) || 'Partial Coverage'}
+            </div>
+            <div className="support-coverage-meta">
+              {(scope && scope.domain_count) || 3} domains · {(scope && scope.cluster_count) || 47} clusters
+            </div>
+          </div>
+
+          {chip.renders && (
+            <div className="support-block support-block--qualifier">
+              <div className="support-label">QUALIFIER</div>
+              <div className="support-qualifier-class">{chip.class_label || chip.qualifier_class || '—'}</div>
+              <div className="support-qualifier-note">advisory bound</div>
+            </div>
+          )}
+
+          {visibilityLayerCompleteness && (
+            <div className="support-block support-block--visibility">
+              <div className="support-label">VISIBILITY COMPLETENESS</div>
+              <div className="support-visibility-scope" data-scope={visibilityLayerCompleteness.verdict_scope}>
+                {visibilityLayerCompleteness.verdict_scope.replace(/_/g, ' ')}
+              </div>
+              <div className="support-visibility-profile">{visibilityLayerCompleteness.architecture_profile}</div>
+              <div className="support-visibility-bar">
+                <div className="support-visibility-bar-fill" style={{ width: `${visibilityLayerCompleteness.completeness}%` }} data-complete={visibilityLayerCompleteness.completeness === 100} />
+              </div>
+              <div className="support-visibility-ratio">{visibilityLayerCompleteness.measured_count}/{visibilityLayerCompleteness.required_count} layers measured</div>
+              {visibilityLayerCompleteness.layers_missing.length > 0 && (
+                <div className="support-visibility-missing">
+                  {visibilityLayerCompleteness.layers_missing.map(l => (
+                    <span key={l.id} className="support-visibility-missing-layer">{l.name}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {swIntelActive && resolvedCondition ? (
+            <div className="support-block support-block--conditions support-block--condition-focus">
+              <div className="support-label">FOCUSED CONDITION</div>
+              <div className="support-condition-focus-title" data-severity={resolvedCondition.severity}>
+                {resolvedCondition.operator_cognition_title}
+              </div>
+              {resolvedCondition.guided_interventions && resolvedCondition.guided_interventions.length > 0 && (
+                <>
+                  <div className="support-label" style={{ marginTop: 10 }}>INTERVENTIONS</div>
+                  {resolvedCondition.guided_interventions.map(gi => (
+                    <div key={gi.intervention_id} className="support-condition-intervention" data-type={gi.action_type}>
+                      <span className="support-condition-intervention-label">{gi.operator_label}</span>
+                      <span className="support-condition-intervention-effect">{gi.panel_mutation}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+              {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).length > 0 && (
+                <>
+                  <div className="support-label" style={{ marginTop: 10 }}>LINKED CAPABILITIES</div>
+                  {(CONDITION_TO_SURFACES[resolvedCondition.condition_type] || []).map(sid => (
+                    <div key={sid} className="support-condition-surface">{SURFACE_DISPLAY_NAME[sid] || sid}</div>
+                  ))}
+                </>
+              )}
+            </div>
+          ) : swIntelActive && activeConditions && activeConditions.length > 0 ? (
+            <div className="support-block support-block--conditions">
+              <div className="support-label">ACTIVE CONDITIONS</div>
+              {activeConditions.slice(0, 4).map(c => (
+                <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
+                  <span className="support-condition-title">{c.operator_cognition_title}</span>
+                  <span className="support-condition-severity">{c.severity}</span>
+                  {c.shared_topology_targets?.domains_display?.[0] && (
+                    <span className="domain-chip" data-severity={c.severity} title={c.shared_topology_targets.domains?.[0]}>
+                      {c.shared_topology_targets.domains_display[0]}
+                    </span>
+                  )}
+                </div>
+              ))}
+              {activeConditions.length > 4 && (
+                <div className="support-condition-overflow">+{activeConditions.length - 4} more</div>
+              )}
+            </div>
+          ) : null}
+
+          {densityClass === 'EXECUTIVE_BALANCED' && emergenceState && (() => {
+            const emerged = Object.values(emergenceState).filter(n => n && n.narrative !== null)
+            return emerged.length > 0 ? (
+              <div className="support-block support-block--emergence support-block--balanced-compressed">
+                <div className="support-label">INTELLIGENCE STATE</div>
+                <div className="emergence-index">
+                  {Object.values(BALANCED_INTERPRETIVE_NARRATIVES).map(fn => {
+                    const state = emergenceState[fn.key]
+                    const active = state && state.narrative !== null
+                    return (
+                      <div key={fn.key} className="emergence-indicator" data-active={active} data-tier={fn.emergenceClass}>
+                        <span className="emergence-indicator-dot">{active ? '●' : '○'}</span>
+                        <span className="emergence-indicator-label">{active ? fn.emergenceLabel : fn.nominalLabel}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            ) : null
+          })()}
+        </>
+      )}
 
       {resolvedCognitionContract && resolvedCognitionContract.guidedCognition && resolvedCognitionContract.guidedCognition.length > 0 && (
         <div className="support-block support-block--cognition-queries" data-surface={resolvedCognitionContract.surface.surface_id}>
@@ -1144,7 +1155,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {escalationAvailable && (
+      {!boardroomMode && escalationAvailable && (
         <div className={`support-block support-block--structural-depth${piRuntimeActive ? ' support-block--depth-active' : ''}`}>
           <div className="support-label">STRUCTURAL DEPTH</div>
           {!piRuntimeActive ? (
@@ -1197,7 +1208,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {fullReport && (
+      {!boardroomMode && fullReport && (
         <div className="support-block support-block--assessment">
           <div className="support-label">STRUCTURAL ASSESSMENT</div>
           <div className="support-assessment-sub">Governed deliverable package — verdict, topology, evidence record</div>
@@ -1211,7 +1222,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {fullReport && (
+      {!boardroomMode && fullReport && (
         <div className="support-block support-block--trail">
           <div className="support-label"><TermHint term="EVIDENCE RECORD">EVIDENCE RECORD</TermHint></div>
           {(exploredQueries.size > 0 || interrogationTrail.size > 0) && (
@@ -1230,7 +1241,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {densityClass !== 'OPERATOR_DENSE' && (
+      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && (
         <div className="support-block support-block--reports">
           <div className="support-label">REPORT PACK</div>
           <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
@@ -4559,7 +4570,7 @@ const INTERROGATION_EXPANSION_REGISTRY = {
   },
 }
 
-function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing, projectionAuthority, suppressedConditions }) {
+function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapted, fullReport, boardroomProjection, activeZoneKey, activeQueryKey, onQueryDismiss, emergenceState, piRuntimeActive, activeExpansionIndex, expansions, onExpansionDismiss, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQueryDismiss, activeConditions, resolvedCondition, onConditionDismiss, swIntelActive, swIntelTeaser, consequenceTeaser, balancedBriefing, projectionAuthority, suppressedConditions, crossDomainCognition }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const framing = boardroomMode
     ? INTERP_MODE_FRAMING.BOARDROOM
@@ -5093,225 +5104,92 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       )
     }
 
-    if (boardroomMode && boardroomProjection && !boardroomProjection.qualification_posture.governed) {
-      const bp = boardroomProjection
-      const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0'
-      const eLabels = projectionAuthority ? projectionAuthority.evidenceCapabilities.join(' + ') : ''
-      const sState = projectionAuthority ? projectionAuthority.qualificationState : 'S0'
-      const suppressedN = (suppressedConditions || []).length
-      const tension = bp.tension_summary || {}
-      const domCov = bp.domain_coverage || {}
-      const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+    if (boardroomMode && boardroomProjection) {
+      const cdc = crossDomainCognition
+      const themes = (cdc && cdc.consequence_themes) || []
+      const critThemes = themes.filter(t => t.severity === 'CRITICAL')
+      const highThemes = themes.filter(t => t.severity === 'HIGH')
+      const primaryThemes = critThemes.length >= 2 ? critThemes.slice(0, 2) : [...critThemes, ...highThemes.slice(0, 3 - critThemes.length)]
+      const primaryLabels = new Set(primaryThemes.map(t => t.theme_label))
+      const supportingThemes = themes.filter(t => !primaryLabels.has(t.theme_label))
+      const postureText = cdc && cdc.posture_label ? cdc.posture_label : 'Structural Assessment'
+      const synthText = cdc && cdc.executive_synthesis ? cdc.executive_synthesis : null
+      const domConc = (cdc && cdc.domain_concentration) || []
+      const structuralCenter = domConc.length > 0 ? domConc[0].domain : pressureZone
+      const executionCenter = cdc && cdc.execution_center ? cdc.execution_center : null
+      const centersdiverge = executionCenter && executionCenter !== structuralCenter
+      const domNarratives = (cdc && cdc.domain_narratives) || []
+      const topDomains = domNarratives.slice(0, 3)
 
       return (
-        <aside className="intel-interp intel-interp--executive-posture" data-tone={framing.tone} aria-label="Executive intelligence briefing">
+        <aside className="intel-interp intel-interp--board-orientation" data-tone={framing.tone} aria-label="Board orientation — posture and findings">
           <div className="interp-tag">
-            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
-            <span className="interp-tag-state">{sState}</span>
+            <span className="interp-tag-label">BOARD ORIENTATION</span>
           </div>
 
           <div className="interp-block interp-block--lead">
-            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
-            <div className="interp-synthesis">
-              {pLevel >= 2
-                ? `${pLabel}. Structural and runtime intelligence across ${domCov.total_domains || 0} domains. ${tension.tension_count || 0} structural tension${(tension.tension_count || 0) !== 1 ? 's' : ''} active.`
-                : `${pLabel}. Structural intelligence across ${domCov.total_domains || 0} domains.`
-              }
-            </div>
-            <div className="interp-synthesis-meta">{eLabels}</div>
+            <div className="interp-synthesis interp-synthesis--posture">{postureText}</div>
+            {synthText && <div className="interp-synthesis-meta">{synthText}</div>}
           </div>
 
-          {tension.tension_count > 0 && (
+          {primaryThemes.length > 0 && (
+            <div className="interp-block interp-block--findings-list">
+              <div className="interp-section-label">MATERIAL FINDINGS</div>
+              {primaryThemes.map((t, i) => (
+                <div key={i} className="interp-finding-item interp-finding-item--primary" data-severity={t.severity}>
+                  <span className="interp-finding-severity" data-severity={t.severity}>{t.severity === 'CRITICAL' ? '!!' : t.severity === 'HIGH' || t.severity === 'ELEVATED' ? '!' : '·'}</span>
+                  <span className="interp-finding-label">{t.theme_label}</span>
+                </div>
+              ))}
+              {supportingThemes.length > 0 && (
+                <>
+                  <div className="interp-finding-separator" />
+                  <div className="interp-section-label interp-section-label--supporting">SUPPORTING</div>
+                  {supportingThemes.map((t, i) => (
+                    <div key={i} className="interp-finding-item interp-finding-item--supporting" data-severity={t.severity}>
+                      <span className="interp-finding-severity" data-severity={t.severity}>·</span>
+                      <span className="interp-finding-label">{t.theme_label}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
+
+          {centersdiverge && (
+            <div className="interp-block interp-block--execution-axis">
+              <div className="interp-section-label">EXECUTION PRESSURE</div>
+              <div className="interp-synthesis">Execution stress accumulates in <strong>{executionCenter}</strong> — distinct from the structural center.</div>
+            </div>
+          )}
+
+          {topDomains.length > 0 && (
             <div className="interp-block">
-              <div className="interp-section-label">STRUCTURAL TENSION</div>
-              <div className="interp-synthesis">{tension.tension_label || `${tension.tension_count} tensions active`}</div>
+              <div className="interp-section-label">AFFECTED REGIONS</div>
+              {topDomains.map((n, i) => (
+                <div key={i} className="interp-affected-region">
+                  <span className="interp-affected-region-name">{n.domain}</span>
+                  <span className="interp-affected-region-risk">{n.risk_label}</span>
+                </div>
+              ))}
             </div>
           )}
-
-          {suppressedN > 0 && (
-            <div className="interp-block">
-              <div className="interp-section-label">SUPPRESSED INTELLIGENCE</div>
-              <div className="interp-synthesis" style={{ color: '#ff9e4a' }}>{suppressedN} condition{suppressedN !== 1 ? 's' : ''} exceed evidence authority. Governed narrative requires P3+ semantic qualification.</div>
-            </div>
-          )}
-
-          {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
-            <div className="interp-block interp-block--module-teaser">
-              <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
-              <div className="interp-module-teaser-cta">Activate Software Intelligence for posture</div>
-            </div>
-          )}
-
-          <div className="interp-block">
-            <div className="interp-section-label">DEPTH</div>
-            <div className="interp-synthesis">Descend into DENSE for structural topology cognition. Descend into OPERATOR for evidence inspection.</div>
-          </div>
-        </aside>
-      )
-    }
-
-    if (boardroomMode && swIntelActive && boardroomProjection && boardroomProjection.qualification_posture.governed) {
-      const qp = boardroomProjection.qualification_posture
-      const primaryDynamic = activeConditions && activeConditions.length > 0
-        ? (activeConditions.find(c => c.severity === 'CRITICAL' || c.severity === 'HIGH') || activeConditions[0])
-        : null
-      const primaryDynamicName = primaryDynamic
-        ? primaryDynamic.condition_type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
-        : '—'
-      const hasPropagation = activeConditions && activeConditions.some(c => c.condition_type === 'PROPAGATION_ASYMMETRY')
-      const hasPressure = activeConditions && activeConditions.some(c => c.condition_type === 'DELIVERY_PRESSURE_CONCENTRATION')
-      return (
-        <aside className="intel-interp intel-interp--executive-posture" data-tone={framing.tone} aria-label="Executive posture — SW-Intel active">
-          <div className="interp-tag">
-            <span className="interp-tag-label">EXECUTIVE POSTURE</span>
-            <span className="interp-tag-state">{qp.s_level}</span>
-          </div>
-
-          <div className="interp-block interp-block--lead">
-            <div className="interp-section-label">OPERATIONAL CONCENTRATION</div>
-            <div className="interp-synthesis">{pressureZone || 'System-wide'}</div>
-          </div>
-
-          <div className="interp-block">
-            <div className="interp-section-label">PRIMARY SOFTWARE DYNAMIC</div>
-            <div className="interp-synthesis">{primaryDynamicName}</div>
-          </div>
-
-          <div className="interp-block">
-            <div className="interp-section-label">PROPAGATION RISK</div>
-            <div className="interp-synthesis">{hasPropagation ? 'Asymmetric downstream spread' : 'Within normal parameters'}</div>
-          </div>
-
-          <div className="interp-block">
-            <div className="interp-section-label">CONFIDENCE</div>
-            <div className="interp-synthesis" data-confidence={primaryDynamic ? primaryDynamic.governance_boundary : 'ADVISORY_BOUND'}>
-              {primaryDynamic && primaryDynamic.governance_boundary === 'GOVERNED' ? 'Governed' : 'Advisory-bound'}
-            </div>
-          </div>
-
-          <div className="interp-block interp-block--implication">
-            <div className="interp-section-label">OPERATIONAL IMPLICATION</div>
-            <div className="interp-synthesis interp-synthesis--implication">
-              {hasPressure ? 'Delivery coordination structurally constrained' : 'No immediate structural constraint'}
-            </div>
-          </div>
-
-          <div className="interp-block">
-            <div className="interp-section-label interp-section-label--descent">DESCENT</div>
-            <div className="interp-synthesis interp-synthesis--descent">
-              DENSE → topology cognition · OPERATOR → evidence inspection
-            </div>
-          </div>
-        </aside>
-      )
-    }
-
-    if (boardroomProjection && boardroomProjection.qualification_posture.governed) {
-      const qp = boardroomProjection.qualification_posture
-      const bpTs = boardroomProjection.tension_summary
-      const bpGl = boardroomProjection.governance_legitimacy
-      return (
-        <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive intelligence briefing">
-          <div className="interp-tag">
-            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
-            <span className="interp-tag-state">{qp.s_level}</span>
-          </div>
-
-          <div className="interp-block interp-block--lead">
-            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
-            <div className="interp-synthesis">{bpTs.posture_narrative}</div>
-            <div className="interp-synthesis-meta">
-              {(qp.provenance_summary || '').replace(/\.$/, '')} · {qp.authority_ceiling || 'L3'} ceiling
-            </div>
-          </div>
-
-          {bpTs.structural_tension_narrative && (
-            <div className="interp-block">
-              <div className="interp-section-label">STRUCTURAL TENSION</div>
-              <div className="interp-synthesis">{bpTs.structural_tension_narrative}</div>
-            </div>
-          )}
-
-          <div className="interp-block">
-            <div className="interp-section-label">GOVERNANCE CONFIDENCE</div>
-            <div className="interp-synthesis">{bpGl.confidence_narrative}</div>
-          </div>
 
           {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
             <div className="interp-block interp-block--module-teaser">
               <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
               <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
               {consequenceTeaser && consequenceTeaser.consequence_teaser && (
-                <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} identified — {consequenceTeaser.consequence_teaser.top_consequence_severity} severity</div>
+                <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} — {consequenceTeaser.consequence_teaser.top_consequence_severity}</div>
               )}
-              <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
+              <div className="interp-module-teaser-cta">Activate Software Intelligence for posture</div>
             </div>
           )}
 
           <div className="interp-block">
-            <div className="interp-section-label interp-section-label--descent">DEPTH</div>
+            <div className="interp-section-label interp-section-label--descent">DESCENT</div>
             <div className="interp-synthesis interp-synthesis--descent">
-              Descend into BALANCED for the governed qualification journey.
-            </div>
-          </div>
-        </aside>
-      )
-    }
-
-    const gl = fullReport && fullReport.governance_lifecycle
-    const isGovernedS1Plus = gl && gl.available && gl.s_level && ['S1', 'S2', 'S3'].includes(gl.s_level)
-    if (isGovernedS1Plus) {
-      const pc = fullReport.proposition_corpus
-      const rv = fullReport.revalidation_intelligence
-      const cc = fullReport.chronicle_certification
-      const govFamilyKeys = [...new Set(activatedSignals.map(s => s.signal_family).filter(Boolean))]
-      return (
-        <aside className="intel-interp" data-tone={framing.tone} aria-label="Executive intelligence briefing">
-          <div className="interp-tag">
-            <span className="interp-tag-label">EXECUTIVE BRIEFING</span>
-            <span className="interp-tag-state">{gl.s_level}</span>
-          </div>
-
-          <div className="interp-block interp-block--lead">
-            <div className="interp-section-label">INTELLIGENCE POSTURE</div>
-            <div className="interp-synthesis">
-              {gl.s_level} governed intelligence across {totalDomains} semantic domains.
-              {govFamilyKeys.length > 0
-                ? ` Structural pressure concentrated${pressureZone ? ` in "${pressureZone}"` : ''}.`
-                : ' No elevated structural pressure.'}
-            </div>
-            <div className="interp-synthesis-meta">
-              {(gl.qualification_provenance || '').replace(/_/g, ' ')} · {gl.authority_ceiling || 'L3'} ceiling
-            </div>
-          </div>
-
-          {govFamilyKeys.length > 0 && (
-            <div className="interp-block">
-              <div className="interp-section-label">STRUCTURAL TENSION</div>
-              <div className="interp-synthesis">
-                {govFamilyKeys.length} pressure dimension{govFamilyKeys.length !== 1 ? 's' : ''} active{pressureZone ? ` — gravity concentrated in "${pressureZone}"` : ''}.
-              </div>
-            </div>
-          )}
-
-          <div className="interp-block">
-            <div className="interp-section-label">GOVERNANCE CONFIDENCE</div>
-            <div className="interp-synthesis">
-              {pc && pc.available && pc.governance_friction_rate > 0
-                ? 'Governed review exercised. Governance friction surfaced and resolved.'
-                : pc && pc.available
-                  ? 'Governed review completed. All claims accepted.'
-                  : 'Governance lifecycle complete.'}
-              {rv && rv.available && rv.status === 'PASS' ? ' Deterministic replay confirmed.' : ''}
-              {cc && cc.available && cc.certification_status === 'CERTIFIED' ? ' Replay-certified.' : ''}
-            </div>
-          </div>
-
-          <div className="interp-block">
-            <div className="interp-section-label interp-section-label--descent">DEPTH</div>
-            <div className="interp-synthesis interp-synthesis--descent">
-              Descend into BALANCED for the governed qualification journey.
+              DENSE → topology cognition · OPERATOR → evidence inspection
             </div>
           </div>
         </aside>
@@ -10927,6 +10805,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         balancedBriefing={balancedBriefing}
         projectionAuthority={projectionAuthority}
         suppressedConditions={suppressedConditions}
+        crossDomainCognition={boardroomCrossDomainCognition}
       />
 
       {focusedDomainId && domainProfileMap[focusedDomainId] && (
@@ -11039,6 +10918,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         resolvedCondition={resolvedCondition}
         swIntelActive={swIntelActive}
         visibilityLayerCompleteness={visibilityLayerCompleteness}
+        projectionAuthority={projectionAuthority}
+        suppressedConditions={suppressedConditions}
+        crossDomainCognition={boardroomCrossDomainCognition}
       />
       {deepDiveModal === 'EXECUTION_BLINDNESS' && fullReport && (
         <ExecutionBlindnessModal fullReport={fullReport} onClose={() => setDeepDiveModal(null)} />

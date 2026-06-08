@@ -1120,6 +1120,17 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
 
   const { domain_narratives, executive_synthesis } = synthesizeBoardroomNarrative(domainConcentration, slices)
 
+  const runtimeSlices = slices.filter(s => RUNTIME_CONDITION_SET.has(s.condition_type))
+  const runtimeDomainCounts = {}
+  for (const s of runtimeSlices) {
+    const d = s.domain || 'System-wide'
+    runtimeDomainCounts[d] = (runtimeDomainCounts[d] || 0) + 1
+  }
+  const executionConcentration = Object.entries(runtimeDomainCounts)
+    .map(([domain, count]) => ({ domain, condition_count: count }))
+    .sort((a, b) => b.condition_count - a.condition_count)
+  const executionCenter = executionConcentration.length > 0 ? executionConcentration[0].domain : null
+
   return {
     posture_label: postureLabel,
     posture_severity: csqs[0].severity,
@@ -1136,6 +1147,8 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     domain_narratives,
     executive_synthesis,
     combined_synthesis: combinedSynthesis,
+    execution_center: executionCenter,
+    execution_concentration: executionConcentration,
   }
 }
 

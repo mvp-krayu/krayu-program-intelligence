@@ -7234,6 +7234,221 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
+        /* ── Confidence Block (SupportRail, BOARDROOM) ────────────────── */
+        .support-block--confidence {
+          border-top: 1px solid #1e2330;
+        }
+        .support-confidence-primary {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: #ffd700;
+          margin-top: 4px;
+        }
+        .support-confidence-primary[data-governed="true"] { color: #64ffda; }
+        .support-confidence-layers {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-top: 6px;
+        }
+        .support-confidence-chip {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.04em;
+          padding: 2px 6px;
+          border-radius: 3px;
+        }
+        .support-confidence-chip[data-status="PASS"] {
+          color: #64ffda;
+          background: rgba(100, 255, 218, 0.08);
+        }
+        .support-confidence-chip[data-status="PENDING"] {
+          color: #5a6580;
+          background: rgba(90, 101, 128, 0.1);
+        }
+
+        /* ── Severity Block (SupportRail, BOARDROOM) ─────────────────── */
+        .support-block--severity {
+          border-top: 1px solid #1e2330;
+        }
+        .support-severity-primary {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          margin-top: 4px;
+        }
+        .support-severity-primary[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .support-severity-primary[data-severity="HIGH"] { color: #ff9e4a; }
+        .support-severity-primary[data-severity="ELEVATED"] { color: #ffb347; }
+        .support-severity-primary[data-severity="MODERATE"] { color: #ffd700; }
+        .support-severity-primary[data-severity="MEDIUM"] { color: #ffd700; }
+        .support-severity-primary[data-severity="LOW"] { color: #7a8aaa; }
+        .support-severity-detail {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+          line-height: 1.35;
+          margin-top: 2px;
+        }
+
+        /* ── Scope Block (SupportRail, BOARDROOM) ────────────────────── */
+        .support-block--scope {
+          border-top: 1px solid #1e2330;
+        }
+        .support-scope-locus {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #ccd6f6;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+        .support-scope-reach {
+          font-family: 'Courier New', monospace;
+          font-size: 9.5px;
+          color: #6a7a9a;
+          letter-spacing: 0.04em;
+          margin-top: 2px;
+        }
+
+        /* ── Blast Radius (SupportRail, BOARDROOM) ────────────────────── */
+        .support-block--blast-radius {
+          border-top: 1px solid #1e2330;
+        }
+        .support-blast-count {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: #ccd6f6;
+          margin-top: 4px;
+        }
+
+        /* ── Center of Gravity (SupportRail, BOARDROOM) ──────────────── */
+        .support-block--gravity {
+          border-top: 1px solid #1e2330;
+        }
+        .support-gravity-domain {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #e2e8f6;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+        .support-gravity-domain--execution {
+          color: #4a9eff;
+        }
+
+        /* ── Investigation Block (SupportRail, BOARDROOM) ────────────── */
+        .support-block--investigation {
+          border-top: 1px solid #1e2330;
+        }
+
+        /* ── Authority Compact (SupportRail, BOARDROOM) ──────────────── */
+        .support-block--authority-compact {
+          border-top: 1px solid rgba(30, 35, 48, 0.5);
+        }
+        .support-authority-compact-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          margin-top: 4px;
+        }
+        .support-authority-s {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #64ffda;
+          letter-spacing: 0.04em;
+        }
+        .support-authority-p {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a9eff;
+          letter-spacing: 0.04em;
+        }
+
+        /* ── Board Orientation (LEFT panel, BOARDROOM) ───────────────── */
+        .intel-interp--board-orientation .interp-synthesis--posture {
+          font-weight: 600;
+          color: #e2e8f6;
+          font-size: 13px;
+          line-height: 1.4;
+        }
+        .interp-block--findings-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .interp-finding-item {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 4px 0;
+        }
+        .interp-finding-item--primary {
+          padding: 5px 0;
+        }
+        .interp-finding-item--supporting .interp-finding-label {
+          color: #7a8aaa;
+          font-size: 10.5px;
+        }
+        .interp-finding-separator {
+          height: 1px;
+          background: rgba(42, 47, 64, 0.3);
+          margin: 4px 0;
+        }
+        .interp-section-label--supporting {
+          font-size: 8px !important;
+          color: #4a5570 !important;
+          margin-bottom: 0 !important;
+        }
+        .interp-finding-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 700;
+          width: 14px;
+          text-align: center;
+          flex-shrink: 0;
+        }
+        .interp-finding-severity[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .interp-finding-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .interp-finding-severity[data-severity="ELEVATED"] { color: #ffb347; }
+        .interp-finding-severity[data-severity="MODERATE"] { color: #ffd700; }
+        .interp-finding-severity[data-severity="MEDIUM"] { color: #ffd700; }
+        .interp-finding-severity[data-severity="LOW"] { color: #7a8aaa; }
+        .interp-finding-label {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #ccd6f6;
+          line-height: 1.35;
+        }
+        .interp-block--execution-axis .interp-synthesis {
+          color: #4a9eff;
+          font-size: 11px;
+        }
+        .interp-block--execution-axis .interp-synthesis strong {
+          color: #e2e8f6;
+          font-weight: 600;
+        }
+        .interp-affected-region {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          padding: 3px 0;
+        }
+        .interp-affected-region-name {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+        }
+        .interp-affected-region-risk {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #ff9e4a;
+          letter-spacing: 0.04em;
+        }
+
         /* ── Available Executive Paths (SupportRail, BOARDROOM) ───────── */
         .support-block--paths {
           border-top: 1px solid #1e2330;
