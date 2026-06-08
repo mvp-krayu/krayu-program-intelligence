@@ -9873,16 +9873,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                   </div>
                   <div className="cockpit-board-finding-desc">{t.description}</div>
                   {swIntelActive && (
-                    <div className="cockpit-board-finding-evidence">
-                      <span className="cockpit-board-finding-evidence-item">{t.source_count} source{t.source_count !== 1 ? 's' : ''}</span>
-                      {t.static_sources > 0 && <span className="cockpit-board-finding-evidence-item">{t.static_sources} structural</span>}
-                      {t.runtime_sources > 0 && <span className="cockpit-board-finding-evidence-item">{t.runtime_sources} runtime</span>}
-                      {t.scope && <span className="cockpit-board-finding-evidence-item">{t.scope.toLowerCase()}</span>}
-                      {t.is_combination && <span className="cockpit-board-finding-evidence-item">compound</span>}
-                    </div>
-                  )}
-                  {swIntelActive && t.evidence_annotation && (
-                    <div className="cockpit-board-finding-annotation">{t.evidence_annotation}</div>
+                    <div className="cockpit-board-finding-annotation">{t.source_count} evidence source{t.source_count !== 1 ? 's' : ''} · {t.scope ? t.scope.toLowerCase() : 'structural'}{t.is_combination ? ' · compound' : ''}</div>
                   )}
                 </div>
               )
