@@ -1055,15 +1055,25 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
 
     let themeSlices = slices.filter(s => causalTypes.includes(s.condition_type))
     if (themeSlices.length === 0 && causalTypes.includes('COMPOUND_CONVERGENCE')) {
-      themeSlices = slices.filter(s => s.severity === 'HIGH' || s.severity === 'CRITICAL').slice(0, 5)
+      themeSlices = slices.filter(s => s.severity === 'HIGH' || s.severity === 'CRITICAL').slice(0, 10)
     }
     const SRANK = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
-    const seen = new Set()
-    const topContributors = themeSlices
-      .sort((a, b) => (SRANK[a.severity] ?? 5) - (SRANK[b.severity] ?? 5))
-      .filter(s => { const key = s.executive_name + '|' + s.domain; if (seen.has(key)) return false; seen.add(key); return true })
+    const driverGroups = {}
+    for (const s of themeSlices) {
+      const key = s.executive_name
+      if (!driverGroups[key]) driverGroups[key] = { name: key, domains: [], maxSev: 'NOMINAL', count: 0 }
+      driverGroups[key].count++
+      if (!driverGroups[key].domains.includes(s.domain)) driverGroups[key].domains.push(s.domain)
+      if ((SRANK[s.severity] ?? 5) < (SRANK[driverGroups[key].maxSev] ?? 5)) driverGroups[key].maxSev = s.severity
+    }
+    const topContributors = Object.values(driverGroups)
+      .sort((a, b) => (SRANK[a.maxSev] ?? 5) - (SRANK[b.maxSev] ?? 5) || b.count - a.count)
       .slice(0, 5)
-      .map(s => ({ name: s.executive_name, domain: s.domain, severity: s.severity }))
+      .map(g => ({
+        name: g.name,
+        domain: g.domains.length === 1 ? g.domains[0] : g.domains.length <= 3 ? g.domains.join(', ') : g.domains.slice(0, 2).join(', ') + ' +' + (g.domains.length - 2),
+        severity: g.maxSev,
+      }))
 
     t.board_grounding = {
       causal_drivers: causalTypes.slice(0, 4).map(ct => CAUSAL_LABELS[ct] || ct.toLowerCase().replace(/_/g, ' ')),
