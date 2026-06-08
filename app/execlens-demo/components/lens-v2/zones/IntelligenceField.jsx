@@ -9878,40 +9878,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         </div>
 
-        {primaryThemes.length > 0 && (
-          <div className="cockpit-board-findings">
-            {primaryThemes.map((t, i) => (
-              <div key={i} className="cockpit-board-finding" data-severity={t.severity}>
-                <div className="cockpit-board-finding-head">
-                  <span className="cockpit-board-finding-severity" data-severity={t.severity}>{t.severity}</span>
-                  <span className="cockpit-board-finding-label">{t.theme_label}</span>
-                </div>
-                <div className="cockpit-board-finding-desc">{t.description}</div>
-                {t.board_implication && (
-                  <div className="cockpit-board-finding-implication">{t.board_implication}</div>
-                )}
-                {swIntelActive && t.board_grounding && t.board_grounding.top_contributors && t.board_grounding.top_contributors.length > 0 && (
-                  <div className="cockpit-board-finding-grounding">
-                    {t.board_grounding.top_contributors.map((c, ci) => (
-                      <div key={ci} className="cockpit-board-finding-contributor">
-                        <span className="cockpit-board-finding-contributor-name">{c.name}</span>
-                        <span className="cockpit-board-finding-contributor-domain">{c.domain}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            {overflowCount > 0 && (
-              <div className="cockpit-board-finding-overflow">+{overflowCount} additional finding{overflowCount !== 1 ? 's' : ''}</div>
-            )}
-          </div>
-        )}
-
-        {cdc && cdc.combined_synthesis && (
-          <div className="cockpit-convergence-synthesis">{cdc.combined_synthesis}</div>
-        )}
-
         {domNarratives.length > 0 && (
           <div className="cockpit-where-section">
             <div className="cockpit-where-label">WHERE IT MANIFESTS</div>
@@ -9948,6 +9914,40 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               )
             })()}
           </div>
+        )}
+
+        {primaryThemes.length > 0 && (
+          <div className="cockpit-board-findings">
+            {primaryThemes.map((t, i) => (
+              <div key={i} className="cockpit-board-finding" data-severity={t.severity}>
+                <div className="cockpit-board-finding-head">
+                  <span className="cockpit-board-finding-severity" data-severity={t.severity}>{t.severity}</span>
+                  <span className="cockpit-board-finding-label">{t.theme_label}</span>
+                </div>
+                <div className="cockpit-board-finding-desc">{t.description}</div>
+                {t.board_implication && (
+                  <div className="cockpit-board-finding-implication">{t.board_implication}</div>
+                )}
+                {swIntelActive && t.board_grounding && t.board_grounding.top_contributors && t.board_grounding.top_contributors.length > 0 && (
+                  <div className="cockpit-board-finding-grounding">
+                    {t.board_grounding.top_contributors.map((c, ci) => (
+                      <div key={ci} className="cockpit-board-finding-contributor">
+                        <span className="cockpit-board-finding-contributor-name">{c.name}</span>
+                        <span className="cockpit-board-finding-contributor-domain">{c.domain}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {overflowCount > 0 && (
+              <div className="cockpit-board-finding-overflow">+{overflowCount} additional finding{overflowCount !== 1 ? 's' : ''}</div>
+            )}
+          </div>
+        )}
+
+        {cdc && cdc.combined_synthesis && (
+          <div className="cockpit-convergence-synthesis">{cdc.combined_synthesis}</div>
         )}
 
         {isGoverned && pressureDimensions.length > 0 && (
