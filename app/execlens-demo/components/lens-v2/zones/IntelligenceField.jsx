@@ -9924,6 +9924,29 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             {domNarratives.length > 4 && (
               <div className="cockpit-where-overflow">+{domNarratives.length - 4} more region{domNarratives.length - 4 !== 1 ? 's' : ''}</div>
             )}
+            {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
+              const dcDomains = domainCognition ? domainCognition.domains : []
+              const boardroomDomains = fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))
+              const boardroomClusters = (fullReport.semantic_cluster_registry || []).map(c => {
+                const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
+                if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
+                  return { ...c, cluster_label: dcMatch.executive_label }
+                }
+                return c
+              })
+              return (
+                <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+                  <TopologyGraph
+                    domains={boardroomDomains}
+                    clusters={boardroomClusters}
+                    edges={fullReport.semantic_topology_edges || []}
+                    pressureZoneLabel={pressureZone || ''}
+                    pressureZoneState={fullReport.pressure_zone_state}
+                  />
+                  <div className="cockpit-topology-hint">Click to explore topology</div>
+                </div>
+              )
+            })()}
           </div>
         )}
 
@@ -10013,30 +10036,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             </div>
           </div>
         </div>
-
-        {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
-          const dcDomains = domainCognition ? domainCognition.domains : []
-          const boardroomDomains = fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))
-          const boardroomClusters = (fullReport.semantic_cluster_registry || []).map(c => {
-            const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
-            if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
-              return { ...c, cluster_label: dcMatch.executive_label }
-            }
-            return c
-          })
-          return (
-            <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-              <TopologyGraph
-                domains={boardroomDomains}
-                clusters={boardroomClusters}
-                edges={fullReport.semantic_topology_edges || []}
-                pressureZoneLabel={pressureZone || ''}
-                pressureZoneState={fullReport.pressure_zone_state}
-              />
-              <div className="cockpit-topology-hint">Click to explore topology</div>
-            </div>
-          )
-        })()}
 
       </div>
     )
