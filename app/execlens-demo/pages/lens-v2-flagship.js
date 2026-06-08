@@ -1286,6 +1286,32 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-coverage-dot--backed { background: #64ffda; }
         .cockpit-coverage-dot--advisory { background: #ffd700; opacity: 0.6; }
 
+        /* Compact confidence rail */
+        .cockpit-finding-confidence {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 10px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+          flex-wrap: wrap;
+        }
+        .cockpit-finding-confidence-state {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #4a9eff;
+          letter-spacing: 0.06em;
+        }
+        .cockpit-finding-confidence-label {
+          font-size: 10px;
+          color: #7a8aaa;
+        }
+        .cockpit-finding-confidence .cockpit-gov-chip {
+          font-size: 9px;
+          padding: 2px 6px;
+        }
+
         /* WHERE IT MANIFESTS section */
         .cockpit-where-section, .cockpit-signal-pressure-section {
           padding: 12px 20px;

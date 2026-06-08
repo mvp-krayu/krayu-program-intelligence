@@ -9840,72 +9840,76 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
     const cdc = crossDomainCognition
     const themes = (cdc && cdc.consequence_themes) || []
-    const critHighThemes = themes.filter(t => t.severity === 'CRITICAL' || t.severity === 'HIGH')
-    const lowerThemes = themes.filter(t => t.severity !== 'CRITICAL' && t.severity !== 'HIGH')
+    const critThemes = themes.filter(t => t.severity === 'CRITICAL')
+    const highThemes = themes.filter(t => t.severity === 'HIGH')
+    const primaryThemes = critThemes.length >= 2 ? critThemes.slice(0, 2) : [...critThemes, ...highThemes.slice(0, 3 - critThemes.length)]
+    const overflowCount = themes.length - primaryThemes.length
     const domNarratives = (cdc && cdc.domain_narratives) || []
+    const sState = isGoverned ? qp.s_level : (projectionAuthority ? projectionAuthority.qualificationState : 'S1')
+    const confidenceChips = []
+    if (isGoverned) {
+      if (sec.deterministic_replay && sec.deterministic_replay.available) confidenceChips.push({ label: sec.deterministic_replay.detail.status === 'PASS' ? 'Replay pass' : 'Replay ' + sec.deterministic_replay.detail.status, status: sec.deterministic_replay.detail.status })
+      if (sec.constitutional_anchor && sec.constitutional_anchor.available) confidenceChips.push({ label: sec.constitutional_anchor.detail.advancement_blocked ? 'Anchor blocked' : 'Anchor pass', status: sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS' })
+      if (sec.replay_certification && sec.replay_certification.available) confidenceChips.push({ label: sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'Certified' : sec.replay_certification.detail.certification_status, status: sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING' })
+    }
 
     return (
       <div className={`rep-field rep-field--boardroom rep-field--cockpit${isGoverned ? ' rep-field--governed' : ''}`}>
         <RepModeTag
           label="Boardroom lens"
           sub="Board · conclusion surface"
-          zones={[{ id: 'Z1', name: 'Board Findings' }, { id: 'Z2', name: 'Domain Grounding' }]}
+          zones={[{ id: 'Z1', name: 'Board Findings' }, { id: 'Z2', name: 'Where It Manifests' }]}
         />
 
-        <div className="cockpit-finding" data-found={String(critHighThemes.length > 0)} data-governed={String(isGoverned)}>
+        <div className="cockpit-finding" data-found={String(primaryThemes.length > 0)} data-governed={String(isGoverned)}>
           <div className="cockpit-finding-verdict">
-            {cdc && cdc.posture_label ? cdc.posture_label : `${critHighThemes.length} CRITICAL FINDING${critHighThemes.length !== 1 ? 'S' : ''}`}
+            {cdc && cdc.posture_label ? cdc.posture_label : 'Structural Assessment'}
           </div>
           <div className="cockpit-finding-summary">
             {cdc && cdc.executive_synthesis ? cdc.executive_synthesis : 'Structural intelligence active.'}
           </div>
+          <div className="cockpit-finding-confidence">
+            <span className="cockpit-finding-confidence-state">{sState}</span>
+            {isGoverned && confidenceChips.map((c, i) => (
+              <span key={i} className="cockpit-gov-chip" data-status={c.status}>{c.label}</span>
+            ))}
+            {!isGoverned && <span className="cockpit-finding-confidence-label">{eLabels}</span>}
+            {suppressedCount > 0 && <span className="cockpit-finding-confidence-label" style={{ color: '#ff9e4a' }}>{suppressedCount} suppressed</span>}
+          </div>
         </div>
 
-        {critHighThemes.length > 0 && (
+        {primaryThemes.length > 0 && (
           <div className="cockpit-board-findings">
-            {critHighThemes.slice(0, 5).map((t, i) => {
-              const domNarr = domNarratives.find(n => n.domain && t.description && n.risk_label)
-              return (
-                <div key={i} className="cockpit-board-finding" data-severity={t.severity}>
-                  <div className="cockpit-board-finding-head">
-                    <span className="cockpit-board-finding-severity" data-severity={t.severity}>{t.severity}</span>
-                    <span className="cockpit-board-finding-label">{t.theme_label}</span>
-                  </div>
-                  <div className="cockpit-board-finding-desc">{t.description}</div>
-                  {t.board_implication && (
-                    <div className="cockpit-board-finding-implication">{t.board_implication}</div>
-                  )}
-                  {swIntelActive && t.board_grounding && (
-                    <div className="cockpit-board-finding-grounding">
-                      {t.board_grounding.top_contributors && t.board_grounding.top_contributors.length > 0 ? (
-                        t.board_grounding.top_contributors.map((c, ci) => (
-                          <div key={ci} className="cockpit-board-finding-contributor">
-                            <span className="cockpit-board-finding-contributor-name">{c.name}</span>
-                            <span className="cockpit-board-finding-contributor-domain">{c.domain}</span>
-                          </div>
-                        ))
-                      ) : t.board_grounding.causal_drivers.length > 0 ? (
-                        <div className="cockpit-board-finding-drivers">Drivers: {t.board_grounding.causal_drivers.join(', ')}</div>
-                      ) : null}
-                    </div>
-                  )}
+            {primaryThemes.map((t, i) => (
+              <div key={i} className="cockpit-board-finding" data-severity={t.severity}>
+                <div className="cockpit-board-finding-head">
+                  <span className="cockpit-board-finding-severity" data-severity={t.severity}>{t.severity}</span>
+                  <span className="cockpit-board-finding-label">{t.theme_label}</span>
                 </div>
-              )
-            })}
-            {lowerThemes.length > 0 && (
-              <div className="cockpit-board-finding-overflow">+{lowerThemes.length} additional finding{lowerThemes.length !== 1 ? 's' : ''} at ELEVATED/MODERATE</div>
+                <div className="cockpit-board-finding-desc">{t.description}</div>
+                {t.board_implication && (
+                  <div className="cockpit-board-finding-implication">{t.board_implication}</div>
+                )}
+                {swIntelActive && t.board_grounding && t.board_grounding.top_contributors && t.board_grounding.top_contributors.length > 0 && (
+                  <div className="cockpit-board-finding-grounding">
+                    {t.board_grounding.top_contributors.map((c, ci) => (
+                      <div key={ci} className="cockpit-board-finding-contributor">
+                        <span className="cockpit-board-finding-contributor-name">{c.name}</span>
+                        <span className="cockpit-board-finding-contributor-domain">{c.domain}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {overflowCount > 0 && (
+              <div className="cockpit-board-finding-overflow">+{overflowCount} additional finding{overflowCount !== 1 ? 's' : ''}</div>
             )}
           </div>
         )}
 
         {cdc && cdc.combined_synthesis && (
           <div className="cockpit-convergence-synthesis">{cdc.combined_synthesis}</div>
-        )}
-
-        {swIntelActive && consequencePosture && consequencePosture.executive_synthesis && (
-          <div className="cockpit-convergence-synthesis" style={{ borderTop: '1px solid #1e2330', paddingTop: 10 }}>
-            {consequencePosture.executive_synthesis}
-          </div>
         )}
 
         {domNarratives.length > 0 && (
@@ -9941,17 +9945,6 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               </div>
             ))}
             {pressureSynthesis && <div className="cockpit-pressure-synthesis">{pressureSynthesis}</div>}
-            <div className="cockpit-governance-chips">
-              {sec.deterministic_replay && sec.deterministic_replay.available && (
-                <span className="cockpit-gov-chip" data-status={sec.deterministic_replay.detail.status}>{sec.deterministic_replay.detail.status === 'PASS' ? 'REPLAY PASS' : 'REPLAY ' + sec.deterministic_replay.detail.status}</span>
-              )}
-              {sec.constitutional_anchor && sec.constitutional_anchor.available && (
-                <span className="cockpit-gov-chip" data-status={sec.constitutional_anchor.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}>{sec.constitutional_anchor.detail.advancement_blocked ? 'ANCHOR BLOCKED' : 'ANCHOR PASS'}</span>
-              )}
-              {sec.replay_certification && sec.replay_certification.available && (
-                <span className="cockpit-gov-chip" data-status={sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'PASS' : 'PENDING'}>{sec.replay_certification.detail.certification_status === 'CERTIFIED' ? 'CERTIFIED' : sec.replay_certification.detail.certification_status}</span>
-              )}
-            </div>
           </div>
         )}
 
