@@ -349,16 +349,20 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
   const avgDomainsPerCluster = clusterCount > 0 ? totalDomains / clusterCount : 1
   const avgLabelLen = (domains || []).reduce((sum, d) => sum + (d.business_label || d.domain_name || '').length, 0) / Math.max(totalDomains, 1)
   const edgeCount = (edges || []).length
-  const densityScore = totalDomains + (edgeCount / 3) + (avgDomainsPerCluster * 2) + (avgLabelLen > 18 ? 12 : avgLabelLen > 12 ? 5 : 0)
-  const layoutMode = densityScore > 35 ? 'EXPANDED' : densityScore > 18 ? 'BALANCED' : 'COMPACT'
+  const isSparse = avgDomainsPerCluster <= 1.5 && avgLabelLen <= 22
+  const isDense = avgDomainsPerCluster > 2.5 || avgLabelLen > 20
+  const layoutMode = boardroomMode
+    ? (isSparse ? 'COMPACT' : isDense ? 'EXPANDED' : 'BALANCED')
+    : 'STANDARD'
 
-  const nodeSpX = layoutMode === 'EXPANDED' ? 160 : layoutMode === 'BALANCED' ? 140 : 110
-  const nodeSpY = layoutMode === 'EXPANDED' ? 80 : layoutMode === 'BALANCED' ? 72 : 66
+  const nodeSpX = layoutMode === 'EXPANDED' ? 160 : layoutMode === 'BALANCED' ? 140 : layoutMode === 'COMPACT' ? 110 : 110
+  const nodeSpY = layoutMode === 'EXPANDED' ? 80 : layoutMode === 'BALANCED' ? 72 : layoutMode === 'COMPACT' ? 66 : 66
   const cluPadTop = 32
   const cluPadLeft = layoutMode === 'EXPANDED' ? 24 : 18
   const gap = 14
-  const maxPerRow = boardroomMode
-    ? (layoutMode === 'EXPANDED' ? 2 : layoutMode === 'BALANCED' ? 2 : 3)
+  const maxPerRow = layoutMode === 'COMPACT' ? 3
+    : layoutMode === 'EXPANDED' ? 2
+    : layoutMode === 'BALANCED' ? 2
     : isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
 
   function clusterRect(id) {
@@ -518,7 +522,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const ux = dx / len, uy = dy / len
           const sD = (domains || []).find(dd => dd.domain_id === e.source_domain)
           const tD = (domains || []).find(dd => dd.domain_id === e.target_domain)
-          const baseR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 20) : null
+          const baseR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 18) : null
           const sR = baseR || ((sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14)
           const tR = baseR || ((tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14)
 
@@ -611,10 +615,10 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const st = nodeStyle(d)
           const backed = d.structurally_backed || d.lineage_status === 'PARTIAL'
           const isPZ = d.zone_anchor
-          const innerR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 20) : backed ? 18 : 14
+          const innerR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 18) : backed ? 18 : 14
           const glowR = innerR + 4
           const rawLabel = d.business_label || d.domain_name
-          const lines = boardroomMode ? splitLabelMulti(rawLabel, layoutMode === 'EXPANDED' ? 16 : 14) : splitLabel(rawLabel, 15)
+          const lines = boardroomMode ? (layoutMode === 'COMPACT' ? splitLabel(rawLabel, 15) : splitLabelMulti(rawLabel, layoutMode === 'EXPANDED' ? 16 : 14)) : splitLabel(rawLabel, 15)
           const crowdedAbove = (incomingAbove[d.domain_id] || 0) > 1
 
           const isEmphasized = cognitionEmphasis && cognitionEmphasis.has(d.domain_id)
