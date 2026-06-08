@@ -9877,12 +9877,16 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                   )}
                   {swIntelActive && t.board_grounding && (
                     <div className="cockpit-board-finding-grounding">
-                      {t.board_grounding.causal_drivers.length > 0 && (
+                      {t.board_grounding.top_contributors && t.board_grounding.top_contributors.length > 0 ? (
+                        t.board_grounding.top_contributors.map((c, ci) => (
+                          <div key={ci} className="cockpit-board-finding-contributor">
+                            <span className="cockpit-board-finding-contributor-name">{c.name}</span>
+                            <span className="cockpit-board-finding-contributor-domain">{c.domain}</span>
+                          </div>
+                        ))
+                      ) : t.board_grounding.causal_drivers.length > 0 ? (
                         <div className="cockpit-board-finding-drivers">Drivers: {t.board_grounding.causal_drivers.join(', ')}</div>
-                      )}
-                      {t.board_grounding.primary_zone && (
-                        <div className="cockpit-board-finding-zone">Primary region: {t.board_grounding.primary_zone}</div>
-                      )}
+                      ) : null}
                     </div>
                   )}
                 </div>

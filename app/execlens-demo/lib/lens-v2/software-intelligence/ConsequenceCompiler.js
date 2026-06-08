@@ -1053,10 +1053,23 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     }
     const locusDisplays = t._locus_displays || []
 
+    let themeSlices = slices.filter(s => causalTypes.includes(s.condition_type))
+    if (themeSlices.length === 0 && causalTypes.includes('COMPOUND_CONVERGENCE')) {
+      themeSlices = slices.filter(s => s.severity === 'HIGH' || s.severity === 'CRITICAL').slice(0, 5)
+    }
+    const SRANK = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+    const seen = new Set()
+    const topContributors = themeSlices
+      .sort((a, b) => (SRANK[a.severity] ?? 5) - (SRANK[b.severity] ?? 5))
+      .filter(s => { const key = s.executive_name + '|' + s.domain; if (seen.has(key)) return false; seen.add(key); return true })
+      .slice(0, 5)
+      .map(s => ({ name: s.executive_name, domain: s.domain, severity: s.severity }))
+
     t.board_grounding = {
       causal_drivers: causalTypes.slice(0, 4).map(ct => CAUSAL_LABELS[ct] || ct.toLowerCase().replace(/_/g, ' ')),
-      primary_zone: locusDisplays[0] || null,
+      primary_zone: locusDisplays[0] || (topContributors[0] ? topContributors[0].domain : null),
       contributing_zones: locusDisplays.slice(0, 3),
+      top_contributors: topContributors,
       evidence_paths: t.evidence_classes,
     }
 

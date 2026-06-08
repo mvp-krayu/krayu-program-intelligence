@@ -1401,14 +1401,26 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .cockpit-board-finding-grounding {
           margin-top: 6px;
         }
+        .cockpit-board-finding-contributor {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          padding: 2px 0;
+          gap: 10px;
+        }
+        .cockpit-board-finding-contributor-name {
+          font-size: 11px;
+          color: #9aa0bc;
+        }
+        .cockpit-board-finding-contributor-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #5e6d8a;
+          flex-shrink: 0;
+        }
         .cockpit-board-finding-drivers {
           font-size: 11px;
           color: #7a8aaa;
-        }
-        .cockpit-board-finding-zone {
-          font-size: 11px;
-          color: #5e6d8a;
-          margin-top: 2px;
         }
         .cockpit-board-finding-overflow {
           font-size: 10px;
