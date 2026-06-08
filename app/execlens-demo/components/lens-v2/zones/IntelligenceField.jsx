@@ -9918,7 +9918,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               const hiddenCount = allClusters.length - boardroomClusters.length
 
               return (
-                <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+                <div className="cockpit-topology-preview">
                   <TopologyGraph
                     domains={boardroomDomains}
                     clusters={boardroomClusters}
@@ -9927,9 +9927,9 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     pressureZoneState={fullReport.pressure_zone_state}
                     boardroomMode={true}
                   />
-                  <div className="cockpit-topology-hint">
-                    {hiddenCount > 0 ? `${boardroomClusters.length} pressure regions shown · ${hiddenCount} more in full topology · ` : ''}Click to explore full topology
-                  </div>
+                  <button className="cockpit-topology-hint" type="button" onClick={openTopoModal}>
+                    {hiddenCount > 0 ? `${boardroomClusters.length} pressure regions shown · ${hiddenCount} more in full topology · ` : ''}Open full topology
+                  </button>
                 </div>
               )
             })()}

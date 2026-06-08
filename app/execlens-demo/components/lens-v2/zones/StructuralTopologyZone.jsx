@@ -333,7 +333,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
   const nodeSpX = boardroomMode ? 140 : 110, nodeSpY = 66
   const cluPadTop = 32, cluPadLeft = boardroomMode ? 24 : 18
   const gap = 14
-  const maxPerRow = isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
+  const maxPerRow = boardroomMode ? 2 : isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
 
   function clusterRect(id) {
     const n = clusterMap[id].domains.length

@@ -1599,16 +1599,26 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           pointer-events: none;
         }
         .cockpit-topology-hint {
+          display: block;
+          width: 100%;
           text-align: center;
-          font-size: 9px;
-          color: #7a8aaa;
-          letter-spacing: 0.08em;
-          margin-top: 4px;
-          transition: color 0.2s;
-        }
-        .cockpit-topology-preview:hover .cockpit-topology-hint {
+          font-size: 11px;
           color: #4a9eff;
+          letter-spacing: 0.06em;
+          margin-top: 8px;
+          padding: 8px 0;
+          background: none;
+          border: 1px solid rgba(74, 158, 255, 0.15);
+          border-radius: 6px;
+          cursor: pointer;
+          font-family: 'Courier New', monospace;
+          transition: background 0.15s, border-color 0.15s;
         }
+        .cockpit-topology-hint:hover {
+          background: rgba(74, 158, 255, 0.06);
+          border-color: rgba(74, 158, 255, 0.3);
+        }
+        button.cockpit-topology-hint { outline: none; }
 
         /* Topology Modal (full-screen overlay) */
         .topo-modal-overlay {
