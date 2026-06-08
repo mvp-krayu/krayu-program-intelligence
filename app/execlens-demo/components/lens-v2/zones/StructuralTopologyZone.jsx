@@ -174,6 +174,19 @@ function splitLabel(name, maxLen) {
   return lines.slice(0, 2)
 }
 
+function splitLabelMulti(name, maxLen) {
+  if (!name) return ['?']
+  const words = name.split(/\s+/)
+  const lines = []
+  let cur = ''
+  words.forEach(w => {
+    if (cur && (cur + ' ' + w).length > maxLen) { lines.push(cur); cur = w }
+    else { cur = cur ? cur + ' ' + w : w }
+  })
+  if (cur) lines.push(cur)
+  return lines.slice(0, 3)
+}
+
 const EDGE_COLORS = {
   EMITS: '#3fb950',
   CALLS: '#58a6ff',
@@ -330,7 +343,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
   if (visibleIds.length === 0) return null
 
   const legendH = 36
-  const nodeSpX = boardroomMode ? 140 : 110, nodeSpY = 66
+  const nodeSpX = boardroomMode ? 160 : 110, nodeSpY = boardroomMode ? 80 : 66
   const cluPadTop = 32, cluPadLeft = boardroomMode ? 24 : 18
   const gap = 14
   const maxPerRow = boardroomMode ? 2 : isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
@@ -576,9 +589,10 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const st = nodeStyle(d)
           const backed = d.structurally_backed || d.lineage_status === 'PARTIAL'
           const isPZ = d.zone_anchor
-          const innerR = boardroomMode ? 22 : backed ? 18 : 14
-          const glowR = boardroomMode ? 26 : backed ? 22 : 17
-          const lines = splitLabel(d.business_label || d.domain_name, boardroomMode ? 18 : 15)
+          const innerR = boardroomMode ? 28 : backed ? 18 : 14
+          const glowR = boardroomMode ? 32 : backed ? 22 : 17
+          const rawLabel = d.business_label || d.domain_name
+          const lines = boardroomMode ? splitLabelMulti(rawLabel, 16) : splitLabel(rawLabel, 15)
           const crowdedAbove = (incomingAbove[d.domain_id] || 0) > 1
 
           const isEmphasized = cognitionEmphasis && cognitionEmphasis.has(d.domain_id)
@@ -694,12 +708,16 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                       {d.confidence.toFixed(2)}
                     </text>
               )}
-              {lines.map((line, li) => (
-                <text key={li} x={pos.cx} y={pos.cy - (lines.length > 1 ? 4 : 0) + li * (boardroomMode ? 10 : 8)} textAnchor="middle"
-                  fontSize={boardroomMode ? 7 : 5.5} fill={boardroomMode ? '#ccd6f6' : isEmphasized ? '#e0e6f0' : isCognitionDimmed ? '#4a5570' : '#9aa4c0'}
-                  fontFamily="ui-monospace, 'SF Mono', Menlo, monospace"
-                  style={{ transition: 'fill 0.3s' }}>{line}</text>
-              ))}
+              {lines.map((line, li) => {
+                const lineH = boardroomMode ? 10 : 8
+                const startY = pos.cy - ((lines.length - 1) * lineH) / 2
+                return (
+                  <text key={li} x={pos.cx} y={startY + li * lineH} textAnchor="middle"
+                    fontSize={boardroomMode ? 7.5 : 5.5} fill={boardroomMode ? '#ccd6f6' : isEmphasized ? '#e0e6f0' : isCognitionDimmed ? '#4a5570' : '#9aa4c0'}
+                    fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
+                    style={{ transition: 'fill 0.3s' }}>{line}</text>
+                )
+              })}
             </g>
           )
         })})()}
