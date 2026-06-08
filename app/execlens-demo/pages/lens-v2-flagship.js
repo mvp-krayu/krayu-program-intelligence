@@ -1336,28 +1336,24 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding-top: 8px;
           border-top: 1px solid #1a1e2a;
         }
-        .cockpit-board-finding-domain-detail {
+        .cockpit-board-finding-causal {
+          padding: 4px 0;
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          padding: 3px 0;
+          gap: 12px;
         }
-        .cockpit-board-finding-domain-name {
+        .cockpit-board-finding-causal-driver {
+          font-size: 12px;
+          color: #ccd6f6;
+          line-height: 1.4;
+        }
+        .cockpit-board-finding-causal-anchor {
           font-family: 'Courier New', monospace;
-          font-size: 11px;
-          color: #9aa0bc;
-          font-weight: 500;
-        }
-        .cockpit-board-finding-domain-risk {
-          font-size: 11px;
-          color: #7a8aaa;
-          text-align: right;
-          max-width: 60%;
-        }
-        .cockpit-board-finding-domain-more {
           font-size: 10px;
           color: #5e6d8a;
-          padding-top: 4px;
+          flex-shrink: 0;
+          text-align: right;
         }
         .cockpit-board-finding-overflow {
           font-size: 10px;

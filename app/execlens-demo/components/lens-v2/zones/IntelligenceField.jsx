@@ -9874,19 +9874,16 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                   <div className="cockpit-board-finding-desc">{t.description}</div>
                   {swIntelActive ? (
                     <div className="cockpit-board-finding-grounding">
-                      {domNarratives.slice(0, 3).map((n, ni) => (
-                        <div key={ni} className="cockpit-board-finding-domain-detail">
-                          <span className="cockpit-board-finding-domain-name">{n.domain}</span>
-                          <span className="cockpit-board-finding-domain-risk">{n.risk_label}</span>
+                      {domNarratives.filter(n => n.risk_label).slice(0, 3).map((n, ni) => (
+                        <div key={ni} className="cockpit-board-finding-causal">
+                          <span className="cockpit-board-finding-causal-driver">{n.risk_label}</span>
+                          <span className="cockpit-board-finding-causal-anchor">{n.domain}</span>
                         </div>
                       ))}
-                      {domNarratives.length > 3 && (
-                        <div className="cockpit-board-finding-domain-more">+{domNarratives.length - 3} more domain{domNarratives.length - 3 !== 1 ? 's' : ''}</div>
-                      )}
                     </div>
-                  ) : domNarratives[i] ? (
+                  ) : domNarratives[0] ? (
                     <div className="cockpit-board-finding-domain">
-                      {domNarratives[i].domain} — {domNarratives[i].risk_label}
+                      {domNarratives[0].domain} — {domNarratives[0].risk_label}
                     </div>
                   ) : null}
                 </div>
