@@ -433,9 +433,12 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const cl = clusterMap[cid]
           const color = cl.color_accent || '#2a2f40'
           const isPressure = cl._pressureRelevant !== false
-          const clusterOpacity = !boardroomMode ? 1 : isPressure ? 1 : 0.4
-          const boxOpacity = !boardroomMode ? 0.06 : isPressure ? 0.06 : 0.03
-          const boxStrokeOpacity = !boardroomMode ? 0.35 : isPressure ? 0.35 : 0.15
+          const eRole = cl._emphasisRole
+          const hasRole = eRole === 'structural-center' || eRole === 'execution-center' || eRole === 'both' || eRole === 'manifestation'
+          const isProminent = isPressure || hasRole
+          const clusterOpacity = !boardroomMode ? 1 : isProminent ? 1 : 0.4
+          const boxOpacity = !boardroomMode ? 0.06 : isProminent ? 0.06 : 0.03
+          const boxStrokeOpacity = !boardroomMode ? 0.35 : isProminent ? 0.35 : 0.15
           return (
             <g key={cid} style={{ transition: 'opacity 0.3s' }}>
               <rect x={lay.x} y={lay.y} width={lay.w} height={lay.h} rx={9}
@@ -443,7 +446,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
               {(() => {
                 const label = (cl.cluster_label || cid).toUpperCase()
                 const maxCharsPerLine = Math.floor(lay.w / 7.5)
-                const titleOpacity = !boardroomMode ? 0.55 : isPressure ? 0.65 : 0.3
+                const titleOpacity = !boardroomMode ? 0.55 : isProminent ? 0.65 : 0.3
                 if (label.length <= maxCharsPerLine) {
                   return <text x={lay.x + lay.w / 2} y={lay.y + 16} textAnchor="middle" fontSize={8} letterSpacing="0.1em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={titleOpacity}>{label}</text>
                 }
@@ -526,8 +529,10 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const sR = baseR || ((sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14)
           const tR = baseR || ((tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14)
 
-          const bothPressure = boardroomMode && sD && tD && sD._pressureRelevant !== false && tD._pressureRelevant !== false
-          const eitherFaded = boardroomMode && ((sD && sD._pressureRelevant === false) || (tD && tD._pressureRelevant === false))
+          const sProminent = sD && (sD._pressureRelevant !== false || sD._emphasisRole)
+          const tProminent = tD && (tD._pressureRelevant !== false || tD._emphasisRole)
+          const bothPressure = boardroomMode && sProminent && tProminent
+          const eitherFaded = boardroomMode && (!sProminent || !tProminent)
           const dimmed = !boardroomMode && highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
           const bright = !boardroomMode && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
           const edgeOpacity = boardroomMode ? (bothPressure ? 0.7 : eitherFaded ? 0.15 : 0.4) : dimmed ? 0.12 : bright ? 0.95 : 0.6
@@ -625,7 +630,8 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const isCognitionDimmed = cognitionDim && cognitionDim.has(d.domain_id)
           const isAdvisory = cognitionAdvisory && cognitionAdvisory.has(d.domain_id)
 
-          const pressureFaded = boardroomMode && d._pressureRelevant === false
+          const dRole = d._emphasisRole
+          const pressureFaded = boardroomMode && d._pressureRelevant === false && !dRole
           const dimmed = !pressureFaded && (cognitionOverlay
             ? isCognitionDimmed
             : (highlightSet && !highlightSet.has(d.domain_id)))
@@ -685,8 +691,15 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
               )}
               <circle cx={pos.cx} cy={pos.cy} r={glowR}
                 fill={isEmphasized && cognitionOverlay ? overlayColor : st.glow} fillOpacity={isEmphasized ? 0.22 : st.glowOp} />
+              {boardroomMode && (dRole === 'execution-center' || dRole === 'both') && (
+                <circle cx={pos.cx} cy={pos.cy} r={innerR + 5}
+                  fill="none" stroke="#4a9eff" strokeWidth={1.8} strokeOpacity={0.6}
+                  style={{ transition: 'stroke-opacity 0.3s' }} />
+              )}
               <circle cx={pos.cx} cy={pos.cy} r={innerR}
-                fill={boardroomMode ? '#141820' : st.fill} stroke={boardroomMode ? '#58a6ff' : isEmphasized && cognitionOverlay ? overlayColor : st.stroke} strokeWidth={boardroomMode ? 1.5 : isEmphasized ? 2.2 : st.sw}
+                fill={boardroomMode && (dRole === 'structural-center' || dRole === 'both') ? '#1a2540' : boardroomMode ? '#141820' : st.fill}
+                stroke={boardroomMode && (dRole === 'structural-center' || dRole === 'both') ? '#e2e8f6' : boardroomMode ? '#58a6ff' : isEmphasized && cognitionOverlay ? overlayColor : st.stroke}
+                strokeWidth={boardroomMode && (dRole === 'structural-center' || dRole === 'both') ? 2.2 : boardroomMode ? 1.5 : isEmphasized ? 2.2 : st.sw}
                 strokeDasharray={boardroomMode ? undefined : (st.dashed && !isEmphasized) ? '4,3' : (isAdvisory && isEmphasized) ? '4,3' : undefined}
                 style={{ transition: 'stroke 0.3s, stroke-width 0.3s' }} />
               {cognitionOverlay && !boardroomMode && cognitionOverlay.overlay_mode === 'GRAVITY_DIVERGENCE' && (() => {

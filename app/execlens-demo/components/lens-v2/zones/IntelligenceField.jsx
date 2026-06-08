@@ -9773,14 +9773,32 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               const azDomainIds = new Set((domainCognition ? domainCognition.attention_zones : []).map(az => az.domain_id))
               const allReg = fullReport.semantic_domain_registry
               const allClusters = fullReport.semantic_cluster_registry || []
+              const cdc = crossDomainCognition
+              const domConc = (cdc && cdc.domain_concentration) || []
+              const structCenterName = domConc.length > 0 ? domConc[0].domain : null
+              const execCenterName = cdc && cdc.execution_center ? cdc.execution_center : null
+              const manifestNames = new Set(((cdc && cdc.domain_narratives) || []).map(n => n.domain.toLowerCase()))
 
               const pressureClusterIds = new Set()
               allReg.forEach(d => { if (azDomainIds.has(d.domain_id)) pressureClusterIds.add(d.cluster_id) })
+
+              const resolveRole = (name) => {
+                const nl = name && name.toLowerCase()
+                const isStruct = structCenterName && nl === structCenterName.toLowerCase()
+                const isExec = execCenterName && nl === execCenterName.toLowerCase()
+                if (isStruct && isExec) return 'both'
+                if (isStruct) return 'structural-center'
+                if (isExec) return 'execution-center'
+                if (nl && manifestNames.has(nl)) return 'manifestation'
+                if (pressureClusterIds.size > 0) return undefined
+                return undefined
+              }
 
               const boardroomDomains = allReg.map(d => ({
                 ...d,
                 business_label: d.domain_name,
                 _pressureRelevant: pressureClusterIds.has(d.cluster_id),
+                _emphasisRole: resolveRole(d.domain_name),
               }))
               const boardroomClusters = allClusters.map(c => {
                 const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
@@ -9788,9 +9806,15 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                   ? { ...c, cluster_label: dcMatch.executive_label }
                   : { ...c }
                 mapped._pressureRelevant = pressureClusterIds.has(c.cluster_id)
+                const clusterDomains = allReg.filter(dd => dd.cluster_id === c.cluster_id)
+                const roles = clusterDomains.map(dd => resolveRole(dd.domain_name)).filter(Boolean)
+                if (roles.includes('both') || (roles.includes('structural-center') && roles.includes('execution-center'))) mapped._emphasisRole = 'both'
+                else if (roles.includes('structural-center')) mapped._emphasisRole = 'structural-center'
+                else if (roles.includes('execution-center')) mapped._emphasisRole = 'execution-center'
+                else if (roles.includes('manifestation')) mapped._emphasisRole = 'manifestation'
                 return mapped
               })
-              const pressureCount = boardroomClusters.filter(c => c._pressureRelevant).length
+              const pressureCount = boardroomClusters.filter(c => c._pressureRelevant || c._emphasisRole).length
               const fadedCount = boardroomClusters.length - pressureCount
 
               return (
