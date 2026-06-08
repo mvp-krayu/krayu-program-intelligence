@@ -415,16 +415,20 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
         {Object.entries(layouts).map(([cid, lay]) => {
           const cl = clusterMap[cid]
           const color = cl.color_accent || '#2a2f40'
-          const faded = boardroomMode && cl._pressureRelevant === false
+          const isPressure = cl._pressureRelevant !== false
+          const clusterOpacity = !boardroomMode ? 1 : isPressure ? 1 : 0.4
+          const boxOpacity = !boardroomMode ? 0.06 : isPressure ? 0.06 : 0.03
+          const boxStrokeOpacity = !boardroomMode ? 0.35 : isPressure ? 0.35 : 0.15
           return (
-            <g key={cid} opacity={faded ? 0.18 : 1} style={{ transition: 'opacity 0.3s' }}>
+            <g key={cid} style={{ transition: 'opacity 0.3s' }}>
               <rect x={lay.x} y={lay.y} width={lay.w} height={lay.h} rx={9}
-                fill={color} fillOpacity={0.06} stroke={color} strokeWidth={1} strokeOpacity={faded ? 0.15 : 0.35} />
+                fill={color} fillOpacity={boxOpacity} stroke={color} strokeWidth={1} strokeOpacity={boxStrokeOpacity} />
               {(() => {
                 const label = (cl.cluster_label || cid).toUpperCase()
                 const maxCharsPerLine = Math.floor(lay.w / 7.5)
+                const titleOpacity = !boardroomMode ? 0.55 : isPressure ? 0.65 : 0.3
                 if (label.length <= maxCharsPerLine) {
-                  return <text x={lay.x + lay.w / 2} y={lay.y + 16} textAnchor="middle" fontSize={8} letterSpacing="0.1em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={0.55}>{label}</text>
+                  return <text x={lay.x + lay.w / 2} y={lay.y + 16} textAnchor="middle" fontSize={8} letterSpacing="0.1em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={titleOpacity}>{label}</text>
                 }
                 const mid = Math.ceil(label.length / 2)
                 const spaceNearMid = label.lastIndexOf(' ', mid)
@@ -433,7 +437,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 const line2 = label.slice(splitAt).trim()
                 const fs = Math.max(6.5, Math.min(8, lay.w / (Math.max(line1.length, line2.length) * 0.95)))
                 return (
-                  <text x={lay.x + lay.w / 2} y={lay.y + 11} textAnchor="middle" fontSize={fs} letterSpacing="0.08em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={0.55}>
+                  <text x={lay.x + lay.w / 2} y={lay.y + 11} textAnchor="middle" fontSize={fs} letterSpacing="0.08em" fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" fontWeight={600} fill={color} fillOpacity={titleOpacity}>
                     <tspan x={lay.x + lay.w / 2} dy="0">{line1}</tspan>
                     <tspan x={lay.x + lay.w / 2} dy={fs + 2}>{line2}</tspan>
                   </text>
@@ -504,15 +508,17 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const sR = boardroomMode ? 28 : (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
           const tR = boardroomMode ? 28 : (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
 
-          const edgePressureFaded = boardroomMode && ((sD && sD._pressureRelevant === false) || (tD && tD._pressureRelevant === false))
-          const dimmed = edgePressureFaded ? true : highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
-          const bright = !edgePressureFaded && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
+          const bothPressure = boardroomMode && sD && tD && sD._pressureRelevant !== false && tD._pressureRelevant !== false
+          const eitherFaded = boardroomMode && ((sD && sD._pressureRelevant === false) || (tD && tD._pressureRelevant === false))
+          const dimmed = !boardroomMode && highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
+          const bright = !boardroomMode && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
+          const edgeOpacity = boardroomMode ? (bothPressure ? 0.7 : eitherFaded ? 0.15 : 0.4) : dimmed ? 0.12 : bright ? 0.95 : 0.6
 
           return (
             <line key={`e-${i}`}
               x1={from.cx + ux * sR} y1={from.cy + uy * sR}
               x2={to.cx - ux * (tR + 4)} y2={to.cy - uy * (tR + 4)}
-              stroke={color} strokeOpacity={edgePressureFaded ? 0.08 : dimmed ? 0.12 : bright ? 0.95 : 0.6} strokeWidth={bright ? 2 : 1.5}
+              stroke={color} strokeOpacity={edgeOpacity} strokeWidth={bright ? 2 : boardroomMode && bothPressure ? 1.8 : 1.5}
               markerEnd={`url(#arr-${markerKey})`}
               strokeDasharray={dash}
               style={{ transition: 'stroke-opacity 0.2s, stroke-width 0.2s' }}
@@ -602,10 +608,10 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const isAdvisory = cognitionAdvisory && cognitionAdvisory.has(d.domain_id)
 
           const pressureFaded = boardroomMode && d._pressureRelevant === false
-          const dimmed = pressureFaded ? true : cognitionOverlay
+          const dimmed = !pressureFaded && (cognitionOverlay
             ? isCognitionDimmed
-            : (highlightSet && !highlightSet.has(d.domain_id))
-          const nodeOpacity = dimmed ? 0.18 : 1
+            : (highlightSet && !highlightSet.has(d.domain_id)))
+          const nodeOpacity = dimmed ? 0.18 : pressureFaded ? 0.45 : 1
           const isSelected = selectedAnchor === d.domain_id
 
           const block = (fullReport => null)
