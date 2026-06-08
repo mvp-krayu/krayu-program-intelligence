@@ -135,13 +135,27 @@ function inferExecutiveRole(domain) {
   const isEdgeBoundary = rr.includes('edge-cloud boundary')
   const isFanout = rr.includes('topic fanout surface')
 
+  const rtRoleCount = rr.length
+  const srRoleCount = sr.length
+
   if (isSpine && isHub && isFragile) return 'operational gravity center'
   if (isSpine && isHub) return 'structural dependency anchor'
-  if (isRuntimeHub && isBrokerDep && isFanout) return 'runtime coordination hub'
-  if (isRuntimeHub && isChokePoint) return 'runtime dependency bottleneck'
+
+  if (isRuntimeHub && isBrokerDep && isEdgeBoundary) return 'edge-to-cloud coordination corridor'
+  if (isRuntimeHub && isBrokerDep && isFanout && rtRoleCount >= 4) return 'operational gravity center'
+  if (isRuntimeHub && isBrokerDep && isFanout) return 'coordination pressure hub'
+  if (isRuntimeHub && isChokePoint) return 'delivery bottleneck'
   if (isRuntimeHub && isEdgeBoundary) return 'edge integration corridor'
-  if (isRuntimeHub && isBrokerDep) return 'runtime coordination surface'
+  if (isRuntimeHub && isBrokerDep && rtRoleCount >= 3) return 'multi-protocol coordination surface'
+  if (isRuntimeHub && isBrokerDep) return 'message-flow pressure zone'
+  if (isChokePoint && rtRoleCount >= 2) return 'throughput bottleneck'
+  if (isChokePoint) return 'delivery bottleneck'
+  if (isRuntimeHub && domain.condition_count >= 4) return 'operational pressure concentrator'
   if (isRuntimeHub) return 'event coordination surface'
+  if (isBrokerDep && isEdgeBoundary) return 'edge ingestion corridor'
+  if (isBrokerDep && isFanout) return 'message distribution surface'
+  if (isBrokerDep) return 'broker-dependent ingestion surface'
+
   if (isHub && isFragile) return 'fragile dependency center'
   if (isOutbound && isFragile) return 'propagation exposure surface'
   if (isOutbound && isRuntimeHub) return 'outbound coordination engine'
@@ -149,9 +163,8 @@ function inferExecutiveRole(domain) {
   if (isFragile && isConstriction) return 'structural stress concentrator'
   if (isFragile) return 'fragility exposure zone'
   if (isDivergent) return 'boundary drift zone'
-  if (isChokePoint) return 'runtime bottleneck'
-  if (isBrokerDep) return 'broker-dependent surface'
-  if (isEdgeBoundary) return 'edge boundary surface'
+
+  if (domain.condition_count >= 6) return 'systemic pressure concentrator'
   if (domain.condition_count >= 4) return 'pressure concentrator'
   if (domain.condition_count >= 2) return 'multi-pressure target'
   return 'structural participant'
@@ -170,8 +183,9 @@ function synthesizeWhyItMatters(domain) {
     parts.push(`${me.fragility_count} fragile file${me.fragility_count !== 1 ? 's' : ''} (peak ${me.peak_fragility})`)
   }
   if (rr.length > 0) {
-    const rtSummary = rr.slice(0, 2).join(', ')
-    parts.push(`runtime: ${rtSummary}`)
+    const RT_COMPRESS = { 'event coordination hub': 'event coordination', 'broker-dependent': 'broker dependency', 'topic fanout surface': 'topic fanout', 'runtime choke point': 'throughput bottleneck', 'edge-cloud boundary': 'edge-cloud path', 'async propagation surface': 'async propagation', 'observability gap': 'observability gap' }
+    const compressed = rr.slice(0, 3).map(r => RT_COMPRESS[r] || r)
+    parts.push(compressed.join(' · '))
   }
   if (me.divergence) {
     parts.push(`boundary divergence ${me.divergence.score.toFixed(1)}`)
@@ -194,7 +208,7 @@ function buildEvidenceAnchors(domain) {
   if (me.fragility_count > 0) anchors.push(`fragility: ${me.fragility_count} hotspots`)
   if (me.constriction_count > 0) anchors.push(`constriction: ${me.constriction_count} points`)
   if (me.divergence) anchors.push(`divergence: ${me.divergence.score.toFixed(1)}`)
-  if (domain.runtime_roles && domain.runtime_roles.length > 0) anchors.push(`runtime: ${domain.runtime_roles.length} role${domain.runtime_roles.length !== 1 ? 's' : ''}`)
+  if (domain.runtime_roles && domain.runtime_roles.length > 0) anchors.push(`${domain.runtime_roles.length} runtime role${domain.runtime_roles.length !== 1 ? 's' : ''}`)
   if (domain.backing_status) anchors.push(domain.backing_status.toLowerCase().replace(/_/g, ' '))
   return anchors
 }

@@ -7883,7 +7883,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
   )
 }
 
-function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct }) {
+function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct, governanceLabel }) {
   const isGoverned = !!governedLevel
   const cx = 75
   const cy = 68
@@ -7919,7 +7919,7 @@ function CockpitRadialGauge({ score, groundingPct, governedLevel, tensionPct }) 
         <path d={`M ${cx - gr} ${cy} A ${gr} ${gr} 0 0 1 ${cx + gr} ${cy}`} fill="none" stroke="#1e2330" strokeWidth="5" strokeLinecap="round" />
         {tensionPath && <path d={tensionPath} fill="none" stroke={tensionColor} strokeWidth="5" strokeLinecap="round" opacity="0.7" />}
         <text x={cx} y={cy - 16} textAnchor="middle" fontSize="24" fontWeight="600" fill={levelColor} fontFamily="'Courier New', monospace">{governedLevel}</text>
-        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="8" fill="#6a7a9a" letterSpacing="0.15em" fontFamily="-apple-system, sans-serif">GOVERNED</text>
+        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="8" fill="#6a7a9a" letterSpacing="0.15em" fontFamily="-apple-system, sans-serif">{governanceLabel || 'GOVERNED'}</text>
         <text x={cx - r + 2} y={cy + 12} textAnchor="start" fontSize="7" fill={levelColor} fontFamily="-apple-system, sans-serif">qualified</text>
         <text x={cx + r - 2} y={cy + 12} textAnchor="end" fontSize="7" fill={tensionColor} fontFamily="-apple-system, sans-serif">{tPct > 0 ? `${tPct}% tension` : 'nominal'}</text>
       </svg>
@@ -9830,7 +9830,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
       CONCENTRATION: dcPrimaryLabel ? `Structural mass concentrated around "${dcPrimaryLabel}"` : 'Structural mass distributed',
       COUPLING: 'Cross-domain coupling and dependency pressure',
       DRIFT: 'Boundary alignment and governance coverage',
-      RUNTIME: hasRuntime ? `Runtime coordination across ${(fullReport._runtime_signals || []).length} evidence paths` : 'No runtime evidence',
+      RUNTIME: hasRuntime ? `Runtime coordination — ${domainCognition ? domainCognition.pressure_summary.domains_with_runtime : 0} domains with runtime evidence` : 'No runtime evidence',
     }
     const PLOCALE = { ...(hasCanonicalFamilies ? PLOCALE_CANONICAL : PLOCALE_BEHAVIORAL), RESILIENCE: covRatio >= 1 ? 'Complete structural grounding' : `${bpDc.total_domains - (bpDc.structurally_backed || 0)} domain${(bpDc.total_domains - (bpDc.structurally_backed || 0)) !== 1 ? 's' : ''} without structural grounding` }
     const activatedDimNames = pressureDimensions.filter(d => d.severity !== 'NOMINAL').map(d => d.name.toLowerCase())
@@ -10042,7 +10042,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
         <div className="cockpit-instruments">
           <div className="cockpit-gauge-panel">
-            <CockpitRadialGauge governedLevel={qp.s_level || (pLevel >= 2 ? 'P2' : 'P1')} tensionPct={tensionPct} />
+            <CockpitRadialGauge governedLevel={isGoverned ? qp.s_level : (projectionAuthority ? projectionAuthority.qualificationState : 'S1')} tensionPct={tensionPct} governanceLabel={isGoverned ? 'GOVERNED' : (pLevel >= 2 ? 'STRUCTURAL + RUNTIME' : 'STRUCTURAL')} />
             <div className="cockpit-gauge-meta">
               <span className="cockpit-gauge-band">{isGoverned ? qp.s_level : (projectionAuthority ? projectionAuthority.qualificationState : 'S1')}</span>
               <span className="cockpit-gauge-sep">·</span>
