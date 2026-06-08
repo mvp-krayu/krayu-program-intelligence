@@ -10016,18 +10016,13 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
 
         {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
           const dcDomains = domainCognition ? domainCognition.domains : []
-          const execLabelMap = {}
-          const boardroomDomains = fullReport.semantic_domain_registry.map(d => {
-            const dcMatch = dcDomains.find(dc => dc.domain_id === d.domain_id)
-            if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
-              execLabelMap[d.domain_name] = dcMatch.executive_label
-              return { ...d, business_label: dcMatch.executive_label }
-            }
-            return d
-          })
+          const boardroomDomains = fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))
           const boardroomClusters = (fullReport.semantic_cluster_registry || []).map(c => {
-            const mapped = execLabelMap[c.cluster_label]
-            return mapped ? { ...c, cluster_label: mapped } : c
+            const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
+            if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
+              return { ...c, cluster_label: dcMatch.executive_label }
+            }
+            return c
           })
           return (
             <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
