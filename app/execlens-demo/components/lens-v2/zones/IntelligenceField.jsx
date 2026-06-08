@@ -10142,18 +10142,34 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
         </div>
       </div>
 
-      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
-          <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
-            clusters={fullReport.semantic_cluster_registry || []}
-            edges={fullReport.semantic_topology_edges || []}
-            pressureZoneLabel={pressureZone || ''}
-            pressureZoneState={fullReport.pressure_zone_state}
-          />
-          <div className="cockpit-topology-hint">Click to explore topology</div>
-        </div>
-      )}
+      {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
+        const dcDomains = domainCognition ? domainCognition.domains : []
+        const execLabelMap = {}
+        const boardroomDomains = fullReport.semantic_domain_registry.map(d => {
+          const dcMatch = dcDomains.find(dc => dc.domain_id === d.domain_id)
+          if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
+            execLabelMap[d.domain_name] = dcMatch.executive_label
+            return { ...d, business_label: dcMatch.executive_label }
+          }
+          return d
+        })
+        const boardroomClusters = (fullReport.semantic_cluster_registry || []).map(c => {
+          const mapped = execLabelMap[c.cluster_label]
+          return mapped ? { ...c, cluster_label: mapped } : c
+        })
+        return (
+          <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+            <TopologyGraph
+              domains={boardroomDomains}
+              clusters={boardroomClusters}
+              edges={fullReport.semantic_topology_edges || []}
+              pressureZoneLabel={pressureZone || ''}
+              pressureZoneState={fullReport.pressure_zone_state}
+            />
+            <div className="cockpit-topology-hint">Click to explore topology</div>
+          </div>
+        )
+      })()}
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
 
