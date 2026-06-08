@@ -10057,6 +10057,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         </div>
 
+        {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} initialSignalTrace={signalTraceId} onSignalTraceConsumed={() => setSignalTraceId(null)} mode="boardroom" onModeTransition={(targetMode, domainId, targetZoneKey) => { closeTopoModal(); if (onModeTransition) onModeTransition(targetMode, domainId, targetZoneKey) }} />, document.body)}
       </div>
     )
   }
