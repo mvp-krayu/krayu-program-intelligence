@@ -9908,6 +9908,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     edges={fullReport.semantic_topology_edges || []}
                     pressureZoneLabel={pressureZone || ''}
                     pressureZoneState={fullReport.pressure_zone_state}
+                    boardroomMode={true}
                   />
                   <div className="cockpit-topology-hint">Click to explore topology</div>
                 </div>
