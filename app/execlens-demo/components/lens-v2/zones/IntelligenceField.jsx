@@ -9872,8 +9872,18 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
                     <span className="cockpit-board-finding-label">{t.theme_label}</span>
                   </div>
                   <div className="cockpit-board-finding-desc">{t.description}</div>
-                  {swIntelActive && (
-                    <div className="cockpit-board-finding-annotation">{t.source_count} evidence source{t.source_count !== 1 ? 's' : ''} · {t.scope ? t.scope.toLowerCase() : 'structural'}{t.is_combination ? ' · compound' : ''}</div>
+                  {t.board_implication && (
+                    <div className="cockpit-board-finding-implication">{t.board_implication}</div>
+                  )}
+                  {swIntelActive && t.board_grounding && (
+                    <div className="cockpit-board-finding-grounding">
+                      {t.board_grounding.causal_drivers.length > 0 && (
+                        <div className="cockpit-board-finding-drivers">Drivers: {t.board_grounding.causal_drivers.join(', ')}</div>
+                      )}
+                      {t.board_grounding.primary_zone && (
+                        <div className="cockpit-board-finding-zone">Primary region: {t.board_grounding.primary_zone}</div>
+                      )}
+                    </div>
                   )}
                 </div>
               )

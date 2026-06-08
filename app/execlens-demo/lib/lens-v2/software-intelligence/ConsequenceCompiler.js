@@ -19,108 +19,126 @@ const CONSEQUENCE_VOCABULARY = {
     structural_consequence_label: 'Structural Coordination Brittleness',
     operator_consequence_title: 'Coordination Fragility',
     operational_implication: 'Operations on this region require multi-party coordination that structural concentration makes brittle.',
+    board_implication: 'Cross-team delivery in this area becomes increasingly unpredictable. Changes require coordination across multiple owners, creating scheduling constraints and delivery risk.',
   },
   DEP_AMP: {
     consequence_type_id: 'DEP_AMP',
     structural_consequence_label: 'Dependency Concentration Amplification',
     operator_consequence_title: 'Dependency Amplification',
     operational_implication: 'A single structural dependency point amplifies change impact beyond its apparent scope.',
+    board_implication: 'Any change to this region cascades further than expected. Investment in this component carries amplified risk — both the cost of change and the cost of not changing increase.',
   },
   DEL_EXP: {
     consequence_type_id: 'DEL_EXP',
     structural_consequence_label: 'Structural Delivery Risk Surface',
     operator_consequence_title: 'Delivery Exposure',
     operational_implication: 'Delivery decisions affecting this region carry elevated structural risk.',
+    board_implication: 'Delivery throughput is constrained by structural concentration. Planned releases touching this area carry elevated risk of unintended side effects.',
   },
   OP_BOTTLENECK: {
     consequence_type_id: 'OP_BOTTLENECK',
     structural_consequence_label: 'Structural Throughput Constraint',
     operator_consequence_title: 'Operational Bottleneck',
     operational_implication: 'Structural concentration creates a throughput constraint on operational flow.',
+    board_implication: 'Development velocity in this area is structurally constrained. Adding capacity does not relieve the bottleneck — the constraint is architectural, not resourcing.',
   },
   RESIL_DEF: {
     consequence_type_id: 'RESIL_DEF',
     structural_consequence_label: 'Structural Resilience Concentration',
     operator_consequence_title: 'Resilience Deficit',
     operational_implication: 'Structural resilience depends disproportionately on one region.',
+    board_implication: 'System resilience depends on a small number of components. If these components degrade, the system lacks structural alternatives — recovery options narrow as concentration increases.',
   },
   GOV_GAP: {
     consequence_type_id: 'GOV_GAP',
     structural_consequence_label: 'Governance Surface Incompleteness',
     operator_consequence_title: 'Governance Coverage Gap',
     operational_implication: 'Governance boundary does not fully cover the structural surface.',
+    board_implication: 'Parts of the system operate outside governed boundaries. Decisions affecting these regions lack the structural validation that governed areas receive.',
   },
   PROP_EXP: {
     consequence_type_id: 'PROP_EXP',
     structural_consequence_label: 'Asymmetric Propagation Surface',
     operator_consequence_title: 'Propagation Exposure',
     operational_implication: 'Change originating at this point propagates asymmetrically — blast radius exceeds structural locality.',
+    board_implication: 'Changes here affect more of the system than their apparent scope suggests. Estimation accuracy degrades because blast radius is structurally hidden.',
   },
   STAB_RISK: {
     consequence_type_id: 'STAB_RISK',
     structural_consequence_label: 'Multi-Factor Structural Instability',
     operator_consequence_title: 'Structural Stability Risk',
     operational_implication: 'Multiple independent structural indicators converge, creating compounding instability.',
+    board_implication: 'Several independent structural pressures affect the same region simultaneously. This is not isolated risk — it compounds. Addressing one pressure without the others may not materially improve stability.',
   },
   AMPLIFIED_DEP_FRAG: {
     consequence_type_id: 'AMPLIFIED_DEP_FRAG',
     structural_consequence_label: 'Amplified Dependency-Pressure Fragility',
     operator_consequence_title: 'Amplified Dependency Fragility',
     operational_implication: 'Coordination fragility is amplified by dependency concentration — the hub sits inside the pressure zone.',
+    board_implication: 'The most depended-upon component is also the most structurally stressed. This creates a compounding risk where the highest-value asset is simultaneously the most fragile.',
   },
   STRUCT_GRAVITY_WELL: {
     consequence_type_id: 'STRUCT_GRAVITY_WELL',
     structural_consequence_label: 'Structural Mass-Pressure Gravity Well',
     operator_consequence_title: 'Structural Gravity Well',
     operational_implication: 'The structurally dominant region attracts disproportionate operational stress.',
+    board_implication: 'One region dominates the system architecture. Over time, more features, dependencies, and operational decisions gravitate toward it — increasing concentration and reducing architectural flexibility.',
   },
   RT_EVENT_CONCENTRATION: {
     consequence_type_id: 'RT_EVENT_CONCENTRATION',
     structural_consequence_label: 'Runtime Event Coordination Concentration',
     operator_consequence_title: 'Event Coordination Concentration',
     operational_implication: 'Event infrastructure carries disproportionate coordination load — all domain events route through a central bus.',
+    board_implication: 'Cross-domain coordination depends on a single event infrastructure. If event processing degrades, all coordinated operations are affected simultaneously.',
   },
   RT_RUNTIME_DEPENDENCY_CHOKE_POINT: {
     consequence_type_id: 'RT_RUNTIME_DEPENDENCY_CHOKE_POINT',
     structural_consequence_label: 'Runtime Channel Dependency Concentration',
     operator_consequence_title: 'Runtime Dependency Choke Point',
     operational_implication: 'A runtime channel or gateway is a dependency for multiple domains — failure disrupts cross-domain coordination.',
+    board_implication: 'A single runtime gateway controls visibility across multiple operational domains. Gateway failure creates silent operational blindness — the system continues but visibility goes dark.',
   },
   RT_BROKER_DEPENDENCY: {
     consequence_type_id: 'RT_BROKER_DEPENDENCY',
     structural_consequence_label: 'Shared Broker Single-Point Dependency',
     operator_consequence_title: 'Broker Dependency Risk',
     operational_implication: 'All edge-to-cloud communication depends on a single broker — a single point of failure for telemetry ingestion.',
+    board_implication: 'Field-to-cloud data continuity depends on a single message broker. Broker failure stops data ingestion across the entire edge fleet without affecting cloud application health indicators.',
   },
   RT_TOPIC_FANOUT_PRESSURE: {
     consequence_type_id: 'RT_TOPIC_FANOUT_PRESSURE',
     structural_consequence_label: 'Topic Fan-Out Propagation Surface',
     operator_consequence_title: 'Topic Fanout Pressure',
     operational_implication: 'Topic families feed multiple consumers — changes to topic structure propagate broadly across domains.',
+    board_implication: 'Message structure changes affect multiple downstream consumers simultaneously. Schema evolution in this area carries broad coordination cost.',
   },
   RT_ASYNC_PROPAGATION_ASYMMETRY: {
     consequence_type_id: 'RT_ASYNC_PROPAGATION_ASYMMETRY',
     structural_consequence_label: 'Async Event Producer/Handler Imbalance',
     operator_consequence_title: 'Async Propagation Asymmetry',
     operational_implication: 'Broad event vocabulary converges on narrow handler surface — concentrated failure exposure.',
+    board_implication: 'Many event types are processed by few handlers. If those handlers fail, a broad range of business events stop being processed while the platform continues to appear healthy.',
   },
   RT_EDGE_CLOUD_PROPAGATION_RISK: {
     consequence_type_id: 'RT_EDGE_CLOUD_PROPAGATION_RISK',
     structural_consequence_label: 'Edge-to-Cloud Dependency Path',
     operator_consequence_title: 'Edge-Cloud Propagation Exposure',
     operational_implication: 'Edge devices depend on cloud-side coordination through a single ingestion path — edge failure propagates to cloud visibility.',
+    board_implication: 'Field operations depend on a single data path to the cloud. If that path degrades, cloud-side dashboards and decisions lose access to field reality.',
   },
   RT_RUNTIME_OBSERVABILITY_GAP: {
     consequence_type_id: 'RT_RUNTIME_OBSERVABILITY_GAP',
     structural_consequence_label: 'Runtime Traceability Incompleteness',
     operator_consequence_title: 'Runtime Observability Gap',
     operational_implication: 'Runtime flows exist with weak traceability — event types defined without matching handlers.',
+    board_implication: 'Parts of the runtime system emit events that nothing processes. These are potential blind spots where operational issues could occur without producing alerts.',
   },
   SYSTEMIC_OP_FRAG: {
     consequence_type_id: 'SYSTEMIC_OP_FRAG',
     structural_consequence_label: 'Systemic Multi-Factor Operational Fragility',
     operator_consequence_title: 'Systemic Operational Fragility',
     operational_implication: 'Multiple independent structural indicators converge on the same region through independent evidence paths.',
+    board_implication: 'Independent structural pressures arrive at the same conclusion through different evidence. This is the strongest signal — the system is converging toward a single fragility center through multiple independent paths.',
   },
 }
 
@@ -957,22 +975,32 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
     const tid = csq.consequence_type_id
     if (!themeMap[tid]) {
       const vocab = CONSEQUENCE_VOCABULARY[tid]
+      const srcConds = csq.source_conditions || []
+      const srcTypes = csq.source_condition_types || []
+      const locusDisplay = csq.primary_locus_display || null
       themeMap[tid] = {
         theme_id: tid,
         theme_label: vocab ? vocab.operator_consequence_title : tid,
         description: vocab ? vocab.operational_implication : '',
         severity: csq.severity,
         scope: csq.consequence_scope,
-        source_count: (csq.source_conditions || []).length,
+        source_count: srcConds.length,
         is_combination: !!csq.combination_pattern,
         _evidence_classes: new Set(),
         _static_sources: 0,
         _runtime_sources: 0,
+        _causal_types: new Set(srcTypes),
+        _locus_displays: locusDisplay ? [locusDisplay] : [],
+        board_implication: vocab ? vocab.board_implication : null,
       }
     } else {
       themeMap[tid].source_count += (csq.source_conditions || []).length
       if ((SEVERITY_RANK[csq.severity] || 0) > (SEVERITY_RANK[themeMap[tid].severity] || 0)) {
         themeMap[tid].severity = csq.severity
+      }
+      for (const st of (csq.source_condition_types || [])) themeMap[tid]._causal_types.add(st)
+      if (csq.primary_locus_display && !themeMap[tid]._locus_displays.includes(csq.primary_locus_display)) {
+        themeMap[tid]._locus_displays.push(csq.primary_locus_display)
       }
     }
     if (csq.evidence_class) themeMap[tid]._evidence_classes.add(csq.evidence_class)
@@ -1002,9 +1030,41 @@ function forBoardroom(consequenceResult, synthesisResult, fullReport) {
       t.evidence_diversity = 'STATIC'
       t.evidence_annotation = `${t.source_count} sources`
     }
+    const causalTypes = [...t._causal_types]
+    const CAUSAL_LABELS = {
+      STRUCTURAL_MASS_CONCENTRATION: 'structural concentration',
+      CROSS_DOMAIN_COUPLING_PRESSURE: 'cross-domain coupling',
+      COUPLING_INERTIA: 'coupling resistance',
+      STRUCTURAL_BOUNDARY_DIVERGENCE: 'boundary drift',
+      GOVERNANCE_COVERAGE_STATUS: 'governance gap',
+      EXECUTION_FRAGILITY: 'fragility',
+      EXECUTION_CONSTRICTION: 'constriction',
+      DELIVERY_PRESSURE_CONCENTRATION: 'delivery pressure',
+      DEPENDENCY_CHOKE_POINT: 'dependency concentration',
+      PROPAGATION_ASYMMETRY: 'propagation asymmetry',
+      EVENT_CONCENTRATION: 'event coordination concentration',
+      RUNTIME_DEPENDENCY_CHOKE_POINT: 'runtime choke point',
+      BROKER_DEPENDENCY: 'broker dependency',
+      TOPIC_FANOUT_PRESSURE: 'topic fanout',
+      ASYNC_PROPAGATION_ASYMMETRY: 'async propagation',
+      EDGE_CLOUD_PROPAGATION_RISK: 'edge-cloud dependency',
+      RUNTIME_OBSERVABILITY_GAP: 'observability gap',
+      COMPOUND_CONVERGENCE: 'convergence',
+    }
+    const locusDisplays = t._locus_displays || []
+
+    t.board_grounding = {
+      causal_drivers: causalTypes.slice(0, 4).map(ct => CAUSAL_LABELS[ct] || ct.toLowerCase().replace(/_/g, ' ')),
+      primary_zone: locusDisplays[0] || null,
+      contributing_zones: locusDisplays.slice(0, 3),
+      evidence_paths: t.evidence_classes,
+    }
+
     delete t._evidence_classes
     delete t._static_sources
     delete t._runtime_sources
+    delete t._causal_types
+    delete t._locus_displays
     consequenceThemes.push(t)
   }
   consequenceThemes.sort((a, b) => (SEVERITY_RANK[b.severity] || 0) - (SEVERITY_RANK[a.severity] || 0))

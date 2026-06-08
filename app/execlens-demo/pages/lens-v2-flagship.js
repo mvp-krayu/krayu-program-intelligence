@@ -1390,11 +1390,25 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border: 1px solid #1a1e2a;
           letter-spacing: 0.04em;
         }
-        .cockpit-board-finding-annotation {
+        .cockpit-board-finding-implication {
+          font-size: 12.5px;
+          color: #ccd6f6;
+          line-height: 1.5;
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 1px solid #1a1e2a;
+        }
+        .cockpit-board-finding-grounding {
+          margin-top: 6px;
+        }
+        .cockpit-board-finding-drivers {
+          font-size: 11px;
+          color: #7a8aaa;
+        }
+        .cockpit-board-finding-zone {
           font-size: 11px;
           color: #5e6d8a;
-          margin-top: 6px;
-          line-height: 1.4;
+          margin-top: 2px;
         }
         .cockpit-board-finding-overflow {
           font-size: 10px;
