@@ -9892,25 +9892,44 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
             )}
             {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
               const dcDomains = domainCognition ? domainCognition.domains : []
-              const boardroomDomains = fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))
-              const boardroomClusters = (fullReport.semantic_cluster_registry || []).map(c => {
-                const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
-                if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
-                  return { ...c, cluster_label: dcMatch.executive_label }
-                }
-                return c
-              })
+              const azDomainIds = new Set((domainCognition ? domainCognition.attention_zones : []).map(az => az.domain_id))
+              const allReg = fullReport.semantic_domain_registry
+              const allClusters = fullReport.semantic_cluster_registry || []
+
+              const pressureClusterIds = new Set()
+              allReg.forEach(d => { if (azDomainIds.has(d.domain_id)) pressureClusterIds.add(d.cluster_id) })
+
+              const boardroomDomains = allReg
+                .filter(d => pressureClusterIds.has(d.cluster_id))
+                .map(d => ({ ...d, business_label: d.domain_name }))
+              const boardroomClusters = allClusters
+                .filter(c => pressureClusterIds.has(c.cluster_id))
+                .map(c => {
+                  const dcMatch = dcDomains.find(dc => dc.technical_name === c.cluster_label || dc.domain_id === c.cluster_id)
+                  if (dcMatch && dcMatch.executive_label !== dcMatch.technical_name) {
+                    return { ...c, cluster_label: dcMatch.executive_label }
+                  }
+                  return c
+                })
+              const boardroomEdges = (fullReport.semantic_topology_edges || []).filter(e =>
+                boardroomDomains.some(d => d.domain_id === e.source_domain) &&
+                boardroomDomains.some(d => d.domain_id === e.target_domain)
+              )
+              const hiddenCount = allClusters.length - boardroomClusters.length
+
               return (
                 <div className="cockpit-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
                   <TopologyGraph
                     domains={boardroomDomains}
                     clusters={boardroomClusters}
-                    edges={fullReport.semantic_topology_edges || []}
+                    edges={boardroomEdges}
                     pressureZoneLabel={pressureZone || ''}
                     pressureZoneState={fullReport.pressure_zone_state}
                     boardroomMode={true}
                   />
-                  <div className="cockpit-topology-hint">Click to explore topology</div>
+                  <div className="cockpit-topology-hint">
+                    {hiddenCount > 0 ? `${boardroomClusters.length} pressure regions shown · ${hiddenCount} more in full topology · ` : ''}Click to explore full topology
+                  </div>
                 </div>
               )
             })()}
