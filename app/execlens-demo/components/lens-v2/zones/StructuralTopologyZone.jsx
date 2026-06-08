@@ -343,10 +343,23 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
   if (visibleIds.length === 0) return null
 
   const legendH = 36
-  const nodeSpX = boardroomMode ? 160 : 110, nodeSpY = boardroomMode ? 80 : 66
-  const cluPadTop = 32, cluPadLeft = boardroomMode ? 24 : 18
+
+  const totalDomains = (domains || []).length
+  const clusterCount = visibleIds.length
+  const avgDomainsPerCluster = clusterCount > 0 ? totalDomains / clusterCount : 1
+  const avgLabelLen = (domains || []).reduce((sum, d) => sum + (d.business_label || d.domain_name || '').length, 0) / Math.max(totalDomains, 1)
+  const edgeCount = (edges || []).length
+  const densityScore = totalDomains + (edgeCount / 3) + (avgDomainsPerCluster * 2) + (avgLabelLen > 18 ? 12 : avgLabelLen > 12 ? 5 : 0)
+  const layoutMode = densityScore > 35 ? 'EXPANDED' : densityScore > 18 ? 'BALANCED' : 'COMPACT'
+
+  const nodeSpX = layoutMode === 'EXPANDED' ? 160 : layoutMode === 'BALANCED' ? 140 : 110
+  const nodeSpY = layoutMode === 'EXPANDED' ? 80 : layoutMode === 'BALANCED' ? 72 : 66
+  const cluPadTop = 32
+  const cluPadLeft = layoutMode === 'EXPANDED' ? 24 : 18
   const gap = 14
-  const maxPerRow = boardroomMode ? 2 : isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
+  const maxPerRow = boardroomMode
+    ? (layoutMode === 'EXPANDED' ? 2 : layoutMode === 'BALANCED' ? 2 : 3)
+    : isS1 ? Math.min(Math.ceil(Math.sqrt(visibleIds.length)), 5) : 3
 
   function clusterRect(id) {
     const n = clusterMap[id].domains.length
@@ -505,8 +518,9 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const ux = dx / len, uy = dy / len
           const sD = (domains || []).find(dd => dd.domain_id === e.source_domain)
           const tD = (domains || []).find(dd => dd.domain_id === e.target_domain)
-          const sR = boardroomMode ? 28 : (sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14
-          const tR = boardroomMode ? 28 : (tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14
+          const baseR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 20) : null
+          const sR = baseR || ((sD && (sD.structurally_backed || sD.lineage_status === 'PARTIAL')) ? 18 : 14)
+          const tR = baseR || ((tD && (tD.structurally_backed || tD.lineage_status === 'PARTIAL')) ? 18 : 14)
 
           const bothPressure = boardroomMode && sD && tD && sD._pressureRelevant !== false && tD._pressureRelevant !== false
           const eitherFaded = boardroomMode && ((sD && sD._pressureRelevant === false) || (tD && tD._pressureRelevant === false))
@@ -597,10 +611,10 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const st = nodeStyle(d)
           const backed = d.structurally_backed || d.lineage_status === 'PARTIAL'
           const isPZ = d.zone_anchor
-          const innerR = boardroomMode ? 28 : backed ? 18 : 14
-          const glowR = boardroomMode ? 32 : backed ? 22 : 17
+          const innerR = boardroomMode ? (layoutMode === 'EXPANDED' ? 28 : layoutMode === 'BALANCED' ? 24 : 20) : backed ? 18 : 14
+          const glowR = innerR + 4
           const rawLabel = d.business_label || d.domain_name
-          const lines = boardroomMode ? splitLabelMulti(rawLabel, 16) : splitLabel(rawLabel, 15)
+          const lines = boardroomMode ? splitLabelMulti(rawLabel, layoutMode === 'EXPANDED' ? 16 : 14) : splitLabel(rawLabel, 15)
           const crowdedAbove = (incomingAbove[d.domain_id] || 0) > 1
 
           const isEmphasized = cognitionEmphasis && cognitionEmphasis.has(d.domain_id)
@@ -722,7 +736,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 const startY = pos.cy - ((lines.length - 1) * lineH) / 2
                 return (
                   <text key={li} x={pos.cx} y={startY + li * lineH} textAnchor="middle"
-                    fontSize={boardroomMode ? 7.5 : 5.5} fill={boardroomMode ? '#ccd6f6' : isEmphasized ? '#e0e6f0' : isCognitionDimmed ? '#4a5570' : '#9aa4c0'}
+                    fontSize={boardroomMode ? (layoutMode === 'EXPANDED' ? 7.5 : 6.5) : 5.5} fill={boardroomMode ? '#ccd6f6' : isEmphasized ? '#e0e6f0' : isCognitionDimmed ? '#4a5570' : '#9aa4c0'}
                     fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
                     style={{ transition: 'fill 0.3s' }}>{line}</text>
                 )
