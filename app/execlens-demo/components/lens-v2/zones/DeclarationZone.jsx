@@ -9,42 +9,25 @@ export default function DeclarationZone({ renderState, adapted, boardroomMode, f
     const synResult = fullReport._synthesisResult
     const conditions = synResult ? (synResult.conditions || []).filter(c => c.severity !== 'NOMINAL') : []
     const critical = conditions.filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH')
-    const qClass = fullReport.qualifier_class
+    const qClass = fullReport.qualifier_class || ''
+    const pa = fullReport._projectionAuthority
+    const pLabel = pa ? pa.projectionLabel : null
     const gl = fullReport.governance_lifecycle
     const transitions = gl && gl.available ? gl.transition_count : 0
 
     return (
-      <div className="declaration-zone declaration-zone--forensic">
-        <div className="declaration-forensic-grid">
-          <div className="declaration-forensic-cell">
-            <span className="declaration-forensic-count">{sigs.length}</span>
-            <span className="declaration-forensic-label">signals</span>
-          </div>
-          <div className="declaration-forensic-cell">
-            <span className="declaration-forensic-count">{conditions.length}</span>
-            <span className="declaration-forensic-label">conditions</span>
-          </div>
-          <div className="declaration-forensic-cell declaration-forensic-cell--critical">
-            <span className="declaration-forensic-count">{critical.length}</span>
-            <span className="declaration-forensic-label">critical</span>
-          </div>
-          {rsigCount > 0 && (
-            <div className="declaration-forensic-cell declaration-forensic-cell--runtime">
-              <span className="declaration-forensic-count">{rsigCount}</span>
-              <span className="declaration-forensic-label">runtime</span>
-            </div>
-          )}
-          {transitions > 0 && (
-            <div className="declaration-forensic-cell">
-              <span className="declaration-forensic-count">{transitions}</span>
-              <span className="declaration-forensic-label">transitions</span>
-            </div>
-          )}
-        </div>
-        <div className="declaration-forensic-meta">
-          {qClass && <span className="declaration-forensic-tag">{qClass}</span>}
-          <span className="declaration-forensic-tag">{rsigCount > 0 ? 'Structural + Runtime' : 'Structural'} evidence</span>
-        </div>
+      <div className="declaration-zone declaration-zone--forensic-compact">
+        <span className="declaration-fc-title">OPERATOR FORENSICS</span>
+        <span className="declaration-fc-sep">·</span>
+        {qClass && <><span className="declaration-fc-tag">{qClass}</span><span className="declaration-fc-sep">·</span></>}
+        {pLabel && <><span className="declaration-fc-tag">{pLabel}</span><span className="declaration-fc-sep">·</span></>}
+        <span className="declaration-fc-metric">Signals {sigs.length}</span>
+        <span className="declaration-fc-sep">·</span>
+        <span className="declaration-fc-metric">Conditions {conditions.length}</span>
+        <span className="declaration-fc-sep">·</span>
+        <span className="declaration-fc-metric declaration-fc-metric--critical">Critical {critical.length}</span>
+        {rsigCount > 0 && <><span className="declaration-fc-sep">·</span><span className="declaration-fc-metric declaration-fc-metric--runtime">Runtime {rsigCount}</span></>}
+        {transitions > 0 && <><span className="declaration-fc-sep">·</span><span className="declaration-fc-metric">Transitions {transitions}</span></>}
       </div>
     )
   }

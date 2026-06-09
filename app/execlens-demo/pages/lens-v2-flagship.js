@@ -875,54 +875,42 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-scope-sep { color: #7a8aaa; }
 
-        /* ── Forensic Declaration (OPERATOR) ────────────────────────── */
-        .declaration-zone--forensic {
-          padding: 20px 32px 16px;
-          border-bottom: 1px solid #1e2330;
-          border-left: 3px solid #4a9eff;
-          background: linear-gradient(90deg, rgba(74, 158, 255, 0.04) 0%, transparent 40%);
-        }
-        .declaration-forensic-grid {
+        /* ── Forensic Compact Bar (OPERATOR) ──────────────────────── */
+        .declaration-zone--forensic-compact {
           display: flex;
-          gap: 24px;
-          flex-wrap: wrap;
-        }
-        .declaration-forensic-cell {
-          display: flex;
-          flex-direction: column;
           align-items: center;
-          min-width: 48px;
+          flex-wrap: wrap;
+          gap: 0;
+          padding: 10px 24px;
+          border-bottom: 1px solid #1e2330;
+          border-left: 2px solid #4a9eff;
+          background: rgba(74, 158, 255, 0.02);
+          max-height: 56px;
         }
-        .declaration-forensic-count {
+        .declaration-fc-title {
           font-family: 'Courier New', monospace;
-          font-size: 22px;
-          font-weight: 700;
-          color: #ccd6f6;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          color: #4a9eff;
         }
-        .declaration-forensic-cell--critical .declaration-forensic-count { color: #ff6b6b; }
-        .declaration-forensic-cell--runtime .declaration-forensic-count { color: #bb86fc; }
-        .declaration-forensic-label {
+        .declaration-fc-sep {
+          color: #2a3040;
+          margin: 0 6px;
+          font-size: 10px;
+        }
+        .declaration-fc-tag {
           font-family: 'Courier New', monospace;
-          font-size: 8px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #5a6580;
-          margin-top: 2px;
+          font-size: 10px;
+          color: #7a8aaa;
         }
-        .declaration-forensic-meta {
-          display: flex;
-          gap: 8px;
-          margin-top: 10px;
-        }
-        .declaration-forensic-tag {
+        .declaration-fc-metric {
           font-family: 'Courier New', monospace;
-          font-size: 9px;
-          color: #6a7a9a;
-          letter-spacing: 0.04em;
-          padding: 2px 6px;
-          border: 1px solid #2a2f40;
-          border-radius: 3px;
+          font-size: 10px;
+          color: #8a96b2;
         }
+        .declaration-fc-metric--critical { color: #ff6b6b; }
+        .declaration-fc-metric--runtime { color: #bb86fc; }
 
         /* ── Boardroom Decision View (Phase 3B) ─────────────────────────── */
         .declaration-zone--boardroom {
