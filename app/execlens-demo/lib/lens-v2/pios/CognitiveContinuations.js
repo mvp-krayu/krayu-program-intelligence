@@ -328,9 +328,20 @@ function deriveAscent(p) {
 
 // ─── Main Export ─────────────────────────────────────────────────
 
-function deriveContinuations(surfaceId, cognitionContext, projectionLevel) {
+// Projection-aware weighting: which continuation types matter most per persona
+const PROJECTION_WEIGHTS = {
+  boardroom: { ascent: 3, implication: 3, challenge: 2, adjacent: 1, clarify: 0, descent: 0 },
+  balanced:  { implication: 3, ascent: 2, adjacent: 2, challenge: 1, clarify: 1, descent: 0 },
+  dense:     { clarify: 3, descent: 3, adjacent: 2, implication: 1, challenge: 1, ascent: 0 },
+  operator:  { challenge: 3, descent: 3, clarify: 2, adjacent: 1, implication: 0, ascent: 0 },
+  thorr:     { implication: 2, challenge: 2, adjacent: 2, descent: 2, clarify: 2, ascent: 2 },
+}
+
+function deriveContinuations(surfaceId, cognitionContext, projectionLevel, projectionMode) {
   const ctx = cognitionContext || {}
   const pLevel = projectionLevel || 0
+  const mode = projectionMode || 'thorr'
+  const weights = PROJECTION_WEIGHTS[mode] || PROJECTION_WEIGHTS.thorr
   const p = detectProperties(surfaceId, ctx)
 
   const raw = {
@@ -344,10 +355,14 @@ function deriveContinuations(surfaceId, cognitionContext, projectionLevel) {
 
   const gated = {}
   for (const [type, continuations] of Object.entries(raw)) {
-    gated[type] = continuations.map(c => ({
-      ...c,
-      available: pLevel >= (c.authorityRequired || 1),
-    }))
+    const weight = weights[type] ?? 1
+    gated[type] = continuations
+      .filter(() => weight > 0)
+      .map(c => ({
+        ...c,
+        available: pLevel >= (c.authorityRequired || 1),
+        weight,
+      }))
   }
 
   return gated

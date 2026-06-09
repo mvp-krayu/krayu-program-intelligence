@@ -125,20 +125,20 @@ function interpret_execution_blindness(cdc, fullReport, projectionLevel) {
   const runtimeDomains = [...new Set(rsigs.flatMap(s => s.affected_domains || []))]
 
   if (rsigs.length === 0) return makeResult('interpret_execution_blindness', true, {
-    meaning: 'No runtime connectivity evidence is available. The system may have blind spots that static analysis cannot detect.',
+    meaning: 'No runtime connectivity evidence is available yet. Runtime analysis would expand visibility beyond the static import graph into execution paths, messaging, and event coordination.',
     why_it_matters: 'Operational monitoring assumptions are unverified. Teams may believe coverage is complete when it is not.',
     who_should_care: ['Operations leadership', 'Monitoring team'],
     operational_consequence: 'Until runtime evidence is collected, treat monitoring confidence as unverified.',
-  }, [{ type: 'absence', source: 'RSIG', field: 'count = 0' }], 'Runtime blind spots may exist — unverified')
+  }, [{ type: 'absence', source: 'RSIG', field: 'count = 0' }], 'Runtime evidence not yet collected — visibility limited to static analysis')
 
   return makeResult('interpret_execution_blindness', true, {
-    meaning: `Your monitoring won't catch this. ${runtimeDomains.length} domain${runtimeDomains.length !== 1 ? 's carry' : ' carries'} runtime dependencies invisible to static analysis. The system reports healthy while operational capabilities silently degrade.`,
+    meaning: `Your monitoring won't catch this. ${runtimeDomains.length} domain${runtimeDomains.length !== 1 ? 's carry' : ' carries'} runtime dependencies that only became visible through runtime connectivity analysis. Static analysis alone would not have revealed these execution paths.`,
     why_it_matters: 'Teams believe the system is healthy because dashboards reflect code-level health, not execution-level connectivity. Change management processes are blind to this failure class.',
     who_should_care: ['Operations leadership', 'Monitoring/observability team', 'Incident response'],
     operational_consequence: `Broker-mediated coordination, event routing, and runtime gateways represent single points of failure across ${runtimeDomains.length} domain${runtimeDomains.length !== 1 ? 's' : ''}. Standard health checks will not detect degradation.`,
   },
     rsigs.slice(0, 3).map(s => ({ type: 'RSIG', source: s.signal_id, field: s.signal_name })),
-    `${runtimeDomains.length} domains carry invisible failure modes`
+    `Runtime expanded visibility to ${runtimeDomains.length} domains`
   )
 }
 

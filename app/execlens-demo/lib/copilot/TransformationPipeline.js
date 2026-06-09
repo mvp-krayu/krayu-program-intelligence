@@ -245,7 +245,8 @@ async function transform({
     const cogCtx = buildCognitionContext(assembled)
     const pLevel = assembled.projectionAuthority ? assembled.projectionAuthority.projectionLevel : 0
     if (cogCtx) {
-      cognitiveContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel)
+      const projMode = (audience || '').toLowerCase().includes('boardroom') ? 'boardroom' : (audience || '').toLowerCase().includes('operator') ? 'operator' : (audience || '').toLowerCase().includes('dense') ? 'dense' : 'thorr'
+      cognitiveContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel, projMode)
     }
   } catch { /* continuations are optional */ }
 
