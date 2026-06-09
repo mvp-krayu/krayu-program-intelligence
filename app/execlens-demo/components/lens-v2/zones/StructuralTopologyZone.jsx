@@ -533,9 +533,11 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           const tProminent = tD && (tD._pressureRelevant !== false || tD._emphasisRole)
           const bothPressure = boardroomMode && sProminent && tProminent
           const eitherFaded = boardroomMode && (!sProminent || !tProminent)
+          const cogBothEmph = cognitionOverlay && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
+          const cogEitherDim = cognitionOverlay && highlightSet && (!highlightSet.has(e.source_domain) || !highlightSet.has(e.target_domain))
           const dimmed = !boardroomMode && highlightSet && !highlightSet.has(e.source_domain) && !highlightSet.has(e.target_domain)
           const bright = !boardroomMode && highlightSet && highlightSet.has(e.source_domain) && highlightSet.has(e.target_domain)
-          const edgeOpacity = boardroomMode ? (bothPressure ? 0.7 : eitherFaded ? 0.15 : 0.4) : dimmed ? 0.12 : bright ? 0.95 : 0.6
+          const edgeOpacity = cogBothEmph ? 0.8 : cogEitherDim ? 0.12 : boardroomMode ? (bothPressure ? 0.7 : eitherFaded ? 0.15 : 0.4) : dimmed ? 0.12 : bright ? 0.95 : 0.6
 
           return (
             <line key={`e-${i}`}
