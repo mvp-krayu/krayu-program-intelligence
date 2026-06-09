@@ -6495,7 +6495,7 @@ function BalancedPressureSynthesis({ signals, pressureZone }) {
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition }) {
   const [activeIntent, setActiveIntent] = useState(null)
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
@@ -10780,7 +10780,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} />
     )
   }
   return (
