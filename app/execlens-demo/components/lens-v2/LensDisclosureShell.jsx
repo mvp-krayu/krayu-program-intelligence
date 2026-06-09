@@ -265,7 +265,7 @@ export default function LensDisclosureShell({
       data-persona={persona}
       data-active-zones={diagnostics.activeZones}
     >
-      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && escalationBanner.active && (
+      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && densityClass !== 'EXECUTIVE_DENSE' && escalationBanner.active && (
         <div className="disclosure-escalation" role="status" aria-atomic="true">
           <span className="disclosure-escalation-count">{escalationBanner.criticalCount}</span>
           <span className="disclosure-escalation-label">

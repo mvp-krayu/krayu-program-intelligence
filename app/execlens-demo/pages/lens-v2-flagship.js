@@ -477,7 +477,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         />
 
         <div className="v2-body">
-          {!boardroomMode && isBlocked && projectionAuthority && projectionAuthority.projectionLevel >= 1 ? (
+          {!boardroomMode && densityClass !== 'EXECUTIVE_DENSE' && densityClass !== 'OPERATOR_DENSE' && isBlocked && projectionAuthority && projectionAuthority.projectionLevel >= 1 ? (
             <div className="blocked-declaration blocked-declaration--authority" role="status">
               <div className="blocked-icon" style={{ color: '#4a9eff' }}>◆</div>
               <div className="blocked-content">
@@ -489,7 +489,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
                 </div>
               </div>
             </div>
-          ) : !boardroomMode && isBlocked ? (
+          ) : !boardroomMode && densityClass !== 'EXECUTIVE_DENSE' && densityClass !== 'OPERATOR_DENSE' && isBlocked ? (
             <BlockedDeclaration adapted={adaptedDisplay} />
           ) : null}
           {!boardroomMode && isDiagnostic && !isBlocked && <DiagnosticDeclaration />}
