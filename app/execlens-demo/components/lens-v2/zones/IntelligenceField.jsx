@@ -6567,14 +6567,37 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         const s = active && active.sections
         const others = available.filter(([name]) => name !== selected)
 
+        const cdc = crossDomainCognition
+        const domConc = (cdc && cdc.domain_concentration) || []
+        const structCenter = domConc.length > 0 ? domConc[0].domain : null
+        const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
+        const isDivergence = selected === 'interpret_runtime_divergence' && execCenter && structCenter && execCenter.toLowerCase() !== structCenter.toLowerCase()
+
         return (
           <div className="balanced-zone balanced-zone--narrative">
             {s && (
               <div className="balanced-narrative">
                 <div className="balanced-narrative-title">{INTENT_LABELS[selected] || selected.replace(/^interpret_/, '').replace(/_/g, ' ')}</div>
+
                 <div className="balanced-narrative-lead">{s.meaning}</div>
+
+                {isDivergence && (
+                  <div className="balanced-split-visual">
+                    <div className="balanced-split-col">
+                      <div className="balanced-split-label">ARCHITECTURE CENTER</div>
+                      <div className="balanced-split-domain">{structCenter}</div>
+                    </div>
+                    <div className="balanced-split-bridge">≠</div>
+                    <div className="balanced-split-col balanced-split-col--exec">
+                      <div className="balanced-split-label">OPERATIONS CENTER</div>
+                      <div className="balanced-split-domain">{execCenter}</div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="balanced-narrative-body">{s.why_it_matters}</div>
                 <div className="balanced-narrative-body">{s.operational_consequence}</div>
+
                 {s.who_should_care && s.who_should_care.length > 0 && (
                   <div className="balanced-narrative-actors">
                     {s.who_should_care.map((actor, i) => (
@@ -6582,8 +6605,10 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
                     ))}
                   </div>
                 )}
+
                 {active.evidence_anchors && active.evidence_anchors.length > 0 && (
                   <div className="balanced-narrative-evidence-row">
+                    <span className="balanced-evidence-label">Evidence anchors</span>
                     {active.evidence_anchors.map((a, i) => (
                       <span key={i} className="balanced-evidence-chip">{a.field || a.source}</span>
                     ))}
@@ -6596,11 +6621,15 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
               <div className="balanced-other-intents">
                 <div className="balanced-other-label">OTHER INTERPRETATIONS</div>
                 <div className="balanced-other-list">
-                  {others.map(([name, call]) => (
-                    <button key={name} className="balanced-other-btn" onClick={() => setActiveIntent(name)} type="button">
-                      {call.hook || INTENT_LABELS[name]}
-                    </button>
-                  ))}
+                  {others.map(([name, call]) => {
+                    const otherS = call.sections
+                    return (
+                      <button key={name} className="balanced-other-card" onClick={() => setActiveIntent(name)} type="button">
+                        <div className="balanced-other-card-title">{INTENT_LABELS[name]}</div>
+                        <div className="balanced-other-card-hook">{call.hook}</div>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}

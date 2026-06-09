@@ -5024,13 +5024,61 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 4px;
           background: rgba(74, 158, 255, 0.03);
         }
+        /* ── Split Visual (Runtime Divergence) ────────────────────────── */
+        .balanced-split-visual {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          margin: 20px 0;
+          border: 1px solid #1e2330;
+          border-radius: 6px;
+          overflow: hidden;
+        }
+        .balanced-split-col {
+          flex: 1;
+          padding: 16px 20px;
+          text-align: center;
+        }
+        .balanced-split-col--exec {
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .balanced-split-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.1em;
+          color: #5a6580;
+          margin-bottom: 6px;
+        }
+        .balanced-split-domain {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          color: #e2e8f6;
+        }
+        .balanced-split-col--exec .balanced-split-domain { color: #4a9eff; }
+        .balanced-split-bridge {
+          font-size: 18px;
+          color: #3a4560;
+          padding: 0 4px;
+          flex-shrink: 0;
+        }
+
+        /* ── Evidence Anchors ────────────────────────────────────────── */
         .balanced-narrative-evidence-row {
           display: flex;
+          align-items: center;
           flex-wrap: wrap;
           gap: 6px;
-          margin-top: 16px;
-          padding-top: 12px;
+          margin-top: 20px;
+          padding-top: 14px;
           border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .balanced-evidence-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          color: #4a5570;
+          margin-right: 4px;
         }
         .balanced-evidence-chip {
           font-family: 'Courier New', monospace;
@@ -5039,11 +5087,12 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           padding: 4px 10px;
           border: 1px solid #2a3040;
           border-radius: 4px;
-          background: rgba(74, 158, 255, 0.03);
+          background: rgba(74, 158, 255, 0.04);
         }
 
+        /* ── Other Interpretation Cards ──────────────────────────────── */
         .balanced-other-intents {
-          margin-top: 32px;
+          margin-top: 36px;
           padding-top: 20px;
           border-top: 1px solid #1e2330;
         }
@@ -5052,33 +5101,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 8.5px;
           letter-spacing: 0.1em;
           color: #4a5570;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
         .balanced-other-list {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 8px;
         }
-        .balanced-other-btn {
+        .balanced-other-card {
           display: block;
-          width: 100%;
           text-align: left;
+          background: rgba(20, 24, 32, 0.6);
+          border: 1px solid #1e2330;
+          border-left: 3px solid #2a2f40;
+          border-radius: 0 6px 6px 0;
+          padding: 12px 16px;
+          cursor: pointer;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .balanced-other-card:hover {
+          border-left-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.04);
+        }
+        .balanced-other-card-title {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 12px;
-          color: #6a7a9a;
-          background: rgba(20, 24, 32, 0.5);
-          border: 1px solid #1e2330;
-          border-left: 2px solid #2a2f40;
-          border-radius: 0 4px 4px 0;
-          padding: 10px 14px;
-          cursor: pointer;
-          transition: border-color 0.2s, color 0.2s, background 0.2s;
-          line-height: 1.4;
-        }
-        .balanced-other-btn:hover {
-          border-left-color: #4a9eff;
+          font-weight: 600;
           color: #ccd6f6;
-          background: rgba(74, 158, 255, 0.04);
+          margin-bottom: 4px;
+        }
+        .balanced-other-card-hook {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #6a7a9a;
+          line-height: 1.4;
         }
 
         .balanced-zone--descent {
