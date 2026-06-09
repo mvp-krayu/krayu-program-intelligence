@@ -236,17 +236,24 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         if (!hasRuntime) challenges.push('No runtime evidence — structural inference only')
         if (!gl || !gl.available) challenges.push('Not governed — advisory weight only')
 
+        const supportParts = []
+        if (runtimeCorrelation.length > 0) supportParts.push(`${runtimeCorrelation.length} runtime signal${runtimeCorrelation.length !== 1 ? 's' : ''}`)
+        if (condCount > 0) supportParts.push(`${condCount} condition${condCount !== 1 ? 's' : ''}`)
+        if (evidCount > 0 && evidCount !== condCount) supportParts.push(`${evidCount} structural evidence`)
+        if (domainCount > 0) supportParts.push(`${domainCount} domain${domainCount !== 1 ? 's' : ''}`)
+        const supportLabel = supportParts.length > 0 ? supportParts.join(' · ') : 'No direct evidence attached'
+
         return (
         <div className="sw-intel-surface-verification">
           <div className="sw-intel-verify-grid">
             <div className="sw-intel-verify-row">
               <span className="sw-intel-verify-key">Supports</span>
-              <span className="sw-intel-verify-val">{evidCount} evidence · {condCount} condition{condCount !== 1 ? 's' : ''} · {domainCount} domain{domainCount !== 1 ? 's' : ''}</span>
+              <span className="sw-intel-verify-val">{supportLabel}</span>
             </div>
             {runtimeCorrelation.length > 0 && (
               <div className="sw-intel-verify-row">
                 <span className="sw-intel-verify-key">Runtime</span>
-                <span className="sw-intel-verify-val">{runtimeCorrelation.length} RSIG signal{runtimeCorrelation.length !== 1 ? 's' : ''} correlate — {runtimeCorrelation.map(s => s.signal_name).slice(0, 2).join(', ')}</span>
+                <span className="sw-intel-verify-val">{runtimeCorrelation.map(s => s.signal_name).slice(0, 3).join(' · ')}</span>
               </div>
             )}
             {challenges.length > 0 && (
