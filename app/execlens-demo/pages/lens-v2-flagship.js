@@ -4986,6 +4986,15 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .balanced-narrative {
           max-width: 680px;
         }
+        .balanced-narrative-title {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 22px;
+          font-weight: 600;
+          color: #e2e8f6;
+          margin-bottom: 20px;
+          padding-bottom: 12px;
+          border-bottom: 2px solid rgba(74, 158, 255, 0.2);
+        }
         .balanced-narrative-lead {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 16px;

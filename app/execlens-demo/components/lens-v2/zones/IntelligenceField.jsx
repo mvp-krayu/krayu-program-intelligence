@@ -6602,6 +6602,7 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           <div className="balanced-zone balanced-zone--narrative">
             {s && (
               <div className="balanced-narrative">
+                <div className="balanced-narrative-title">{INTENT_LABELS[selected] || selected.replace(/^interpret_/, '').replace(/_/g, ' ')}</div>
                 <div className="balanced-narrative-lead">{s.meaning}</div>
                 <div className="balanced-narrative-body">{s.why_it_matters}</div>
                 <div className="balanced-narrative-body">{s.operational_consequence}</div>
