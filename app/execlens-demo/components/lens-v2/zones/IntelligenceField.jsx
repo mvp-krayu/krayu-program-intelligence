@@ -866,24 +866,22 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         const blastRadius = domConc.filter(d => d.condition_count > 0).length
         const gravityCenter = domConc.length > 0 ? domConc[0].domain : null
         const pLevel = pa ? pa.projectionLevel : 0
-        const confidenceLabel = pLevel >= 4 ? 'Governed — full authority'
-          : pLevel >= 3 ? 'Governed — semantic authority'
-          : pLevel >= 2 ? 'Structural + Runtime'
-          : pLevel >= 1 ? 'Structural only'
-          : 'Topology only'
-        const isGoverned = pLevel >= 3
+
+        const pLabel = pa ? pa.projectionLabel : 'P0 — Topology Only'
+        const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
+        const centersMatch = !execCenter || !gravityCenter || execCenter.toLowerCase() === gravityCenter.toLowerCase()
+        const hasGovernance = pLevel >= 4
 
         return (
           <>
-            <div className="support-block support-block--confidence">
-              <div className="support-label">CONFIDENCE</div>
-              <div className="support-confidence-primary" data-governed={isGoverned ? 'true' : 'false'}>
-                {confidenceLabel}
-              </div>
-              <div className="support-confidence-layers">
-                <span className="support-confidence-chip" data-status={pLevel >= 1 ? 'PASS' : 'PENDING'}>{pLevel >= 1 ? 'Structural' : 'Structural pending'}</span>
-                <span className="support-confidence-chip" data-status={pLevel >= 2 ? 'PASS' : 'PENDING'}>{pLevel >= 2 ? 'Runtime' : 'Runtime pending'}</span>
-                <span className="support-confidence-chip" data-status={pLevel >= 3 ? 'PASS' : 'PENDING'}>{pLevel >= 3 ? 'Semantic' : 'Semantic pending'}</span>
+            <div className="support-block support-block--authority-bar">
+              <div className="support-label">AUTHORITY</div>
+              <div className="support-authority-plabel" data-governed={pLevel >= 3 ? 'true' : 'false'}>{pLabel}</div>
+              <div className="support-authority-layers">
+                <span className="support-authority-layer" data-status={pLevel >= 1 ? 'pass' : 'pending'}><span className="support-authority-check">{pLevel >= 1 ? '✓' : '✗'}</span> Structural</span>
+                <span className="support-authority-layer" data-status={pLevel >= 2 ? 'pass' : 'pending'}><span className="support-authority-check">{pLevel >= 2 ? '✓' : '✗'}</span> Runtime</span>
+                <span className="support-authority-layer" data-status={pLevel >= 3 ? 'pass' : 'pending'}><span className="support-authority-check">{pLevel >= 3 ? '✓' : '✗'}</span> Semantic</span>
+                {hasGovernance && <span className="support-authority-layer" data-status="pass"><span className="support-authority-check">✓</span> Governance</span>}
               </div>
             </div>
 
@@ -892,7 +890,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
                 <div className="support-label">SEVERITY</div>
                 <div className="support-severity-primary" data-severity={topSeverity}>{topSeverity}</div>
                 <div className="support-severity-detail">
-                  {surfacedFindings} material finding{surfacedFindings !== 1 ? 's' : ''} from {sliceCount} detected condition{sliceCount !== 1 ? 's' : ''}
+                  {surfacedFindings} finding{surfacedFindings !== 1 ? 's' : ''} from {sliceCount} condition{sliceCount !== 1 ? 's' : ''}
                 </div>
               </div>
             )}
@@ -900,31 +898,27 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             {blastRadius > 0 && (
               <div className="support-block support-block--blast-radius">
                 <div className="support-label">BLAST RADIUS</div>
-                <div className="support-blast-count">{blastRadius} domain{blastRadius !== 1 ? 's' : ''} affected</div>
+                <div className="support-blast-count">{blastRadius} domain{blastRadius !== 1 ? 's' : ''}</div>
               </div>
             )}
 
-            {gravityCenter && (() => {
-              const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
-              const centersMatch = !execCenter || execCenter === gravityCenter
-              return (
-                <div className="support-block support-block--gravity">
-                  {centersMatch ? (
-                    <>
-                      <div className="support-label">CENTER OF GRAVITY</div>
-                      <div className="support-gravity-domain">{gravityCenter}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="support-label">STRUCTURAL CENTER</div>
-                      <div className="support-gravity-domain">{gravityCenter}</div>
-                      <div className="support-label" style={{ marginTop: 8 }}>EXECUTION CENTER</div>
-                      <div className="support-gravity-domain support-gravity-domain--execution">{execCenter}</div>
-                    </>
-                  )}
-                </div>
-              )
-            })()}
+            {gravityCenter && (
+              <div className="support-block support-block--gravity">
+                {centersMatch ? (
+                  <>
+                    <div className="support-label">CENTER OF GRAVITY</div>
+                    <div className="support-gravity-domain">{gravityCenter}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="support-label">STRUCTURAL CENTER</div>
+                    <div className="support-gravity-domain">{gravityCenter}</div>
+                    <div className="support-label" style={{ marginTop: 8 }}>EXECUTION CENTER</div>
+                    <div className="support-gravity-domain support-gravity-domain--execution">{execCenter}</div>
+                  </>
+                )}
+              </div>
+            )}
 
             <div className="support-block support-block--investigation">
               <div className="support-label">INVESTIGATE</div>
@@ -933,16 +927,6 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
                 <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">OPERATOR</span><span className="support-sw-intel-descent-purpose">Condition forensics</span></div>
               </div>
             </div>
-
-            {sLevel && (
-              <div className="support-block support-block--authority-compact">
-                <div className="support-label">AUTHORITY</div>
-                <div className="support-authority-compact-row">
-                  <span className="support-authority-s">{sLevel}</span>
-                  <span className="support-authority-p">{pa ? pa.projectionLabel : 'P0'}</span>
-                </div>
-              </div>
-            )}
 
             {selectedNarrativeArc && (
               <div className="support-block support-block--arc-context">

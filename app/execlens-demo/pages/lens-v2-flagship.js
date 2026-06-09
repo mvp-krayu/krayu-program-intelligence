@@ -480,9 +480,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
                 <div className="blocked-headline" style={{ color: '#8ab4f8' }}>{projectionAuthority.projectionLabel.toUpperCase()}</div>
                 <div className="blocked-detail">
                   {projectionAuthority.projectionLevel >= 2
-                    ? 'Structural and runtime intelligence available. Governed narrative requires semantic qualification (P3+).'
-                    : 'Structural intelligence available. Operational and narrative projection requires additional evidence authority.'}
-                  {projectionAuthority.hasViolations ? ` ${projectionAuthority.violationCount} conditions suppressed.` : ''}
+                    ? 'Structural and runtime intelligence available. Full narrative authority requires semantic qualification.'
+                    : 'Structural intelligence available. Full authority requires additional evidence layers.'}
                 </div>
               </div>
             </div>
@@ -791,22 +790,26 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         /* ── Blocked Declaration ─────────────────────────────────────────── */
         .blocked-declaration {
           display: flex;
-          align-items: flex-start;
-          gap: 24px;
-          padding: 40px 48px;
-          background: rgba(255,107,107,0.05);
-          border-bottom: 1px solid rgba(255,107,107,0.15);
+          align-items: center;
+          gap: 16px;
+          padding: 16px 32px;
+          background: rgba(255,107,107,0.04);
+          border-bottom: 1px solid rgba(255,107,107,0.12);
           animation: v2Enter 0.4s ease 0.1s both;
         }
-        .blocked-icon { font-size: 18px; color: #ff6b6b; margin-top: 5px; flex-shrink: 0; }
+        .blocked-declaration--authority {
+          background: rgba(74,158,255,0.04);
+          border-bottom: 1px solid rgba(74,158,255,0.12);
+        }
+        .blocked-icon { font-size: 14px; color: #ff6b6b; flex-shrink: 0; }
         .blocked-headline {
-          font-size: 20px;
-          font-weight: 700;
+          font-size: 13px;
+          font-weight: 600;
           color: #ff6b6b;
           letter-spacing: 0.06em;
-          margin-bottom: 10px;
+          margin-bottom: 2px;
         }
-        .blocked-detail { font-size: 14px; color: #8a96b2; line-height: 1.7; }
+        .blocked-detail { font-size: 12px; color: #7a8aaa; line-height: 1.5; }
 
         /* ── Diagnostic Declaration ──────────────────────────────────────── */
         .diagnostic-declaration {
@@ -7234,39 +7237,40 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
-        /* ── Confidence Block (SupportRail, BOARDROOM) ────────────────── */
-        .support-block--confidence {
+        /* ── Authority Bar (SupportRail, BOARDROOM) ─────────────────── */
+        .support-block--authority-bar {
           border-top: 1px solid #1e2330;
         }
-        .support-confidence-primary {
+        .support-authority-plabel {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 12px;
           font-weight: 600;
           color: #ffd700;
           margin-top: 4px;
         }
-        .support-confidence-primary[data-governed="true"] { color: #64ffda; }
-        .support-confidence-layers {
+        .support-authority-plabel[data-governed="true"] { color: #64ffda; }
+        .support-authority-layers {
           display: flex;
-          flex-wrap: wrap;
-          gap: 4px;
+          flex-direction: column;
+          gap: 2px;
           margin-top: 6px;
         }
-        .support-confidence-chip {
-          font-family: 'Courier New', monospace;
-          font-size: 9px;
-          letter-spacing: 0.04em;
-          padding: 2px 6px;
-          border-radius: 3px;
+        .support-authority-layer {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
         }
-        .support-confidence-chip[data-status="PASS"] {
-          color: #64ffda;
-          background: rgba(100, 255, 218, 0.08);
+        .support-authority-layer[data-status="pass"] { color: #8a96b2; }
+        .support-authority-layer[data-status="pending"] { color: #4a5570; }
+        .support-authority-check {
+          font-size: 10px;
+          width: 12px;
+          text-align: center;
         }
-        .support-confidence-chip[data-status="PENDING"] {
-          color: #5a6580;
-          background: rgba(90, 101, 128, 0.1);
-        }
+        .support-authority-layer[data-status="pass"] .support-authority-check { color: #64ffda; }
+        .support-authority-layer[data-status="pending"] .support-authority-check { color: #3a4560; }
 
         /* ── Severity Block (SupportRail, BOARDROOM) ─────────────────── */
         .support-block--severity {
