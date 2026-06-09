@@ -2762,11 +2762,27 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border: 1px solid #2a2f40;
           border-radius: 3px;
         }
+        .actor-runtime-summary-chip[data-severity="CRITICAL"],
         .actor-runtime-summary-chip[data-severity="HIGH"],
         .actor-runtime-summary-chip[data-severity="ELEVATED"] {
           color: #ff9e4a;
           border-color: rgba(255, 158, 74, 0.2);
         }
+        .actor-runtime-sev-group {
+          margin-bottom: 4px;
+        }
+        .actor-runtime-sev-header {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 4px 0 2px;
+          margin-top: 4px;
+          color: #5a6580;
+        }
+        .actor-runtime-sev-header[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .actor-runtime-sev-header[data-severity="HIGH"] { color: #ff9e4a; }
+        .actor-runtime-sev-header[data-severity="ELEVATED"] { color: #ffd700; }
 
         /* ── Investigation Governance Audit ── */
         .actor--operator-governance {

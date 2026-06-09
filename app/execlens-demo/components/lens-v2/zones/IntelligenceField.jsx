@@ -7554,57 +7554,86 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           ASYNC_PROPAGATION_ASYMMETRY: 'Asymmetric failure — producers outpace consumers',
           EDGE_CLOUD_PROPAGATION_RISK: 'Edge-cloud split risk — field data may not reach platform',
         }
-        const elevated = rsigSigsLocal.filter(s => s.severity !== 'NOMINAL' && s.severity !== 'MODERATE')
-        const other = rsigSigsLocal.filter(s => s.severity === 'NOMINAL' || s.severity === 'MODERATE')
         const runtimeDomains = [...new Set(rsigSigsLocal.flatMap(s => s.affected_domains || []))]
+        const elevatedCount = rsigSigsLocal.filter(s => s.severity !== 'NOMINAL' && s.severity !== 'MODERATE').length
+        const SRANK = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+        const highestSev = rsigSigsLocal.reduce((best, s) => (SRANK[s.severity] ?? 5) < (SRANK[best] ?? 5) ? s.severity : best, 'NOMINAL')
+
+        const deduped = {}
+        for (const sig of rsigSigsLocal) {
+          const key = sig.signal_name
+          if (!deduped[key]) {
+            deduped[key] = { ...sig, _domains: new Set(sig.affected_domains || []), _count: 1 }
+          } else {
+            deduped[key]._count++
+            for (const d of (sig.affected_domains || [])) deduped[key]._domains.add(d)
+            if ((SRANK[sig.severity] ?? 5) < (SRANK[deduped[key].severity] ?? 5)) deduped[key].severity = sig.severity
+          }
+        }
+        const uniqueSignals = Object.values(deduped).map(s => ({ ...s, affected_domains: [...s._domains] }))
+        uniqueSignals.sort((a, b) => (SRANK[a.severity] ?? 5) - (SRANK[b.severity] ?? 5))
+
+        const sevGroups = {}
+        for (const s of uniqueSignals) {
+          const sev = s.severity || 'NOMINAL'
+          if (!sevGroups[sev]) sevGroups[sev] = []
+          sevGroups[sev].push(s)
+        }
+        const sevOrder = ['CRITICAL', 'HIGH', 'ELEVATED', 'MODERATE', 'LOW', 'NOMINAL'].filter(s => sevGroups[s])
+
         return (
           <div className="actor actor--runtime-connectivity" data-zone-key="runtimeConnectivity">
             <div className="actor-tag">
               <span className="actor-code">RC</span>
-              <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals · {runtimeDomains.length} domains</span>
+              <span className="actor-name">Runtime Connectivity</span>
             </div>
             <div className="actor-runtime-summary">
-              {elevated.length > 0 && <span className="actor-runtime-summary-chip" data-severity="HIGH">{elevated.length} elevated</span>}
-              {other.length > 0 && <span className="actor-runtime-summary-chip">{other.length} nominal</span>}
+              <span className="actor-runtime-summary-chip">{rsigSigsLocal.length} signals</span>
+              <span className="actor-runtime-summary-chip">{runtimeDomains.length} domains</span>
+              <span className="actor-runtime-summary-chip" data-severity={highestSev}>{elevatedCount} elevated</span>
             </div>
             <div className="actor-runtime-signals">
-              {rsigSigsLocal.map(sig => {
-                const condType = sig.source_condition_type || null
-                const matchingConditions = condType ? allConditions.filter(c => c.condition_type === condType) : []
-                const consequenceText = condType ? CONSEQUENCE_LABELS[condType] : null
-                return (
-                  <details key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
-                    <summary className="actor-runtime-signal-head">
-                      <span className="actor-runtime-signal-severity" data-severity={sig.severity}>{sig.severity}</span>
-                      <span className="actor-runtime-signal-name-inline">{sig.signal_name}</span>
-                      {sig.affected_domains && <span className="actor-runtime-signal-domain-count">{sig.affected_domains.length} domains</span>}
-                    </summary>
-                    {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
-                    {sig.affected_domains && sig.affected_domains.length > 0 && (
-                      <div className="actor-runtime-bridge">
-                        <div className="actor-runtime-bridge-label">STRUCTURAL REGIONS</div>
-                        <div className="actor-runtime-bridge-domains">{sig.affected_domains.join(' · ')}</div>
-                      </div>
-                    )}
-                    {matchingConditions.length > 0 && (
-                      <div className="actor-runtime-bridge">
-                        <div className="actor-runtime-bridge-label">REINFORCES</div>
-                        {matchingConditions.map(c => (
-                          <div key={c.condition_id} className="actor-runtime-bridge-condition" data-severity={c.severity}>
-                            {c.operator_cognition_title}
+              {sevOrder.map(sev => (
+                <div key={sev} className="actor-runtime-sev-group">
+                  <div className="actor-runtime-sev-header" data-severity={sev}>{sev} ({sevGroups[sev].length})</div>
+                  {sevGroups[sev].map(sig => {
+                    const condType = sig.source_condition_type || null
+                    const matchingConditions = condType ? allConditions.filter(c => c.condition_type === condType) : []
+                    const consequenceText = condType ? CONSEQUENCE_LABELS[condType] : null
+                    return (
+                      <details key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
+                        <summary className="actor-runtime-signal-head">
+                          <span className="actor-runtime-signal-name-inline">{sig.signal_name}</span>
+                          <span className="actor-runtime-signal-domain-count">{sig.affected_domains.length} domains{sig._count > 1 ? ` · ${sig._count} instances` : ''}</span>
+                        </summary>
+                        {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
+                        {sig.affected_domains.length > 0 && (
+                          <div className="actor-runtime-bridge">
+                            <div className="actor-runtime-bridge-label">STRUCTURAL REGIONS</div>
+                            <div className="actor-runtime-bridge-domains">{sig.affected_domains.join(' · ')}</div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                    {consequenceText && (
-                      <div className="actor-runtime-bridge actor-runtime-bridge--consequence">
-                        <div className="actor-runtime-bridge-label">IF DEGRADED</div>
-                        <div className="actor-runtime-bridge-consequence">{consequenceText}</div>
-                      </div>
-                    )}
-                  </details>
-                )
-              })}
+                        )}
+                        {matchingConditions.length > 0 && (
+                          <div className="actor-runtime-bridge">
+                            <div className="actor-runtime-bridge-label">REINFORCES</div>
+                            {matchingConditions.map(c => (
+                              <div key={c.condition_id} className="actor-runtime-bridge-condition" data-severity={c.severity}>
+                                {c.operator_cognition_title}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {consequenceText && (
+                          <div className="actor-runtime-bridge actor-runtime-bridge--consequence">
+                            <div className="actor-runtime-bridge-label">IF DEGRADED</div>
+                            <div className="actor-runtime-bridge-consequence">{consequenceText}</div>
+                          </div>
+                        )}
+                      </details>
+                    )
+                  })}
+                </div>
+              ))}
             </div>
           </div>
         )
@@ -7755,7 +7784,7 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
     <div className="actor actor--signal-intelligence" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SI</span>
-        <span className="actor-name">Signal Decomposition · {structuralSigs.length} structural · {elevatedCount} elevated</span>
+        <span className="actor-name">Structural Evidence · {structuralSigs.length} signals · {elevatedCount} elevated</span>
       </div>
       {renderGroup(isigSigs, 'ISIG')}
       {renderGroup(dpsigSigs, 'DPSIG')}
