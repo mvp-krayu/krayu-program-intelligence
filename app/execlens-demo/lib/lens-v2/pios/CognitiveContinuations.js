@@ -105,20 +105,30 @@ function detectProperties(surfaceId, ctx) {
 // ─── Traversal Functions ────────────────────────────────────────
 // All derived from properties, not surface IDs.
 
-function deriveClarify(p) {
+function deriveClarify(p, altitude) {
   const results = []
 
   if (p.hasDivergence) {
-    results.push(makeContinuation('clarify',
-      `Why is ${p.execCenter} the execution center rather than ${p.structCenter}?`,
+    const q = {
+      executive: 'Why does the operational risk center differ from where structural investment is concentrated?',
+      technical: `Why is ${p.execCenter} the operational authority rather than ${p.structCenter}?`,
+      strategic: 'Why does transformation sequencing need to account for two different gravity centers?',
+      operational: 'Which coordination assumptions change because structural and operational gravity diverge?',
+    }[altitude] || `Why is ${p.execCenter} the execution center rather than ${p.structCenter}?`
+    results.push(makeContinuation('clarify', q,
       { object: 'execution_concentration[0]', field: 'domain', value: p.execCenter },
       `execution_center (${p.execCenter}) !== structural_center (${p.structCenter})`
     ))
   }
 
   if (p.hasRuntime && p.rsigCount > 0) {
-    results.push(makeContinuation('clarify',
-      'Which specific runtime paths create pressure?',
+    const q = {
+      executive: 'Which runtime dependencies create exposure beyond what conventional analysis reveals?',
+      technical: 'Which runtime paths create operational pressure invisible to the import graph?',
+      strategic: 'Which runtime dependencies create unplanned transformation scope?',
+      operational: 'Which runtime execution paths are invisible to current delivery coordination?',
+    }[altitude] || 'Which specific runtime paths create pressure?'
+    results.push(makeContinuation('clarify', q,
       { object: 'signal_interpretations', field: 'RSIG', value: p.rsigCount },
       `${p.rsigCount} RSIG signals exist`,
       { targetEvidence: 'RSIG', authorityRequired: 2 }
@@ -126,16 +136,26 @@ function deriveClarify(p) {
   }
 
   if (p.structCenter && p.domainCount > 1) {
-    results.push(makeContinuation('clarify',
-      `What makes ${p.structCenter} dominant rather than just large?`,
+    const q = {
+      executive: `Why does ${p.structCenter} carry outsized governance significance?`,
+      technical: `What makes ${p.structCenter} an operational authority rather than just a large codebase?`,
+      strategic: `Why does ${p.structCenter} create transformation drag beyond its apparent size?`,
+      operational: `Why does ${p.structCenter} create coordination load beyond its apparent scope?`,
+    }[altitude] || `What makes ${p.structCenter} dominant rather than just large?`
+    results.push(makeContinuation('clarify', q,
       { object: 'domain_concentration[0]', field: 'domain', value: p.structCenter },
       `${p.structCenter} is domain_concentration[0] with ${p.domainCount} total domains`
     ))
   }
 
   if (p.hasMultipleThemes) {
-    results.push(makeContinuation('clarify',
-      `Which ${p.themeCount} pressures converge to create ${p.postureLabel || 'this posture'}?`,
+    const q = {
+      executive: 'Which converging pressures create the systemic governance exposure?',
+      technical: `Which ${p.themeCount} pressures create compounding operational risk?`,
+      strategic: 'Which converging pressures create transformation sequencing constraints?',
+      operational: `Which ${p.themeCount} pressures create compounding delivery coordination risk?`,
+    }[altitude] || `Which ${p.themeCount} pressures converge to create ${p.postureLabel || 'this posture'}?`
+    results.push(makeContinuation('clarify', q,
       { object: 'consequence_themes', field: 'length', value: p.themeCount },
       `${p.themeCount} consequence themes exist`
     ))
@@ -144,36 +164,56 @@ function deriveClarify(p) {
   return results
 }
 
-function deriveImplication(p) {
+function deriveImplication(p, altitude) {
   const results = []
 
   if (p.hasDivergence) {
-    results.push(makeContinuation('implication',
-      `Which delivery decisions are affected by having architecture in ${p.structCenter} and operations in ${p.execCenter}?`,
+    const q = {
+      executive: 'Which investment assumptions are invalidated by structural and operational gravity pointing at different regions?',
+      technical: 'Which operational decisions become unreliable because static and runtime blast radii diverge?',
+      strategic: 'Which transformation investments are mis-targeted by following structural gravity instead of operational gravity?',
+      operational: 'Which delivery coordination decisions are affected by structural and operational pressure pointing at different regions?',
+    }[altitude] || `Which delivery decisions are affected by having architecture in ${p.structCenter} and operations in ${p.execCenter}?`
+    results.push(makeContinuation('implication', q,
       { object: 'domain_concentration + execution_center', field: 'divergence', value: true },
       `structural_center (${p.structCenter}) !== execution_center (${p.execCenter})`
     ))
   }
 
   if (p.hasRuntime) {
-    results.push(makeContinuation('implication',
-      'What monitoring gaps exist for runtime execution paths?',
+    const q = {
+      executive: 'Which oversight assumptions about system health are unverified by current monitoring?',
+      technical: 'Which incident response assumptions are invalidated by runtime dependencies invisible to static analysis?',
+      strategic: 'Which adoption timelines are at risk from unmonitored runtime execution paths?',
+      operational: 'Which delivery dependencies are invisible to current coordination practices?',
+    }[altitude] || 'What monitoring gaps exist for runtime execution paths?'
+    results.push(makeContinuation('implication', q,
       { object: 'signal_interpretations', field: 'RSIG_present', value: true },
       `${p.rsigCount} runtime signals indicate execution dependencies invisible to static analysis`
     ))
   }
 
   if (p.hasPropagation && p.propagationReceivers.length > 0) {
-    results.push(makeContinuation('implication',
-      `Which downstream domains (${p.propagationReceivers.join(', ')}) are affected by this propagation?`,
+    const q = {
+      executive: `Which governance decisions are affected by structural pressure propagating across ${p.propagationReceivers.join(', ')}?`,
+      technical: `Which release decisions become unreliable because changes in ${p.propagationOrigin} cascade into ${p.propagationReceivers.join(', ')}?`,
+      strategic: `Which modernization investments in ${p.propagationOrigin} carry hidden downstream sequencing risk?`,
+      operational: `Which delivery plans are affected by structural pressure propagating from ${p.propagationOrigin}?`,
+    }[altitude] || `Which downstream domains (${p.propagationReceivers.join(', ')}) are affected by this propagation?`
+    results.push(makeContinuation('implication', q,
       { object: 'domain_narratives', field: 'receivers', value: p.propagationReceivers },
       `${p.propagationReceivers.length} receiver domains in propagation chain`
     ))
   }
 
   if (p.structCenter && p.hasMultipleThemes) {
-    results.push(makeContinuation('implication',
-      'Which delivery decisions become harder because of this structural concentration?',
+    const q = {
+      executive: 'Which budget commitments become unreliable because multiple structural pressures converge?',
+      technical: 'Which architectural assumptions become unreliable because of compounding structural concentration?',
+      strategic: 'Which change capacity assumptions are invalidated by converging structural pressures?',
+      operational: 'Which coordination dependencies are hidden by converging structural pressures?',
+    }[altitude] || 'Which delivery decisions become harder because of this structural concentration?'
+    results.push(makeContinuation('implication', q,
       { object: 'domain_narratives', field: 'top_domains', value: p.structCenter },
       `multiple themes converge around ${p.structCenter}`
     ))
@@ -182,12 +222,17 @@ function deriveImplication(p) {
   return results
 }
 
-function deriveChallenge(p) {
+function deriveChallenge(p, altitude) {
   const results = []
 
   if (p.hasFalsification) {
-    results.push(makeContinuation('challenge',
-      `Would this finding disappear if ${p.falsificationPath}?`,
+    const q = {
+      executive: 'What evidence would show this risk exposure is overstated?',
+      technical: `Would this finding disappear if ${p.falsificationPath}?`,
+      strategic: 'What evidence would show this transformation risk is manageable without structural remediation?',
+      operational: 'What evidence would show this delivery risk is contained?',
+    }[altitude] || `Would this finding disappear if ${p.falsificationPath}?`
+    results.push(makeContinuation('challenge', q,
       { object: 'FALSIFICATION_PATHS', field: p.surfaceId, value: p.falsificationPath },
       `falsification path defined for ${p.surfaceId}`
     ))
@@ -195,24 +240,39 @@ function deriveChallenge(p) {
 
   if (p.hasMultipleThemes) {
     const topTheme = p.themes[0]
-    results.push(makeContinuation('challenge',
-      `Would addressing ${topTheme.theme_label} alone reduce the systemic scope?`,
+    const q = {
+      executive: `Would resolving ${topTheme.theme_label} materially reduce the governance exposure?`,
+      technical: `Would addressing ${topTheme.theme_label} alone change the operational decision landscape?`,
+      strategic: `Would addressing ${topTheme.theme_label} alone unblock the transformation sequence?`,
+      operational: `Would addressing ${topTheme.theme_label} alone reduce delivery coordination complexity?`,
+    }[altitude] || `Would addressing ${topTheme.theme_label} alone reduce the systemic scope?`
+    results.push(makeContinuation('challenge', q,
       { object: 'consequence_themes[0]', field: 'theme_label', value: topTheme.theme_label },
       `${p.themeCount} themes exist — removing the dominant one may or may not change posture_scope`
     ))
   }
 
   if (!p.isGoverned) {
-    results.push(makeContinuation('challenge',
-      'This finding is advisory-only — what would governed qualification change?',
+    const q = {
+      executive: 'What institutional confidence level does this finding carry for board-level decisions?',
+      technical: 'This finding is advisory — what would governed qualification change for architectural planning?',
+      strategic: 'What confidence level does this finding carry for transformation investment decisions?',
+      operational: 'This finding is advisory — what would governed qualification change for delivery planning?',
+    }[altitude] || 'This finding is advisory-only — what would governed qualification change?'
+    results.push(makeContinuation('challenge', q,
       { object: 'governance_lifecycle', field: 'available', value: false },
       'governance_lifecycle not available — all findings carry advisory weight'
     ))
   }
 
   if (p.hasDivergence) {
-    results.push(makeContinuation('challenge',
-      `What evidence would show ${p.structCenter} and ${p.execCenter} are actually converging?`,
+    const q = {
+      executive: 'What evidence would show structural and operational risks are converging?',
+      technical: `What evidence would show ${p.structCenter} and ${p.execCenter} are actually converging?`,
+      strategic: 'What evidence would demonstrate that current transformation targets align with operational gravity?',
+      operational: 'What evidence would show structural and operational coordination load is converging?',
+    }[altitude] || `What evidence would show ${p.structCenter} and ${p.execCenter} are actually converging?`
+    results.push(makeContinuation('challenge', q,
       { object: 'execution_center', field: 'convergence_test', value: `${p.structCenter} vs ${p.execCenter}` },
       'divergence exists — convergence is the inverse condition'
     ))
@@ -221,12 +281,15 @@ function deriveChallenge(p) {
   return results
 }
 
-function deriveDescent(p) {
+function deriveDescent(p, altitude) {
   const results = []
 
   if (p.hasRuntime && p.rsigCount > 0) {
-    results.push(makeContinuation('descent',
-      `Show the ${p.rsigCount} runtime signals and their affected domains`,
+    const q = {
+      technical: `Which ${p.rsigCount} runtime signals create the operational dependencies?`,
+      operational: `Show the ${p.rsigCount} runtime execution paths and their operational scope`,
+    }[altitude] || `Show the ${p.rsigCount} runtime signals and their affected domains`
+    results.push(makeContinuation('descent', q,
       { object: 'signal_interpretations', field: 'RSIG[]', value: p.rsigCount },
       `${p.rsigCount} RSIG signals available for inspection`,
       { targetEvidence: 'RSIG', authorityRequired: 2 }
@@ -234,8 +297,11 @@ function deriveDescent(p) {
   }
 
   if (p.hasCentrality) {
-    results.push(makeContinuation('descent',
-      'Show the structural authority spines and import graph',
+    const q = {
+      technical: 'Show which structural spines carry operational authority',
+      operational: 'Show the structural authority spines and their delivery impact',
+    }[altitude] || 'Show the structural authority spines and import graph'
+    results.push(makeContinuation('descent', q,
       { object: 'structural_enrichment.centrality', field: 'top_structural_spines', value: 'available' },
       'centrality data available in structural enrichment',
       { targetEvidence: 'centrality' }
@@ -243,8 +309,11 @@ function deriveDescent(p) {
   }
 
   if (p.hasMultipleThemes) {
-    results.push(makeContinuation('descent',
-      'Show the condition chain that produces this posture',
+    const q = {
+      technical: 'Show the evidence chain that produces this operational posture',
+      operational: 'Show the condition chain and its delivery implications',
+    }[altitude] || 'Show the condition chain that produces this posture'
+    results.push(makeContinuation('descent', q,
       { object: 'crossDomainCognition', field: 'cognition_slices', value: 'available' },
       `${p.themeCount} consequence themes derive from underlying conditions`,
       { targetEvidence: 'cognition_slices' }
@@ -252,8 +321,11 @@ function deriveDescent(p) {
   }
 
   if (p.hasPropagation) {
-    results.push(makeContinuation('descent',
-      `Show the propagation chain from ${p.propagationOrigin}`,
+    const q = {
+      technical: `Show the cascade path from ${p.propagationOrigin} and its operational reach`,
+      operational: `Show how changes in ${p.propagationOrigin} propagate to downstream delivery`,
+    }[altitude] || `Show the propagation chain from ${p.propagationOrigin}`
+    results.push(makeContinuation('descent', q,
       { object: 'domain_narratives', field: 'propagation_roles', value: p.narratives.length },
       `propagation origin ${p.propagationOrigin} with ${p.narratives.length - 1} receivers`,
       { targetEvidence: 'domain_narratives' }
@@ -328,27 +400,55 @@ function deriveAscent(p) {
 
 // ─── Main Export ─────────────────────────────────────────────────
 
-// Projection-aware weighting: which continuation types matter most per persona
+// Altitude-keyed weighting: derived from PERSONA_PROJECTIONS.altitude
 const PROJECTION_WEIGHTS = {
-  boardroom: { ascent: 3, implication: 3, challenge: 2, adjacent: 1, clarify: 0, descent: 0 },
-  balanced:  { implication: 3, ascent: 2, adjacent: 2, challenge: 1, clarify: 1, descent: 0 },
-  dense:     { clarify: 3, descent: 3, adjacent: 2, implication: 1, challenge: 1, ascent: 0 },
-  operator:  { challenge: 3, descent: 3, clarify: 2, adjacent: 1, implication: 0, ascent: 0 },
-  thorr:     { implication: 2, challenge: 2, adjacent: 2, descent: 2, clarify: 2, ascent: 2 },
+  executive:   { ascent: 3, implication: 3, challenge: 2, adjacent: 1, clarify: 0, descent: 0 },
+  strategic:   { implication: 3, challenge: 2, adjacent: 2, ascent: 2, clarify: 1, descent: 0 },
+  operational: { implication: 3, ascent: 2, adjacent: 2, challenge: 1, clarify: 1, descent: 0 },
+  technical:   { implication: 3, challenge: 2, adjacent: 2, descent: 2, clarify: 1, ascent: 0 },
+  structural:  { clarify: 3, descent: 3, adjacent: 2, implication: 1, challenge: 1, ascent: 0 },
+  sovereign:   { implication: 2, challenge: 2, adjacent: 2, descent: 2, clarify: 2, ascent: 2 },
+}
+
+function selectTopContinuations(gated, maxItems) {
+  const n = maxItems || 6
+  const guaranteed = []
+  const pool = []
+
+  for (const [type, items] of Object.entries(gated)) {
+    const avail = items.filter(c => c.available && c.weight > 0)
+    if (avail.length > 0) {
+      guaranteed.push({ ...avail[0], typeKey: type })
+      for (let i = 1; i < avail.length; i++) {
+        pool.push({ ...avail[i], typeKey: type })
+      }
+    }
+  }
+
+  guaranteed.sort((a, b) => b.weight - a.weight)
+  pool.sort((a, b) => b.weight - a.weight)
+
+  const result = guaranteed.slice(0, n)
+  if (result.length < n) {
+    result.push(...pool.slice(0, n - result.length))
+  }
+
+  result.sort((a, b) => b.weight - a.weight)
+  return result
 }
 
 function deriveContinuations(surfaceId, cognitionContext, projectionLevel, projectionMode) {
   const ctx = cognitionContext || {}
   const pLevel = projectionLevel || 0
-  const mode = projectionMode || 'thorr'
-  const weights = PROJECTION_WEIGHTS[mode] || PROJECTION_WEIGHTS.thorr
+  const mode = projectionMode || 'sovereign'
+  const weights = PROJECTION_WEIGHTS[mode] || PROJECTION_WEIGHTS.sovereign
   const p = detectProperties(surfaceId, ctx)
 
   const raw = {
-    clarify: deriveClarify(p),
-    implication: deriveImplication(p),
-    challenge: deriveChallenge(p),
-    descent: deriveDescent(p),
+    clarify: deriveClarify(p, mode),
+    implication: deriveImplication(p, mode),
+    challenge: deriveChallenge(p, mode),
+    descent: deriveDescent(p, mode),
     adjacent: deriveAdjacent(p),
     ascent: deriveAscent(p),
   }
@@ -365,6 +465,7 @@ function deriveContinuations(surfaceId, cognitionContext, projectionLevel, proje
       }))
   }
 
+  gated.ranked = selectTopContinuations(gated)
   return gated
 }
 

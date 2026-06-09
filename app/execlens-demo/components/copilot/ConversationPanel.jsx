@@ -55,9 +55,11 @@ function CognitiveContinuationsPanel({ continuations, onSelect }) {
   if (!continuations) return null
   const TYPE_LABELS = { clarify: 'CLARIFY', implication: 'IMPLICATION', challenge: 'CHALLENGE', descent: 'DESCENT', adjacent: 'ADJACENT', ascent: 'ASCENT' }
   const TYPE_COLORS = { clarify: '#4a9eff', implication: '#ccd6f6', challenge: '#ff9e4a', descent: '#64ffda', adjacent: '#bb86fc', ascent: '#ffd700' }
-  const allItems = Object.entries(continuations)
-    .flatMap(([type, items]) => items.filter(c => c.available).map(c => ({ ...c, typeKey: type })))
-    .slice(0, 6)
+  const allItems = continuations.ranked
+    ? continuations.ranked
+    : Object.entries(continuations)
+      .flatMap(([type, items]) => Array.isArray(items) ? items.filter(c => c.available).map(c => ({ ...c, typeKey: type })) : [])
+      .slice(0, 6)
   if (allItems.length === 0) return null
   return (
     <div className="copilot-continuations">

@@ -236,7 +236,7 @@ const PERSONA_PROJECTIONS = {
   },
   'CTO / VP Engineering': {
     decisionHorizon: 'Technical strategy, architectural direction',
-    altitude: 'structural',
+    altitude: 'technical',
     accessTier: ACCESS_TIER.OPERATOR,
     defaultEvidence: [
       'dependency hubs and their structural role',

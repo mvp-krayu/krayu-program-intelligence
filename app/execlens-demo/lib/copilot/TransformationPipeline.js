@@ -3,13 +3,18 @@
 const fs = require('fs');
 const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
-const { assemble, formatContextForPrompt } = require('./PIContextAssembler');
+const { assemble, formatContextForPrompt, PERSONA_PROJECTIONS } = require('./PIContextAssembler');
 const { resolveMode, getModeConfig } = require('./ModeOrchestrator');
 const { validate } = require('./ProhibitionValidator');
 const { routeIntent } = require('./topic-router');
 const { deriveContinuations } = require('../lens-v2/pios/CognitiveContinuations');
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
+
+function resolveContinuationAltitude(audience) {
+  const persona = PERSONA_PROJECTIONS[audience]
+  return (persona && persona.altitude) || 'sovereign'
+}
 
 function detectSurfaceFromIntent(intent) {
   const lower = (intent || '').toLowerCase()
@@ -170,8 +175,6 @@ function extractVitals(assembled) {
 
 function extractPersonaSummary(audience) {
   if (!audience) return null;
-  const { PERSONA_PROJECTIONS, ACCESS_TIER } = require('./PIContextAssembler');
-  if (!PERSONA_PROJECTIONS) return null;
   const persona = PERSONA_PROJECTIONS[audience];
   if (!persona) return { name: audience };
   return {
@@ -245,8 +248,7 @@ async function transform({
     const cogCtx = buildCognitionContext(assembled)
     const pLevel = assembled.projectionAuthority ? assembled.projectionAuthority.projectionLevel : 0
     if (cogCtx) {
-      const projMode = (audience || '').toLowerCase().includes('boardroom') ? 'boardroom' : (audience || '').toLowerCase().includes('operator') ? 'operator' : (audience || '').toLowerCase().includes('dense') ? 'dense' : 'thorr'
-      cognitiveContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel, projMode)
+      cognitiveContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel, resolveContinuationAltitude(audience))
     }
   } catch { /* continuations are optional */ }
 
@@ -337,7 +339,7 @@ async function* transformStream({
     const detectedSurface = detectSurfaceFromIntent(message)
     const cogCtx = buildCognitionContext(assembled)
     const pLevel = assembled.projectionAuthority ? assembled.projectionAuthority.projectionLevel : 0
-    if (cogCtx) streamContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel)
+    if (cogCtx) streamContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel, resolveContinuationAltitude(audience))
   } catch { /* optional */ }
 
   yield {
