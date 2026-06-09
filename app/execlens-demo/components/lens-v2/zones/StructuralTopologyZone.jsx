@@ -719,20 +719,21 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
               {cognitionOverlay && cognitionOverlay.overlay_mode === 'EXECUTION_BLINDNESS' && (() => {
                 const blindType = cognitionOverlay.blindness_types && cognitionOverlay.blindness_types[d.domain_id]
                 if (!blindType) return null
-                const bx = pos.cx - innerR + 3
-                const by = pos.cy - innerR + 3
+                const scale = boardroomMode ? 1.8 : 1
+                const bx = pos.cx - innerR + 3 * scale
+                const by = pos.cy - innerR + 3 * scale
                 if (blindType === 'BOUNDARY') {
                   return (<g>
-                    <rect x={bx - 4} y={by - 4} width={8} height={8} rx={1} fill="none" stroke="#ff4757" strokeWidth={1.2} strokeDasharray="2,2" />
+                    <rect x={bx - 5 * scale} y={by - 5 * scale} width={10 * scale} height={10 * scale} rx={1.5} fill="rgba(255,71,87,0.15)" stroke="#ff4757" strokeWidth={1.5} strokeDasharray="3,2" />
                   </g>)
                 }
                 if (blindType === 'SILENCE') {
-                  return <circle cx={bx} cy={by} r={3.5} fill="none" stroke="#ff4757" strokeWidth={1.5} strokeOpacity={0.8} />
+                  return <circle cx={bx} cy={by} r={5 * scale} fill="#ff4757" fillOpacity={0.3} stroke="#ff4757" strokeWidth={1.8} strokeOpacity={0.9} />
                 }
                 if (blindType === 'COUPLING') {
                   return (<g>
-                    <circle cx={bx} cy={by} r={5} fill="none" stroke="#ff4757" strokeWidth={0.8} strokeOpacity={0.5} />
-                    <circle cx={bx} cy={by} r={2.5} fill="#ff4757" fillOpacity={0.6} />
+                    <circle cx={bx} cy={by} r={7 * scale} fill="none" stroke="#ff4757" strokeWidth={1} strokeOpacity={0.5} />
+                    <circle cx={bx} cy={by} r={3.5 * scale} fill="#ff4757" fillOpacity={0.6} />
                   </g>)
                 }
                 return null
