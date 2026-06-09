@@ -844,7 +844,8 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
     }
   }
 
-  const isDense = !boardroomMode && (densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE')
+  const isOperatorDense = !boardroomMode && densityClass === 'OPERATOR_DENSE'
+  const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
   const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
   const zonePaths = activeZoneKey && DENSE_ZONE_PATHS[activeZoneKey]
 
@@ -939,7 +940,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             )}
           </>
         )
-      })() : isDense ? (() => {
+      })() : isOperatorDense ? (() => {
         const allSigs = (fullReport && fullReport.signal_interpretations) || []
         const rsigCount = allSigs.filter(s => s.signal_family === 'RSIG').length
         const structCount = allSigs.length - rsigCount
@@ -1188,7 +1189,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </>
       )}
 
-      {isDense && resolvedCognitionContract && resolvedCognitionContract.surface && (() => {
+      {isOperatorDense && resolvedCognitionContract && resolvedCognitionContract.surface && (() => {
         const surf = resolvedCognitionContract.surface
         const interp = resolvedCognitionContract.interpretation
         const evidence = interp && interp.structuralEvidence ? interp.structuralEvidence : []
