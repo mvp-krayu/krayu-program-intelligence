@@ -1645,6 +1645,26 @@ const DENSE_ZONE_INTERPRETATIONS = {
       }
     },
   },
+  evidenceTrace: {
+    sectionLabel: 'EVIDENCE LINEAGE',
+    code: 'ET',
+    derive: (fullReport) => {
+      const rv = fullReport && fullReport.revalidation_intelligence
+      const cc = fullReport && fullReport.chronicle_certification
+      const ca = fullReport && fullReport.constitutional_anchor
+      const hasReplay = rv && rv.available && rv.status === 'PASS'
+      const hasAnchor = ca && ca.available && !(ca.detail && ca.detail.advancement_blocked)
+      const hasCert = cc && cc.available && cc.certification_status === 'CERTIFIED'
+      const verifiedCount = (hasReplay ? 1 : 0) + (hasAnchor ? 1 : 0) + (hasCert ? 1 : 0)
+      return {
+        heading: 'Evidence object provenance and replay status',
+        body: verifiedCount > 0
+          ? `${verifiedCount} lineage verification${verifiedCount !== 1 ? 's' : ''} established.${hasReplay ? ' Deterministic replay confirmed.' : ''}${hasCert ? ' Replay-certified.' : ''}${hasAnchor ? ' Constitutional anchor verified.' : ''}`
+          : 'No lineage verifications established. Evidence objects are present but replay, anchor, and certification have not been exercised.',
+        structuralNote: null,
+      }
+    },
+  },
 }
 
 // ─── SW-INTEL DOMAIN REASONING CONTRACTS ──────────────────────────
@@ -5584,7 +5604,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     }
   }
 
-  const zoneInterp = activeZoneKey && densityClass === 'EXECUTIVE_DENSE' && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
+  const zoneInterp = activeZoneKey && (densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
   const zoneDerived = zoneInterp ? zoneInterp.derive(fullReport) : null
 
   const structuralContext = useMemo(() => {
