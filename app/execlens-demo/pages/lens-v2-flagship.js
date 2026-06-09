@@ -7442,6 +7442,62 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ccd6f6;
           line-height: 1.35;
         }
+        /* ── Cognition Chain (LEFT panel, OPERATOR) ─────────────────── */
+        .interp-block--cognition-chain {
+          padding-bottom: 8px;
+        }
+        .interp-cognition-chain {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-top: 6px;
+          flex-wrap: wrap;
+        }
+        .interp-chain-step {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: #5a6580;
+          padding: 2px 6px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+        }
+        .interp-chain-step[data-has="true"] { color: #ccd6f6; border-color: #3a4560; }
+        .interp-chain-step--critical[data-has="true"] { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); }
+        .interp-chain-arrow {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #3a4560;
+        }
+        .interp-cognition-chain-posture {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: #e2e8f6;
+          margin-top: 8px;
+          line-height: 1.35;
+        }
+
+        /* ── Operator Authority (LEFT panel, OPERATOR) ───────────────── */
+        .interp-operator-authority-label {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          color: #4a9eff;
+          margin-top: 4px;
+        }
+        .interp-operator-authority-meta {
+          font-family: 'Courier New', monospace;
+          font-size: 9.5px;
+          color: #5a6580;
+          margin-top: 3px;
+        }
+
+        /* ── Zone Verification (RIGHT panel, OPERATOR) ───────────────── */
+        .support-block--zone-verification {
+          border-top: 1px solid #1e2330;
+        }
+
         .interp-block--execution-axis .interp-synthesis {
           color: #4a9eff;
           font-size: 11px;

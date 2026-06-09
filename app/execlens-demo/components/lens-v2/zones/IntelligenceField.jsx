@@ -52,6 +52,7 @@ const DENSE_ZONE_REGISTRY = {
   propagationFlow:     { key: 'propagationFlow',       code: 'PF', label: 'Propagation Flow' },
   pressureZoneFocus:   { key: 'pressureZoneFocus',     code: 'PZ', label: 'Pressure Zone Focus' },
   governanceLifecycle: { key: 'governanceLifecycle',   code: 'GL', label: 'Governance Lifecycle' },
+  evidenceTrace:       { key: 'evidenceTrace',        code: 'ET', label: 'Evidence Lineage' },
 }
 
 const REP_TIER_COLOR = {
@@ -842,7 +843,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
     }
   }
 
-  const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
+  const isDense = !boardroomMode && (densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE')
   const zoneReg = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
   const zonePaths = activeZoneKey && DENSE_ZONE_PATHS[activeZoneKey]
 
@@ -935,6 +936,137 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
                 <div className="support-arc-hint">Evidence context shown in left panel</div>
               </div>
             )}
+          </>
+        )
+      })() : isDense ? (() => {
+        const allSigs = (fullReport && fullReport.signal_interpretations) || []
+        const rsigCount = allSigs.filter(s => s.signal_family === 'RSIG').length
+        const structCount = allSigs.length - rsigCount
+        const ts = (fullReport && fullReport.topology_summary) || {}
+        const gl = (fullReport && fullReport.governance_lifecycle) || {}
+        const vlc = visibilityLayerCompleteness
+        const zr = activeZoneKey && DENSE_ZONE_REGISTRY[activeZoneKey]
+
+        const ZONE_VERIFICATION = {
+          semanticTopology: { label: 'TOPOLOGY CONFIDENCE', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">Domains</span><span className="support-kv-val">{ts.semantic_domain_count || 0}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Clusters</span><span className="support-kv-val">{ts.cluster_count || 0}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Backed</span><span className="support-kv-val">{ts.structurally_backed_count || 0}/{ts.semantic_domain_count || 0}</span></div>
+              {vlc && <div className="support-kv"><span className="support-kv-key">Visibility</span><span className="support-kv-val">{vlc.completeness}% · {vlc.measured_count}/{vlc.required_count} layers</span></div>}
+            </>
+          )},
+          clusterConcentration: { label: 'CONCENTRATION METRICS', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">Clusters</span><span className="support-kv-val">{ts.cluster_count || 0}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Domains</span><span className="support-kv-val">{ts.semantic_domain_count || 0}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Avg per cluster</span><span className="support-kv-val">{ts.cluster_count && ts.semantic_domain_count ? (ts.semantic_domain_count / ts.cluster_count).toFixed(1) : '—'}</span></div>
+            </>
+          )},
+          signalAssessment: { label: 'SIGNAL COVERAGE', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">Total signals</span><span className="support-kv-val">{allSigs.length}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Structural</span><span className="support-kv-val">{structCount}</span></div>
+              {rsigCount > 0 && <div className="support-kv"><span className="support-kv-key">Runtime (RSIG)</span><span className="support-kv-val">{rsigCount}</span></div>}
+              <div className="support-kv"><span className="support-kv-key">Elevated</span><span className="support-kv-val">{allSigs.filter(s => s.severity !== 'NOMINAL').length}</span></div>
+            </>
+          )},
+          propagationFlow: { label: 'PROPAGATION METRICS', render: () => {
+            const ps = (fullReport && fullReport.propagation_summary) || {}
+            return (
+              <>
+                {ps.primary_zone_business_label && <div className="support-kv"><span className="support-kv-key">Pressure zone</span><span className="support-kv-val">{ps.primary_zone_business_label}</span></div>}
+                <div className="support-kv"><span className="support-kv-key">Chain domains</span><span className="support-kv-val">{(ps.chain_domains || []).length}</span></div>
+              </>
+            )
+          }},
+          pressureZoneFocus: { label: 'PRESSURE METRICS', render: () => {
+            const ps = (fullReport && fullReport.propagation_summary) || {}
+            return (
+              <>
+                {ps.primary_zone_business_label && <div className="support-kv"><span className="support-kv-key">Primary zone</span><span className="support-kv-val">{ps.primary_zone_business_label}</span></div>}
+                <div className="support-kv"><span className="support-kv-key">Elevated signals</span><span className="support-kv-val">{allSigs.filter(s => s.severity !== 'NOMINAL').length}</span></div>
+              </>
+            )
+          }},
+          governanceLifecycle: { label: 'GOVERNANCE STATE', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">S-level</span><span className="support-kv-val">{gl.s_level || (fullReport && fullReport.qualification_level) || 'S0'}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Provenance</span><span className="support-kv-val">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</span></div>
+              {gl.transition_count > 0 && <div className="support-kv"><span className="support-kv-key">Transitions</span><span className="support-kv-val">{gl.transition_count}</span></div>}
+              <div className="support-kv"><span className="support-kv-key">Qualifier</span><span className="support-kv-val">{qualifierClass || '—'}</span></div>
+            </>
+          )},
+          absorptionLoad: { label: 'ABSORPTION METRICS', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">Domains</span><span className="support-kv-val">{ts.semantic_domain_count || 0}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Backed</span><span className="support-kv-val">{ts.structurally_backed_count || 0}</span></div>
+            </>
+          )},
+          evidenceTrace: { label: 'LINEAGE STATUS', render: () => {
+            const rv = fullReport && fullReport.revalidation_intelligence
+            const cc = fullReport && fullReport.chronicle_certification
+            const ca = fullReport && fullReport.constitutional_anchor
+            return (
+              <>
+                {rv && rv.available && <div className="support-kv"><span className="support-kv-key">Replay</span><span className="support-kv-val">{rv.status || 'PENDING'}</span></div>}
+                {ca && ca.available && <div className="support-kv"><span className="support-kv-key">Anchor</span><span className="support-kv-val">{ca.detail && ca.detail.advancement_blocked ? 'BLOCKED' : 'PASS'}</span></div>}
+                {cc && cc.available && <div className="support-kv"><span className="support-kv-key">Certification</span><span className="support-kv-val">{cc.certification_status || 'PENDING'}</span></div>}
+                {!rv && !ca && !cc && <div className="support-kv"><span className="support-kv-key">Lineage</span><span className="support-kv-val">Not yet established</span></div>}
+              </>
+            )
+          }},
+        }
+
+        const zoneVerif = activeZoneKey && ZONE_VERIFICATION[activeZoneKey]
+
+        return (
+          <>
+            {zoneVerif ? (
+              <div className="support-block support-block--zone-verification" data-zone={activeZoneKey}>
+                <div className="support-label">{zoneVerif.label}</div>
+                <div className="support-kv-list">{zoneVerif.render()}</div>
+              </div>
+            ) : (
+              <div className="support-block">
+                <div className="support-label">EVIDENCE STATE</div>
+                <div className="support-readiness">{badge.state_label || '—'}</div>
+                <div className="support-coverage">{(scope && scope.grounding_label) || 'Partial Coverage'}</div>
+              </div>
+            )}
+
+            {swIntelActive && resolvedCondition ? (
+              <div className="support-block support-block--conditions support-block--condition-focus">
+                <div className="support-label">FOCUSED CONDITION</div>
+                <div className="support-condition-focus-title" data-severity={resolvedCondition.severity}>
+                  {resolvedCondition.operator_cognition_title}
+                </div>
+                {resolvedCondition.guided_interventions && resolvedCondition.guided_interventions.length > 0 && (
+                  <>
+                    <div className="support-label" style={{ marginTop: 10 }}>INTERVENTIONS</div>
+                    {resolvedCondition.guided_interventions.map(gi => (
+                      <div key={gi.intervention_id} className="support-condition-intervention" data-type={gi.action_type}>
+                        <span className="support-condition-intervention-label">{gi.operator_label}</span>
+                        <span className="support-condition-intervention-effect">{gi.panel_mutation}</span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            ) : swIntelActive && activeConditions && activeConditions.length > 0 ? (
+              <div className="support-block support-block--conditions">
+                <div className="support-label">ACTIVE CONDITIONS</div>
+                {activeConditions.slice(0, 4).map(c => (
+                  <div key={c.condition_id} className="support-condition-item" data-severity={c.severity}>
+                    <span className="support-condition-title">{c.operator_cognition_title}</span>
+                    <span className="support-condition-severity">{c.severity}</span>
+                  </div>
+                ))}
+                {activeConditions.length > 4 && (
+                  <div className="support-condition-overflow">+{activeConditions.length - 4} more</div>
+                )}
+              </div>
+            ) : null}
           </>
         )
       })() : (
@@ -5645,58 +5777,54 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
   if (densityClass === 'OPERATOR_DENSE') {
     const ts = (fullReport && fullReport.topology_summary) || {}
-    const gl = (fullReport && fullReport.governance_lifecycle) || {}
-    const backed = ts.structurally_backed_count || 0
-    const total = ts.semantic_domain_count || 0
+    const allSigs = (fullReport && fullReport.signal_interpretations) || []
+    const allConditions = activeConditions || []
+    const criticalConditions = allConditions.filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH')
+    const totalDomains = ts.semantic_domain_count || 0
+    const rsigCount = allSigs.filter(s => s.signal_family === 'RSIG').length
+    const structSigCount = allSigs.length - rsigCount
+    const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+    const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0 — Topology Only'
+
+    const postureLabel = swIntelActive && crossDomainCognition && crossDomainCognition.posture_label
+      ? crossDomainCognition.posture_label
+      : criticalConditions.length > 0
+        ? criticalConditions[0].operator_cognition_title
+        : 'No elevated conditions'
+
     return (
-      <aside className="intel-interp intel-interp--operator-orientation" data-tone={framing.tone} aria-label="Operator orientation">
+      <aside className="intel-interp intel-interp--operator-orientation" data-tone={framing.tone} aria-label="Operator verification surface">
         <div className="interp-tag">
-          <span className="interp-tag-label">{framing.label}</span>
-          <span className="interp-tag-state"><TermHint term="Executive Ready">{badge.state_label || '—'}</TermHint></span>
+          <span className="interp-tag-label">VERIFICATION</span>
         </div>
 
-        <div className="interp-block interp-block--lead">
-          <div className="interp-section-label">SPECIMEN OVERVIEW</div>
-          <div className="interp-synthesis">
-            {total > 0 ? <>{total} domains · {ts.cluster_count || 0} clusters · {backed}/{total} <TermHint term="structurally backed">structurally backed</TermHint></> : 'Structural data loading'}
+        <div className="interp-block interp-block--cognition-chain">
+          <div className="interp-section-label">COGNITION CHAIN</div>
+          <div className="interp-cognition-chain">
+            <span className="interp-chain-step" data-has={allSigs.length > 0 ? 'true' : 'false'}>{allSigs.length} signal{allSigs.length !== 1 ? 's' : ''}</span>
+            <span className="interp-chain-arrow">→</span>
+            <span className="interp-chain-step" data-has={allConditions.length > 0 ? 'true' : 'false'}>{allConditions.filter(c => c.severity !== 'NOMINAL').length} condition{allConditions.filter(c => c.severity !== 'NOMINAL').length !== 1 ? 's' : ''}</span>
+            <span className="interp-chain-arrow">→</span>
+            <span className="interp-chain-step interp-chain-step--critical" data-has={criticalConditions.length > 0 ? 'true' : 'false'}>{criticalConditions.length} critical</span>
+          </div>
+          <div className="interp-cognition-chain-posture">{postureLabel}</div>
+        </div>
+
+        <div className="interp-block interp-block--operator-authority">
+          <div className="interp-section-label">AUTHORITY</div>
+          <div className="interp-operator-authority-label">{pLabel}</div>
+          <div className="interp-operator-authority-meta">
+            {totalDomains} domains · {structSigCount} structural{rsigCount > 0 ? ` · ${rsigCount} runtime` : ''} signal{allSigs.length !== 1 ? 's' : ''}
           </div>
         </div>
 
-        {gl.available && (
-          <div className="interp-block">
-            <div className="interp-section-label">GOVERNANCE STATE</div>
-            <div className="interp-synthesis"><TermHint term={gl.s_level}>{gl.s_level || '—'}</TermHint> · {(gl.qualification_provenance || '—').replace(/_/g, ' ')}</div>
-          </div>
-        )}
-
-        {activatedSignals.length > 0 && (
-          <div className="interp-block">
-            <div className="interp-section-label">SIGNAL POSTURE</div>
-            <div className="interp-synthesis">{activatedSignals.length} elevated signal{activatedSignals.length !== 1 ? 's' : ''} across the structural topology</div>
-          </div>
-        )}
-
-        {swIntelActive && activeConditions && activeConditions.length > 0 ? (
-          <div className="interp-block interp-block--conditions">
-            <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
-            <div className="interp-conditions-strip">
-              {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
-                <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
-                  <span className="interp-condition-name">{c.operator_cognition_title}</span>
-                  {c.domain_targets && c.domain_targets[0] && (
-                    <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : !swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 ? (
+        {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
           <div className="interp-block interp-block--module-teaser">
             <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
-            <div className="interp-module-teaser-cta">Activate Software Intelligence for operational posture</div>
+            <div className="interp-module-teaser-text">{swIntelTeaser.active_count} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
+            <div className="interp-module-teaser-cta">Activate for cognition chain</div>
           </div>
-        ) : null}
+        )}
       </aside>
     )
   }
@@ -7250,8 +7378,31 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   )
 }
 
-function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot }) {
+function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot, onZoneChange }) {
+  const fieldRef = useRef(null)
   const [topoModalOpen, setTopoModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (!fieldRef.current || !onZoneChange) return
+    let rafId = null
+    function updateActiveZone() {
+      const actors = fieldRef.current ? fieldRef.current.querySelectorAll('[data-zone-key]') : []
+      if (!actors.length) return
+      const vpCenter = window.innerHeight / 2
+      let best = null, bestDist = Infinity
+      actors.forEach(actor => {
+        const rect = actor.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return
+        const dist = Math.abs((rect.top + rect.bottom) / 2 - vpCenter)
+        if (dist < bestDist) { best = actor.getAttribute('data-zone-key'); bestDist = dist }
+      })
+      if (best) onZoneChange(best)
+    }
+    function onScroll() { if (rafId) return; rafId = requestAnimationFrame(() => { rafId = null; updateActiveZone() }) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    updateActiveZone()
+    return () => { window.removeEventListener('scroll', onScroll); if (rafId) cancelAnimationFrame(rafId) }
+  }, [onZoneChange])
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => setTopoModalOpen(false), [])
   const ps = (fullReport && fullReport.propagation_summary) || {}
@@ -7279,7 +7430,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
   const qRules = renderingMeta.qualifier_rules_applied || []
 
   return (
-    <div className="rep-field rep-field--operator">
+    <div className="rep-field rep-field--operator" ref={fieldRef}>
       <RepModeTag
         label="Evidence lens"
         sub="Analyst · structural substrate → signals → conditions → governance → lineage"
@@ -7348,7 +7499,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
 
       <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
 
-      <div className="actor actor--evidence-trace">
+      <div className="actor actor--evidence-trace" data-zone-key="evidenceTrace">
         <div className="actor-tag">
           <span className="actor-code">ET</span>
           <span className="actor-name">Evidence Trace · lineage</span>
@@ -7449,7 +7600,7 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
   }
 
   return (
-    <div className="actor actor--signal-intelligence">
+    <div className="actor actor--signal-intelligence" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SI</span>
         <span className="actor-name">Signal Intelligence · {sigs.length} signals across {familyCount} {familyCount === 1 ? 'family' : 'families'}</span>
@@ -7477,7 +7628,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
   const deepForensicsCount = [pc && pc.available, ca && ca.available, rv && rv.available, ei && ei.available, ci && ci.available, cc && cc.available].filter(Boolean).length
 
   return (
-    <div className="actor actor--operator-governance">
+    <div className="actor actor--operator-governance" data-zone-key="governanceLifecycle">
       <div className="actor-tag">
         <span className="actor-code">GA</span>
         <span className="actor-name">Governance Audit · {gl.s_level}{deepForensicsCount > 0 ? ` · ${deepForensicsCount} forensic sections` : ''}</span>
@@ -10316,7 +10467,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
       </>
     )
     return (
-      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} />
+      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} onZoneChange={onZoneChange} />
     )
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
@@ -10608,6 +10759,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const handleEmergenceState = useCallback((state) => { setEmergenceState(state) }, [])
   const isDense = !boardroomMode && densityClass === 'EXECUTIVE_DENSE'
   const isOperator = !boardroomMode && densityClass === 'OPERATOR_DENSE'
+  const hasZoneTracking = isDense || isOperator
   const canvasRef = useRef(null)
 
   const escalationAvailable = useMemo(() => {
@@ -10794,7 +10946,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     <div
       className={`intelligence-field intelligence-field--three-col${boardroomMode ? ' intelligence-field--boardroom' : ''}`}
       data-mode={boardroomMode ? 'BOARDROOM' : densityClass}
-      data-active-zone={isDense ? activeZoneKey : undefined}
+      data-active-zone={hasZoneTracking ? activeZoneKey : undefined}
       data-query-active={isDense && activeQueryKey ? activeQueryKey : undefined}
       data-depth-escalated={piRuntimeActive || undefined}
     >
@@ -10805,8 +10957,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         adapted={adapted}
         fullReport={fullReport}
         boardroomProjection={boardroomProjection}
-        activeZoneKey={isDense ? activeZoneKey : null}
-        activeQueryKey={isDense ? activeQueryKey : null}
+        activeZoneKey={hasZoneTracking ? activeZoneKey : null}
+        activeQueryKey={hasZoneTracking ? activeQueryKey : null}
         onQueryDismiss={handleQueryDismiss}
         emergenceState={isBalanced ? emergenceState : null}
         piRuntimeActive={piRuntimeActive}
@@ -10858,7 +11010,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           temporalAnalyticsData={temporalAnalyticsData}
           temporalLifecycleData={temporalLifecycleData}
           onModeTransition={onModeTransition}
-          onZoneChange={isDense ? handleZoneChange : undefined}
+          onZoneChange={hasZoneTracking ? handleZoneChange : undefined}
           onAuthorityChange={isBalanced ? onAuthorityChange : undefined}
           onEmergenceState={isBalanced ? handleEmergenceState : undefined}
           selectedNarrativeArc={selectedNarrativeArc}
@@ -10915,9 +11067,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         reportPackArtifacts={reportPackArtifacts}
         fullReport={fullReport}
         qualifierClass={qualifierClass}
-        activeZoneKey={isDense ? activeZoneKey : null}
+        activeZoneKey={hasZoneTracking ? activeZoneKey : null}
         densityClass={densityClass}
-        activeQueryKey={isDense ? activeQueryKey : null}
+        activeQueryKey={hasZoneTracking ? activeQueryKey : null}
         onQuerySelect={handleQuerySelect}
         exploredQueries={exploredQueries}
         emergenceState={isBalanced ? emergenceState : null}
