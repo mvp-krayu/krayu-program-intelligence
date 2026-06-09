@@ -6575,7 +6575,7 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
       />
 
 
-      {/* Governed Interpretation — one selected intent */}
+      {/* Governed Interpretation — THORR Lite */}
       {balancedInterpretations && (() => {
         const INTENT_LABELS = {
           interpret_operational_posture: 'Operational Posture',
@@ -6586,43 +6586,65 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           interpret_propagation_dynamics: 'Propagation Dynamics',
           interpret_dependency_amplification: 'Dependency Amplification',
         }
-        const available = Object.entries(balancedInterpretations).filter(([, c]) => c.available && c.narrative)
+        const available = Object.entries(balancedInterpretations).filter(([, c]) => c.available && c.sections)
         if (available.length === 0) return null
         const defaultIntent = available[0][0]
         const selected = activeIntent && balancedInterpretations[activeIntent] && balancedInterpretations[activeIntent].available
           ? activeIntent : defaultIntent
         const active = balancedInterpretations[selected]
+        const s = active && active.sections
 
         return (
           <div className="balanced-zone balanced-zone--interpretations">
-            <div className="balanced-interpretation-header">NARRATIVE INTERPRETATION</div>
-            <div className="balanced-intent-selector">
-              {available.map(([name]) => (
+            <div className="balanced-discovery-selector">
+              {available.map(([name, call]) => (
                 <button
                   key={name}
-                  className={`balanced-intent-btn${selected === name ? ' balanced-intent-btn--active' : ''}`}
+                  className={`balanced-discovery-btn${selected === name ? ' balanced-discovery-btn--active' : ''}`}
                   onClick={() => setActiveIntent(name)}
                   type="button"
                 >
-                  {INTENT_LABELS[name] || name.replace(/^interpret_/, '').replace(/_/g, ' ')}
+                  <span className="balanced-discovery-hook">{call.hook || INTENT_LABELS[name]}</span>
                 </button>
               ))}
             </div>
 
-            {active && (
-              <div className="balanced-interpretation-active">
-                <div className="balanced-interpretation-anchor">
-                  Interpreting: {INTENT_LABELS[selected] || selected}
+            {s && (
+              <div className="balanced-thorr-interpretation">
+                <div className="balanced-thorr-section">
+                  <div className="balanced-thorr-label">WHAT THIS MEANS</div>
+                  <div className="balanced-thorr-meaning">{s.meaning}</div>
                 </div>
-                <div className="balanced-interpretation-narrative">{active.narrative}</div>
-                {active.organizational_insight && (
-                  <div className="balanced-interpretation-insight">{active.organizational_insight}</div>
+
+                <div className="balanced-thorr-section">
+                  <div className="balanced-thorr-label">WHY IT MATTERS</div>
+                  <div className="balanced-thorr-body">{s.why_it_matters}</div>
+                </div>
+
+                {s.who_should_care && s.who_should_care.length > 0 && (
+                  <div className="balanced-thorr-section">
+                    <div className="balanced-thorr-label">WHO SHOULD CARE</div>
+                    <div className="balanced-thorr-actors">
+                      {s.who_should_care.map((actor, i) => (
+                        <span key={i} className="balanced-thorr-actor">{actor}</span>
+                      ))}
+                    </div>
+                  </div>
                 )}
+
+                <div className="balanced-thorr-section">
+                  <div className="balanced-thorr-label">OPERATIONAL CONSEQUENCE</div>
+                  <div className="balanced-thorr-body">{s.operational_consequence}</div>
+                </div>
+
                 {active.evidence_anchors && active.evidence_anchors.length > 0 && (
-                  <div className="balanced-interpretation-anchors">
-                    {active.evidence_anchors.map((a, i) => (
-                      <span key={i} className="balanced-interpretation-anchor-chip">{a.field || a.source}</span>
-                    ))}
+                  <div className="balanced-thorr-section balanced-thorr-section--evidence">
+                    <div className="balanced-thorr-label">EVIDENCE BASIS</div>
+                    <div className="balanced-thorr-evidence">
+                      {active.evidence_anchors.map((a, i) => (
+                        <span key={i} className="balanced-thorr-evidence-chip">{a.field || a.source}</span>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

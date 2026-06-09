@@ -4979,80 +4979,102 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* ── Zone 5 — Descent Paths ── */
-        /* ── Governed Interpretation (BALANCED) ──────────────────────── */
+        /* ── THORR Lite Interpretation (BALANCED) ────────────────────── */
         .balanced-zone--interpretations {
-          padding: 24px 0;
-          border-top: 1px solid rgba(74, 158, 255, 0.12);
+          padding: 16px 0;
         }
-        .balanced-interpretation-header {
-          font-family: 'Courier New', monospace;
-          font-size: 9px;
-          letter-spacing: 0.12em;
-          color: #4a9eff;
-          font-weight: 600;
-          margin-bottom: 12px;
-        }
-        .balanced-intent-selector {
+        .balanced-discovery-selector {
           display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-          margin-bottom: 20px;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 24px;
         }
-        .balanced-intent-btn {
-          font-family: 'Courier New', monospace;
-          font-size: 9.5px;
-          letter-spacing: 0.03em;
+        .balanced-discovery-btn {
+          display: block;
+          width: 100%;
+          text-align: left;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12.5px;
           color: #6a7a9a;
           background: none;
-          border: 1px solid #2a2f40;
-          border-radius: 4px;
-          padding: 5px 10px;
+          border: 1px solid #1e2330;
+          border-left: 3px solid #2a2f40;
+          border-radius: 0 4px 4px 0;
+          padding: 10px 14px;
           cursor: pointer;
-          transition: border-color 0.2s, color 0.2s;
+          transition: border-color 0.2s, color 0.2s, background 0.2s;
         }
-        .balanced-intent-btn:hover { border-color: #4a9eff; color: #8a96b2; }
-        .balanced-intent-btn--active {
+        .balanced-discovery-btn:hover {
+          border-left-color: #4a9eff;
+          color: #8a96b2;
+          background: rgba(74, 158, 255, 0.02);
+        }
+        .balanced-discovery-btn--active {
           color: #ccd6f6;
-          border-color: #4a9eff;
-          background: rgba(74, 158, 255, 0.06);
+          border-left-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.04);
         }
-        .balanced-interpretation-active {
-          padding: 0;
+        .balanced-discovery-hook {
+          line-height: 1.4;
         }
-        .balanced-interpretation-anchor {
+
+        .balanced-thorr-interpretation {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .balanced-thorr-section {
+          padding: 16px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .balanced-thorr-section:last-child { border-bottom: none; }
+        .balanced-thorr-label {
           font-family: 'Courier New', monospace;
-          font-size: 10px;
-          letter-spacing: 0.06em;
-          color: #4a9eff;
-          margin-bottom: 12px;
+          font-size: 8.5px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          margin-bottom: 8px;
         }
-        .balanced-interpretation-narrative {
+        .balanced-thorr-meaning {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          font-size: 14px;
-          color: #ccd6f6;
+          font-size: 15px;
+          color: #e2e8f6;
           line-height: 1.7;
+          font-weight: 400;
         }
-        .balanced-interpretation-insight {
+        .balanced-thorr-body {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 12px;
-          color: #4a9eff;
-          font-style: italic;
-          margin-top: 12px;
-          padding-left: 14px;
-          border-left: 2px solid rgba(74, 158, 255, 0.25);
-          line-height: 1.55;
+          font-size: 13px;
+          color: #8a96b2;
+          line-height: 1.65;
         }
-        .balanced-interpretation-anchors {
+        .balanced-thorr-actors {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
-          margin-top: 14px;
         }
-        .balanced-interpretation-anchor-chip {
+        .balanced-thorr-actor {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #ccd6f6;
+          padding: 4px 10px;
+          border: 1px solid #2a3040;
+          border-radius: 4px;
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .balanced-thorr-section--evidence {
+          padding-top: 12px;
+        }
+        .balanced-thorr-evidence {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        .balanced-thorr-evidence-chip {
           font-family: 'Courier New', monospace;
-          font-size: 8.5px;
+          font-size: 9px;
           color: #5a6580;
-          padding: 2px 6px;
+          padding: 3px 8px;
           border: 1px solid #2a2f40;
           border-radius: 3px;
         }
