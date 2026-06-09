@@ -5832,18 +5832,38 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   }
 
   if (zoneDerived) {
+    const ZONE_STRUCTURAL_CONTEXT = {
+      semanticTopology: 'Topology explains which domains are structurally backed and which remain semantic-only. Partial grounding limits how strongly domain-level claims can be asserted.',
+      clusterConcentration: 'Cluster distribution reveals where structural mass accumulates. Concentration is not inherently negative — but asymmetric concentration amplifies change impact.',
+      absorptionLoad: 'Absorption load identifies modules that absorb structural stress from surrounding components. High absorption creates implicit coordination dependencies.',
+      signalAssessment: 'Signals are pre-condition evidence. They explain pressure indicators before they are synthesized into conditions or cognition surfaces.',
+      propagationFlow: 'Propagation shows how pressure travels from origin domains to receiver domains. Receiver pressure should not be mistaken for structural centrality.',
+      pressureZoneFocus: 'Pressure concentrates around the structural origin. Partial grounding means the pressure zone is visible but not fully reconciled across all semantic domains.',
+      governanceLifecycle: 'Governance context explains which claims are qualified, withheld, or advisory-bound.',
+      evidenceTrace: 'Lineage context explains whether the evidence can be replayed and traced to its origin.',
+      topologySurface: 'Topology explains which semantic domains are structurally backed and which remain semantic-only.',
+      structuralCentrality: 'Centrality identifies structural authority spines — files and modules where changes propagate broadly. These are the architectural load-bearing points.',
+      runtimeConnectivity: 'Runtime evidence explains execution pressure that static structure alone cannot reveal.',
+      behavioralClassView: 'Behavioral classes organize conditions into pressure categories — concentration, flow, fragility, drift — revealing which forces dominate.',
+    }
+    const ZONE_RUNTIME_CONTEXT = {
+      semanticTopology: 'Runtime evidence may reveal that execution pressure concentrates in different domains than structural mass.',
+      pressureZoneFocus: 'Runtime evidence should be used to determine whether the pressure zone is also an execution center.',
+      propagationFlow: 'Runtime connectivity may reveal whether propagation also affects execution flow or remains structural-only.',
+      signalAssessment: 'Runtime signals (RSIG) should be evaluated separately so execution pressure is not collapsed into static topology.',
+    }
+    const zoneStructCtx = ZONE_STRUCTURAL_CONTEXT[activeZoneKey] || null
+    const zoneRuntimeCtx = ZONE_RUNTIME_CONTEXT[activeZoneKey] || null
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const hasRuntimeSigs = sigs.some(s => s.signal_family === 'RSIG')
+
     return (
       <aside className="intel-interp intel-interp--zone-active" data-tone={framing.tone} data-zone={activeZoneKey} aria-label="Zone-focused interpretation">
         <div className="interp-tag">
-          <span className="interp-tag-label">{framing.label}</span>
-          <span className="interp-tag-state">{badge.state_label || '—'}</span>
+          <span className="interp-tag-label">{zoneInterp.sectionLabel}</span>
         </div>
 
         <div className="interp-zone-focus">
-          <div className="interp-zone-badge">
-            <span className="interp-zone-badge-code">{zoneInterp.code}</span>
-            <span className="interp-zone-badge-label">{zoneInterp.sectionLabel}</span>
-          </div>
           <div className="interp-zone-heading">{zoneDerived.heading}</div>
           <div className="interp-zone-body">{zoneDerived.body}</div>
           {zoneDerived.structuralNote && (
@@ -5852,7 +5872,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
           {zoneDerived.signalDetail && zoneDerived.signalDetail.length > 0 && (
             <div className="interp-zone-signals">
-              <div className="interp-zone-signals-label">TOP SIGNALS ({zoneDerived.signalDetail.length})</div>
+              <div className="interp-zone-signals-label">TOP 3 SIGNALS</div>
               {zoneDerived.signalDetail.slice(0, 3).map(s => (
                 <div key={s.id} className="interp-zone-signal" data-severity={s.severity}>
                   <span className="interp-zone-signal-severity">{s.severity}</span>
@@ -5867,11 +5887,11 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
           {zoneDerived.signalByRole && (
             <div className="interp-zone-signals">
-              <div className="interp-zone-signals-label">SIGNAL CONCENTRATION BY ROLE</div>
+              <div className="interp-zone-signals-label">BY ROLE</div>
               {Object.entries(zoneDerived.signalByRole).map(([role, count]) => (
                 <div key={role} className="interp-zone-signal">
                   <span className="interp-zone-signal-severity">{role}</span>
-                  <span className="interp-zone-signal-text">{count} elevated signal{count !== 1 ? 's' : ''}</span>
+                  <span className="interp-zone-signal-text">{count} elevated</span>
                 </div>
               ))}
             </div>
@@ -5885,62 +5905,23 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
                   {zoneDerived.signalSummary.total} elevated{zoneDerived.signalSummary.critical > 0 ? ` · ${zoneDerived.signalSummary.critical} critical/high` : ''}
                 </span>
               </div>
-              {zoneDerived.signalSummary.compound && (
-                <div className="interp-zone-signal interp-zone-signal--compound">
-                  <span className="interp-zone-signal-text">{zoneDerived.signalSummary.compound}</span>
-                </div>
-              )}
+            </div>
+          )}
+
+          {zoneStructCtx && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">STRUCTURAL CONTEXT</div>
+              <div className="interp-zone-signal"><span className="interp-zone-signal-text">{zoneStructCtx}</span></div>
+            </div>
+          )}
+
+          {hasRuntimeSigs && zoneRuntimeCtx && (
+            <div className="interp-zone-signals">
+              <div className="interp-zone-signals-label">RUNTIME CONTEXT</div>
+              <div className="interp-zone-signal"><span className="interp-zone-signal-text" style={{ color: '#bb86fc' }}>{zoneRuntimeCtx}</span></div>
             </div>
           )}
         </div>
-
-        <details className="interp-context-secondary">
-          <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
-          {structuralContext && (
-            <>
-              <div className="interp-block interp-block--signal-context">
-                <div className="interp-signal-context-row">
-                  <span className="interp-signal-context-qualifier">{structuralContext.stateLabel}</span>
-                  <span className="interp-signal-context-state">{structuralContext.signalLabel}</span>
-                </div>
-                <div className="interp-structural-context-body">{structuralContext.whyThisView}</div>
-                {structuralContext.limitation && (
-                  <div className="interp-signal-context-note">{structuralContext.limitation}</div>
-                )}
-                {structuralContext.nextStep && (
-                  <div className="interp-signal-context-note">{structuralContext.nextStep}</div>
-                )}
-              </div>
-            </>
-          )}
-          {narrative.executive_summary && (
-            <div className="interp-block interp-block--lead">
-              <div className="interp-section-label">{framing.assessmentLabel}</div>
-              <div className="interp-summary">{narrative.executive_summary}</div>
-            </div>
-          )}
-          {narrative.why_primary_statement && framing.whyLabel && (
-            <div className="interp-block">
-              <div className="interp-section-label">{framing.whyLabel}</div>
-              <div className="interp-why">{narrative.why_primary_statement}</div>
-            </div>
-          )}
-        </details>
-        {activeConditions && activeConditions.length > 0 && swIntelActive && (
-          <div className="interp-block interp-block--conditions">
-            <div className="interp-section-label">OPERATIONAL CONDITIONS</div>
-            <div className="interp-conditions-strip">
-              {activeConditions.filter(c => c.severity !== 'NOMINAL').slice(0, 3).map(c => (
-                <div key={c.condition_id} className="interp-condition-row" data-severity={c.severity}>
-                  <span className="interp-condition-name">{c.operator_cognition_title}</span>
-                  {c.domain_targets && c.domain_targets[0] && (
-                    <span className="interp-condition-domain">{c.domain_targets[0].display_name}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </aside>
     )
   }
