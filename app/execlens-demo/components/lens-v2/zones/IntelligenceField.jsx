@@ -1424,7 +1424,7 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
 
       {!boardroomMode && fullReport && (
         <div className="support-block support-block--trail">
-          <div className="support-label"><TermHint term="EVIDENCE RECORD">EVIDENCE RECORD</TermHint></div>
+          <div className="support-label">EVIDENCE RECORD</div>
           {(exploredQueries.size > 0 || interrogationTrail.size > 0) && (
             <div className="trail-export-summary">
               {exploredQueries.size > 0 && <span className="trail-count">{exploredQueries.size} structural queries reviewed</span>}
@@ -1441,27 +1441,26 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </div>
       )}
 
-      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && (
-        <div className="support-block support-block--reports">
-          <div className="support-label">REPORT PACK</div>
-          <div className="support-reports-sub">Official Tier-1 / Tier-2 deliverables</div>
-          <div className="support-reports-list">
-            {artifacts.map(a => (
-              <div
-                key={a.id}
-                className="support-report-item"
-                aria-disabled="true"
-                title={`Future binding: ${a.binding_path} · file ${a.file} · pending real client/run integration`}
-                data-binding="pending"
-              >
-                <span className="support-report-tier">{a.tier}</span>
-                <span className="support-report-name">{a.name}</span>
+      {!boardroomMode && (
+        <div className="support-block support-block--deliverables">
+          <div className="support-label">DELIVERABLES</div>
+          <div className="support-deliverable-list">
+            {(densityClass === 'EXECUTIVE_BALANCED' || densityClass === 'EXECUTIVE_DENSE') && (
+              <div className="support-deliverable-item">
+                <span className="support-deliverable-name">Executive Intelligence Report</span>
+                <span className="support-deliverable-status">binding pending</span>
               </div>
-            ))}
-            <div className="support-reports-state" aria-live="polite">
-              <span className="support-reports-state-dot" aria-hidden="true" />
-              binding pending — live client/run integration not yet active
+            )}
+            <div className="support-deliverable-item">
+              <span className="support-deliverable-name">Evidence Record</span>
+              <span className="support-deliverable-status">binding pending</span>
             </div>
+            {(densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') && (
+              <div className="support-deliverable-item">
+                <span className="support-deliverable-name">Structural Assessment</span>
+                <span className="support-deliverable-status">binding pending</span>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -5603,7 +5602,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
         <div className="interp-block">
           <div className="interp-section-label">SCOPE</div>
-          <div className="interp-synthesis">{themes.length} finding{themes.length !== 1 ? 's' : ''} · {pLabel}</div>
+          <div className="interp-synthesis">{pLabel}</div>
         </div>
       </aside>
     )

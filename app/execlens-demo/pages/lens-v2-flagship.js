@@ -7832,11 +7832,35 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #8ab4f8;
           padding: 2px 0;
         }
-        .support-block--reports {
+        .support-block--reports { display: none; }
+        .support-block--deliverables {
           margin-top: auto;
-          padding-top: 22px;
+          padding-top: 16px;
           border-top: 1px solid #1a2030;
-          gap: 10px;
+        }
+        .support-deliverable-list {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .support-deliverable-item {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .support-deliverable-item:last-child { border-bottom: none; }
+        .support-deliverable-name {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .support-deliverable-status {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
         }
         .support-reports-sub {
           font-size: 10px;
