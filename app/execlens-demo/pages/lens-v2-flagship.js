@@ -12823,6 +12823,50 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           margin-bottom: 6px;
         }
 
+        /* ── Evidence Item List (OPERATOR verify expand) ──────────── */
+        .sw-intel-evidence-list {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .sw-intel-evidence-item {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 3px 0;
+          border-bottom: 1px solid rgba(30, 35, 48, 0.5);
+        }
+        .sw-intel-evidence-item:last-child { border-bottom: none; }
+        .sw-intel-evidence-item-type {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.06em;
+          color: #4a5570;
+          min-width: 28px;
+        }
+        .sw-intel-evidence-item-label {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+          flex: 1;
+          min-width: 0;
+          word-break: break-word;
+        }
+        .sw-intel-evidence-item-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.06em;
+        }
+        .sw-intel-evidence-item-severity[data-severity="CRITICAL"],
+        .sw-intel-evidence-item-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .sw-intel-evidence-item-severity[data-severity="ELEVATED"] { color: #ffd700; }
+        .sw-intel-evidence-item-severity[data-severity="MODERATE"] { color: #7a8aaa; }
+        .sw-intel-evidence-item-domain {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+        }
+
         .sw-intel-surface--active {
           background: #181c28;
           border-color: #3a4060;

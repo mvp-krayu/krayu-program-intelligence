@@ -203,39 +203,20 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
       {isVerify && surface.evidence_density > 0 ? (
         <details className="sw-intel-surface-footer sw-intel-surface-footer--expandable" onClick={e => e.stopPropagation()}>
           <summary className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</summary>
-          {surface.constituents ? (
+          {surface._evidence_items && surface._evidence_items.length > 0 ? (
+            <div className="sw-intel-evidence-list">
+              {surface._evidence_items.map((item, i) => (
+                <div key={i} className="sw-intel-evidence-item" data-type={item.type} data-severity={item.severity}>
+                  <span className="sw-intel-evidence-item-type">{item.type === 'condition' ? 'COND' : 'REF'}</span>
+                  <span className="sw-intel-evidence-item-label">{item.label}</span>
+                  {item.severity && <span className="sw-intel-evidence-item-severity" data-severity={item.severity}>{item.severity}</span>}
+                  {item.domain && <span className="sw-intel-evidence-item-domain">{resolveDomain ? resolveDomain(item.domain) : item.domain}</span>}
+                </div>
+              ))}
+            </div>
+          ) : surface.constituents ? (
             <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
           ) : null}
-          {surface.affected_domains && surface.affected_domains.length > 0 && (
-            <div className="sw-intel-surface-detail">
-              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>AFFECTED DOMAINS</span></div>
-              {surface.affected_domains.map(d => (
-                <div key={d} className="sw-intel-surface-detail-row">
-                  <span className="sw-intel-surface-detail-label" title={d}>{resolveDomain ? resolveDomain(d) : d}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          {surface.source_conditions && surface.source_conditions.length > 0 && (
-            <div className="sw-intel-surface-detail">
-              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>SOURCE CONDITIONS</span></div>
-              {surface.source_conditions.map((sc, i) => (
-                <div key={i} className="sw-intel-surface-detail-row">
-                  <span className="sw-intel-surface-detail-label">{sc.display_title || sc.condition_type}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          {surface.causal_types && surface.causal_types.length > 0 && !surface.source_conditions && (
-            <div className="sw-intel-surface-detail">
-              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>CAUSAL DRIVERS</span></div>
-              {surface.causal_types.map((ct, i) => (
-                <div key={i} className="sw-intel-surface-detail-row">
-                  <span className="sw-intel-surface-detail-label">{ct.replace(/_/g, ' ')}</span>
-                </div>
-              ))}
-            </div>
-          )}
         </details>
       ) : (
         <div className="sw-intel-surface-footer">
