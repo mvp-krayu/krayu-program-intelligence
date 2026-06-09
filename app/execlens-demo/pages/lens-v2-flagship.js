@@ -7383,7 +7383,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             radial-gradient(110% 70% at 50% 0%, rgba(74,158,255,0.04) 0%, transparent 60%),
             radial-gradient(70% 50% at 50% 100%, rgba(255,158,74,0.025) 0%, transparent 70%);
           min-height: 620px;
-          overflow: hidden;
+          overflow-x: auto;
         }
         .intelligence-field--boardroom .intel-canvas {
           padding: 72px 64px 80px;
@@ -12960,9 +12960,10 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
         .rt-inline-blindness-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 10px;
           margin-bottom: 12px;
+          min-width: 0;
         }
         @media (max-width: 900px) {
           .rt-inline-blindness-grid { grid-template-columns: 1fr; }
@@ -12971,6 +12972,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: #0d0f17;
           border-radius: 6px;
           border: 1px solid var(--blindness-color, #1e2333);
+          min-width: 0;
+          overflow: hidden;
           border-color: color-mix(in srgb, var(--blindness-color) 30%, transparent);
           padding: 12px;
         }
