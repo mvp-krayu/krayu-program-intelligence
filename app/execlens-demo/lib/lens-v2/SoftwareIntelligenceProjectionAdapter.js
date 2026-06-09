@@ -374,6 +374,8 @@ function consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfac
         governance_boundary: csq.confidence,
         consequence_scope: csq.consequence_scope,
         combination_pattern: csq.combination_pattern || null,
+        source_condition_types: csq.source_condition_types || (conditionTypes.length > 0 ? conditionTypes : null),
+        is_combination: !!csq.combination_pattern,
         is_runtime: isRuntime,
         is_consequence_derived: true,
         constituents: legacyConstituents || (isRuntime ? {

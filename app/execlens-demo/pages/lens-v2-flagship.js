@@ -12755,6 +12755,47 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .sw-intel-surface[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
         .sw-intel-surface[data-severity="MODERATE"] { border-left-color: #ffd700; }
         .sw-intel-surface[data-severity="LOW"] { border-left-color: #64ffda; }
+        /* ── Explanation Chain (DENSE SW-INTEL) ──────────────────────── */
+        .sw-intel-explain-chain {
+          margin-top: 8px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-explain-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.1em;
+          color: #4a9eff;
+          margin-bottom: 6px;
+        }
+        .sw-intel-explain-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .sw-intel-explain-step {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .sw-intel-explain-step-num {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #4a5570;
+          min-width: 14px;
+          text-align: center;
+        }
+        .sw-intel-explain-step-text {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #8a96b2;
+          line-height: 1.4;
+        }
+        .sw-intel-explain-step--combine .sw-intel-explain-step-num { color: #ff9e4a; }
+        .sw-intel-explain-step--combine .sw-intel-explain-step-text { color: #ccd6f6; font-weight: 500; }
+        .sw-intel-explain-step--runtime .sw-intel-explain-step-num { color: #bb86fc; }
+        .sw-intel-explain-step--runtime .sw-intel-explain-step-text { color: #bb86fc; }
+
         /* ── Verification Mode (OPERATOR SW-INTEL) ───────────────────── */
         .sw-intel-surface--verify {
           border-left-color: #4a9eff;

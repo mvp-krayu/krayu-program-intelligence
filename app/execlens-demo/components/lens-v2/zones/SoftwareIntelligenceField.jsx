@@ -130,6 +130,59 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
       {isExplain && (
         <>
           <div className="sw-intel-surface-consequence">{surface.consequence}</div>
+
+          {(() => {
+            const srcTypes = surface.source_condition_types || (surface.condition_type ? [surface.condition_type] : [])
+            const isCombined = surface.combination_pattern || surface.is_combination
+            const domainCount = (surface.affected_domains || []).length
+            const hasRuntime = surface.is_runtime
+            if (srcTypes.length === 0 && !isCombined) return null
+            const COND_EXPLAIN = {
+              DELIVERY_PRESSURE_CONCENTRATION: 'Delivery pressure concentrates in a single region',
+              DEPENDENCY_CHOKE_POINT: 'A structural bottleneck funnels dependencies through one point',
+              PROPAGATION_ASYMMETRY: 'Changes propagate further in one direction than expected',
+              STRUCTURAL_MASS_CONCENTRATION: 'Structural mass accumulates disproportionately',
+              CROSS_DOMAIN_COUPLING_PRESSURE: 'Cross-domain coupling creates rigid binding',
+              EXECUTION_FRAGILITY: 'Multiple fragility indicators compound in one region',
+              EXECUTION_CONSTRICTION: 'Execution pathways narrow through a constriction point',
+              STRUCTURAL_BOUNDARY_DIVERGENCE: 'Declared boundaries diverge from actual dependency structure',
+              COUPLING_INERTIA: 'Coupling patterns resist change — the architecture is locked',
+              GOVERNANCE_COVERAGE_STATUS: 'Governance coverage does not span all operational domains',
+              EVENT_CONCENTRATION: 'Event coordination concentrates through a single node',
+              RUNTIME_DEPENDENCY_CHOKE_POINT: 'Runtime execution depends on a single gateway',
+              BROKER_DEPENDENCY: 'All messaging routes through a single broker',
+              TOPIC_FANOUT_PRESSURE: 'Topic changes propagate to multiple consumers simultaneously',
+              ASYNC_PROPAGATION_ASYMMETRY: 'Async producers outpace consumers',
+              EDGE_CLOUD_PROPAGATION_RISK: 'Edge-to-cloud data path has no redundancy',
+              RUNTIME_OBSERVABILITY_GAP: 'Runtime behavior is not observable in some domains',
+            }
+            return (
+              <div className="sw-intel-explain-chain">
+                <div className="sw-intel-explain-label">WHY THIS EXISTS</div>
+                <div className="sw-intel-explain-steps">
+                  {srcTypes.slice(0, 3).map((ct, i) => (
+                    <div key={ct} className="sw-intel-explain-step">
+                      <span className="sw-intel-explain-step-num">{i + 1}</span>
+                      <span className="sw-intel-explain-step-text">{COND_EXPLAIN[ct] || ct.replace(/_/g, ' ').toLowerCase()}</span>
+                    </div>
+                  ))}
+                  {isCombined && (
+                    <div className="sw-intel-explain-step sw-intel-explain-step--combine">
+                      <span className="sw-intel-explain-step-num">→</span>
+                      <span className="sw-intel-explain-step-text">These conditions converge in {domainCount} domain{domainCount !== 1 ? 's' : ''}, creating {surface.surface_name.toLowerCase()}</span>
+                    </div>
+                  )}
+                  {hasRuntime && (
+                    <div className="sw-intel-explain-step sw-intel-explain-step--runtime">
+                      <span className="sw-intel-explain-step-num">⚡</span>
+                      <span className="sw-intel-explain-step-text">Runtime evidence reinforces this finding — not purely structural</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })()}
+
           {surface.affected_domains && surface.affected_domains.length > 0 && (() => {
             const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'App', UTILITY: 'Utility' }
             return (
