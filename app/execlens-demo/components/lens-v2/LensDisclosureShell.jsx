@@ -161,7 +161,7 @@ export default function LensDisclosureShell({
         if (renderState === 'BLOCKED') return null
         return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} boardroomProjection={boardroomProjection} densityClass={densityClass} />
       case 'QualifierMandate':
-        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') return null
         return (
           <QualifierMandate
             qualifierClass={qualifierClass}
@@ -172,7 +172,7 @@ export default function LensDisclosureShell({
           />
         )
       case 'GovernanceRibbon':
-        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') return null
         return (
           <GovernanceRibbon
             governance={governance}
@@ -191,7 +191,7 @@ export default function LensDisclosureShell({
           />
         )
       case 'ReconciliationAwarenessZone':
-        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE' || densityClass === 'EXECUTIVE_BALANCED') return null
         return (
           <ReconciliationAwarenessZone
             awareness={reconciliationAwareness}
@@ -268,7 +268,7 @@ export default function LensDisclosureShell({
       data-persona={persona}
       data-active-zones={diagnostics.activeZones}
     >
-      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && densityClass !== 'EXECUTIVE_DENSE' && escalationBanner.active && (
+      {!boardroomMode && densityClass !== 'OPERATOR_DENSE' && densityClass !== 'EXECUTIVE_DENSE' && densityClass !== 'EXECUTIVE_BALANCED' && escalationBanner.active && (
         <div className="disclosure-escalation" role="status" aria-atomic="true">
           <span className="disclosure-escalation-count">{escalationBanner.criticalCount}</span>
           <span className="disclosure-escalation-label">

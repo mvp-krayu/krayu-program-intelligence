@@ -40,6 +40,10 @@ export default function DeclarationZone({ renderState, adapted, boardroomMode, f
     return <CompactForensicBar title="STRUCTURAL EXPLORATION" fullReport={fullReport} />
   }
 
+  if (densityClass === 'EXECUTIVE_BALANCED' && fullReport) {
+    return <CompactForensicBar title="NARRATIVE INTERPRETATION" fullReport={fullReport} />
+  }
+
   const label = STATE_LABELS[renderState] || renderState.replace(/_/g, ' ')
   return (
     <div className="declaration-zone">

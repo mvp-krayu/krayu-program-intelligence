@@ -5547,7 +5547,11 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     const balSigs = (fullReport && fullReport.signal_interpretations) || []
     const balActivated = balSigs.filter(s => s.severity !== 'NOMINAL')
     const balCritical = balActivated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
-    const balZone = ps.primary_zone_business_label || null
+    const cdc = crossDomainCognition
+    const domConc = (cdc && cdc.domain_concentration) || []
+    const balZone = (ps.primary_zone_business_label && ps.primary_zone_business_label !== 'Primary structural zone')
+      ? ps.primary_zone_business_label
+      : domConc.length > 0 ? domConc[0].domain : null
     const qs = (fullReport && fullReport.qualifier_summary) || {}
     const ts = (fullReport && fullReport.topology_summary) || {}
     const backed = ts.structurally_backed_count || 0
