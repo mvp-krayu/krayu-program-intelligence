@@ -12856,3 +12856,53 @@ a.topo-chip:hover {
 .copilot-main::-webkit-scrollbar-thumb:hover {
   background: var(--border-dim);
 }
+
+/* ── Cognitive Continuations (THORR) ─────────────────────────── */
+.copilot-continuations {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(74, 158, 255, 0.1);
+}
+.copilot-continuations-label {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim, #5a6580);
+  margin-bottom: 8px;
+}
+.copilot-continuations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.copilot-continuation-btn {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid var(--border-dim, #2a2f40);
+  border-left: 2px solid var(--border-dim, #2a2f40);
+  border-radius: 0 4px 4px 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.copilot-continuation-btn:hover {
+  border-left-color: var(--accent, #4a9eff);
+  background: rgba(74, 158, 255, 0.04);
+}
+.copilot-continuation-type {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+.copilot-continuation-question {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary, #8a96b2);
+  line-height: 1.4;
+}

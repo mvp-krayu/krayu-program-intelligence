@@ -7,8 +7,44 @@ const { assemble, formatContextForPrompt } = require('./PIContextAssembler');
 const { resolveMode, getModeConfig } = require('./ModeOrchestrator');
 const { validate } = require('./ProhibitionValidator');
 const { routeIntent } = require('./topic-router');
+const { deriveContinuations } = require('../lens-v2/pios/CognitiveContinuations');
 
 const DEFAULT_MODEL = 'claude-sonnet-4-6';
+
+function detectSurfaceFromIntent(intent) {
+  const lower = (intent || '').toLowerCase()
+  if (/blind|invisible|monitor|silent.*fail|hidden.*fail/i.test(lower)) return 'EXECUTION_BLINDNESS'
+  if (/diverge|gravity.*differ|structural.*vs.*operational|architecture.*vs.*operation/i.test(lower)) return 'GRAVITY_DIVERGENCE'
+  if (/amplif|dependency.*concentrat|hub.*dominat|shared.*utility/i.test(lower)) return 'DEPENDENCY_AMPLIFICATION'
+  if (/propagat|cascade|downstream|blast.*radius|spread/i.test(lower)) return 'PROPAGATION_RISK'
+  if (/fragil|stability|systemic|compound|converge.*pressure/i.test(lower)) return 'SYSTEMIC_OPERATIONAL_FRAGILITY'
+  if (/choke|bottleneck|gateway|single.*point/i.test(lower)) return 'RUNTIME_DEPENDENCY_CHOKE_POINT'
+  if (/coordinat|saturat|coupling/i.test(lower)) return 'COORDINATION_SATURATION'
+  if (/exposure|integration/i.test(lower)) return 'INTEGRATION_EXPOSURE'
+  if (/govern|replay|certif|qualification/i.test(lower)) return 'GOVERNANCE'
+  return 'SYSTEMIC_OPERATIONAL_FRAGILITY'
+}
+
+function buildCognitionContext(assembled) {
+  const verdict = assembled.verdict
+  if (!verdict) return null
+  const boardroom = verdict.boardroom || verdict
+  return {
+    crossDomainCognition: {
+      domain_concentration: boardroom.domain_concentration || [],
+      execution_center: boardroom.execution_center || null,
+      consequence_themes: boardroom.consequence_themes || [],
+      domain_narratives: boardroom.domain_narratives || [],
+      posture_label: boardroom.posture_label || null,
+      posture_scope: boardroom.posture_scope || null,
+    },
+    fullReport: {
+      signal_interpretations: assembled.specimen?.signal_interpretations || [],
+      governance_lifecycle: assembled.specimen?.governance_lifecycle || null,
+      structural_enrichment: assembled.specimen?.structural_enrichment || null,
+    },
+  }
+}
 const MAX_TOKENS = 4096;
 
 function loadEnvLocal() {
@@ -203,6 +239,16 @@ async function transform({
   const validation = validate(content, assembled.contextLevel);
   const output = wrapDisclosure(content, assembled.contextLevel);
 
+  let cognitiveContinuations = null
+  try {
+    const detectedSurface = detectSurfaceFromIntent(message)
+    const cogCtx = buildCognitionContext(assembled)
+    const pLevel = assembled.projectionAuthority ? assembled.projectionAuthority.projectionLevel : 0
+    if (cogCtx) {
+      cognitiveContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel)
+    }
+  } catch { /* continuations are optional */ }
+
   return {
     content: output,
     rawContent: content,
@@ -211,6 +257,8 @@ async function transform({
     availableDomains: assembled.availableDomains,
     retrievedTopics: allTopics,
     validation,
+    cognitiveContinuations,
+    detectedSurface: detectSurfaceFromIntent(message),
     usage: {
       inputTokens: response.usage?.input_tokens,
       outputTokens: response.usage?.output_tokens,
@@ -283,9 +331,18 @@ async function* transformStream({
   const finalMessage = await stream.finalMessage();
   const validation = validate(fullContent, assembled.contextLevel);
 
+  let streamContinuations = null
+  try {
+    const detectedSurface = detectSurfaceFromIntent(message)
+    const cogCtx = buildCognitionContext(assembled)
+    const pLevel = assembled.projectionAuthority ? assembled.projectionAuthority.projectionLevel : 0
+    if (cogCtx) streamContinuations = deriveContinuations(detectedSurface, cogCtx, pLevel)
+  } catch { /* optional */ }
+
   yield {
     type: 'done',
     validation,
+    cognitiveContinuations: streamContinuations,
     usage: {
       inputTokens: finalMessage.usage?.input_tokens,
       outputTokens: finalMessage.usage?.output_tokens,

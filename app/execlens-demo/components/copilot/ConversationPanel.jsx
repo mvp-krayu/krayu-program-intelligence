@@ -51,7 +51,30 @@ function OperatorMessage({ content, audience }) {
   )
 }
 
-function SystemMessage({ content, mode, validation, usage, streaming }) {
+function CognitiveContinuationsPanel({ continuations, onSelect }) {
+  if (!continuations) return null
+  const TYPE_LABELS = { clarify: 'CLARIFY', implication: 'IMPLICATION', challenge: 'CHALLENGE', descent: 'DESCENT', adjacent: 'ADJACENT', ascent: 'ASCENT' }
+  const TYPE_COLORS = { clarify: '#4a9eff', implication: '#ccd6f6', challenge: '#ff9e4a', descent: '#64ffda', adjacent: '#bb86fc', ascent: '#ffd700' }
+  const allItems = Object.entries(continuations)
+    .flatMap(([type, items]) => items.filter(c => c.available).map(c => ({ ...c, typeKey: type })))
+    .slice(0, 6)
+  if (allItems.length === 0) return null
+  return (
+    <div className="copilot-continuations">
+      <div className="copilot-continuations-label">NEXT LINES OF INQUIRY</div>
+      <div className="copilot-continuations-list">
+        {allItems.map((c, i) => (
+          <button key={i} className="copilot-continuation-btn" onClick={() => onSelect && onSelect(c.question)} type="button">
+            <span className="copilot-continuation-type" style={{ color: TYPE_COLORS[c.typeKey] || '#7a8aaa' }}>{TYPE_LABELS[c.typeKey] || c.typeKey}</span>
+            <span className="copilot-continuation-question">{c.question}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function SystemMessage({ content, mode, validation, usage, streaming, cognitiveContinuations, onContinuationSelect }) {
   return (
     <div className="copilot-msg copilot-msg-system">
       <div className="copilot-msg-meta">
@@ -63,6 +86,7 @@ function SystemMessage({ content, mode, validation, usage, streaming }) {
         <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
         {streaming && <span className="copilot-cursor" />}
       </div>
+      {!streaming && <CognitiveContinuationsPanel continuations={cognitiveContinuations} onSelect={onContinuationSelect} />}
     </div>
   )
 }
@@ -90,7 +114,7 @@ function AssemblingIndicator() {
   )
 }
 
-export default function ConversationPanel({ messages, streamingContent, streamingMeta, assembling, onExampleClick }) {
+export default function ConversationPanel({ messages, streamingContent, streamingMeta, assembling, onExampleClick, onContinuationSelect }) {
   const endRef = useRef(null)
 
   useEffect(() => {
@@ -140,6 +164,8 @@ export default function ConversationPanel({ messages, streamingContent, streamin
             mode={msg.mode}
             validation={msg.validation}
             usage={msg.usage}
+            cognitiveContinuations={msg.cognitiveContinuations}
+            onContinuationSelect={onContinuationSelect}
           />
         )
       })}

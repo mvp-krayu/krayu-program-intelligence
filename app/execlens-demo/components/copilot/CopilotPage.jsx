@@ -137,6 +137,7 @@ export default function CopilotPage({ client, runId }) {
         usage: finalEvent?.usage,
         contextLevel: meta?.contextLevel,
         retrievedTopics: meta?.retrievedTopics,
+        cognitiveContinuations: finalEvent?.cognitiveContinuations || null,
       }])
 
     } catch (err) {
@@ -173,6 +174,7 @@ export default function CopilotPage({ client, runId }) {
             streamingMeta={streamingMeta}
             assembling={assembling}
             onExampleClick={handleExampleClick}
+            onContinuationSelect={(question) => handleSubmit({ message: question })}
           />
         </div>
 
