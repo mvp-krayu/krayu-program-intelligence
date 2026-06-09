@@ -7466,7 +7466,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
         const tm = (fullReport && fullReport.topology_maturity) || {}
         const svgPolicy = tm.svg_policy || 'REGISTRY'
-        const showFullSvg = svgPolicy === 'FULL' || svgPolicy === 'ENRICHED'
+        const showFullSvg = true
         const clusters = fullReport.semantic_cluster_registry || []
         return (
           <div className="actor actor--topology-surface" data-zone-key="topologySurface">
@@ -7481,7 +7481,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
             {showFullSvg ? (
               <div className={`dense-topology-preview${cognitionOverlay ? '' : ''}`} onClick={cognitionOverlay ? undefined : openTopoModal} role="button" tabIndex={0} aria-label={cognitionOverlay ? cognitionOverlay.topology_label : 'Open topology explorer'} onKeyDown={e => e.key === 'Enter' && !cognitionOverlay && openTopoModal()}>
                 <TopologyGraph
-                  domains={fullReport.semantic_domain_registry}
+                  domains={fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))}
                   clusters={clusters}
                   edges={fullReport.semantic_topology_edges || []}
                   runtimeEdges={runtimeConnectivityEdges}
@@ -7490,6 +7490,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
                   cognitionOverlay={cognitionOverlay}
                   onPressureZoneClick={onPressureZoneClick}
                   activePressureZone={activePressureZone}
+                  boardroomMode={true}
                 />
                 <div className="dense-topology-hint">{cognitionOverlay ? cognitionOverlay.topology_label : 'Open structural topology'}</div>
               </div>

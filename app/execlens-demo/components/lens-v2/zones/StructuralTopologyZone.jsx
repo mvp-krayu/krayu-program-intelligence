@@ -497,11 +497,11 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 strokeDasharray={boardroomMode ? '4,4' : isCognitionTarget || isActive ? undefined : '6,3'}
                 style={{ transition: 'fill-opacity 0.2s, stroke-opacity 0.2s, stroke-width 0.2s' }}
               >
-                {isCognitionTarget && !boardroomMode && (
+                {isCognitionTarget && (!boardroomMode || cognitionOverlay) && (
                   <animate attributeName="stroke-opacity" values="0.8;0.4;0.8" dur="3s" repeatCount="indefinite" />
                 )}
               </rect>
-              {!boardroomMode && (
+              {(!boardroomMode || cognitionOverlay) && (
                 <text x={minX + 6} y={minY + 10} fontSize={isCognitionTarget ? 5.5 : 5} fontWeight={600}
                   fill={zoneColor} fillOpacity={isCognitionTarget ? 0.95 : isActive ? 0.8 : 0.45}
                   fontFamily="ui-monospace, 'SF Mono', Menlo, monospace" letterSpacing="0.08em">
@@ -658,7 +658,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                onMouseLeave={handleNodeLeave}
                onClick={(e) => { e.stopPropagation(); handleNodeClick(d) }}
             >
-              {isEmphasized && cognitionOverlay && !boardroomMode && (
+              {isEmphasized && cognitionOverlay && (
                 <circle cx={pos.cx} cy={pos.cy} r={innerR + 8}
                   fill="none" stroke={overlayColor} strokeWidth={cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' ? 2 : 1.5} strokeOpacity={0.5}
                   strokeDasharray={isAdvisory ? '3,3' : undefined}
@@ -702,7 +702,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 strokeWidth={boardroomMode && (dRole === 'structural-center' || dRole === 'both') ? 2.2 : boardroomMode ? 1.5 : isEmphasized ? 2.2 : st.sw}
                 strokeDasharray={boardroomMode ? undefined : (st.dashed && !isEmphasized) ? '4,3' : (isAdvisory && isEmphasized) ? '4,3' : undefined}
                 style={{ transition: 'stroke 0.3s, stroke-width 0.3s' }} />
-              {cognitionOverlay && !boardroomMode && cognitionOverlay.overlay_mode === 'GRAVITY_DIVERGENCE' && (() => {
+              {cognitionOverlay && cognitionOverlay.overlay_mode === 'GRAVITY_DIVERGENCE' && (() => {
                 const isStaticGravity = cognitionOverlay.gravity_static && cognitionOverlay.gravity_static.has(d.domain_id)
                 const isRuntimeGravity = cognitionOverlay.gravity_runtime && cognitionOverlay.gravity_runtime.has(d.domain_id)
                 if (!isStaticGravity && !isRuntimeGravity) return null
@@ -716,7 +716,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                 }
                 return <circle cx={gx} cy={gy} r={3.5} fill={isStaticGravity ? '#4a9eff' : '#ff9e4a'} fillOpacity={0.9} />
               })()}
-              {cognitionOverlay && !boardroomMode && cognitionOverlay.overlay_mode === 'EXECUTION_BLINDNESS' && (() => {
+              {cognitionOverlay && cognitionOverlay.overlay_mode === 'EXECUTION_BLINDNESS' && (() => {
                 const blindType = cognitionOverlay.blindness_types && cognitionOverlay.blindness_types[d.domain_id]
                 if (!blindType) return null
                 const bx = pos.cx - innerR + 3
