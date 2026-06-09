@@ -3,8 +3,8 @@
 //
 // Answer → unexplored cognition edges → next valuable inquiry
 //
-// Not prompt suggestions. Not LLM generation. Deterministic graph traversal.
-// Every continuation traces to a specific cognition object.
+// Property-based derivation. No surface ID hardcoding.
+// Every continuation carries: trace (resolvable path), reason (triggering condition).
 
 const SURFACE_ADJACENCY = {
   EXECUTION_BLINDNESS: ['GRAVITY_DIVERGENCE', 'DELIVERY_FRAGILITY', 'COORDINATION_SATURATION'],
@@ -47,235 +47,280 @@ const FALSIFICATION_PATHS = {
   STRUCTURAL_COUPLING: 'coupling patterns allowed independent evolution of connected domains',
 }
 
-function makeContinuation(type, question, derivedFrom, opts = {}) {
+function makeContinuation(type, question, trace, reason, opts = {}) {
   return {
     type,
     question,
-    derivedFrom,
+    trace,
+    reason,
     targetSurface: opts.targetSurface || null,
     targetEvidence: opts.targetEvidence || null,
     authorityRequired: opts.authorityRequired || 1,
   }
 }
 
-// ─── Traversal Functions ────────────────────────────────────────
+// ─── Property Detection ─────────────────────────────────────────
+// Derive surface properties from cognition objects, not surface IDs.
 
-function deriveClarify(surfaceId, ctx) {
-  const results = []
-  const domConc = (ctx.crossDomainCognition && ctx.crossDomainCognition.domain_concentration) || []
-  const topDomain = domConc.length > 0 ? domConc[0].domain : null
-  const execCenter = ctx.crossDomainCognition && ctx.crossDomainCognition.execution_center
-  const sigs = (ctx.fullReport && ctx.fullReport.signal_interpretations) || []
+function detectProperties(surfaceId, ctx) {
+  const cdc = ctx.crossDomainCognition || {}
+  const fr = ctx.fullReport || {}
+  const domConc = cdc.domain_concentration || []
+  const sigs = fr.signal_interpretations || []
   const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const themes = cdc.consequence_themes || []
+  const narratives = cdc.domain_narratives || []
+  const gl = fr.governance_lifecycle
+  const se = fr.structural_enrichment
+  const structCenter = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || null
 
-  if (surfaceId === 'GRAVITY_DIVERGENCE' && execCenter && topDomain) {
+  return {
+    surfaceId,
+    structCenter,
+    execCenter,
+    hasDivergence: execCenter && structCenter && execCenter.toLowerCase() !== structCenter.toLowerCase(),
+    hasRuntime: rsigs.length > 0,
+    rsigCount: rsigs.length,
+    rsigs,
+    hasMultipleThemes: themes.length > 1,
+    themeCount: themes.length,
+    themes,
+    hasPropagation: narratives.length > 1,
+    narratives,
+    propagationOrigin: narratives.length > 0 ? narratives[0].domain : null,
+    propagationReceivers: narratives.slice(1, 4).map(n => n.domain),
+    isGoverned: gl && gl.available,
+    governanceLevel: gl && gl.available ? gl.s_level : null,
+    hasCentrality: se && se.available && se.centrality,
+    hasFalsification: !!FALSIFICATION_PATHS[surfaceId],
+    falsificationPath: FALSIFICATION_PATHS[surfaceId] || null,
+    adjacentSurfaces: SURFACE_ADJACENCY[surfaceId] || [],
+    domainCount: domConc.length,
+    postureLabel: cdc.posture_label || null,
+    postureScope: cdc.posture_scope || null,
+  }
+}
+
+// ─── Traversal Functions ────────────────────────────────────────
+// All derived from properties, not surface IDs.
+
+function deriveClarify(p) {
+  const results = []
+
+  if (p.hasDivergence) {
     results.push(makeContinuation('clarify',
-      `Why is ${execCenter} the execution center rather than ${topDomain}?`,
-      'execution_concentration[0] vs domain_concentration[0]'))
+      `Why is ${p.execCenter} the execution center rather than ${p.structCenter}?`,
+      { object: 'execution_concentration[0]', field: 'domain', value: p.execCenter },
+      `execution_center (${p.execCenter}) !== structural_center (${p.structCenter})`
+    ))
   }
 
-  if (surfaceId === 'EXECUTION_BLINDNESS' && rsigs.length > 0) {
+  if (p.hasRuntime && p.rsigCount > 0) {
     results.push(makeContinuation('clarify',
-      `Which specific runtime paths create the blindness?`,
-      `RSIG signals (${rsigs.length})`,
-      { targetEvidence: 'RSIG' }))
+      'Which specific runtime paths create pressure?',
+      { object: 'signal_interpretations', field: 'RSIG', value: p.rsigCount },
+      `${p.rsigCount} RSIG signals exist`,
+      { targetEvidence: 'RSIG', authorityRequired: 2 }
+    ))
   }
 
-  if (surfaceId === 'DEPENDENCY_AMPLIFICATION' && topDomain) {
+  if (p.structCenter && p.domainCount > 1) {
     results.push(makeContinuation('clarify',
-      `What makes ${topDomain} an amplifier rather than just structurally large?`,
-      `domain_concentration[0].weight + condition_count`))
+      `What makes ${p.structCenter} dominant rather than just large?`,
+      { object: 'domain_concentration[0]', field: 'domain', value: p.structCenter },
+      `${p.structCenter} is domain_concentration[0] with ${p.domainCount} total domains`
+    ))
   }
 
-  if (surfaceId === 'RUNTIME_DEPENDENCY_CHOKE_POINT' && rsigs.length > 0) {
-    const chokeSig = rsigs.find(s => s.signal_name && s.signal_name.toLowerCase().includes('choke'))
-    if (chokeSig) {
-      results.push(makeContinuation('clarify',
-        `Which domains depend on this runtime gateway?`,
-        `${chokeSig.signal_id}.affected_domains`,
-        { targetEvidence: chokeSig.signal_id }))
-    }
-  }
-
-  if (surfaceId === 'SYSTEMIC_OPERATIONAL_FRAGILITY') {
-    const themes = (ctx.crossDomainCognition && ctx.crossDomainCognition.consequence_themes) || []
+  if (p.hasMultipleThemes) {
     results.push(makeContinuation('clarify',
-      `Which ${themes.length} pressures converge to create systemic fragility?`,
-      `consequence_themes[]`))
+      `Which ${p.themeCount} pressures converge to create ${p.postureLabel || 'this posture'}?`,
+      { object: 'consequence_themes', field: 'length', value: p.themeCount },
+      `${p.themeCount} consequence themes exist`
+    ))
   }
 
   return results
 }
 
-function deriveImplication(surfaceId, ctx) {
+function deriveImplication(p) {
   const results = []
-  const domConc = (ctx.crossDomainCognition && ctx.crossDomainCognition.domain_concentration) || []
-  const narratives = (ctx.crossDomainCognition && ctx.crossDomainCognition.domain_narratives) || []
-  const topDomain = domConc.length > 0 ? domConc[0].domain : null
-  const execCenter = ctx.crossDomainCognition && ctx.crossDomainCognition.execution_center
 
-  if (surfaceId === 'GRAVITY_DIVERGENCE' && execCenter && topDomain && execCenter.toLowerCase() !== topDomain.toLowerCase()) {
+  if (p.hasDivergence) {
     results.push(makeContinuation('implication',
-      `Which delivery decisions are affected by having architecture in ${topDomain} and operations in ${execCenter}?`,
-      'domain_narratives for both centers'))
+      `Which delivery decisions are affected by having architecture in ${p.structCenter} and operations in ${p.execCenter}?`,
+      { object: 'domain_concentration + execution_center', field: 'divergence', value: true },
+      `structural_center (${p.structCenter}) !== execution_center (${p.execCenter})`
+    ))
   }
 
-  if (surfaceId === 'EXECUTION_BLINDNESS') {
+  if (p.hasRuntime) {
     results.push(makeContinuation('implication',
       'What monitoring gaps does this create for operational teams?',
-      'RUNTIME_OBSERVABILITY_GAP condition'))
+      { object: 'signal_interpretations', field: 'RSIG_present', value: true },
+      `${p.rsigCount} runtime signals indicate execution dependencies invisible to static analysis`
+    ))
   }
 
-  if (surfaceId === 'DEPENDENCY_AMPLIFICATION' && narratives.length > 1) {
-    const receivers = narratives.slice(1, 4).map(n => n.domain)
+  if (p.hasPropagation && p.propagationReceivers.length > 0) {
     results.push(makeContinuation('implication',
-      `Which downstream teams (${receivers.join(', ')}) are affected without knowing it?`,
-      'domain_narratives receivers'))
+      `Which downstream teams (${p.propagationReceivers.join(', ')}) are affected without knowing it?`,
+      { object: 'domain_narratives', field: 'receivers', value: p.propagationReceivers },
+      `${p.propagationReceivers.length} receiver domains in propagation chain`
+    ))
   }
 
-  if (surfaceId === 'SYSTEMIC_OPERATIONAL_FRAGILITY' && topDomain) {
+  if (p.structCenter && p.hasMultipleThemes) {
     results.push(makeContinuation('implication',
-      `Which teams experience this as delivery unpredictability?`,
-      'domain_narratives top domains'))
-  }
-
-  if (surfaceId === 'RUNTIME_DEPENDENCY_CHOKE_POINT') {
-    results.push(makeContinuation('implication',
-      'What happens to downstream services if this gateway degrades?',
-      'CONSEQUENCE_LABELS[RUNTIME_DEPENDENCY_CHOKE_POINT]'))
+      'Which teams experience this as delivery unpredictability?',
+      { object: 'domain_narratives', field: 'top_domains', value: p.structCenter },
+      `multiple themes converge around ${p.structCenter}`
+    ))
   }
 
   return results
 }
 
-function deriveChallenge(surfaceId, ctx) {
+function deriveChallenge(p) {
   const results = []
-  const falsification = FALSIFICATION_PATHS[surfaceId]
 
-  if (falsification) {
+  if (p.hasFalsification) {
     results.push(makeContinuation('challenge',
-      `Would this finding disappear if ${falsification}?`,
-      `FALSIFICATION_PATHS[${surfaceId}]`))
+      `Would this finding disappear if ${p.falsificationPath}?`,
+      { object: 'FALSIFICATION_PATHS', field: p.surfaceId, value: p.falsificationPath },
+      `falsification path defined for ${p.surfaceId}`
+    ))
   }
 
-  const themes = (ctx.crossDomainCognition && ctx.crossDomainCognition.consequence_themes) || []
-  if (surfaceId === 'SYSTEMIC_OPERATIONAL_FRAGILITY' && themes.length > 1) {
+  if (p.hasMultipleThemes) {
+    const topTheme = p.themes[0]
     results.push(makeContinuation('challenge',
-      `Would addressing ${themes[0].theme_label} alone reduce systemic scope?`,
-      'consequence_themes[0] vs posture_scope'))
+      `Would addressing ${topTheme.theme_label} alone reduce the systemic scope?`,
+      { object: 'consequence_themes[0]', field: 'theme_label', value: topTheme.theme_label },
+      `${p.themeCount} themes exist — removing the dominant one may or may not change posture_scope`
+    ))
   }
 
-  const gl = ctx.fullReport && ctx.fullReport.governance_lifecycle
-  if (!gl || !gl.available) {
+  if (!p.isGoverned) {
     results.push(makeContinuation('challenge',
       'This finding is advisory-only — what would governed qualification change?',
-      'governance_lifecycle.available = false',
-      { authorityRequired: 1 }))
+      { object: 'governance_lifecycle', field: 'available', value: false },
+      'governance_lifecycle not available — all findings carry advisory weight'
+    ))
+  }
+
+  if (p.hasDivergence) {
+    results.push(makeContinuation('challenge',
+      `What evidence would show ${p.structCenter} and ${p.execCenter} are actually converging?`,
+      { object: 'execution_center', field: 'convergence_test', value: `${p.structCenter} vs ${p.execCenter}` },
+      'divergence exists — convergence is the inverse condition'
+    ))
   }
 
   return results
 }
 
-function deriveDescent(surfaceId, ctx) {
+function deriveDescent(p) {
   const results = []
-  const sigs = (ctx.fullReport && ctx.fullReport.signal_interpretations) || []
-  const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
-  const execCenter = ctx.crossDomainCognition && ctx.crossDomainCognition.execution_center
 
-  if (surfaceId === 'GRAVITY_DIVERGENCE' && rsigs.length > 0 && execCenter) {
+  if (p.hasRuntime && p.rsigCount > 0) {
     results.push(makeContinuation('descent',
-      `Show the RSIG signals supporting ${execCenter} as execution center`,
-      'RSIG signals filtered by execution_center domain',
-      { targetEvidence: 'RSIG', authorityRequired: 2 }))
+      `Show the ${p.rsigCount} runtime signals and their affected domains`,
+      { object: 'signal_interpretations', field: 'RSIG[]', value: p.rsigCount },
+      `${p.rsigCount} RSIG signals available for inspection`,
+      { targetEvidence: 'RSIG', authorityRequired: 2 }
+    ))
   }
 
-  if (surfaceId === 'EXECUTION_BLINDNESS') {
+  if (p.hasCentrality) {
     results.push(makeContinuation('descent',
-      'Show the 3 blindness types and their affected domains',
-      'blindness_types map (BOUNDARY/SILENCE/COUPLING)',
-      { targetEvidence: 'blindness_types', authorityRequired: 2 }))
+      'Show the structural authority spines and import graph',
+      { object: 'structural_enrichment.centrality', field: 'top_structural_spines', value: 'available' },
+      'centrality data available in structural enrichment',
+      { targetEvidence: 'centrality' }
+    ))
   }
 
-  if (surfaceId === 'DEPENDENCY_AMPLIFICATION') {
-    const se = ctx.fullReport && ctx.fullReport.structural_enrichment
-    if (se && se.centrality) {
-      results.push(makeContinuation('descent',
-        'Show the import graph fan-out from the primary domain',
-        'structural_enrichment.centrality.top_structural_spines',
-        { targetEvidence: 'centrality' }))
-    }
-  }
-
-  if (surfaceId === 'SYSTEMIC_OPERATIONAL_FRAGILITY') {
+  if (p.hasMultipleThemes) {
     results.push(makeContinuation('descent',
       'Show the condition chain that produces this posture',
-      'cognition_slices from forBoardroom()',
-      { targetEvidence: 'cognition_slices' }))
+      { object: 'crossDomainCognition', field: 'cognition_slices', value: 'available' },
+      `${p.themeCount} consequence themes derive from underlying conditions`,
+      { targetEvidence: 'cognition_slices' }
+    ))
   }
 
-  if (surfaceId === 'RUNTIME_DEPENDENCY_CHOKE_POINT') {
+  if (p.hasPropagation) {
     results.push(makeContinuation('descent',
-      'Show the runtime connectivity flow through this choke point',
-      'runtimeConnectivityEdges filtered by choke domain',
-      { targetEvidence: 'runtimeConnectivityEdges', authorityRequired: 2 }))
+      `Show the propagation chain from ${p.propagationOrigin}`,
+      { object: 'domain_narratives', field: 'propagation_roles', value: p.narratives.length },
+      `propagation origin ${p.propagationOrigin} with ${p.narratives.length - 1} receivers`,
+      { targetEvidence: 'domain_narratives' }
+    ))
   }
 
   return results
 }
 
-function deriveAdjacent(surfaceId, ctx) {
+function deriveAdjacent(p) {
   const results = []
-  const adjacentIds = SURFACE_ADJACENCY[surfaceId] || []
-  const themes = (ctx.crossDomainCognition && ctx.crossDomainCognition.consequence_themes) || []
-  const themeLabels = new Set(themes.map(t => t.theme_label))
 
-  for (const adjId of adjacentIds.slice(0, 2)) {
+  for (const adjId of p.adjacentSurfaces.slice(0, 2)) {
     const adjName = SURFACE_NAMES[adjId] || adjId
     results.push(makeContinuation('adjacent',
       `Does this finding contribute to ${adjName}?`,
-      `SURFACE_ADJACENCY[${surfaceId}] → ${adjId}`,
-      { targetSurface: adjId }))
+      { object: 'SURFACE_ADJACENCY', field: p.surfaceId, value: adjId },
+      `${adjId} is an adjacent cognition surface in the graph`,
+      { targetSurface: adjId }
+    ))
   }
 
-  if (surfaceId === 'GRAVITY_DIVERGENCE') {
+  if (p.hasDivergence && p.hasRuntime) {
     results.push(makeContinuation('adjacent',
-      'Does the divergence compound with Execution Blindness?',
-      'execution_center domains ∩ blindness_types domains',
-      { targetSurface: 'EXECUTION_BLINDNESS' }))
+      'Does the structural/execution divergence compound with runtime blindness?',
+      { object: 'execution_center + blindness_types', field: 'domain_overlap', value: 'test_required' },
+      'both divergence and runtime evidence exist — potential compounding',
+      { targetSurface: 'EXECUTION_BLINDNESS' }
+    ))
   }
 
-  if (surfaceId === 'DEPENDENCY_AMPLIFICATION') {
+  if (p.hasPropagation && p.structCenter) {
     results.push(makeContinuation('adjacent',
-      'Does amplification compound with propagation dynamics?',
-      'domain_concentration[0] === domain_narratives[0]',
-      { targetSurface: 'PROPAGATION_RISK' }))
+      'Does structural concentration compound with propagation dynamics?',
+      { object: 'domain_concentration[0] vs domain_narratives[0]', field: 'domain_match', value: `${p.structCenter} vs ${p.propagationOrigin}` },
+      `structural center (${p.structCenter}) may or may not be propagation origin (${p.propagationOrigin})`,
+      { targetSurface: 'PROPAGATION_RISK' }
+    ))
   }
 
   return results
 }
 
-function deriveAscent(surfaceId, ctx) {
+function deriveAscent(p) {
   const results = []
-  const cdc = ctx.crossDomainCognition
 
   results.push(makeContinuation('ascent',
     'How does the BOARDROOM project this finding?',
-    'crossDomainCognition.posture_label + consequence_themes',
-    { authorityRequired: 1 }))
+    { object: 'crossDomainCognition', field: 'posture_label', value: p.postureLabel },
+    'BOARDROOM consumes crossDomainCognition as executive synthesis'
+  ))
 
-  if (cdc && cdc.posture_label) {
+  if (p.postureLabel) {
     results.push(makeContinuation('ascent',
-      `What does ${cdc.posture_label} mean for how the organization operates?`,
-      'BALANCED interpret_operational_posture',
-      { authorityRequired: 1 }))
+      `What does ${p.postureLabel} mean for how the organization operates?`,
+      { object: 'BALANCED.interpret_operational_posture', field: 'posture_label', value: p.postureLabel },
+      'BALANCED interprets posture as organizational meaning'
+    ))
   }
 
-  const gl = ctx.fullReport && ctx.fullReport.governance_lifecycle
-  if (gl && gl.available) {
+  if (p.isGoverned) {
     results.push(makeContinuation('ascent',
       'Can these findings be presented with institutional confidence?',
-      `governance_lifecycle.s_level = ${gl.s_level}`,
-      { authorityRequired: 3 }))
+      { object: 'governance_lifecycle', field: 's_level', value: p.governanceLevel },
+      `governance_lifecycle available at ${p.governanceLevel}`,
+      { authorityRequired: 3 }
+    ))
   }
 
   return results
@@ -286,14 +331,15 @@ function deriveAscent(surfaceId, ctx) {
 function deriveContinuations(surfaceId, cognitionContext, projectionLevel) {
   const ctx = cognitionContext || {}
   const pLevel = projectionLevel || 0
+  const p = detectProperties(surfaceId, ctx)
 
   const raw = {
-    clarify: deriveClarify(surfaceId, ctx),
-    implication: deriveImplication(surfaceId, ctx),
-    challenge: deriveChallenge(surfaceId, ctx),
-    descent: deriveDescent(surfaceId, ctx),
-    adjacent: deriveAdjacent(surfaceId, ctx),
-    ascent: deriveAscent(surfaceId, ctx),
+    clarify: deriveClarify(p),
+    implication: deriveImplication(p),
+    challenge: deriveChallenge(p),
+    descent: deriveDescent(p),
+    adjacent: deriveAdjacent(p),
+    ascent: deriveAscent(p),
   }
 
   const gated = {}
@@ -307,4 +353,4 @@ function deriveContinuations(surfaceId, cognitionContext, projectionLevel) {
   return gated
 }
 
-module.exports = { deriveContinuations, SURFACE_ADJACENCY, SURFACE_NAMES }
+module.exports = { deriveContinuations, detectProperties, SURFACE_ADJACENCY, SURFACE_NAMES }
