@@ -2525,7 +2525,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .operator-topology-compact:hover { background: rgba(74, 158, 255, 0.03); }
         .operator-topology-compact .topo-graph-wrap { margin-bottom: 0; }
         .operator-topology-compact .topo-graph-heading { font-size: 9px; text-align: center; }
-        .operator-topology-compact .topo-graph-svg { pointer-events: none; transform: scale(0.75); transform-origin: top center; }
+        .operator-topology-compact .topo-graph-svg { pointer-events: none; }
 
         /* ── Runtime Connectivity Zone (OPERATOR) ────────────────────── */
         .actor--runtime-connectivity {

@@ -7529,13 +7529,14 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
         <div className="operator-topology-compact" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
           <TopologyGraph
-            domains={fullReport.semantic_domain_registry}
+            domains={fullReport.semantic_domain_registry.map(d => ({ ...d, business_label: d.domain_name }))}
             clusters={fullReport.semantic_cluster_registry || []}
             edges={fullReport.semantic_topology_edges || []}
             pressureZoneLabel={pressureZone}
             pressureZoneState={fullReport.pressure_zone_state}
+            boardroomMode={true}
           />
-          <div className="operator-topology-hint">Expand topology</div>
+          <div className="operator-topology-hint">Open full forensic topology</div>
         </div>
       )}
 
