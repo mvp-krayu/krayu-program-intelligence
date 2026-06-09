@@ -159,7 +159,7 @@ export default function LensDisclosureShell({
     switch (zoneName) {
       case 'DeclarationZone':
         if (renderState === 'BLOCKED') return null
-        return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} boardroomProjection={boardroomProjection} />
+        return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} boardroomProjection={boardroomProjection} densityClass={densityClass} />
       case 'QualifierMandate':
         return (
           <QualifierMandate

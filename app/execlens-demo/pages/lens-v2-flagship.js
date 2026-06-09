@@ -875,6 +875,55 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .declaration-scope-sep { color: #7a8aaa; }
 
+        /* ── Forensic Declaration (OPERATOR) ────────────────────────── */
+        .declaration-zone--forensic {
+          padding: 20px 32px 16px;
+          border-bottom: 1px solid #1e2330;
+          border-left: 3px solid #4a9eff;
+          background: linear-gradient(90deg, rgba(74, 158, 255, 0.04) 0%, transparent 40%);
+        }
+        .declaration-forensic-grid {
+          display: flex;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+        .declaration-forensic-cell {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 48px;
+        }
+        .declaration-forensic-count {
+          font-family: 'Courier New', monospace;
+          font-size: 22px;
+          font-weight: 700;
+          color: #ccd6f6;
+        }
+        .declaration-forensic-cell--critical .declaration-forensic-count { color: #ff6b6b; }
+        .declaration-forensic-cell--runtime .declaration-forensic-count { color: #bb86fc; }
+        .declaration-forensic-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #5a6580;
+          margin-top: 2px;
+        }
+        .declaration-forensic-meta {
+          display: flex;
+          gap: 8px;
+          margin-top: 10px;
+        }
+        .declaration-forensic-tag {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #6a7a9a;
+          letter-spacing: 0.04em;
+          padding: 2px 6px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+        }
+
         /* ── Boardroom Decision View (Phase 3B) ─────────────────────────── */
         .declaration-zone--boardroom {
           padding: 72px 56px 48px;
@@ -2633,6 +2682,90 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           color: #5a6580;
           margin-left: auto;
+        }
+
+        /* ── Compact Governance (OPERATOR) ───────────────────────────── */
+        .inv-gov-compact {
+          padding: 8px 0;
+        }
+        .inv-gov-compact-grid {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+        .inv-gov-compact-stat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .inv-gov-compact-val {
+          font-family: 'Courier New', monospace;
+          font-size: 16px;
+          font-weight: 700;
+          color: #ccd6f6;
+        }
+        .inv-gov-compact-stat--reject .inv-gov-compact-val { color: #ff6b6b; }
+        .inv-gov-compact-stat--arb .inv-gov-compact-val { color: #ffd700; }
+        .inv-gov-compact-stat--pass .inv-gov-compact-val { color: #64ffda; }
+        .inv-gov-compact-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #5a6580;
+          margin-top: 2px;
+        }
+        .inv-gov-compact-meta {
+          display: flex;
+          gap: 6px;
+          margin-top: 8px;
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+        }
+        .inv-gov-expand {
+          margin-top: 8px;
+        }
+        .inv-gov-expand summary {
+          cursor: pointer;
+          list-style: none;
+        }
+        .inv-gov-expand summary::-webkit-details-marker { display: none; }
+        .actor-runtime-signal summary {
+          cursor: pointer;
+          list-style: none;
+        }
+        .actor-runtime-signal summary::-webkit-details-marker { display: none; }
+        .actor-runtime-signal-name-inline {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #ccd6f6;
+          font-weight: 500;
+          flex: 1;
+        }
+        .actor-runtime-signal-domain-count {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+        }
+        .actor-runtime-summary {
+          display: flex;
+          gap: 8px;
+          margin-top: 4px;
+          margin-bottom: 8px;
+        }
+        .actor-runtime-summary-chip {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #6a7a9a;
+          padding: 2px 6px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
+        }
+        .actor-runtime-summary-chip[data-severity="HIGH"],
+        .actor-runtime-summary-chip[data-severity="ELEVATED"] {
+          color: #ff9e4a;
+          border-color: rgba(255, 158, 74, 0.2);
         }
 
         /* ── Investigation Governance Audit ── */

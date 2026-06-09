@@ -7545,15 +7545,6 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
       )}
 
       {rsigSigsLocal.length > 0 && (() => {
-        const RUNTIME_TO_CONDITION = {
-          EVENT_CONCENTRATION: 'EVENT_CONCENTRATION',
-          RUNTIME_DEPENDENCY_CHOKE_POINT: 'RUNTIME_DEPENDENCY_CHOKE_POINT',
-          BROKER_DEPENDENCY: 'BROKER_DEPENDENCY',
-          TOPIC_FANOUT_PRESSURE: 'TOPIC_FANOUT_PRESSURE',
-          ASYNC_PROPAGATION_ASYMMETRY: 'ASYNC_PROPAGATION_ASYMMETRY',
-          EDGE_CLOUD_PROPAGATION_RISK: 'EDGE_CLOUD_PROPAGATION_RISK',
-          RUNTIME_OBSERVABILITY_GAP: 'RUNTIME_OBSERVABILITY_GAP',
-        }
         const CONSEQUENCE_LABELS = {
           EVENT_CONCENTRATION: 'Coordination visibility drops if this node degrades',
           BROKER_DEPENDENCY: 'Telemetry ingestion stalls — single point of failure',
@@ -7563,24 +7554,31 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           ASYNC_PROPAGATION_ASYMMETRY: 'Asymmetric failure — producers outpace consumers',
           EDGE_CLOUD_PROPAGATION_RISK: 'Edge-cloud split risk — field data may not reach platform',
         }
+        const elevated = rsigSigsLocal.filter(s => s.severity !== 'NOMINAL' && s.severity !== 'MODERATE')
+        const other = rsigSigsLocal.filter(s => s.severity === 'NOMINAL' || s.severity === 'MODERATE')
+        const runtimeDomains = [...new Set(rsigSigsLocal.flatMap(s => s.affected_domains || []))]
         return (
           <div className="actor actor--runtime-connectivity" data-zone-key="runtimeConnectivity">
             <div className="actor-tag">
               <span className="actor-code">RC</span>
-              <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals</span>
+              <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals · {runtimeDomains.length} domains</span>
+            </div>
+            <div className="actor-runtime-summary">
+              {elevated.length > 0 && <span className="actor-runtime-summary-chip" data-severity="HIGH">{elevated.length} elevated</span>}
+              {other.length > 0 && <span className="actor-runtime-summary-chip">{other.length} nominal</span>}
             </div>
             <div className="actor-runtime-signals">
               {rsigSigsLocal.map(sig => {
-                const condType = sig.source_condition_type || RUNTIME_TO_CONDITION[sig.signal_name?.toUpperCase().replace(/ /g, '_')]
-                const matchingConditions = allConditions.filter(c => c.condition_type === condType)
-                const consequenceText = CONSEQUENCE_LABELS[condType] || null
+                const condType = sig.source_condition_type || null
+                const matchingConditions = condType ? allConditions.filter(c => c.condition_type === condType) : []
+                const consequenceText = condType ? CONSEQUENCE_LABELS[condType] : null
                 return (
-                  <div key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
-                    <div className="actor-runtime-signal-head">
-                      <span className="actor-runtime-signal-id">{sig.signal_id}</span>
+                  <details key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
+                    <summary className="actor-runtime-signal-head">
                       <span className="actor-runtime-signal-severity" data-severity={sig.severity}>{sig.severity}</span>
-                    </div>
-                    <div className="actor-runtime-signal-name">{sig.signal_name}</div>
+                      <span className="actor-runtime-signal-name-inline">{sig.signal_name}</span>
+                      {sig.affected_domains && <span className="actor-runtime-signal-domain-count">{sig.affected_domains.length} domains</span>}
+                    </summary>
                     {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
                     {sig.affected_domains && sig.affected_domains.length > 0 && (
                       <div className="actor-runtime-bridge">
@@ -7604,7 +7602,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
                         <div className="actor-runtime-bridge-consequence">{consequenceText}</div>
                       </div>
                     )}
-                  </div>
+                  </details>
                 )
               })}
             </div>
@@ -7767,7 +7765,6 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
 }
 
 function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
-  const [forensicsOpen, setForensicsOpen] = useState(false)
   const gl = fullReport && fullReport.governance_lifecycle
   const pc = fullReport && fullReport.proposition_corpus
   const ei = fullReport && fullReport.enrichment_intelligence
@@ -7780,52 +7777,70 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
 
   const deepForensicsCount = [pc && pc.available, ca && ca.available, rv && rv.available, ei && ei.available, ci && ci.available, cc && cc.available].filter(Boolean).length
 
+  const accepted = pc && pc.available ? pc.disposition_counts.accepted : 0
+  const rejected = pc && pc.available ? pc.disposition_counts.rejected : 0
+  const arbitrated = pc && pc.available ? pc.disposition_counts.arbitrated : 0
+  const replayPass = rv && rv.available && rv.status === 'PASS'
+  const replayCount = rv && rv.available ? rv.detail?.total_checks || 0 : 0
+
   return (
     <div className="actor actor--operator-governance" data-zone-key="governanceLifecycle">
       <div className="actor-tag">
         <span className="actor-code">GA</span>
-        <span className="actor-name">Governance Audit · {gl.s_level}{deepForensicsCount > 0 ? ` · ${deepForensicsCount} forensic sections` : ''}</span>
+        <span className="actor-name">Governance · {gl.s_level}</span>
       </div>
 
-      <div className="inv-gov-section">
-        <div className="inv-gov-section-head">Governance Lifecycle</div>
-        <table className="inv-gov-table">
-          <tbody>
-            <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val"><TermHint term={gl.s_level}>{gl.s_level}</TermHint></td></tr>
-            <tr><td className="inv-gov-key"><TermHint term="Provenance">Provenance</TermHint></td><td className="inv-gov-val"><TermHint term="Qualified">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</TermHint></td></tr>
-            <tr><td className="inv-gov-key"><TermHint term="Authority ceiling">Authority ceiling</TermHint></td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
-            <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
-            {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
-            <tr><td className="inv-gov-key">Last updated</td><td className="inv-gov-val">{gl.last_updated || '—'}</td></tr>
-          </tbody>
-        </table>
-        {gl.transitions && gl.transitions.length > 0 && (
-          <div className="inv-gov-transitions">
-            <div className="inv-gov-sub-head">State Transitions ({gl.transition_count})</div>
-            <table className="inv-gov-table">
-              <thead><tr><th>From</th><th>To</th><th>Actor</th><th>Action</th><th>Timestamp</th></tr></thead>
-              <tbody>
-                {gl.transitions.map((t, i) => (
-                  <tr key={i}>
-                    <td>{t.from}</td><td>{t.to}</td>
-                    <td>{t.actor || '—'}</td><td>{t.action || '—'}</td>
-                    <td className="inv-gov-ts">{t.timestamp || '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div className="inv-gov-compact">
+        <div className="inv-gov-compact-grid">
+          {pc && pc.available && <div className="inv-gov-compact-stat"><span className="inv-gov-compact-val">{accepted}</span><span className="inv-gov-compact-label">accepted</span></div>}
+          {rejected > 0 && <div className="inv-gov-compact-stat inv-gov-compact-stat--reject"><span className="inv-gov-compact-val">{rejected}</span><span className="inv-gov-compact-label">rejected</span></div>}
+          {arbitrated > 0 && <div className="inv-gov-compact-stat inv-gov-compact-stat--arb"><span className="inv-gov-compact-val">{arbitrated}</span><span className="inv-gov-compact-label">arbitrated</span></div>}
+          {replayPass && <div className="inv-gov-compact-stat inv-gov-compact-stat--pass"><span className="inv-gov-compact-val">{replayCount}/{replayCount}</span><span className="inv-gov-compact-label">replay pass</span></div>}
+        </div>
+        <div className="inv-gov-compact-meta">
+          <span>{(gl.qualification_provenance || '').replace(/_/g, ' ')}</span>
+          {gl.authority_ceiling && <span>· {gl.authority_ceiling} ceiling</span>}
+        </div>
       </div>
 
-      {deepForensicsCount > 0 && (
-        <button className="inv-gov-forensics-toggle" onClick={() => setForensicsOpen(p => !p)} type="button" aria-expanded={forensicsOpen}>
-          <span className="inv-gov-forensics-toggle-icon">{forensicsOpen ? '▾' : '▸'}</span>
-          Deep Governance Forensics ({deepForensicsCount} sections)
-        </button>
-      )}
+      <details className="inv-gov-expand">
+        <summary className="inv-gov-forensics-toggle">
+          <span className="inv-gov-forensics-toggle-icon">{'▸'}</span>
+          Governance forensics ({deepForensicsCount + 1} sections)
+        </summary>
 
-      {forensicsOpen && pc && pc.available && (
+        <div className="inv-gov-section">
+          <div className="inv-gov-section-head">Lifecycle Detail</div>
+          <table className="inv-gov-table">
+            <tbody>
+              <tr><td className="inv-gov-key">S-Level</td><td className="inv-gov-val">{gl.s_level}</td></tr>
+              <tr><td className="inv-gov-key">Provenance</td><td className="inv-gov-val">{(gl.qualification_provenance || '—').replace(/_/g, ' ')}</td></tr>
+              <tr><td className="inv-gov-key">Authority ceiling</td><td className="inv-gov-val">{gl.authority_ceiling || '—'}</td></tr>
+              <tr><td className="inv-gov-key">Promotion eligible</td><td className="inv-gov-val">{gl.promotion_eligible != null ? String(gl.promotion_eligible) : '—'}</td></tr>
+              {gl.hold_reason && <tr><td className="inv-gov-key">Hold reason</td><td className="inv-gov-val inv-gov-val--warn">{gl.hold_reason}</td></tr>}
+              <tr><td className="inv-gov-key">Last updated</td><td className="inv-gov-val">{gl.last_updated || '—'}</td></tr>
+            </tbody>
+          </table>
+          {gl.transitions && gl.transitions.length > 0 && (
+            <div className="inv-gov-transitions">
+              <div className="inv-gov-sub-head">State Transitions ({gl.transition_count})</div>
+              <table className="inv-gov-table">
+                <thead><tr><th>From</th><th>To</th><th>Actor</th><th>Action</th><th>Timestamp</th></tr></thead>
+                <tbody>
+                  {gl.transitions.map((t, i) => (
+                    <tr key={i}>
+                      <td>{t.from}</td><td>{t.to}</td>
+                      <td>{t.actor || '—'}</td><td>{t.action || '—'}</td>
+                      <td className="inv-gov-ts">{t.timestamp || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+      {pc && pc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Proposition Corpus ({pc.total})</div>
           <div className="inv-gov-grid">
@@ -7882,7 +7897,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         </div>
       )}
 
-      {forensicsOpen && ca && ca.available && (
+      {ca && ca.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Constitutional Anchor ({ca.dimensions.length} dimensions)</div>
           <table className="inv-gov-table">
@@ -7913,7 +7928,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         </div>
       )}
 
-      {forensicsOpen && rv && rv.available && (
+      {rv && rv.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Revalidation ({rv.passed}/{rv.total_checks} · {rv.phase_count} phases)</div>
           <table className="inv-gov-table">
@@ -7945,7 +7960,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         </div>
       )}
 
-      {forensicsOpen && ei && ei.available && (
+      {ei && ei.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Evidence Enrichment</div>
           <table className="inv-gov-table">
@@ -7994,7 +8009,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         </div>
       )}
 
-      {forensicsOpen && ci && ci.available && (
+      {ci && ci.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Convergence Observations ({ci.total_observations})</div>
           <table className="inv-gov-table">
@@ -8020,7 +8035,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
         </div>
       )}
 
-      {forensicsOpen && cc && cc.available && (
+      {cc && cc.available && (
         <div className="inv-gov-section">
           <div className="inv-gov-section-head">Chronicle Certification ({cc.passed}/{cc.total_checks})</div>
           <table className="inv-gov-table">
@@ -8047,6 +8062,8 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
           </table>
         </div>
       )}
+
+      </details>
 
       <div className="inv-gov-footer">
         <div className="inv-gov-footer-statement">All governance data derived from governed artifacts. No interpretation applied. Evidence lineage preserved.</div>
