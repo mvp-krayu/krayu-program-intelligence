@@ -16,7 +16,7 @@ import { compile as compileConsequences, compileTeaser as compileConsequenceTeas
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
 import { resolveNode, resolveConnections, CONDITION_NODES } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
-import { executeAll as executeInterpretations } from '../../../lib/lens-v2/balanced/GovernedInterpretationCalls'
+import { executeAll as executeInterpretations, CALL_AUTHORITY as CALL_AUTHORITY_REF } from '../../../lib/lens-v2/balanced/GovernedInterpretationCalls'
 
 let _verificationCache = { result: null, timestamp: null, proofData: null }
 
@@ -6556,7 +6556,10 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           interpret_propagation_dynamics: 'Propagation Dynamics',
           interpret_dependency_amplification: 'Dependency Amplification',
         }
-        const allAvailable = Object.entries(balancedInterpretations).filter(([, c]) => c.available && c.sections)
+        const P_LABEL_SHORT = { 1: 'P1', 2: 'P2', 3: 'P3', 4: 'P4' }
+        const allEntries = Object.entries(balancedInterpretations)
+        const allAvailable = allEntries.filter(([, c]) => c.available && c.sections)
+        const gatedIntents = allEntries.filter(([, c]) => !c.available).map(([name]) => ({ name, required: CALL_AUTHORITY_REF[name] }))
         const available = allAvailable
           .filter(([name]) => !GOVERNANCE_INTENTS.has(name))
           .sort((a, b) => (INTENT_RANK.indexOf(a[0]) === -1 ? 99 : INTENT_RANK.indexOf(a[0])) - (INTENT_RANK.indexOf(b[0]) === -1 ? 99 : INTENT_RANK.indexOf(b[0])))
@@ -6700,6 +6703,17 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
                     <span className="balanced-governance-chip-label">{INTENT_LABELS[name]}</span>
                     <span className="balanced-governance-chip-hook">{call.hook}</span>
                   </button>
+                ))}
+              </div>
+            )}
+
+            {gatedIntents.length > 0 && (
+              <div className="balanced-gated-intents">
+                {gatedIntents.map(g => (
+                  <div key={g.name} className="balanced-gated-card">
+                    <span className="balanced-gated-card-title">{INTENT_LABELS[g.name] || g.name.replace(/^interpret_/, '').replace(/_/g, ' ')}</span>
+                    <span className="balanced-gated-card-lock">Requires {P_LABEL_SHORT[g.required] || `P${g.required}`}</span>
+                  </div>
                 ))}
               </div>
             )}

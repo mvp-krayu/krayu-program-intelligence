@@ -270,6 +270,18 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
               <span className="sw-intel-verify-key">Confidence</span>
               <span className="sw-intel-verify-val">{confidenceLevel}</span>
             </div>
+            {(() => {
+              const pa = fullReport && fullReport._projectionAuthority
+              const pLevel = pa ? pa.projectionLevel : 0
+              const needsRuntime = surface.is_runtime || surface.surface_id === 'EXECUTION_BLINDNESS' || surface.surface_id === 'GRAVITY_DIVERGENCE'
+              const authorityOk = needsRuntime ? pLevel >= 2 : pLevel >= 1
+              return !authorityOk ? (
+                <div className="sw-intel-verify-row sw-intel-verify-row--gated">
+                  <span className="sw-intel-verify-key">Authority</span>
+                  <span className="sw-intel-verify-val">Requires {needsRuntime ? 'P2 Runtime' : 'P1 Structural'} — current: P{pLevel}</span>
+                </div>
+              ) : null
+            })()}
           </div>
           {FALSIFICATION_PATHS[surface.surface_id] && (
             <div className="sw-intel-verify-falsification">

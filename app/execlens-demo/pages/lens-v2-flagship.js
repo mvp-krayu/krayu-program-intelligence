@@ -5159,6 +5159,34 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #6a7a9a;
         }
 
+        /* ── Gated Interpretation Cards ───────────────────────────────── */
+        .balanced-gated-intents {
+          margin-top: 12px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        .balanced-gated-card {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 6px 12px;
+          border: 1px dashed #2a2f40;
+          border-radius: 4px;
+          opacity: 0.5;
+        }
+        .balanced-gated-card-title {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #5a6580;
+        }
+        .balanced-gated-card-lock {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          color: #4a5570;
+          letter-spacing: 0.04em;
+        }
+
         /* ── Evidence Anchors ────────────────────────────────────────── */
         .balanced-narrative-evidence-row {
           display: flex;
@@ -13108,6 +13136,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .sw-intel-verify-row--challenge .sw-intel-verify-key { color: #ff9e4a; }
         .sw-intel-verify-row--challenge .sw-intel-verify-val { color: #ff9e4a; }
+        .sw-intel-verify-row--gated .sw-intel-verify-key { color: #ffd700; }
+        .sw-intel-verify-row--gated .sw-intel-verify-val { color: #ffd700; }
         .sw-intel-verify-falsification {
           margin-top: 8px;
           padding-top: 6px;
