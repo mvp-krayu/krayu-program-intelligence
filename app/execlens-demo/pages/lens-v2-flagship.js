@@ -4979,7 +4979,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* ── Zone 5 — Descent Paths ── */
-        /* ── Governed Interpretations (BALANCED) ─────────────────────── */
+        /* ── Governed Interpretation (BALANCED) ──────────────────────── */
         .balanced-zone--interpretations {
           padding: 24px 0;
           border-top: 1px solid rgba(74, 158, 255, 0.12);
@@ -4990,29 +4990,71 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           letter-spacing: 0.12em;
           color: #4a9eff;
           font-weight: 600;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
-        .balanced-interpretation-block {
+        .balanced-intent-selector {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
           margin-bottom: 20px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid rgba(42, 47, 64, 0.3);
         }
-        .balanced-interpretation-block:last-child { border-bottom: none; margin-bottom: 0; }
+        .balanced-intent-btn {
+          font-family: 'Courier New', monospace;
+          font-size: 9.5px;
+          letter-spacing: 0.03em;
+          color: #6a7a9a;
+          background: none;
+          border: 1px solid #2a2f40;
+          border-radius: 4px;
+          padding: 5px 10px;
+          cursor: pointer;
+          transition: border-color 0.2s, color 0.2s;
+        }
+        .balanced-intent-btn:hover { border-color: #4a9eff; color: #8a96b2; }
+        .balanced-intent-btn--active {
+          color: #ccd6f6;
+          border-color: #4a9eff;
+          background: rgba(74, 158, 255, 0.06);
+        }
+        .balanced-interpretation-active {
+          padding: 0;
+        }
+        .balanced-interpretation-anchor {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          letter-spacing: 0.06em;
+          color: #4a9eff;
+          margin-bottom: 12px;
+        }
         .balanced-interpretation-narrative {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          font-size: 13.5px;
+          font-size: 14px;
           color: #ccd6f6;
-          line-height: 1.65;
+          line-height: 1.7;
         }
         .balanced-interpretation-insight {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 11.5px;
+          font-size: 12px;
           color: #4a9eff;
           font-style: italic;
-          margin-top: 8px;
-          padding-left: 12px;
-          border-left: 2px solid rgba(74, 158, 255, 0.2);
-          line-height: 1.5;
+          margin-top: 12px;
+          padding-left: 14px;
+          border-left: 2px solid rgba(74, 158, 255, 0.25);
+          line-height: 1.55;
+        }
+        .balanced-interpretation-anchors {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 14px;
+        }
+        .balanced-interpretation-anchor-chip {
+          font-family: 'Courier New', monospace;
+          font-size: 8.5px;
+          color: #5a6580;
+          padding: 2px 6px;
+          border: 1px solid #2a2f40;
+          border-radius: 3px;
         }
 
         .balanced-zone--descent {

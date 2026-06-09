@@ -6527,6 +6527,7 @@ function BalancedPressureSynthesis({ signals, pressureZone }) {
 }
 
 function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations }) {
+  const [activeIntent, setActiveIntent] = useState(null)
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
@@ -6712,21 +6713,58 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         </div>
       </div>
 
-      {/* Governed Interpretations */}
+      {/* Governed Interpretation — one selected intent */}
       {balancedInterpretations && (() => {
-        const calls = Object.values(balancedInterpretations).filter(c => c.available && c.narrative)
-        if (calls.length === 0) return null
+        const INTENT_LABELS = {
+          interpret_operational_posture: 'Operational Posture',
+          interpret_primary_finding: 'Primary Finding',
+          interpret_runtime_divergence: 'Runtime Divergence',
+          interpret_execution_blindness: 'Execution Blindness',
+          interpret_governance_confidence: 'Governance Confidence',
+          interpret_propagation_dynamics: 'Propagation Dynamics',
+          interpret_dependency_amplification: 'Dependency Amplification',
+        }
+        const available = Object.entries(balancedInterpretations).filter(([, c]) => c.available && c.narrative)
+        if (available.length === 0) return null
+        const defaultIntent = available[0][0]
+        const selected = activeIntent && balancedInterpretations[activeIntent] && balancedInterpretations[activeIntent].available
+          ? activeIntent : defaultIntent
+        const active = balancedInterpretations[selected]
+
         return (
           <div className="balanced-zone balanced-zone--interpretations">
             <div className="balanced-interpretation-header">NARRATIVE INTERPRETATION</div>
-            {calls.map(call => (
-              <div key={call.call} className="balanced-interpretation-block">
-                <div className="balanced-interpretation-narrative">{call.narrative}</div>
-                {call.organizational_insight && (
-                  <div className="balanced-interpretation-insight">{call.organizational_insight}</div>
+            <div className="balanced-intent-selector">
+              {available.map(([name]) => (
+                <button
+                  key={name}
+                  className={`balanced-intent-btn${selected === name ? ' balanced-intent-btn--active' : ''}`}
+                  onClick={() => setActiveIntent(name)}
+                  type="button"
+                >
+                  {INTENT_LABELS[name] || name.replace(/^interpret_/, '').replace(/_/g, ' ')}
+                </button>
+              ))}
+            </div>
+
+            {active && (
+              <div className="balanced-interpretation-active">
+                <div className="balanced-interpretation-anchor">
+                  Interpreting: {INTENT_LABELS[selected] || selected}
+                </div>
+                <div className="balanced-interpretation-narrative">{active.narrative}</div>
+                {active.organizational_insight && (
+                  <div className="balanced-interpretation-insight">{active.organizational_insight}</div>
+                )}
+                {active.evidence_anchors && active.evidence_anchors.length > 0 && (
+                  <div className="balanced-interpretation-anchors">
+                    {active.evidence_anchors.map((a, i) => (
+                      <span key={i} className="balanced-interpretation-anchor-chip">{a.field || a.source}</span>
+                    ))}
+                  </div>
                 )}
               </div>
-            ))}
+            )}
           </div>
         )
       })()}
