@@ -12973,7 +12973,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 6px;
           border: 1px solid var(--blindness-color, #1e2333);
           min-width: 0;
-          overflow: hidden;
           border-color: color-mix(in srgb, var(--blindness-color) 30%, transparent);
           padding: 12px;
         }
@@ -13005,6 +13004,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           display: flex;
           justify-content: space-between;
           align-items: baseline;
+          gap: 4px;
           padding: 4px 8px;
           margin-bottom: 2px;
           background: #12151f;
@@ -13014,6 +13014,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .rt-inline-blindness-condition-name {
           font-size: 11px;
           color: #9aa0bc;
+          word-break: break-all;
+          min-width: 0;
         }
         .rt-inline-blindness-condition-sev {
           font-family: 'Courier New', monospace;
