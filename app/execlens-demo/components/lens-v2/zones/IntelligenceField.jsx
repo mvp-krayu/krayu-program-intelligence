@@ -6,6 +6,8 @@ import { TopologyGraph, StructuralSpinesPanel } from './StructuralTopologyZone'
 import { buildTrailHTML } from '../../../lib/lens-v2/InterrogationTrailBuilder'
 import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBuilder'
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from './SoftwareIntelligenceField'
+import DenseVisualArchitectureZone from './DenseVisualArchitectureZone'
+import VisualSpecRenderer from './VisualSpecRenderer'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
@@ -6507,7 +6509,28 @@ function BalancedPressureSynthesis({ signals, pressureZone }) {
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition }) {
+function BalancedVisualInterpretationZone({ fullReport, crossDomainCognition, visibilityLayerCompleteness, projectionLevel }) {
+  const resolved = useMemo(() => {
+    try {
+      const { resolveAvailable, VISUAL_SPEC_REGISTRY } = require('../../../lib/lens-v2/visual-specs/resolveVisualSpecs')
+      const all = resolveAvailable(fullReport, projectionLevel, visibilityLayerCompleteness, crossDomainCognition)
+      return all.filter(s => { const reg = VISUAL_SPEC_REGISTRY[s.specId]; return reg && reg.persona === 'balanced' })
+    } catch { return [] }
+  }, [fullReport, projectionLevel, visibilityLayerCompleteness, crossDomainCognition])
+
+  const available = resolved.filter(s => s.available)
+  if (available.length === 0) return null
+
+  return (
+    <div className="balanced-zone balanced-zone--visual">
+      {available.map(s => (
+        <VisualSpecRenderer key={s.specId} specId={s.specId} fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
+      ))}
+    </div>
+  )
+}
+
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel }) {
   const [activeIntent, setActiveIntent] = useState(null)
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
@@ -6755,6 +6778,8 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           </div>
         )
       })()}
+
+      <BalancedVisualInterpretationZone fullReport={fullReport} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionLevel} />
 
       {/* Perspectives */}
       <div className="balanced-zone balanced-zone--perspectives">
@@ -10880,7 +10905,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} />
@@ -10903,12 +10928,13 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} />
     )
   }
   return (
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
+      <DenseVisualArchitectureZone fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} visibilityLayerCompleteness={visibilityLayerCompleteness} crossDomainCognition={crossDomainCognition} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={(suppressedConditions || []).length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
       )}
@@ -11485,6 +11511,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           domainCognition={domainCognition}
           cognitionSubstrate={cognitionSubstrate}
           crossDomainCognition={boardroomCrossDomainCognition}
+          visibilityLayerCompleteness={visibilityLayerCompleteness}
         />
 
         {!boardroomMode && !isBalanced && (
