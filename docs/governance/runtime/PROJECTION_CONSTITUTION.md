@@ -119,17 +119,24 @@ OPERATOR does not explain why. OPERATOR proves whether. Every surface answers: w
 
 ### §2.4 — BALANCED
 
-**Question:** What does it mean?
-**Purpose:** Interpret (governed)
-**Verb:** Translate cognition into operational meaning through curated interpretation calls
-**Consumer:** CTO, VP Engineering, Enterprise Architect — operators who accept the posture and want to understand the dynamics
+**Question:** What does this mean for how we operate?
+**Purpose:** Narrative interpretation (governed)
+**Verb:** Derive organizational meaning from structural findings through governed interpretation calls
+**Consumer:** CTO, VP Engineering, Enterprise Architect — operators who accept the posture and want to understand the operational implications
 
 **Pipeline:**
 ```
 Evidence → Cognition → Governed Interpretation Calls → Curated Narrative
 ```
 
-BALANCED is the curated interpretation surface. It uses THORR-quality interpretation capability but through governed contracts — not freeform prompts. The operator receives interpreted cognition, not raw evidence (OPERATOR) or mechanical explanation (DENSE) or compressed verdict (BOARDROOM).
+BALANCED is the narrative interpretation surface. It derives organizational meaning that neither the structural evidence nor its translation explicitly contains. The operator receives interpretation — not raw evidence (OPERATOR), not mechanical explanation (DENSE), not compressed verdict (BOARDROOM).
+
+BALANCED sits next to THORR in the cognitive model, not next to BOARDROOM. Both perform interpretation. THORR does it interactively; BALANCED does it through governed contracts. The distinction:
+
+- **Translation** = convert structural language to business language (dictionary operation)
+- **Interpretation** = derive meaning that wasn't explicitly stated in the evidence (cognitive operation)
+
+DENSE says: "Import fan asymmetry 2.04." Translation says: "Dependency risk is concentrated." Interpretation says: "Your delivery roadmap is increasingly governed by the teams maintaining infrastructure, whether feature teams realize it or not." The interpretation creates new understanding from evidence meeting operational context.
 
 **Interpretation call model:**
 
@@ -185,7 +192,7 @@ The contracts are NOT density levels:
 
 ```
 WRONG:  BOARDROOM = less  →  OPERATOR = more  →  DENSE = most
-RIGHT:  BOARDROOM = conclude  |  BALANCED = interpret  |  DENSE = explain  |  OPERATOR = verify
+RIGHT:  BOARDROOM = synthesize  |  BALANCED = interpret  |  DENSE = explain  |  OPERATOR = verify
 ```
 
 If DENSE becomes "OPERATOR with more text" or OPERATOR becomes "DENSE with less text" or BALANCED becomes "THORR without the prompt box," the contracts are violated. The test: can you state what each persona FORBIDS? If you cannot, the contracts have collapsed into density.
