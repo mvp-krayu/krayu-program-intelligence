@@ -241,7 +241,10 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         if (condCount > 0) supportParts.push(`${condCount} condition${condCount !== 1 ? 's' : ''}`)
         if (evidCount > 0 && evidCount !== condCount) supportParts.push(`${evidCount} structural evidence`)
         if (domainCount > 0) supportParts.push(`${domainCount} domain${domainCount !== 1 ? 's' : ''}`)
-        const supportLabel = supportParts.length > 0 ? supportParts.join(' · ') : 'No direct evidence attached'
+        const evidItems = surface._evidence_items || []
+        if (supportParts.length === 0 && evidItems.length > 0) supportParts.push(`${evidItems.length} consequence-derived evidence`)
+        if (supportParts.length === 0 && surface.is_consequence_derived) supportParts.push('Consequence-derived finding')
+        const supportLabel = supportParts.length > 0 ? supportParts.join(' · ') : 'Indirect evidence — expand for detail'
 
         return (
         <div className="sw-intel-surface-verification">

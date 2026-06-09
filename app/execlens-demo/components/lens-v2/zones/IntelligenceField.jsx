@@ -5469,10 +5469,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           {!swIntelActive && swIntelTeaser && swIntelTeaser.active_count > 0 && (
             <div className="interp-block interp-block--module-teaser">
               <div className="interp-section-label">SOFTWARE INTELLIGENCE</div>
-              <div className="interp-module-teaser-text">{swIntelTeaser.active_count} {swIntelTeaser._structural_only ? 'structural' : 'operational'} condition{swIntelTeaser.active_count !== 1 ? 's' : ''} detected</div>
-              {consequenceTeaser && consequenceTeaser.consequence_teaser && (
-                <div className="interp-module-teaser-consequence">{consequenceTeaser.consequence_teaser.active_consequence_count} structural dynamic{consequenceTeaser.consequence_teaser.active_consequence_count !== 1 ? 's' : ''} — {consequenceTeaser.consequence_teaser.top_consequence_severity}</div>
-              )}
+              <div className="interp-module-teaser-text">Additional intelligence available</div>
               <div className="interp-module-teaser-cta">Activate Software Intelligence for posture</div>
             </div>
           )}
@@ -5816,7 +5813,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       pressureZoneFocus: 'Pressure concentrates around the structural origin. Partial grounding means the pressure zone is visible but not fully reconciled across all semantic domains.',
       governanceLifecycle: 'Governance context explains which claims are qualified, withheld, or advisory-bound.',
       evidenceTrace: 'Lineage context explains whether the evidence can be replayed and traced to its origin.',
-      topologySurface: 'Topology explains which semantic domains are structurally backed and which remain semantic-only.',
+      topologySurface: 'The topology surface shows the full structural graph with grounding status, import relationships, and pressure zone annotations.',
       structuralCentrality: 'Centrality identifies structural authority spines — files and modules where changes propagate broadly. These are the architectural load-bearing points.',
       runtimeConnectivity: 'Runtime evidence explains execution pressure that static structure alone cannot reveal.',
       behavioralClassView: 'Behavioral classes organize conditions into pressure categories — concentration, flow, fragility, drift — revealing which forces dominate.',
