@@ -7834,7 +7834,21 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
   const ci = fullReport && fullReport.convergence_intelligence
   const cc = fullReport && fullReport.chronicle_certification
 
-  if (!gl || !gl.available) return null
+  if (!gl || !gl.available) {
+    const qClass = fullReport && fullReport.qualifier_class
+    return (
+      <div className="actor actor--operator-governance" data-zone-key="governanceLifecycle">
+        <div className="actor-tag">
+          <span className="actor-code">GA</span>
+          <span className="actor-name">Governance</span>
+        </div>
+        <div className="inv-gov-absent">
+          <div className="inv-gov-absent-state">{qClass || 'Q-04'} · Structural-derived substrate</div>
+          <div className="inv-gov-absent-detail">Governed lifecycle not available. Evidence limited to structural invariants and current authority state. S2+ qualification with operator review and replay certification required for governance depth.</div>
+        </div>
+      </div>
+    )
+  }
 
   const deepForensicsCount = [pc && pc.available, ca && ca.available, rv && rv.available, ei && ei.available, ci && ci.available, cc && cc.available].filter(Boolean).length
 
@@ -10690,7 +10704,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     const swIntelSlot = (
       <>
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} />
+          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} />
         )}
         {verificationState && verificationState.active && verificationState.result && (
           <VerificationProtocolSection verificationState={verificationState} onClose={onVerificationClose} />

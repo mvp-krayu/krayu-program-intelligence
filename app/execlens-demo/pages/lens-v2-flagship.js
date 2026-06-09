@@ -2807,6 +2807,24 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor-runtime-sev-header[data-severity="HIGH"] { color: #ff9e4a; }
         .actor-runtime-sev-header[data-severity="ELEVATED"] { color: #ffd700; }
 
+        /* ── Governance Absent (OPERATOR, no lifecycle) ──────────────── */
+        .inv-gov-absent {
+          padding: 8px 0;
+        }
+        .inv-gov-absent-state {
+          font-family: 'Courier New', monospace;
+          font-size: 11px;
+          color: #ffd700;
+          font-weight: 600;
+        }
+        .inv-gov-absent-detail {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #5a6580;
+          line-height: 1.45;
+          margin-top: 4px;
+        }
+
         /* ── Investigation Governance Audit ── */
         .actor--operator-governance {
           margin: 20px 0;

@@ -372,7 +372,7 @@ function CognitionSurfaceDetail({ surface, resolveDomain }) {
         </div>
         {c.convergence_domains.map(d => (
           <div key={d.domain} className="sw-intel-surface-detail-row">
-            <span className="sw-intel-surface-detail-label">{d.domain}</span>
+            <span className="sw-intel-surface-detail-label" title={d.domain}>{resolveDomain ? resolveDomain(d.domain) : d.domain}</span>
             <span className="sw-intel-surface-detail-value">{d.condition_count} condition{d.condition_count !== 1 ? 's' : ''}: {d.condition_types.join(', ')}</span>
           </div>
         ))}
@@ -551,7 +551,13 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
 const VERIFICATION_BADGE_LABEL = { VERIFIED: 'Verified', PARTIALLY_VERIFIED: 'Partial', VERIFICATION_FAILED: 'Failed', CANNOT_INVESTIGATE: 'No target' }
 
-export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen }) {
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen, domainLabelMap, domainProfileMap }) {
+  const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
+  const enrichedMap = useMemo(() => {
+    const m = { ...(domainLabelMap || {}) }
+    m._profiles = domainProfileMap || {}
+    return m
+  }, [domainLabelMap, domainProfileMap])
   const surfaces = projection.surfaces || []
   const hasResult = verificationState && verificationState.result
 
@@ -577,7 +583,7 @@ export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, act
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
         ))}
       </div>
 
