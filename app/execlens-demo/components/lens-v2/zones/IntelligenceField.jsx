@@ -54,6 +54,7 @@ const DENSE_ZONE_REGISTRY = {
   governanceLifecycle: { key: 'governanceLifecycle',   code: 'GL', label: 'Governance Lifecycle' },
   evidenceTrace:       { key: 'evidenceTrace',        code: 'ET', label: 'Evidence Lineage' },
   runtimeConnectivity: { key: 'runtimeConnectivity',  code: 'RC', label: 'Runtime Connectivity' },
+  structuralCentrality:{ key: 'structuralCentrality', code: 'SC', label: 'Structural Centrality' },
 }
 
 const REP_TIER_COLOR = {
@@ -1005,6 +1006,17 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               <div className="support-kv"><span className="support-kv-key">Backed</span><span className="support-kv-val">{ts.structurally_backed_count || 0}</span></div>
             </>
           )},
+          structuralCentrality: { label: 'CENTRALITY METRICS', render: () => {
+            const se = (fullReport && fullReport.structural_enrichment) || {}
+            const centrality = se.centrality || {}
+            return (
+              <>
+                <div className="support-kv"><span className="support-kv-key">Spines</span><span className="support-kv-val">{(centrality.top_structural_spines || []).length}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Import hubs</span><span className="support-kv-val">{centrality.import_hub_count || 0}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Inheritance</span><span className="support-kv-val">{centrality.inheritance_spine_count || 0}</span></div>
+              </>
+            )
+          }},
           runtimeConnectivity: { label: 'RUNTIME EVIDENCE', render: () => (
             <>
               <div className="support-kv"><span className="support-kv-key">RSIG signals</span><span className="support-kv-val">{rsigCount}</span></div>
@@ -1596,6 +1608,26 @@ const DENSE_ZONE_INTERPRETATIONS = {
         signalSummary: activated.length > 0
           ? { total: activated.length, critical: critical.length, compound: compound || null }
           : null,
+      }
+    },
+  },
+  structuralCentrality: {
+    sectionLabel: 'CENTRALITY INTERPRETATION',
+    code: 'SC',
+    derive: (fullReport) => {
+      const se = fullReport && fullReport.structural_enrichment
+      if (!se || !se.available) return { heading: 'Structural centrality', body: 'Structural enrichment not available.', structuralNote: null }
+      const centrality = se.centrality || {}
+      const spines = centrality.top_structural_spines || []
+      const topSpine = spines[0]
+      const importHubs = centrality.import_hub_count || 0
+      const inheritanceSpines = centrality.inheritance_spine_count || 0
+      return {
+        heading: 'Where structural authority concentrates',
+        body: topSpine
+          ? `${topSpine.path.split('/').slice(-2).join('/')} is the primary structural authority — ${topSpine.role || 'high centrality'}. ${spines.length} spine${spines.length !== 1 ? 's' : ''} carry disproportionate structural load. Changes to these files propagate broadly.`
+          : `${importHubs} import hub${importHubs !== 1 ? 's' : ''} and ${inheritanceSpines} inheritance spine${inheritanceSpines !== 1 ? 's' : ''} define the structural authority hierarchy.`,
+        structuralNote: `${spines.length} spines · ${importHubs} import hubs · ${inheritanceSpines} inheritance spines`,
       }
     },
   },
@@ -5820,13 +5852,16 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
           {zoneDerived.signalDetail && zoneDerived.signalDetail.length > 0 && (
             <div className="interp-zone-signals">
-              <div className="interp-zone-signals-label">SIGNAL DECOMPOSITION</div>
-              {zoneDerived.signalDetail.map(s => (
+              <div className="interp-zone-signals-label">TOP SIGNALS ({zoneDerived.signalDetail.length})</div>
+              {zoneDerived.signalDetail.slice(0, 3).map(s => (
                 <div key={s.id} className="interp-zone-signal" data-severity={s.severity}>
                   <span className="interp-zone-signal-severity">{s.severity}</span>
                   <span className="interp-zone-signal-text">{s.interpretation}</span>
                 </div>
               ))}
+              {zoneDerived.signalDetail.length > 3 && (
+                <div className="interp-zone-signal interp-zone-signal--overflow">+{zoneDerived.signalDetail.length - 3} more in center panel</div>
+              )}
             </div>
           )}
 
@@ -5859,7 +5894,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
           )}
         </div>
 
-        <details className="interp-context-secondary" open={!!structuralContext}>
+        <details className="interp-context-secondary">
           <summary className="interp-context-secondary-toggle">STRUCTURAL CONTEXT</summary>
           {structuralContext && (
             <>
@@ -7505,7 +7540,9 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       })()}
 
       {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
-        <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+        <div data-zone-key="structuralCentrality">
+          <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+        </div>
       )}
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="dense" />, document.body)}
