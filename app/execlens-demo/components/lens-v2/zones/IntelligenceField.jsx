@@ -1091,6 +1091,36 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
             ) : null}
           </>
         )
+      })() : densityClass === 'EXECUTIVE_BALANCED' ? (() => {
+        const pLevel = pa ? pa.projectionLevel : 0
+        const pLabel = pa ? pa.projectionLabel : 'P0'
+        const allSigs = (fullReport && fullReport.signal_interpretations) || []
+        const rsigCount = allSigs.filter(s => s.signal_family === 'RSIG').length
+        const cdc = crossDomainCognition
+        const domConc = (cdc && cdc.domain_concentration) || []
+        const blastRadius = domConc.filter(d => d.condition_count > 0).length
+        const themes = (cdc && cdc.consequence_themes) || []
+        return (
+          <>
+            <div className="support-block support-block--interp-confidence">
+              <div className="support-label">INTERPRETATION CONFIDENCE</div>
+              <div className="support-authority-plabel" data-governed={pLevel >= 3 ? 'true' : 'false'}>{pLabel}</div>
+              <div className="support-kv-list">
+                <div className="support-kv"><span className="support-kv-key">Findings</span><span className="support-kv-val">{themes.length}</span></div>
+                <div className="support-kv"><span className="support-kv-key">Domains</span><span className="support-kv-val">{blastRadius}</span></div>
+                {rsigCount > 0 && <div className="support-kv"><span className="support-kv-key">Runtime signals</span><span className="support-kv-val">{rsigCount}</span></div>}
+              </div>
+            </div>
+            <div className="support-block">
+              <div className="support-label">DESCENT</div>
+              <div className="support-sw-intel-descent">
+                <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">DENSE</span><span className="support-sw-intel-descent-purpose">Explain why</span></div>
+                <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">OPERATOR</span><span className="support-sw-intel-descent-purpose">Prove it</span></div>
+                <div className="support-sw-intel-descent-item"><span className="support-sw-intel-descent-target">BOARDROOM</span><span className="support-sw-intel-descent-purpose">Board conclusion</span></div>
+              </div>
+            </div>
+          </>
+        )
       })() : (
         <>
           <div className="support-block">
@@ -5542,99 +5572,38 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     )
   }
 
-  if (densityClass === 'EXECUTIVE_BALANCED' && emergenceState) {
-    const swEnhancedPanel = swIntelActive && balancedBriefing && balancedBriefing.valid
-    const ps = (fullReport && fullReport.propagation_summary) || {}
-    const balSigs = (fullReport && fullReport.signal_interpretations) || []
-    const balActivated = balSigs.filter(s => s.severity !== 'NOMINAL')
-    const balCritical = balActivated.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+  if (densityClass === 'EXECUTIVE_BALANCED') {
     const cdc = crossDomainCognition
     const domConc = (cdc && cdc.domain_concentration) || []
-    const balZone = (ps.primary_zone_business_label && ps.primary_zone_business_label !== 'Primary structural zone')
-      ? ps.primary_zone_business_label
-      : domConc.length > 0 ? domConc[0].domain : null
-    const qs = (fullReport && fullReport.qualifier_summary) || {}
-    const ts = (fullReport && fullReport.topology_summary) || {}
-    const backed = ts.structurally_backed_count || 0
-    const totalDomains = ts.semantic_domain_count || 0
-    const confLabel = qs.qualifier_class === 'Q-01' ? 'Full' : qs.qualifier_class === 'Q-02' ? 'Partial' : 'Advisory-bound'
-
-    const synthesisText = balCritical.length > 0 && balZone
-      ? `Structural pressure converges on ${balZone}. ${balCritical.length > 1 ? 'Multiple independent conditions reinforce this concentration — ' : ''}this is not a localised deficiency but a compound convergence pattern that constrains delivery coordination across the program.`
-      : balActivated.length > 0 && balZone
-        ? `Operational load concentrates around ${balZone}. Pressure is present but has not reached the convergence threshold that would constrain delivery coordination.`
-        : 'Operational dependencies are distributed without disproportionate concentration. No structural convergence pattern detected.'
-
-    const whyText = balCritical.length > 0 && balZone
-      ? `When multiple structural pressures converge on the same operational corridor, delivery coordination becomes dependent on that single area. Program intelligence surfaces this because the pattern is structural — it persists regardless of team composition or sprint planning. Addressing it requires architectural intervention, not process adjustment.`
-      : balActivated.length > 0
-        ? `Structural pressure concentration creates operational risk that is invisible to conventional project tracking. Program intelligence detects it because the evidence is embedded in the codebase topology, not in delivery metrics.`
-        : 'No structural concentration detected. Delivery coordination is not constrained by the current codebase topology.'
-
-    const bz1 = swEnhancedPanel ? balancedBriefing.zones.z1 : null
-    const bz3 = swEnhancedPanel ? balancedBriefing.zones.z3 : null
+    const locus = domConc.length > 0 ? domConc[0].domain : null
+    const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
+    const themes = (cdc && cdc.consequence_themes) || []
+    const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+    const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0'
 
     return (
-      <aside className="intel-interp intel-interp--balanced" data-tone={framing.tone} data-sw-intel={swEnhancedPanel || undefined} aria-label="Executive interpretation — operational orientation">
+      <aside className="intel-interp intel-interp--balanced" data-tone={framing.tone} aria-label="Interpretation orientation">
         <div className="interp-tag">
-          <span className="interp-tag-label">{framing.label}</span>
-          <span className="interp-tag-state">{badge.state_label || '—'}</span>
+          <span className="interp-tag-label">ORIENTATION</span>
         </div>
 
         <div className="interp-block interp-block--lead">
-          <div className="interp-section-label">{framing.assessmentLabel}</div>
-          <div className="interp-summary">{synthesisText}</div>
+          <div className="interp-synthesis interp-synthesis--posture">{cdc && cdc.posture_label ? cdc.posture_label : 'Structural Assessment'}</div>
         </div>
 
-        <div className="interp-block interp-block--orientation">
-          <div className="interp-section-label">Operational orientation</div>
-          <div className="interp-orientation-grid">
-            <div className="interp-orient-row">
-              <span className="interp-orient-key">Posture</span>
-              <span className="interp-orient-val" data-tone={balCritical.length > 0 ? 'critical' : balActivated.length > 0 ? 'elevated' : 'nominal'}>
-                {balCritical.length > 0 ? 'Pressure concentrated' : balActivated.length > 0 ? 'Load imbalanced' : 'Distributed'}
-              </span>
-            </div>
-            {balZone && balActivated.length > 0 && (
-              <div className="interp-orient-row">
-                <span className="interp-orient-key">Primary pressure</span>
-                <span className="interp-orient-val">{balZone}</span>
-              </div>
+        {locus && (
+          <div className="interp-block">
+            <div className="interp-section-label">PRIMARY ANCHOR</div>
+            <div className="interp-synthesis">{locus}</div>
+            {execCenter && execCenter.toLowerCase() !== locus.toLowerCase() && (
+              <div className="interp-synthesis" style={{ color: '#4a9eff', fontSize: '11px', marginTop: 4 }}>Execution: {execCenter}</div>
             )}
-            <div className="interp-orient-row">
-              <span className="interp-orient-key">Propagation</span>
-              <span className="interp-orient-val">{balCritical.length > 1 ? 'Compound — multi-corridor' : balCritical.length > 0 ? 'Concentrated corridor' : 'Within parameters'}</span>
-            </div>
-            {swEnhancedPanel && bz3 && (
-              <div className="interp-orient-row">
-                <span className="interp-orient-key">Primary consequence</span>
-                <span className="interp-orient-val">{bz3.title}</span>
-              </div>
-            )}
-            {swEnhancedPanel && bz1 && (
-              <div className="interp-orient-row">
-                <span className="interp-orient-key">Consequences</span>
-                <span className="interp-orient-val">{bz1.consequence_count} active</span>
-              </div>
-            )}
-            <div className="interp-orient-row">
-              <span className="interp-orient-key">Confidence</span>
-              <span className="interp-orient-val">{confLabel}</span>
-            </div>
-            <div className="interp-orient-row">
-              <span className="interp-orient-key">Grounding</span>
-              <span className="interp-orient-val">{backed} of {totalDomains} domains confirmed</span>
-            </div>
-            <div className="interp-orient-row">
-              <span className="interp-orient-key">Implication</span>
-              <span className="interp-orient-val">{balCritical.length > 0 ? 'Delivery coordination constrained' : balActivated.length > 0 ? 'Structural attention required' : 'No immediate constraint'}</span>
-            </div>
           </div>
-        </div>
+        )}
 
         <div className="interp-block">
-          <div className="interp-section-label">{framing.whyLabel}</div>
-          <div className="interp-why">{whyText}</div>
+          <div className="interp-section-label">SCOPE</div>
+          <div className="interp-synthesis">{themes.length} finding{themes.length !== 1 ? 's' : ''} · {pLabel}</div>
         </div>
       </aside>
     )
@@ -6614,8 +6583,10 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
                   </div>
                 )}
                 {active.evidence_anchors && active.evidence_anchors.length > 0 && (
-                  <div className="balanced-narrative-evidence">
-                    Evidence: {active.evidence_anchors.map(a => a.field || a.source).join(' · ')}
+                  <div className="balanced-narrative-evidence-row">
+                    {active.evidence_anchors.map((a, i) => (
+                      <span key={i} className="balanced-evidence-chip">{a.field || a.source}</span>
+                    ))}
                   </div>
                 )}
               </div>

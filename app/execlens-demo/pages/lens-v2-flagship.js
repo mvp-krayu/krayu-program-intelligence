@@ -5024,16 +5024,27 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 4px;
           background: rgba(74, 158, 255, 0.03);
         }
-        .balanced-narrative-evidence {
+        .balanced-narrative-evidence-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .balanced-evidence-chip {
           font-family: 'Courier New', monospace;
           font-size: 10px;
-          color: #5a6580;
-          margin-top: 8px;
+          color: #8a96b2;
+          padding: 4px 10px;
+          border: 1px solid #2a3040;
+          border-radius: 4px;
+          background: rgba(74, 158, 255, 0.03);
         }
 
         .balanced-other-intents {
           margin-top: 32px;
-          padding-top: 16px;
+          padding-top: 20px;
           border-top: 1px solid #1e2330;
         }
         .balanced-other-label {
@@ -5041,25 +5052,34 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 8.5px;
           letter-spacing: 0.1em;
           color: #4a5570;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
         }
         .balanced-other-list {
           display: flex;
-          flex-wrap: wrap;
+          flex-direction: column;
           gap: 6px;
         }
         .balanced-other-btn {
+          display: block;
+          width: 100%;
+          text-align: left;
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 11px;
+          font-size: 12px;
           color: #6a7a9a;
-          background: none;
-          border: 1px solid #2a2f40;
-          border-radius: 4px;
-          padding: 6px 12px;
+          background: rgba(20, 24, 32, 0.5);
+          border: 1px solid #1e2330;
+          border-left: 2px solid #2a2f40;
+          border-radius: 0 4px 4px 0;
+          padding: 10px 14px;
           cursor: pointer;
-          transition: border-color 0.2s, color 0.2s;
+          transition: border-color 0.2s, color 0.2s, background 0.2s;
+          line-height: 1.4;
         }
-        .balanced-other-btn:hover { border-color: #4a9eff; color: #8a96b2; }
+        .balanced-other-btn:hover {
+          border-left-color: #4a9eff;
+          color: #ccd6f6;
+          background: rgba(74, 158, 255, 0.04);
+        }
 
         .balanced-zone--descent {
           padding: 32px 0 40px;
