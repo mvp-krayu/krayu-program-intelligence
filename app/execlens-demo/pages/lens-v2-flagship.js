@@ -4979,6 +4979,42 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* ── Zone 5 — Descent Paths ── */
+        /* ── Governed Interpretations (BALANCED) ─────────────────────── */
+        .balanced-zone--interpretations {
+          padding: 24px 0;
+          border-top: 1px solid rgba(74, 158, 255, 0.12);
+        }
+        .balanced-interpretation-header {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.12em;
+          color: #4a9eff;
+          font-weight: 600;
+          margin-bottom: 16px;
+        }
+        .balanced-interpretation-block {
+          margin-bottom: 20px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid rgba(42, 47, 64, 0.3);
+        }
+        .balanced-interpretation-block:last-child { border-bottom: none; margin-bottom: 0; }
+        .balanced-interpretation-narrative {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 13.5px;
+          color: #ccd6f6;
+          line-height: 1.65;
+        }
+        .balanced-interpretation-insight {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #4a9eff;
+          font-style: italic;
+          margin-top: 8px;
+          padding-left: 12px;
+          border-left: 2px solid rgba(74, 158, 255, 0.2);
+          line-height: 1.5;
+        }
+
         .balanced-zone--descent {
           padding: 32px 0 40px;
           border-top: 1px solid #1e2330;

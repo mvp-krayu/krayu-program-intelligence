@@ -16,6 +16,7 @@ import { compile as compileConsequences, compileTeaser as compileConsequenceTeas
 import { investigate, verifyProjectionDisposition, SECTION_4_RULES, SECTION_5_2_PATTERNS } from '../../../lib/lens-v2/software-intelligence/InvestigationVerifier'
 import { resolveNode, resolveConnections, CONDITION_NODES } from '../../../lib/lens-v2/software-intelligence/CognitionOntology'
 import { composeBriefing as composeBalancedBriefing } from '../../../lib/lens-v2/balanced'
+import { executeAll as executeInterpretations } from '../../../lib/lens-v2/balanced/GovernedInterpretationCalls'
 
 let _verificationCache = { result: null, timestamp: null, proofData: null }
 
@@ -6525,7 +6526,7 @@ function BalancedPressureSynthesis({ signals, pressureZone }) {
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations }) {
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
@@ -6710,6 +6711,25 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           <span className="balanced-confidence-bar-label">Advisory {semantic}</span>
         </div>
       </div>
+
+      {/* Governed Interpretations */}
+      {balancedInterpretations && (() => {
+        const calls = Object.values(balancedInterpretations).filter(c => c.available && c.narrative)
+        if (calls.length === 0) return null
+        return (
+          <div className="balanced-zone balanced-zone--interpretations">
+            <div className="balanced-interpretation-header">NARRATIVE INTERPRETATION</div>
+            {calls.map(call => (
+              <div key={call.call} className="balanced-interpretation-block">
+                <div className="balanced-interpretation-narrative">{call.narrative}</div>
+                {call.organizational_insight && (
+                  <div className="balanced-interpretation-insight">{call.organizational_insight}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        )
+      })()}
 
       {/* Z5 — Descent */}
       <div className="balanced-zone balanced-zone--descent">
@@ -10854,7 +10874,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} />
     )
   }
   return (
@@ -11075,6 +11095,11 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [consequencePosture, fullReport, qualifiedReport])
   const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
   const balancedBriefing = useMemo(() => balancedProjection ? composeBalancedBriefing(balancedProjection, synthesisResult, fullReport) : null, [balancedProjection, synthesisResult, fullReport])
+  const balancedInterpretations = useMemo(() => {
+    if (!boardroomCrossDomainCognition || !fullReport) return null
+    const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
+    return executeInterpretations(boardroomCrossDomainCognition, fullReport, pLevel)
+  }, [boardroomCrossDomainCognition, fullReport, projectionAuthority])
 
   const resolvedCondition = useMemo(() => {
     if (!cognitionState.activeConditionId || !synthesisResult) return null
