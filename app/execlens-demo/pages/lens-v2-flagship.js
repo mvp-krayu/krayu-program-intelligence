@@ -2807,6 +2807,63 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor-runtime-sev-header[data-severity="HIGH"] { color: #ff9e4a; }
         .actor-runtime-sev-header[data-severity="ELEVATED"] { color: #ffd700; }
 
+        /* ── Propagation Compact (OPERATOR) ──────────────────────────── */
+        .pf-compact-summary {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          padding: 6px 0;
+        }
+        .pf-compact-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .pf-compact-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #4a5570;
+          min-width: 80px;
+        }
+        .pf-compact-val {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #8a96b2;
+        }
+        .pf-detail-expand { margin-top: 4px; }
+        .pf-detail-toggle {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+          cursor: pointer;
+          list-style: none;
+          letter-spacing: 0.04em;
+        }
+        .pf-detail-toggle::-webkit-details-marker { display: none; }
+
+        /* ── Cognition Bridge (OPERATOR, Propagation → SW-INTEL) ──────── */
+        .operator-cognition-bridge {
+          padding: 12px 0 8px;
+          border-top: 1px solid rgba(74, 158, 255, 0.15);
+          border-bottom: 1px solid rgba(74, 158, 255, 0.08);
+        }
+        .operator-cognition-bridge-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.12em;
+          color: #4a9eff;
+          font-weight: 600;
+        }
+        .operator-cognition-bridge-text {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.45;
+          margin-top: 4px;
+        }
+
         /* ── Governance Absent (OPERATOR, no lifecycle) ──────────────── */
         .inv-gov-absent {
           padding: 8px 0;

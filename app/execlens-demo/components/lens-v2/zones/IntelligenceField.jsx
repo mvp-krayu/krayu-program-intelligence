@@ -1403,14 +1403,21 @@ const DENSE_ZONE_INTERPRETATIONS = {
       const backed = ts.structurally_backed_count || 0
       const total = ts.semantic_domain_count || 0
       const semantic = total - backed
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const rsigCount = sigs.filter(s => s.signal_family === 'RSIG').length
+      const runtimeDomains = [...new Set(sigs.filter(s => s.signal_family === 'RSIG').flatMap(s => s.affected_domains || []))]
+      const ps = (fullReport && fullReport.propagation_summary) || {}
+      const pressureZone = ps.primary_zone_business_label || null
       return {
         heading: 'What the topology reveals',
         body: backed === total
-          ? 'All domains are structurally backed. The topology reflects verified organizational reality.'
-          : `${semantic} of ${total} domain${semantic !== 1 ? 's' : ''} lack structural backing. These represent semantic claims without evidence confirmation.`,
-        structuralNote: total > 0
-          ? `Grounding ratio: ${backed}/${total} (${Math.round(backed / Math.max(1, total) * 100)}%) · ${scope.cluster_count || 0} clusters mapped`
-          : null,
+          ? `All ${total} domains are structurally backed.${rsigCount > 0 ? ` Runtime connectivity affects ${runtimeDomains.length} domain${runtimeDomains.length !== 1 ? 's' : ''} — execution pressure may not align with structural mass.` : ''}`
+          : `${semantic} of ${total} domain${semantic !== 1 ? 's' : ''} lack structural backing.${rsigCount > 0 ? ` Runtime evidence covers ${runtimeDomains.length} domain${runtimeDomains.length !== 1 ? 's' : ''}.` : ''}`,
+        structuralNote: [
+          total > 0 ? `Grounding: ${backed}/${total} (${Math.round(backed / Math.max(1, total) * 100)}%) · ${scope.cluster_count || 0} clusters` : null,
+          pressureZone ? `Pressure center: ${pressureZone}` : null,
+          rsigCount > 0 ? `Runtime: ${rsigCount} signals · ${runtimeDomains.length} domains` : null,
+        ].filter(Boolean).join(' · ') || null,
       }
     },
   },
@@ -7671,38 +7678,62 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         )
       })()}
 
-      {blocks && blocks.length > 0 && (
-        <div className="actor actor--signal-evidence-inline" data-zone-key="propagationFlow">
-          <div className="actor-tag">
-            <span className="actor-code">PF</span>
-            <span className="actor-name">Pressure Flow · propagation</span>
-          </div>
-          <div className="evidence-grid">
-            {blocks.map((b, i) => {
-              const firstCard = b.signal_cards && b.signal_cards[0]
-              const pm = firstCard ? (PRESSURE_META[firstCard.pressure_tier] || PRESSURE_META.MODERATE) : null
-              const rm = ROLE_META[b.propagation_role] || null
-              const isPartial = b.grounding_status && b.grounding_status !== 'Q-00'
-              return (
-                <div key={b.domain_alias || i} className={`evidence-block${isPartial ? ' evidence-block--partial' : ''}`}>
-                  <div className="eb-header">
-                    <div className="eb-domain">{b.domain_alias}</div>
-                    <div className="eb-tags">
-                      {rm && <span className="eb-tag" style={{ color: rm.color }}>{rm.symbol} {rm.label}</span>}
-                      {pm && <span className="eb-tag" style={{ color: pm.color }}>{pm.symbol} {pm.label}</span>}
-                      {isPartial && <span className="eb-tag eb-tag--partial">PARTIAL</span>}
+      {blocks && blocks.length > 0 && (() => {
+        const origins = blocks.filter(b => b.propagation_role === 'ORIGIN')
+        const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER' || b.propagation_role === 'PASS_THROUGH')
+        const elevatedBlocks = blocks.filter(b => b.signal_cards && b.signal_cards.some(c => c.pressure_tier === 'HIGH' || c.pressure_tier === 'CRITICAL'))
+        return (
+          <div className="actor actor--signal-evidence-inline" data-zone-key="propagationFlow">
+            <div className="actor-tag">
+              <span className="actor-code">PF</span>
+              <span className="actor-name">Pressure Flow · {blocks.length} domains · {origins.length} origin{origins.length !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="pf-compact-summary">
+              {origins.length > 0 && <div className="pf-compact-row"><span className="pf-compact-label">Origin</span><span className="pf-compact-val">{origins.map(b => b.domain_alias).join(', ')}</span></div>}
+              {receivers.length > 0 && <div className="pf-compact-row"><span className="pf-compact-label">Receivers</span><span className="pf-compact-val">{receivers.slice(0, 3).map(b => b.domain_alias).join(', ')}{receivers.length > 3 ? ` +${receivers.length - 3}` : ''}</span></div>}
+              {pressureZone && <div className="pf-compact-row"><span className="pf-compact-label">Pressure zone</span><span className="pf-compact-val">{pressureZone}</span></div>}
+              <div className="pf-compact-row"><span className="pf-compact-label">Elevated</span><span className="pf-compact-val">{elevatedBlocks.length} domain{elevatedBlocks.length !== 1 ? 's' : ''}</span></div>
+            </div>
+            <details className="pf-detail-expand">
+              <summary className="pf-detail-toggle">Domain propagation detail ({blocks.length})</summary>
+              <div className="evidence-grid">
+                {blocks.map((b, i) => {
+                  const firstCard = b.signal_cards && b.signal_cards[0]
+                  const pm = firstCard ? (PRESSURE_META[firstCard.pressure_tier] || PRESSURE_META.MODERATE) : null
+                  const rm = ROLE_META[b.propagation_role] || null
+                  return (
+                    <div key={b.domain_alias || i} className="evidence-block">
+                      <div className="eb-header">
+                        <div className="eb-domain">{b.domain_alias}</div>
+                        <div className="eb-tags">
+                          {rm && <span className="eb-tag" style={{ color: rm.color }}>{rm.symbol} {rm.label}</span>}
+                          {pm && <span className="eb-tag" style={{ color: pm.color }}>{pm.symbol} {pm.label}</span>}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  {b.evidence_description && <div className="eb-description">{b.evidence_description}</div>}
-                  {firstCard && firstCard.evidence_text && <div className="eb-signal">{firstCard.evidence_text}</div>}
-                </div>
-              )
-            })}
+                  )
+                })}
+              </div>
+            </details>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
-      {swIntelSlot}
+      {swIntelSlot && (() => {
+        const surfaceCount = fullReport && fullReport._synthesisResult && fullReport._synthesisResult.conditions
+          ? fullReport._synthesisResult.conditions.filter(c => c.severity !== 'NOMINAL').length : 0
+        return surfaceCount > 0 ? (
+          <>
+            <div className="operator-cognition-bridge">
+              <div className="operator-cognition-bridge-label">DERIVED COGNITION</div>
+              <div className="operator-cognition-bridge-text">
+                Propagation analysis and {rsigSigsLocal.length > 0 ? 'runtime connectivity' : 'structural enrichment'} produce {surfaceCount > 0 ? `${criticalConditions.length} critical condition${criticalConditions.length !== 1 ? 's' : ''}` : 'conditions'} materialized as cognition surfaces below.
+              </div>
+            </div>
+            {swIntelSlot}
+          </>
+        ) : swIntelSlot
+      })()}
 
       <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
 
