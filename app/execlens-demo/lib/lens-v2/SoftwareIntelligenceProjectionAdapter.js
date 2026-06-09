@@ -362,7 +362,7 @@ function consequencesToSurfaces(consequenceResult, synthesisResult, legacySurfac
         evidence_density: (csq.source_conditions || []).length + (csq.evidence_refs || []).length,
         _evidence_items: [
           ...(sourceConditions || []).map(sc => ({ type: 'condition', id: sc.condition_id, label: sc.operator_cognition_title || sc.condition_type, severity: sc.severity, domain: sc.shared_topology_targets?.domains_display?.[0] || sc.shared_topology_targets?.domains?.[0] || null })),
-          ...(csq.evidence_refs || []).map(ref => ({ type: 'reference', id: ref, label: ref, severity: null, domain: null })),
+          ...(csq.evidence_refs || []).map(ref => ({ type: 'reference', id: typeof ref === 'string' ? ref : ref.id || '', label: typeof ref === 'string' ? ref : ref.condition_type || ref.id || 'evidence ref', severity: ref.severity || null, domain: null })),
         ],
         evidence_class: isRuntime ? (sourceConditions[0] && sourceConditions[0].evidence_class) || 'RUNTIME' : 'STATIC_IMPORT',
         evidence_mode: isRuntime ? 'RUNTIME_EVIDENCE' : 'STATIC_EVIDENCE',
