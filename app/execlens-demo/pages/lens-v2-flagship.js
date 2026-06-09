@@ -12808,6 +12808,21 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
+        .sw-intel-surface-footer--expandable {
+          cursor: pointer;
+        }
+        .sw-intel-surface-footer--expandable summary {
+          list-style: none;
+          cursor: pointer;
+        }
+        .sw-intel-surface-footer--expandable summary::-webkit-details-marker { display: none; }
+        .sw-intel-surface-footer--expandable .sw-intel-surface-density {
+          color: #4a9eff;
+        }
+        .sw-intel-surface-footer--expandable[open] .sw-intel-surface-density {
+          margin-bottom: 6px;
+        }
+
         .sw-intel-surface--active {
           background: #181c28;
           border-color: #3a4060;
