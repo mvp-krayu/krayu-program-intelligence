@@ -7543,29 +7543,73 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
       )}
 
-      {rsigSigsLocal.length > 0 && (
-        <div className="actor actor--runtime-connectivity" data-zone-key="runtimeConnectivity">
-          <div className="actor-tag">
-            <span className="actor-code">RC</span>
-            <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals</span>
+      {rsigSigsLocal.length > 0 && (() => {
+        const RUNTIME_TO_CONDITION = {
+          EVENT_CONCENTRATION: 'EVENT_CONCENTRATION',
+          RUNTIME_DEPENDENCY_CHOKE_POINT: 'RUNTIME_DEPENDENCY_CHOKE_POINT',
+          BROKER_DEPENDENCY: 'BROKER_DEPENDENCY',
+          TOPIC_FANOUT_PRESSURE: 'TOPIC_FANOUT_PRESSURE',
+          ASYNC_PROPAGATION_ASYMMETRY: 'ASYNC_PROPAGATION_ASYMMETRY',
+          EDGE_CLOUD_PROPAGATION_RISK: 'EDGE_CLOUD_PROPAGATION_RISK',
+          RUNTIME_OBSERVABILITY_GAP: 'RUNTIME_OBSERVABILITY_GAP',
+        }
+        const CONSEQUENCE_LABELS = {
+          EVENT_CONCENTRATION: 'Coordination visibility drops if this node degrades',
+          BROKER_DEPENDENCY: 'Telemetry ingestion stalls — single point of failure',
+          TOPIC_FANOUT_PRESSURE: 'Changes propagate broadly — runtime blast radius',
+          RUNTIME_OBSERVABILITY_GAP: 'Silent failures — no runtime signal coverage',
+          RUNTIME_DEPENDENCY_CHOKE_POINT: 'Execution bottleneck — downstream services blocked',
+          ASYNC_PROPAGATION_ASYMMETRY: 'Asymmetric failure — producers outpace consumers',
+          EDGE_CLOUD_PROPAGATION_RISK: 'Edge-cloud split risk — field data may not reach platform',
+        }
+        return (
+          <div className="actor actor--runtime-connectivity" data-zone-key="runtimeConnectivity">
+            <div className="actor-tag">
+              <span className="actor-code">RC</span>
+              <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals</span>
+            </div>
+            <div className="actor-runtime-signals">
+              {rsigSigsLocal.map(sig => {
+                const condType = sig.source_condition_type || RUNTIME_TO_CONDITION[sig.signal_name?.toUpperCase().replace(/ /g, '_')]
+                const matchingConditions = allConditions.filter(c => c.condition_type === condType)
+                const consequenceText = CONSEQUENCE_LABELS[condType] || null
+                return (
+                  <div key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
+                    <div className="actor-runtime-signal-head">
+                      <span className="actor-runtime-signal-id">{sig.signal_id}</span>
+                      <span className="actor-runtime-signal-severity" data-severity={sig.severity}>{sig.severity}</span>
+                    </div>
+                    <div className="actor-runtime-signal-name">{sig.signal_name}</div>
+                    {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
+                    {sig.affected_domains && sig.affected_domains.length > 0 && (
+                      <div className="actor-runtime-bridge">
+                        <div className="actor-runtime-bridge-label">STRUCTURAL REGIONS</div>
+                        <div className="actor-runtime-bridge-domains">{sig.affected_domains.join(' · ')}</div>
+                      </div>
+                    )}
+                    {matchingConditions.length > 0 && (
+                      <div className="actor-runtime-bridge">
+                        <div className="actor-runtime-bridge-label">REINFORCES</div>
+                        {matchingConditions.map(c => (
+                          <div key={c.condition_id} className="actor-runtime-bridge-condition" data-severity={c.severity}>
+                            {c.operator_cognition_title}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {consequenceText && (
+                      <div className="actor-runtime-bridge actor-runtime-bridge--consequence">
+                        <div className="actor-runtime-bridge-label">IF DEGRADED</div>
+                        <div className="actor-runtime-bridge-consequence">{consequenceText}</div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
-          <div className="actor-runtime-signals">
-            {rsigSigsLocal.map(sig => (
-              <div key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
-                <div className="actor-runtime-signal-head">
-                  <span className="actor-runtime-signal-id">{sig.signal_id}</span>
-                  <span className="actor-runtime-signal-severity" data-severity={sig.severity}>{sig.severity}</span>
-                </div>
-                <div className="actor-runtime-signal-name">{sig.signal_name}</div>
-                {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
-                {sig.affected_domains && sig.affected_domains.length > 0 && (
-                  <div className="actor-runtime-signal-domains">{sig.affected_domains.join(', ')}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        )
+      })()}
 
       <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
 

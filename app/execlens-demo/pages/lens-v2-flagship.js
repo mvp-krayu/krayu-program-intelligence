@@ -2521,13 +2521,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           cursor: pointer;
           position: relative;
           transition: background 0.2s;
-          max-height: 200px;
-          overflow: hidden;
         }
         .operator-topology-compact:hover { background: rgba(74, 158, 255, 0.03); }
         .operator-topology-compact .topo-graph-wrap { margin-bottom: 0; }
         .operator-topology-compact .topo-graph-heading { font-size: 9px; text-align: center; }
-        .operator-topology-compact .topo-graph-svg { pointer-events: none; }
+        .operator-topology-compact .topo-graph-svg { pointer-events: none; transform: scale(0.75); transform-origin: top center; }
 
         /* ── Runtime Connectivity Zone (OPERATOR) ────────────────────── */
         .actor--runtime-connectivity {
@@ -2586,6 +2584,42 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 9px;
           color: #5a6580;
           margin-top: 4px;
+        }
+
+        /* ── Consequence Bridge (Runtime → Structural) ────────────────── */
+        .actor-runtime-bridge {
+          margin-top: 6px;
+          padding-top: 4px;
+          border-top: 1px solid rgba(187, 134, 252, 0.08);
+        }
+        .actor-runtime-bridge-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          text-transform: uppercase;
+          margin-bottom: 2px;
+        }
+        .actor-runtime-bridge-domains {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+        }
+        .actor-runtime-bridge-condition {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #ccd6f6;
+          padding: 1px 0;
+        }
+        .actor-runtime-bridge-condition[data-severity="CRITICAL"],
+        .actor-runtime-bridge-condition[data-severity="HIGH"] { color: #ff9e4a; }
+        .actor-runtime-bridge--consequence .actor-runtime-bridge-label { color: #ff9e4a; }
+        .actor-runtime-bridge-consequence {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #ff9e4a;
+          font-style: italic;
+          line-height: 1.4;
         }
 
         /* ── Collapsed Signal Families (OPERATOR) ────────────────────── */
