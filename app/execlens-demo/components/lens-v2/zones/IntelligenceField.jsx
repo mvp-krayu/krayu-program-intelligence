@@ -7526,19 +7526,28 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       </div>
 
-      {criticalConditions.length > 0 && (() => {
-        const topCond = criticalConditions[0]
-        const topDomain = topCond.shared_topology_targets?.domains_display?.[0] || topCond.domain_targets?.[0]?.display_name || null
+      {allConditions.length > 0 && (() => {
+        const ps = (fullReport && fullReport.propagation_summary) || {}
+        const originDomain = ps.primary_zone_business_label || null
+        const chainDomains = (ps.chain_domains || []).filter(d => d !== originDomain)
+        const propagationTargets = chainDomains.slice(0, 3)
         const hasRuntime = rsigSigsLocal.length > 0
         const runtimeDomains = [...new Set(rsigSigsLocal.flatMap(s => s.affected_domains || []))]
+        const SRANK = { CRITICAL: 0, HIGH: 1, ELEVATED: 2, MODERATE: 3, LOW: 4, NOMINAL: 5 }
+        const topRsig = hasRuntime ? rsigSigsLocal.reduce((best, s) => (SRANK[s.severity] ?? 5) < (SRANK[best.severity] ?? 5) ? s : best, rsigSigsLocal[0]) : null
         const gl = fullReport && fullReport.governance_lifecycle
         const replayOk = fullReport && fullReport.revalidation_intelligence && fullReport.revalidation_intelligence.available && fullReport.revalidation_intelligence.status === 'PASS'
+        const certified = fullReport && fullReport.chronicle_certification && fullReport.chronicle_certification.available && fullReport.chronicle_certification.certification_status === 'CERTIFIED'
+        const isCritical = criticalConditions.length > 0
+        const postureLabel = isCritical ? 'systemic operational fragility driven by concentration and propagation' : 'elevated structural pressure across multiple domains'
+
         return (
           <div className="operator-forensic-narrative">
-            {topDomain && <span>{topDomain} creates dominant structural pressure. </span>}
-            {criticalConditions.length > 1 && <span>{criticalConditions.length} critical conditions converge. </span>}
-            {hasRuntime && <span>Runtime evidence reinforces pressure across {runtimeDomains.length} domain{runtimeDomains.length !== 1 ? 's' : ''}. </span>}
-            {gl && gl.available && <span>Governance review confirms {replayOk ? 'replayability' : 'qualification'}. </span>}
+            {originDomain && <span>{originDomain} acts as the primary pressure origin. </span>}
+            {propagationTargets.length > 0 && <span>Pressure propagates through {propagationTargets.join(', ')}. </span>}
+            {hasRuntime && topRsig && <span>Runtime connectivity confirms that execution dependence concentrates around {topRsig.signal_name.toLowerCase()}. </span>}
+            {gl && gl.available && <span>Governance replay {replayOk ? 'remains deterministic' : 'is pending'}{certified ? ' and replay-certified' : ''}. </span>}
+            <span>The specimen therefore exhibits {postureLabel} rather than isolated defects.</span>
           </div>
         )
       })()}
@@ -7609,6 +7618,12 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
               <span className="actor-runtime-summary-chip">{runtimeDomains.length} domains</span>
               <span className="actor-runtime-summary-chip" data-severity={highestSev}>{elevatedCount} elevated</span>
             </div>
+            {uniqueSignals.length > 0 && (
+              <div className="actor-runtime-focus">
+                <div className="actor-runtime-focus-row"><span className="actor-runtime-focus-label">Primary risk</span><span className="actor-runtime-focus-val">{uniqueSignals[0].signal_name}</span></div>
+                {runtimeDomains.length > 0 && <div className="actor-runtime-focus-row"><span className="actor-runtime-focus-label">Highest impact</span><span className="actor-runtime-focus-val">{runtimeDomains.slice(0, 2).join(', ')}{runtimeDomains.length > 2 ? ` +${runtimeDomains.length - 2}` : ''}</span></div>}
+              </div>
+            )}
             <div className="actor-runtime-signals">
               {sevOrder.map(sev => (
                 <div key={sev} className="actor-runtime-sev-group">
@@ -7687,8 +7702,6 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
-
       {swIntelSlot}
 
       <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
@@ -7718,6 +7731,8 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           ))}
         </div>
       </div>
+
+      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
 
       {topoModalOpen && createPortal(<TopologyModal fullReport={fullReport} onClose={closeTopoModal} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} mode="operator" />, document.body)}
     </div>

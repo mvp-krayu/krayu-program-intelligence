@@ -2778,6 +2778,31 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #ff9e4a;
           border-color: rgba(255, 158, 74, 0.2);
         }
+        .actor-runtime-focus {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          margin-bottom: 10px;
+        }
+        .actor-runtime-focus-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .actor-runtime-focus-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8.5px;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #4a5570;
+          min-width: 80px;
+        }
+        .actor-runtime-focus-val {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #ccd6f6;
+          font-weight: 500;
+        }
         .actor-runtime-sev-group {
           margin-bottom: 4px;
         }
