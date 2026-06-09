@@ -87,7 +87,7 @@ const FALSIFICATION_PATHS = {
   PROPAGATION_RISK: 'If propagation chains had circuit breakers and no asymmetric fan-out existed, propagation risk would be contained.',
 }
 
-function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain, domainLabelMap, projectionMode }) {
+function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain, domainLabelMap, projectionMode, fullReport }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
@@ -219,25 +219,46 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         const evidCount = surface.evidence_density || 0
         const domainCount = (surface.affected_domains || []).length
         const condCount = relatedConditions.length
-        const hasRuntime = surface.is_runtime || (surface.evidence_classes && surface.evidence_classes.some(e => e === 'EVENT_FLOW' || e === 'MQTT' || e === 'WEBSOCKET'))
-        const confidenceLevel = evidCount >= 6 ? 'High — multiple evidence sources' : evidCount >= 2 ? 'Moderate — structural evidence' : condCount > 0 ? 'Moderate — condition-derived' : 'Low — limited evidence'
+        const allSigs = (fullReport && fullReport.signal_interpretations) || []
+        const rsigs = allSigs.filter(s => s.signal_family === 'RSIG')
+        const affectedDomainSet = new Set((surface.affected_domains || []).map(d => d.toLowerCase()))
+        const runtimeCorrelation = rsigs.filter(s => (s.affected_domains || []).some(d => affectedDomainSet.has(d.toLowerCase())))
+        const hasRuntime = surface.is_runtime || runtimeCorrelation.length > 0
+        const gl = fullReport && fullReport.governance_lifecycle
+        const govStatus = gl && gl.available ? `${gl.s_level} governed` : 'Structural only'
+        const supportSources = (evidCount > 0 ? 1 : 0) + (condCount > 0 ? 1 : 0) + (runtimeCorrelation.length > 0 ? 1 : 0) + (gl && gl.available ? 1 : 0)
+        const confidenceLevel = supportSources >= 3 ? 'High — multiple independent sources converge'
+          : supportSources >= 2 ? 'Moderate — corroborated by two source types'
+          : supportSources >= 1 ? 'Low — single source type'
+          : 'Insufficient — no direct evidence'
+        const challenges = []
+        if (domainCount <= 1) challenges.push('Narrow scope — single domain affected')
+        if (!hasRuntime) challenges.push('No runtime evidence — structural inference only')
+        if (!gl || !gl.available) challenges.push('Not governed — advisory weight only')
+
         return (
         <div className="sw-intel-surface-verification">
           <div className="sw-intel-verify-grid">
             <div className="sw-intel-verify-row">
-              <span className="sw-intel-verify-key">Evidence</span>
-              <span className="sw-intel-verify-val">{evidCount} item{evidCount !== 1 ? 's' : ''}{condCount > 0 ? ` · ${condCount} condition${condCount !== 1 ? 's' : ''}` : ''}</span>
+              <span className="sw-intel-verify-key">Supports</span>
+              <span className="sw-intel-verify-val">{evidCount} evidence · {condCount} condition{condCount !== 1 ? 's' : ''} · {domainCount} domain{domainCount !== 1 ? 's' : ''}</span>
             </div>
-            <div className="sw-intel-verify-row">
-              <span className="sw-intel-verify-key">Domains</span>
-              <span className="sw-intel-verify-val">{domainCount} affected</span>
-            </div>
-            {hasRuntime && (
+            {runtimeCorrelation.length > 0 && (
               <div className="sw-intel-verify-row">
                 <span className="sw-intel-verify-key">Runtime</span>
-                <span className="sw-intel-verify-val">Runtime evidence contributes</span>
+                <span className="sw-intel-verify-val">{runtimeCorrelation.length} RSIG signal{runtimeCorrelation.length !== 1 ? 's' : ''} correlate — {runtimeCorrelation.map(s => s.signal_name).slice(0, 2).join(', ')}</span>
               </div>
             )}
+            {challenges.length > 0 && (
+              <div className="sw-intel-verify-row sw-intel-verify-row--challenge">
+                <span className="sw-intel-verify-key">Challenges</span>
+                <span className="sw-intel-verify-val">{challenges.join(' · ')}</span>
+              </div>
+            )}
+            <div className="sw-intel-verify-row">
+              <span className="sw-intel-verify-key">Governance</span>
+              <span className="sw-intel-verify-val">{govStatus}</span>
+            </div>
             <div className="sw-intel-verify-row">
               <span className="sw-intel-verify-key">Confidence</span>
               <span className="sw-intel-verify-val">{confidenceLevel}</span>
@@ -647,7 +668,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
           <React.Fragment key={s.surface_id}>
-            <CognitionSurfaceCard surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="explain" />
+            <CognitionSurfaceCard surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="explain" fullReport={fullReport} />
             {activeSurface === s.surface_id && s.surface_id === 'EXECUTION_BLINDNESS' && fullReport && (
               <ExecutionBlindnessInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('EXECUTION_BLINDNESS') : undefined} />
             )}
@@ -680,7 +701,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
 const VERIFICATION_BADGE_LABEL = { VERIFIED: 'Verified', PARTIALLY_VERIFIED: 'Partial', VERIFICATION_FAILED: 'Failed', CANNOT_INVESTIGATE: 'No target' }
 
-export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen, domainLabelMap, domainProfileMap, activeConditions }) {
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen, domainLabelMap, domainProfileMap, activeConditions, fullReport }) {
   const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
   const enrichedMap = useMemo(() => {
     const m = { ...(domainLabelMap || {}) }
@@ -712,7 +733,7 @@ export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, act
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="verify" />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="verify" fullReport={fullReport} />
         ))}
       </div>
 

@@ -10837,7 +10837,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
     const swIntelSlot = (
       <>
         {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
-          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} activeConditions={activeConditions} />
+          <SoftwareIntelligenceOperatorView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} verificationState={verificationState} verificationTargetReady={verificationTargetReady} onVerificationInvoke={onVerificationInvoke} onVerificationReopen={onVerificationReopen} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} activeConditions={activeConditions} fullReport={fullReport} />
         )}
         {verificationState && verificationState.active && verificationState.result && (
           <VerificationProtocolSection verificationState={verificationState} onClose={onVerificationClose} />

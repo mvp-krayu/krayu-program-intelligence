@@ -13106,6 +13106,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           font-size: 10.5px;
           color: #8a96b2;
         }
+        .sw-intel-verify-row--challenge .sw-intel-verify-key { color: #ff9e4a; }
+        .sw-intel-verify-row--challenge .sw-intel-verify-val { color: #ff9e4a; }
         .sw-intel-verify-falsification {
           margin-top: 8px;
           padding-top: 6px;
