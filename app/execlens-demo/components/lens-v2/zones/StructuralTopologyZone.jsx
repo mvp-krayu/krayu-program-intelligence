@@ -342,7 +342,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
   const visibleIds = Object.keys(clusterMap).filter(id => clusterMap[id].domains.length > 0).sort()
   if (visibleIds.length === 0) return null
 
-  const legendH = 36
+  const legendH = 48
 
   const totalDomains = (domains || []).length
   const clusterCount = visibleIds.length
@@ -798,26 +798,26 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
             let cx = 14
             return (
               <g>
-                <text x={cx} y={ly - 2} fontSize={5} fontWeight={700} letterSpacing="0.1em"
+                <text x={cx} y={ly - 2} fontSize={7} fontWeight={700} letterSpacing="0.1em"
                   fill={COGNITION_OVERLAY_COLORS[cognitionOverlay.overlay_mode] || '#4a9eff'} fillOpacity={0.7}
                   fontFamily="ui-monospace, 'SF Mono', Menlo, monospace">
                   {cognitionOverlay.topology_label || cognitionOverlay.overlay_mode}
                 </text>
                 {cognitionOverlay.legend_entries.map((entry, i) => {
-                  const x = 14 + i * 120
+                  const x = 14 + i * 150
                   return (
                     <g key={i}>
-                      <circle cx={x} cy={ly + 10} r={3}
+                      <circle cx={x} cy={ly + 14} r={4}
                         fill={entry.style === 'dashed' || entry.style === 'dotted' ? 'none' : entry.color}
                         stroke={entry.color} strokeWidth={1.2}
                         strokeDasharray={entry.style === 'dashed' ? '2,2' : entry.style === 'dotted' ? '1,2' : undefined} />
-                      <text x={x + 8} y={ly + 13} fontSize={5} fill="#7a8aaa"
+                      <text x={x + 10} y={ly + 17} fontSize={7} fill="#7a8aaa"
                         fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">{entry.label}</text>
                     </g>
                   )
                 })}
                 {cognitionOverlay.evidence_gaps && cognitionOverlay.evidence_gaps.length > 0 && (
-                  <text x={14} y={ly + 26} fontSize={4.5} fill="#5e6d8a" fontStyle="italic"
+                  <text x={14} y={ly + 32} fontSize={6} fill="#5e6d8a" fontStyle="italic"
                     fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
                     {cognitionOverlay.evidence_gaps[0].label}
                   </text>
@@ -827,28 +827,28 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
           }
           return isS1 ? (
             <g>
-              <circle cx={14} cy={ly} r={3} fill="#58a6ff" />
-              <text x={22} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Structural Group</text>
-              <circle cx={120} cy={ly} r={3} fill="none" stroke="#ffd700" strokeWidth={1.3} />
-              <text x={128} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+              <circle cx={14} cy={ly} r={4} fill="#58a6ff" />
+              <text x={24} y={ly + 3} fontSize={7} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Structural Group</text>
+              <circle cx={150} cy={ly} r={4} fill="none" stroke="#ffd700" strokeWidth={1.3} />
+              <text x={160} y={ly + 3} fontSize={7} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
                 Concentration Anchor{pressureZoneLabel ? ` — ${pressureZoneLabel}` : ''}
               </text>
-              <text x={14} y={ly + 16} fontSize={4.6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-                Structural clusters from PATH A topology · hover for component counts
+              <text x={14} y={ly + 20} fontSize={6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                Hover nodes for details · click zone anchors to highlight connections
               </text>
             </g>
           ) : (
             <g>
-              <circle cx={14} cy={ly} r={3} fill="#3fb950" />
-              <text x={22} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Grounded</text>
-              <circle cx={100} cy={ly} r={3} fill="#d29922" />
-              <text x={108} y={ly + 3} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Weakly Grounded</text>
-              <circle cx={14} cy={ly + 13} r={3} fill="none" stroke="#58a6ff" strokeWidth={1.2} />
-              <text x={22} y={ly + 16} fontSize={5.5} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+              <circle cx={14} cy={ly} r={4} fill="#3fb950" />
+              <text x={24} y={ly + 3} fontSize={7} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Grounded</text>
+              <circle cx={120} cy={ly} r={4} fill="#d29922" />
+              <text x={130} y={ly + 3} fontSize={7} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">Weakly Grounded</text>
+              <circle cx={14} cy={ly + 18} r={4} fill="none" stroke="#58a6ff" strokeWidth={1.2} />
+              <text x={24} y={ly + 21} fontSize={7} fill="#6a7593" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
                 Primary Pressure Zone{pressureZoneLabel ? ` — ${pressureZoneLabel}` : ''}
               </text>
-              <text x={14} y={ly + 28} fontSize={4.6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-                Hover nodes for details · click zone anchors to highlight connections · Escape to reset
+              <text x={14} y={ly + 36} fontSize={6} fill="#5e6d8a" fontStyle="italic" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+                Hover nodes for details · click zone anchors to highlight connections
               </text>
             </g>
           )
