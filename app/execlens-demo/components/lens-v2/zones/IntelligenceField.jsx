@@ -7526,6 +7526,23 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       </div>
 
+      {criticalConditions.length > 0 && (() => {
+        const topCond = criticalConditions[0]
+        const topDomain = topCond.shared_topology_targets?.domains_display?.[0] || topCond.domain_targets?.[0]?.display_name || null
+        const hasRuntime = rsigSigsLocal.length > 0
+        const runtimeDomains = [...new Set(rsigSigsLocal.flatMap(s => s.affected_domains || []))]
+        const gl = fullReport && fullReport.governance_lifecycle
+        const replayOk = fullReport && fullReport.revalidation_intelligence && fullReport.revalidation_intelligence.available && fullReport.revalidation_intelligence.status === 'PASS'
+        return (
+          <div className="operator-forensic-narrative">
+            {topDomain && <span>{topDomain} creates dominant structural pressure. </span>}
+            {criticalConditions.length > 1 && <span>{criticalConditions.length} critical conditions converge. </span>}
+            {hasRuntime && <span>Runtime evidence reinforces pressure across {runtimeDomains.length} domain{runtimeDomains.length !== 1 ? 's' : ''}. </span>}
+            {gl && gl.available && <span>Governance review confirms {replayOk ? 'replayability' : 'qualification'}. </span>}
+          </div>
+        )
+      })()}
+
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
         <div className="operator-topology-compact" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
           <TopologyGraph
@@ -7639,13 +7656,11 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         )
       })()}
 
-      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
-
       {blocks && blocks.length > 0 && (
-        <div className="actor actor--signal-evidence-inline">
+        <div className="actor actor--signal-evidence-inline" data-zone-key="propagationFlow">
           <div className="actor-tag">
-            <span className="actor-code">SE</span>
-            <span className="actor-name">Signal Evidence · propagation</span>
+            <span className="actor-code">PF</span>
+            <span className="actor-name">Pressure Flow · propagation</span>
           </div>
           <div className="evidence-grid">
             {blocks.map((b, i) => {
@@ -7671,6 +7686,8 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
           </div>
         </div>
       )}
+
+      <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
 
       {swIntelSlot}
 
@@ -7753,9 +7770,9 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
   }
 
   const FAMILY_LABELS = {
-    ISIG: { label: 'File Structure', hint: 'L1', desc: 'File-level import dependency analysis' },
-    DPSIG: { label: 'Topology Distribution', hint: null, desc: 'Cluster-level structural mass distribution' },
-    PSIG: { label: 'Architectural Binding', hint: 'L3', desc: 'Cross-domain coupling at architectural level' },
+    ISIG: { label: 'Code Structure', hint: 'L1', desc: 'File-level import dependency analysis' },
+    DPSIG: { label: 'Topology', hint: null, desc: 'Cluster-level structural mass distribution' },
+    PSIG: { label: 'Architectural Coupling', hint: 'L3', desc: 'Cross-domain coupling at architectural level' },
     RSIG: { label: 'Runtime Connectivity', hint: null, desc: 'Event flow, messaging, and execution pathway analysis' },
   }
 

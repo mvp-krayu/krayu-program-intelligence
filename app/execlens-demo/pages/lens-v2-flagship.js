@@ -2564,6 +2564,16 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .operator-evidence-chip--runtime { color: #bb86fc; }
 
+        /* ── Forensic Narrative (OPERATOR) ──────────────────────────── */
+        .operator-forensic-narrative {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #8a96b2;
+          line-height: 1.55;
+          padding: 10px 0 12px;
+          border-bottom: 1px solid #1e2330;
+        }
+
         /* ── Compact Topology (OPERATOR) ────────────────────────────── */
         .operator-topology-compact {
           padding: 8px 0;
