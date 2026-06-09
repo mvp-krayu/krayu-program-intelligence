@@ -523,6 +523,81 @@ function RiskConcentrationMapSVG({ crossDomainCognition }) {
   )
 }
 
+function resolveConfidenceLabel(fullReport) {
+  const gl = fullReport && fullReport.governance_lifecycle
+  if (gl && gl.available) return { label: 'GOVERNED', color: '#64ffda' }
+  const pa = fullReport && fullReport._projectionAuthority
+  if (pa && pa.projectionLevel >= 3) return { label: 'QUALIFIED', color: '#4a9eff' }
+  if (pa && pa.projectionLevel >= 2) return { label: 'EVIDENCED', color: '#e6b800' }
+  return { label: 'ADVISORY', color: '#7a8aaa' }
+}
+
+function ExecutiveRiskCard({ crossDomainCognition, fullReport }) {
+  const cdc = crossDomainCognition || {}
+  const postureLabel = cdc.posture_label
+  if (!postureLabel) return null
+
+  const severity = cdc.posture_severity || 'MODERATE'
+  const scope = cdc.posture_scope || 'LOCAL'
+  const consequenceCount = cdc.consequence_count || 0
+  const systemicCount = cdc.systemic_count || 0
+  const primaryLocus = cdc.primary_locus || (cdc.domain_concentration && cdc.domain_concentration.length > 0 ? cdc.domain_concentration[0].domain : null)
+  const confidence = resolveConfidenceLabel(fullReport)
+  const themes = cdc.consequence_themes || []
+  const primaryTheme = themes.length > 0 ? themes[0] : null
+
+  const sevColor = SEV_COLORS[severity] || MUTED
+  const scopeColor = scope === 'SYSTEMIC' ? RISK_COLOR : scope === 'REGIONAL' ? WARN_COLOR : '#64ffda'
+  const ratio = consequenceCount > 0 ? systemicCount / consequenceCount : 0
+
+  const badgeStyle = (color) => ({
+    display: 'inline-block', padding: '2px 8px', borderRadius: 3,
+    fontSize: 10, fontFamily: 'monospace', fontWeight: 600, letterSpacing: '0.04em',
+    color, background: color + '12', border: `1px solid ${color}35`,
+  })
+
+  return (
+    <div style={{ padding: '10px 0 14px' }}>
+      {/* Posture + badges — single line */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 15, fontFamily: 'monospace', fontWeight: 700, color: sevColor }}>{postureLabel}</span>
+        <span style={badgeStyle(sevColor)}>{severity}</span>
+        <span style={badgeStyle(scopeColor)}>{scope}</span>
+        <span style={badgeStyle(confidence.color)}>{confidence.label}</span>
+      </div>
+
+      {/* Metrics line */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
+        {consequenceCount > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <svg width={60} height={4} style={{ display: 'block' }}>
+              <rect x={0} y={0} width={60} height={4} rx={2} fill="#1a1e2a" />
+              <rect x={0} y={0} width={Math.max(4, ratio * 60)} height={4} rx={2} fill={sevColor} opacity={0.6} />
+            </svg>
+            <span style={{ fontSize: 11, fontFamily: 'monospace', color: systemicCount > 0 ? sevColor : MUTED }}>
+              {systemicCount}/{consequenceCount} systemic
+            </span>
+          </div>
+        )}
+        {primaryLocus && (
+          <span style={{ fontSize: 11, fontFamily: 'monospace', color: MUTED }}>
+            <span style={{ color: DIM, letterSpacing: '0.06em', marginRight: 4 }}>exposure</span>
+            <span style={{ color: TEXT }}>{primaryLocus}</span>
+          </span>
+        )}
+      </div>
+
+      {/* Key theme — subtle */}
+      {primaryTheme && (
+        <div style={{ marginTop: 6, fontSize: 10, fontFamily: 'monospace', color: DIM }}>
+          {primaryTheme.theme_label}
+          {primaryTheme.severity && <span style={{ color: SEV_COLORS[primaryTheme.severity] || DIM, marginLeft: 6 }}>{primaryTheme.severity}</span>}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function VisualSpecRenderer({ specId, fullReport, crossDomainCognition }) {
   if (specId === 'runtime_coordination_backbone') {
     return (
@@ -541,6 +616,9 @@ export default function VisualSpecRenderer({ specId, fullReport, crossDomainCogn
         <DualGravityMapSVG fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
       </div>
     )
+  }
+  if (specId === 'executive_risk_card') {
+    return <ExecutiveRiskCard crossDomainCognition={crossDomainCognition} fullReport={fullReport} />
   }
   if (specId === 'risk_concentration_map') {
     return (

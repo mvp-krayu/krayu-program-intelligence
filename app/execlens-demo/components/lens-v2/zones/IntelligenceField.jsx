@@ -10179,6 +10179,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
+  const [structuralContextOpen, setStructuralContextOpen] = useState(false)
   const openTopoModal = useCallback(() => setTopoModalOpen(true), [])
   const closeTopoModal = useCallback(() => { setTopoModalOpen(false); setSignalTraceId(null) }, [])
 
@@ -10360,6 +10361,10 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           </div>
         </div>
 
+        {crossDomainCognition && crossDomainCognition.posture_label && (
+          <VisualSpecRenderer specId="executive_risk_card" fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
+        )}
+
         {domNarratives.length > 0 && (
           <div className="cockpit-where-section">
             <div className="cockpit-where-label">WHERE IT MANIFESTS</div>
@@ -10422,18 +10427,37 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
               const fadedCount = boardroomClusters.length - pressureCount
 
               return (
-                <div className="cockpit-topology-preview">
-                  <TopologyGraph
-                    domains={boardroomDomains}
-                    clusters={boardroomClusters}
-                    edges={fullReport.semantic_topology_edges || []}
-                    pressureZoneLabel={pressureZone || ''}
-                    pressureZoneState={fullReport.pressure_zone_state}
-                    boardroomMode={true}
-                  />
-                  <button className="cockpit-topology-hint" type="button" onClick={openTopoModal}>
-                    {fadedCount > 0 ? `${pressureCount} pressure regions emphasized · ` : ''}Open full topology
+                <div className="cockpit-structural-context">
+                  <button
+                    className="cockpit-structural-context-toggle"
+                    type="button"
+                    onClick={() => setStructuralContextOpen(prev => !prev)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      background: 'none', border: 'none', cursor: 'pointer',
+                      padding: '8px 0', width: '100%', textAlign: 'left',
+                    }}
+                  >
+                    <span style={{ fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.1em', color: '#7a8aaa' }}>
+                      {structuralContextOpen ? 'Hide' : 'Show'} Structural Context
+                    </span>
+                    <span style={{ fontSize: 10, color: '#5a6580', transition: 'transform 0.2s', transform: structuralContextOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
                   </button>
+                  {structuralContextOpen && (
+                    <div className="cockpit-topology-preview">
+                      <TopologyGraph
+                        domains={boardroomDomains}
+                        clusters={boardroomClusters}
+                        edges={fullReport.semantic_topology_edges || []}
+                        pressureZoneLabel={pressureZone || ''}
+                        pressureZoneState={fullReport.pressure_zone_state}
+                        boardroomMode={true}
+                      />
+                      <button className="cockpit-topology-hint" type="button" onClick={openTopoModal}>
+                        {fadedCount > 0 ? `${pressureCount} pressure regions emphasized · ` : ''}Open full topology
+                      </button>
+                    </div>
+                  )}
                 </div>
               )
             })()}

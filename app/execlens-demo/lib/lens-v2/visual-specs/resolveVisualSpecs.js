@@ -12,6 +12,14 @@ const VISUAL_SPEC_REGISTRY = {
     requiresRuntime: true,
     minimumPLevel: 2,
   },
+  executive_risk_card: {
+    title: 'Executive Risk Card',
+    subtitle: 'Board-level risk posture at a glance',
+    requires: ['STATIC_IMPORT'],
+    requiresCDC: true,
+    minimumPLevel: 1,
+    persona: 'boardroom',
+  },
   risk_concentration_map: {
     title: 'Risk Concentration Map',
     subtitle: 'Where structural and operational risk concentrates across domains',
