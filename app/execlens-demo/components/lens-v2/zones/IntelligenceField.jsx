@@ -5697,7 +5697,8 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     }
   }
 
-  const zoneInterp = activeZoneKey && (densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
+  const operatorSwIntelActive = swIntelActive && densityClass === 'OPERATOR_DENSE' && !resolvedCognitionContract
+  const zoneInterp = activeZoneKey && !operatorSwIntelActive && (densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') && DENSE_ZONE_INTERPRETATIONS[activeZoneKey]
   const zoneDerived = zoneInterp ? zoneInterp.derive(fullReport) : null
 
   const structuralContext = useMemo(() => {
@@ -5776,6 +5777,27 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
       ...ctx,
     }
   }, [fullReport, activeZoneKey])
+
+  if (operatorSwIntelActive) {
+    const allSurfaces = fullReport && fullReport._synthesisResult && fullReport._synthesisResult._swIntelSurfaces || []
+    const critSurfaces = allSurfaces.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
+    const runtimeSurfaces = allSurfaces.filter(s => s.is_runtime)
+    return (
+      <aside className="intel-interp intel-interp--operator-swi" data-tone={framing.tone} aria-label="SW-INTEL verification overview">
+        <div className="interp-tag">
+          <span className="interp-tag-label">VERIFICATION SURFACE</span>
+        </div>
+        <div className="interp-block interp-block--lead">
+          <div className="interp-section-label">COGNITION SURFACES</div>
+          <div className="interp-synthesis">{allSurfaces.length} surface{allSurfaces.length !== 1 ? 's' : ''} · {critSurfaces.length} critical · {runtimeSurfaces.length} runtime-derived</div>
+        </div>
+        <div className="interp-block">
+          <div className="interp-section-label">VERIFICATION MODE</div>
+          <div className="interp-synthesis">Each surface shows supporting evidence, affected domains, confidence, and falsification path. Click a surface to inspect its verification detail in this panel.</div>
+        </div>
+      </aside>
+    )
+  }
 
   if (zoneDerived) {
     return (

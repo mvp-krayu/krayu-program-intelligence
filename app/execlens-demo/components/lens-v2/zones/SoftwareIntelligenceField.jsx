@@ -162,18 +162,24 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         </>
       )}
 
-      {isVerify && (
+      {isVerify && (() => {
+        const evidCount = surface.evidence_density || 0
+        const domainCount = (surface.affected_domains || []).length
+        const condCount = relatedConditions.length
+        const hasRuntime = surface.is_runtime || (surface.evidence_classes && surface.evidence_classes.some(e => e === 'EVENT_FLOW' || e === 'MQTT' || e === 'WEBSOCKET'))
+        const confidenceLevel = evidCount >= 6 ? 'High — multiple evidence sources' : evidCount >= 2 ? 'Moderate — structural evidence' : condCount > 0 ? 'Moderate — condition-derived' : 'Low — limited evidence'
+        return (
         <div className="sw-intel-surface-verification">
           <div className="sw-intel-verify-grid">
             <div className="sw-intel-verify-row">
-              <span className="sw-intel-verify-key">Supports</span>
-              <span className="sw-intel-verify-val">{relatedConditions.length} condition{relatedConditions.length !== 1 ? 's' : ''} · {surface.evidence_density || 0} evidence</span>
+              <span className="sw-intel-verify-key">Evidence</span>
+              <span className="sw-intel-verify-val">{evidCount} item{evidCount !== 1 ? 's' : ''}{condCount > 0 ? ` · ${condCount} condition${condCount !== 1 ? 's' : ''}` : ''}</span>
             </div>
             <div className="sw-intel-verify-row">
               <span className="sw-intel-verify-key">Domains</span>
-              <span className="sw-intel-verify-val">{(surface.affected_domains || []).length} affected</span>
+              <span className="sw-intel-verify-val">{domainCount} affected</span>
             </div>
-            {surface.is_runtime && (
+            {hasRuntime && (
               <div className="sw-intel-verify-row">
                 <span className="sw-intel-verify-key">Runtime</span>
                 <span className="sw-intel-verify-val">Runtime evidence contributes</span>
@@ -181,7 +187,7 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
             )}
             <div className="sw-intel-verify-row">
               <span className="sw-intel-verify-key">Confidence</span>
-              <span className="sw-intel-verify-val">{relatedConditions.length >= 2 ? 'High — multiple sources converge' : relatedConditions.length === 1 ? 'Moderate — single condition' : 'Low — no direct conditions'}</span>
+              <span className="sw-intel-verify-val">{confidenceLevel}</span>
             </div>
           </div>
           {FALSIFICATION_PATHS[surface.surface_id] && (
@@ -191,7 +197,8 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
             </div>
           )}
         </div>
-      )}
+        )
+      })()}
 
       <div className="sw-intel-surface-footer">
         <span className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</span>
