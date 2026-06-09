@@ -203,12 +203,12 @@ function interpret_dependency_amplification(cdc, projectionLevel) {
 
   return makeResult('interpret_dependency_amplification', true, {
     meaning: `${topDomain} behaves less like a shared utility and more like an execution authority. Teams think they own feature delivery, but delivery velocity is increasingly governed by decisions made in ${topDomain}.`,
-    why_it_matters: `This creates a hidden prioritization problem. Small changes in ${topDomain} affect multiple delivery streams simultaneously while feature teams remain unaware of the dependency.`,
+    why_it_matters: `This creates a structural prioritization constraint. Small changes in ${topDomain} affect multiple delivery streams simultaneously — the dependency is architectural, not visible in project-level planning.`,
     who_should_care: [`${topDomain} team`, 'Feature delivery teams', 'Engineering leadership', 'Release management'],
     operational_consequence: `Roadmap commitments become coupled to ${topDomain} change velocity. Investment in ${topDomain} carries amplified risk — both the cost of changing it and the cost of not changing it increase over time.`,
   },
     [{ type: 'domain_concentration', source: 'domain_concentration[0]', field: topDomain }],
-    `${topDomain} governs the roadmap more than feature teams realize`
+    `${topDomain} structurally governs delivery velocity beyond its apparent scope`
   )
 }
 

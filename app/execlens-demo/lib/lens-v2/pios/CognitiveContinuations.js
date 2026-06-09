@@ -157,7 +157,7 @@ function deriveImplication(p) {
 
   if (p.hasRuntime) {
     results.push(makeContinuation('implication',
-      'What monitoring gaps does this create for operational teams?',
+      'What monitoring gaps exist for runtime execution paths?',
       { object: 'signal_interpretations', field: 'RSIG_present', value: true },
       `${p.rsigCount} runtime signals indicate execution dependencies invisible to static analysis`
     ))
@@ -165,7 +165,7 @@ function deriveImplication(p) {
 
   if (p.hasPropagation && p.propagationReceivers.length > 0) {
     results.push(makeContinuation('implication',
-      `Which downstream teams (${p.propagationReceivers.join(', ')}) are affected without knowing it?`,
+      `Which downstream domains (${p.propagationReceivers.join(', ')}) are affected by this propagation?`,
       { object: 'domain_narratives', field: 'receivers', value: p.propagationReceivers },
       `${p.propagationReceivers.length} receiver domains in propagation chain`
     ))
@@ -173,7 +173,7 @@ function deriveImplication(p) {
 
   if (p.structCenter && p.hasMultipleThemes) {
     results.push(makeContinuation('implication',
-      'Which teams experience this as delivery unpredictability?',
+      'Which delivery decisions become harder because of this structural concentration?',
       { object: 'domain_narratives', field: 'top_domains', value: p.structCenter },
       `multiple themes converge around ${p.structCenter}`
     ))
