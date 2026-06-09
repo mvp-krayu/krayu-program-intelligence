@@ -878,16 +878,25 @@ function deriveTopologyCognitionState(activeSurfaceId, fullReport, resolvedSurfa
   if (activeSurfaceId === 'EXECUTION_BLINDNESS') {
     const blindnessTypes = {}
     const affectedIds = new Set()
+    const registry = fullReport.semantic_domain_registry || []
+    const nameToId = {}
+    for (const d of registry) {
+      nameToId[d.domain_name] = d.domain_id
+      nameToId[d.domain_name?.toLowerCase()] = d.domain_id
+      nameToId[d.domain_id] = d.domain_id
+    }
+    const resolveId = (ref) => nameToId[ref] || nameToId[ref?.toLowerCase()] || ref
 
     const conditions = (fullReport._synthesisResult || fullReport.synthesisResult || {}).conditions || []
     for (const c of conditions) {
       const domains = (c.shared_topology_targets && c.shared_topology_targets.domains) || []
+      const resolvedDomains = domains.map(resolveId)
       if (c.condition_type === 'BROKER_DEPENDENCY' || c.condition_type === 'EDGE_CLOUD_PROPAGATION_RISK') {
-        domains.forEach(id => { blindnessTypes[id] = 'BOUNDARY'; affectedIds.add(id) })
+        resolvedDomains.forEach(id => { blindnessTypes[id] = 'BOUNDARY'; affectedIds.add(id) })
       } else if (c.condition_type === 'RUNTIME_DEPENDENCY_CHOKE_POINT' || c.condition_type === 'ASYNC_PROPAGATION_ASYMMETRY') {
-        domains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'SILENCE'; affectedIds.add(id) })
+        resolvedDomains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'SILENCE'; affectedIds.add(id) })
       } else if (c.condition_type === 'EVENT_CONCENTRATION' || c.condition_type === 'TOPIC_FANOUT_PRESSURE') {
-        domains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'COUPLING'; affectedIds.add(id) })
+        resolvedDomains.forEach(id => { if (!blindnessTypes[id]) blindnessTypes[id] = 'COUPLING'; affectedIds.add(id) })
       }
     }
 
