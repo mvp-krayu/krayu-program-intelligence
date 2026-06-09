@@ -200,10 +200,20 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         )
       })()}
 
-      {isVerify && surface.constituents ? (
-        <details className="sw-intel-surface-footer sw-intel-surface-footer--expandable">
+      {isVerify && surface.evidence_density > 0 ? (
+        <details className="sw-intel-surface-footer sw-intel-surface-footer--expandable" onClick={e => e.stopPropagation()}>
           <summary className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</summary>
-          <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
+          {surface.constituents ? (
+            <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
+          ) : surface.affected_domains && surface.affected_domains.length > 0 ? (
+            <div className="sw-intel-surface-detail">
+              {surface.affected_domains.map(d => (
+                <div key={d} className="sw-intel-surface-detail-row">
+                  <span className="sw-intel-surface-detail-label" title={d}>{resolveDomain ? resolveDomain(d) : d}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </details>
       ) : (
         <div className="sw-intel-surface-footer">
