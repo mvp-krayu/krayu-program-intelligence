@@ -5063,6 +5063,102 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           flex-shrink: 0;
         }
 
+        /* ── Micro-Visual Cognition Blocks ────────────────────────────── */
+        .balanced-micro-visual {
+          margin: 16px 0;
+          padding: 14px 18px;
+          border: 1px solid #1e2330;
+          border-radius: 6px;
+          background: rgba(20, 24, 32, 0.6);
+        }
+        .balanced-micro-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 6px 0;
+        }
+        .balanced-micro-row + .balanced-micro-row { border-top: 1px solid rgba(42, 47, 64, 0.3); }
+        .balanced-micro-label {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 13px;
+          color: #8a96b2;
+        }
+        .balanced-micro-status {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        .balanced-micro-status--pass { color: #64ffda; }
+        .balanced-micro-status--fail { color: #ff6b6b; }
+
+        .balanced-micro-flow {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .balanced-micro-flow-node {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 12px;
+          color: #ccd6f6;
+          padding: 5px 12px;
+          border: 1px solid #2a3040;
+          border-radius: 4px;
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .balanced-micro-flow-node--origin {
+          color: #e2e8f6;
+          font-weight: 600;
+          border-color: rgba(74, 158, 255, 0.2);
+        }
+        .balanced-micro-flow-node--impact {
+          color: #ff9e4a;
+          border-color: rgba(255, 158, 74, 0.2);
+        }
+        .balanced-micro-flow-targets {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .balanced-micro-flow-arrow {
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          color: #3a4560;
+        }
+
+        /* ── Governance Side-Band ────────────────────────────────────── */
+        .balanced-governance-band {
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(42, 47, 64, 0.2);
+        }
+        .balanced-governance-chip {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          width: 100%;
+          text-align: left;
+          background: none;
+          border: 1px solid rgba(100, 255, 218, 0.1);
+          border-radius: 4px;
+          padding: 8px 12px;
+          cursor: pointer;
+          transition: border-color 0.2s;
+        }
+        .balanced-governance-chip:hover { border-color: rgba(100, 255, 218, 0.3); }
+        .balanced-governance-chip-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          color: #64ffda;
+          flex-shrink: 0;
+        }
+        .balanced-governance-chip-hook {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #6a7a9a;
+        }
+
         /* ── Evidence Anchors ────────────────────────────────────────── */
         .balanced-narrative-evidence-row {
           display: flex;

@@ -6546,7 +6546,8 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
 
       {/* Narrative-first interpretation */}
       {balancedInterpretations && (() => {
-        const INTENT_RANK = ['interpret_execution_blindness', 'interpret_runtime_divergence', 'interpret_dependency_amplification', 'interpret_operational_posture', 'interpret_primary_finding', 'interpret_propagation_dynamics', 'interpret_governance_confidence']
+        const INTENT_RANK = ['interpret_primary_finding', 'interpret_runtime_divergence', 'interpret_execution_blindness', 'interpret_dependency_amplification', 'interpret_propagation_dynamics', 'interpret_operational_posture']
+        const GOVERNANCE_INTENTS = new Set(['interpret_governance_confidence'])
         const INTENT_LABELS = {
           interpret_operational_posture: 'Operational Posture',
           interpret_primary_finding: 'Primary Finding',
@@ -6556,9 +6557,11 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           interpret_propagation_dynamics: 'Propagation Dynamics',
           interpret_dependency_amplification: 'Dependency Amplification',
         }
-        const available = Object.entries(balancedInterpretations)
-          .filter(([, c]) => c.available && c.sections)
+        const allAvailable = Object.entries(balancedInterpretations).filter(([, c]) => c.available && c.sections)
+        const available = allAvailable
+          .filter(([name]) => !GOVERNANCE_INTENTS.has(name))
           .sort((a, b) => (INTENT_RANK.indexOf(a[0]) === -1 ? 99 : INTENT_RANK.indexOf(a[0])) - (INTENT_RANK.indexOf(b[0]) === -1 ? 99 : INTENT_RANK.indexOf(b[0])))
+        const govIntents = allAvailable.filter(([name]) => GOVERNANCE_INTENTS.has(name))
         if (available.length === 0) return null
         const defaultIntent = available[0][0]
         const selected = activeIntent && balancedInterpretations[activeIntent] && balancedInterpretations[activeIntent].available
@@ -6595,6 +6598,66 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
                   </div>
                 )}
 
+                {selected === 'interpret_execution_blindness' && (
+                  <div className="balanced-micro-visual">
+                    <div className="balanced-micro-row">
+                      <span className="balanced-micro-label">Dashboard</span>
+                      <span className="balanced-micro-status balanced-micro-status--pass">✓ healthy</span>
+                    </div>
+                    <div className="balanced-micro-row">
+                      <span className="balanced-micro-label">Runtime</span>
+                      <span className="balanced-micro-status balanced-micro-status--fail">✕ degrading</span>
+                    </div>
+                  </div>
+                )}
+
+                {selected === 'interpret_dependency_amplification' && structCenter && (() => {
+                  const receivers = (cdc && cdc.domain_narratives || []).slice(1, 4)
+                  return receivers.length > 0 ? (
+                    <div className="balanced-micro-visual">
+                      <div className="balanced-micro-flow">
+                        <span className="balanced-micro-flow-node balanced-micro-flow-node--origin">{structCenter}</span>
+                        <span className="balanced-micro-flow-arrow">↓</span>
+                        <div className="balanced-micro-flow-targets">
+                          {receivers.map((r, i) => <span key={i} className="balanced-micro-flow-node">{r.domain}</span>)}
+                        </div>
+                      </div>
+                    </div>
+                  ) : null
+                })()}
+
+                {selected === 'interpret_propagation_dynamics' && (() => {
+                  const narrs = (cdc && cdc.domain_narratives || [])
+                  const origin = narrs[0]
+                  const receiverCount = narrs.length - 1
+                  return origin ? (
+                    <div className="balanced-micro-visual">
+                      <div className="balanced-micro-flow">
+                        <span className="balanced-micro-flow-node balanced-micro-flow-node--origin">{origin.domain}</span>
+                        <span className="balanced-micro-flow-arrow">→</span>
+                        <span className="balanced-micro-flow-node">{receiverCount} region{receiverCount !== 1 ? 's' : ''}</span>
+                        <span className="balanced-micro-flow-arrow">→</span>
+                        <span className="balanced-micro-flow-node balanced-micro-flow-node--impact">blast radius</span>
+                      </div>
+                    </div>
+                  ) : null
+                })()}
+
+                {selected === 'interpret_primary_finding' && (() => {
+                  const themeCount = (cdc && cdc.consequence_themes || []).length
+                  return themeCount > 0 ? (
+                    <div className="balanced-micro-visual">
+                      <div className="balanced-micro-flow">
+                        <span className="balanced-micro-flow-node">{themeCount} pressure{themeCount !== 1 ? 's' : ''}</span>
+                        <span className="balanced-micro-flow-arrow">→</span>
+                        <span className="balanced-micro-flow-node">{structCenter || '1 corridor'}</span>
+                        <span className="balanced-micro-flow-arrow">→</span>
+                        <span className="balanced-micro-flow-node balanced-micro-flow-node--impact">delivery instability</span>
+                      </div>
+                    </div>
+                  ) : null
+                })()}
+
                 <div className="balanced-narrative-body">{s.why_it_matters}</div>
                 <div className="balanced-narrative-body">{s.operational_consequence}</div>
 
@@ -6621,16 +6684,24 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
               <div className="balanced-other-intents">
                 <div className="balanced-other-label">OTHER INTERPRETATIONS</div>
                 <div className="balanced-other-list">
-                  {others.map(([name, call]) => {
-                    const otherS = call.sections
-                    return (
-                      <button key={name} className="balanced-other-card" onClick={() => setActiveIntent(name)} type="button">
-                        <div className="balanced-other-card-title">{INTENT_LABELS[name]}</div>
-                        <div className="balanced-other-card-hook">{call.hook}</div>
-                      </button>
-                    )
-                  })}
+                  {others.map(([name, call]) => (
+                    <button key={name} className="balanced-other-card" onClick={() => setActiveIntent(name)} type="button">
+                      <div className="balanced-other-card-title">{INTENT_LABELS[name]}</div>
+                      <div className="balanced-other-card-hook">{call.hook}</div>
+                    </button>
+                  ))}
                 </div>
+              </div>
+            )}
+
+            {govIntents.length > 0 && (
+              <div className="balanced-governance-band">
+                {govIntents.map(([name, call]) => (
+                  <button key={name} className="balanced-governance-chip" onClick={() => setActiveIntent(name)} type="button">
+                    <span className="balanced-governance-chip-label">{INTENT_LABELS[name]}</span>
+                    <span className="balanced-governance-chip-hook">{call.hook}</span>
+                  </button>
+                ))}
               </div>
             )}
           </div>
