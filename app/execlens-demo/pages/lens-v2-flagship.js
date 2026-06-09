@@ -5261,6 +5261,52 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           line-height: 1.4;
         }
 
+        /* ── Perspective Navigation Cards (BALANCED) ────────────────── */
+        .balanced-zone--perspectives {
+          padding: 24px 0 16px;
+          border-top: 1px solid #1e2330;
+        }
+        .balanced-perspectives-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8.5px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          margin-bottom: 10px;
+        }
+        .balanced-perspectives-cards {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+        .balanced-perspective-card {
+          padding: 12px 14px;
+          border: 1px solid #1e2330;
+          border-radius: 6px;
+          background: rgba(20, 24, 32, 0.5);
+          transition: border-color 0.2s, background 0.2s;
+          cursor: default;
+        }
+        .balanced-perspective-card:hover {
+          border-color: #3a4560;
+          background: rgba(74, 158, 255, 0.03);
+        }
+        .balanced-perspective-card-title {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          color: #4a9eff;
+          margin-bottom: 4px;
+        }
+        .balanced-perspective-card[data-persona="BOARDROOM"] .balanced-perspective-card-title { color: #64ffda; }
+        .balanced-perspective-card[data-persona="OPERATOR"] .balanced-perspective-card-title { color: #ff9e4a; }
+        .balanced-perspective-card-question {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #7a8aaa;
+          line-height: 1.4;
+        }
+
         .balanced-zone--descent {
           padding: 32px 0 40px;
           border-top: 1px solid #1e2330;

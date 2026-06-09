@@ -5573,9 +5573,9 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
     const domConc = (cdc && cdc.domain_concentration) || []
     const locus = domConc.length > 0 ? domConc[0].domain : null
     const execCenter = cdc && cdc.execution_center ? cdc.execution_center : null
-    const themes = (cdc && cdc.consequence_themes) || []
-    const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
     const pLabel = projectionAuthority ? projectionAuthority.projectionLabel : 'P0'
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const rsigCount = sigs.filter(s => s.signal_family === 'RSIG').length
 
     return (
       <aside className="intel-interp intel-interp--balanced" data-tone={framing.tone} aria-label="Interpretation orientation">
@@ -5589,7 +5589,7 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
 
         {locus && (
           <div className="interp-block">
-            <div className="interp-section-label">PRIMARY ANCHOR</div>
+            <div className="interp-section-label">ANCHOR</div>
             <div className="interp-synthesis">{locus}</div>
             {execCenter && execCenter.toLowerCase() !== locus.toLowerCase() && (
               <div className="interp-synthesis" style={{ color: '#4a9eff', fontSize: '11px', marginTop: 4 }}>Execution: {execCenter}</div>
@@ -5598,8 +5598,22 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
         )}
 
         <div className="interp-block">
-          <div className="interp-section-label">SCOPE</div>
+          <div className="interp-section-label">AUTHORITY</div>
           <div className="interp-synthesis">{pLabel}</div>
+        </div>
+
+        {rsigCount > 0 && (
+          <div className="interp-block">
+            <div className="interp-section-label">RUNTIME</div>
+            <div className="interp-synthesis">{rsigCount} signal{rsigCount !== 1 ? 's' : ''}</div>
+          </div>
+        )}
+
+        <div className="interp-block">
+          <div className="interp-section-label interp-section-label--descent">PERSPECTIVES</div>
+          <div className="interp-synthesis interp-synthesis--descent">
+            BOARDROOM → verdict · DENSE → mechanics · OPERATOR → proof
+          </div>
         </div>
       </aside>
     )
@@ -6659,6 +6673,28 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
                   ) : null
                 })()}
 
+                {selected === 'interpret_operational_posture' && (() => {
+                  const scope = cdc && cdc.posture_scope
+                  const themes = (cdc && cdc.consequence_themes || [])
+                  const critCount = themes.filter(t => t.severity === 'CRITICAL' || t.severity === 'HIGH').length
+                  return (
+                    <div className="balanced-micro-visual">
+                      <div className="balanced-micro-row">
+                        <span className="balanced-micro-label">Scope</span>
+                        <span className="balanced-micro-status" style={{ color: scope === 'SYSTEMIC' ? '#ff6b6b' : scope === 'REGIONAL' ? '#ff9e4a' : '#64ffda' }}>{scope || 'LOCAL'}</span>
+                      </div>
+                      <div className="balanced-micro-row">
+                        <span className="balanced-micro-label">Critical dynamics</span>
+                        <span className="balanced-micro-status" style={{ color: critCount > 0 ? '#ff9e4a' : '#64ffda' }}>{critCount}</span>
+                      </div>
+                      <div className="balanced-micro-row">
+                        <span className="balanced-micro-label">Total findings</span>
+                        <span className="balanced-micro-status">{themes.length}</span>
+                      </div>
+                    </div>
+                  )
+                })()}
+
                 <div className="balanced-narrative-body">{s.why_it_matters}</div>
                 <div className="balanced-narrative-body">{s.operational_consequence}</div>
 
@@ -6720,17 +6756,21 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         )
       })()}
 
-      {/* Z5 — Descent */}
-      <div className="balanced-zone balanced-zone--descent">
-        <div className="balanced-descent-label">Descent Paths</div>
-        <div className="balanced-descent-cards">
-          <div className="balanced-descent-card">
-            <div className="balanced-descent-card-title">DENSE</div>
-            <div className="balanced-descent-card-desc">Inspect topology cognition and structural signal behavior.</div>
+      {/* Perspectives */}
+      <div className="balanced-zone balanced-zone--perspectives">
+        <div className="balanced-perspectives-label">EXPLORE OTHER PERSPECTIVES</div>
+        <div className="balanced-perspectives-cards">
+          <div className="balanced-perspective-card" data-persona="BOARDROOM">
+            <div className="balanced-perspective-card-title">BOARDROOM</div>
+            <div className="balanced-perspective-card-question">What should leadership conclude?</div>
           </div>
-          <div className="balanced-descent-card">
-            <div className="balanced-descent-card-title">OPERATOR</div>
-            <div className="balanced-descent-card-desc">Inspect evidence chain and operational proof.</div>
+          <div className="balanced-perspective-card" data-persona="DENSE">
+            <div className="balanced-perspective-card-title">DENSE</div>
+            <div className="balanced-perspective-card-question">Why does this happen?</div>
+          </div>
+          <div className="balanced-perspective-card" data-persona="OPERATOR">
+            <div className="balanced-perspective-card-title">OPERATOR</div>
+            <div className="balanced-perspective-card-question">What proves this?</div>
           </div>
         </div>
       </div>
