@@ -1576,11 +1576,12 @@ const EVIDENCE_MODE_LABEL = {
 function backfillSignalInterpretations(fullReport, synthesisResult) {
   if (!fullReport || !synthesisResult) return
   const existing = fullReport.signal_interpretations || []
-  if (existing.length > 0) return
+  const runtimeSignals = fullReport._runtime_signals || []
+  const hasRsigAlready = existing.some(s => s.signal_family === 'RSIG')
+  if (existing.length > 0 && (runtimeSignals.length === 0 || hasRsigAlready)) return
 
   const conditions = synthesisResult.conditions || []
-  const runtimeSignals = fullReport._runtime_signals || []
-  if (conditions.length === 0 && runtimeSignals.length === 0) return
+  if (existing.length === 0 && conditions.length === 0 && runtimeSignals.length === 0) return
 
   const registry = fullReport.semantic_domain_registry || []
   const rl = (id) => { const d = registry.find(r => r.domain_id === id); return d ? (d.business_label || d.domain_name || id) : id }
@@ -1634,7 +1635,12 @@ function backfillSignalInterpretations(fullReport, synthesisResult) {
     })
   }
 
-  fullReport.signal_interpretations = derived
+  if (existing.length > 0) {
+    const rsigOnly = derived.filter(s => s.signal_family === 'RSIG')
+    fullReport.signal_interpretations = [...existing, ...rsigOnly]
+  } else {
+    fullReport.signal_interpretations = derived
+  }
 }
 
 module.exports = { synthesize, synthesizeTeaser, extractFeatures, resolveDomainDisplay, translateCentralityNode, STRUCTURAL_ROLE_LABELS, CONDITION_VOCABULARY, SEVERITY_RANK, CONDITION_INTERVENTIONS, qualifyDomainBacking, BACKING_STATUS, backfillSignalInterpretations }

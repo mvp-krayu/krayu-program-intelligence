@@ -278,6 +278,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     if (synResult) {
       qualified._synthesisResult = synResult
       reportObject._synthesisResult = synResult
+      if (qualified._runtime_signals && qualified._runtime_signals.length > 0) {
+        reportObject._runtime_signals = qualified._runtime_signals
+      }
       backfillSignalInterpretations(reportObject, synResult)
       backfillSignalInterpretations(qualified, synResult)
     }
@@ -5112,6 +5115,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           background: rgba(100, 255, 218, 0.06);
           border-color: rgba(100, 255, 218, 0.2);
         }
+        .dense-signal-family-tag[data-family="RSIG"] {
+          color: #bb86fc;
+          background: rgba(187, 134, 252, 0.06);
+          border-color: rgba(187, 134, 252, 0.2);
+        }
         .dense-signal-level-note {
           font: italic 10px/1.35 'Courier New', monospace;
           color: #a0adc6;
@@ -5146,6 +5154,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
         .dense-signal-group[data-family="ISIG"] .dense-signal-group-label { color: #4a9eff; }
         .dense-signal-group[data-family="PSIG"] .dense-signal-group-label { color: #64ffda; }
+        .dense-signal-group[data-family="RSIG"] .dense-signal-group-label { color: #bb86fc; }
 
         /* Translated Signal Cognition Entries */
         .dense-signal-entry--translated {
@@ -5638,6 +5647,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .osi-family-tag[data-family="ISIG"] { color: #64ffda; border-color: rgba(100, 255, 218, 0.3); }
         .osi-family-tag[data-family="DPSIG"] { color: #ff9e4a; border-color: rgba(255, 158, 74, 0.3); }
         .osi-family-tag[data-family="PSIG"] { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); }
+        .osi-family-tag[data-family="RSIG"] { color: #bb86fc; border-color: rgba(187, 134, 252, 0.3); }
         .osi-family-label {
           font: 500 10px/1 -apple-system, BlinkMacSystemFont, sans-serif;
           color: #8a96b2;
@@ -5790,6 +5800,11 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           color: #64ffda;
           background: rgba(100, 255, 218, 0.06);
           border-color: rgba(100, 255, 218, 0.2);
+        }
+        .inv-signal-family-chip[data-family="RSIG"] {
+          color: #bb86fc;
+          background: rgba(187, 134, 252, 0.06);
+          border-color: rgba(187, 134, 252, 0.2);
         }
         td[data-severity="HIGH"],
         td[data-severity="CRITICAL"] { color: #ff6b6b; }

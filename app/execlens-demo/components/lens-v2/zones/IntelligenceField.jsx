@@ -138,7 +138,7 @@ function StructuralGlyph({ type, severity, size = 28 }) {
   return null
 }
 
-const PRESSURE_GLYPH_TYPE = { DPSIG: 'convergence', PSIG: 'spread', ISIG: 'hub', RESILIENCE: 'fragmented-ring' }
+const PRESSURE_GLYPH_TYPE = { DPSIG: 'convergence', PSIG: 'spread', ISIG: 'hub', RSIG: 'runtime', RESILIENCE: 'fragmented-ring' }
 const DYNAMICS_GLYPH_TYPE = {
   DELIVERY_PRESSURE_CONCENTRATION: 'convergence',
   DEPENDENCY_CHOKE_POINT: 'hub',
@@ -6534,13 +6534,14 @@ function DenseSignalSection({ fullReport }) {
   const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
   const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
   const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
-  const hasMultipleFamilies = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0) > 1
+  const rsigSigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const hasMultipleFamilies = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0) + (rsigSigs.length > 0) > 1
 
   return (
     <div className="actor actor--signal-assessment" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SA</span>
-        <span className="actor-name">Structural Signal Cognition · {sigs.length} signals</span>
+        <span className="actor-name">Signal Cognition · {sigs.length} signals across {(isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0) + (rsigSigs.length > 0)} families</span>
       </div>
       {hasMultipleFamilies ? (
         <>
@@ -6569,6 +6570,15 @@ function DenseSignalSection({ fullReport }) {
                 <span className="dense-signal-group-count">{psigSigs.length}</span>
               </div>
               {psigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
+            </div>
+          )}
+          {rsigSigs.length > 0 && (
+            <div className="dense-signal-group" data-family="RSIG">
+              <div className="dense-signal-group-head">
+                <span className="dense-signal-group-label">Runtime Connectivity</span>
+                <span className="dense-signal-group-count">{rsigSigs.length}</span>
+              </div>
+              {rsigSigs.map(sig => <DenseSignalEntry key={sig.signal_id} sig={sig} />)}
             </div>
           )}
         </>
@@ -7374,7 +7384,8 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
   const isigSigs = sigs.filter(s => s.signal_family === 'ISIG')
   const dpsigSigs = sigs.filter(s => !s.signal_family || s.signal_family === 'DPSIG')
   const psigSigs = sigs.filter(s => s.signal_family === 'PSIG')
-  const familyCount = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0)
+  const rsigSigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const familyCount = (isigSigs.length > 0) + (dpsigSigs.length > 0) + (psigSigs.length > 0) + (rsigSigs.length > 0)
 
   if (!sigs.length) return null
 
@@ -7417,6 +7428,7 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
     ISIG: { label: 'File Structure', hint: 'L1', desc: 'File-level import dependency analysis' },
     DPSIG: { label: 'Topology Distribution', hint: null, desc: 'Cluster-level structural mass distribution' },
     PSIG: { label: 'Architectural Binding', hint: 'L3', desc: 'Cross-domain coupling at architectural level' },
+    RSIG: { label: 'Runtime Connectivity', hint: null, desc: 'Event flow, messaging, and execution pathway analysis' },
   }
 
   const renderGroup = (familySigs, familyKey) => {
@@ -7445,6 +7457,7 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
       {renderGroup(isigSigs, 'ISIG')}
       {renderGroup(dpsigSigs, 'DPSIG')}
       {renderGroup(psigSigs, 'PSIG')}
+      {renderGroup(rsigSigs, 'RSIG')}
     </div>
   )
 }
