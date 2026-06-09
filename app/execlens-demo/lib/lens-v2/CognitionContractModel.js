@@ -301,8 +301,8 @@ function resolveCognitionContract(surfaceId, surface, fullReport, legacyContract
   // 2. Legacy contract: direct by surface_id
   let contract = legacyContracts[surfaceId]
 
-  // 3. Legacy contract: via condition_type mapping
-  if (!contract && surface.condition_type) {
+  // 3. Legacy contract: via condition_type mapping (skip for combination/consequence surfaces)
+  if (!contract && surface.condition_type && !surface.is_combination && !surface.combination_pattern) {
     if (!_conditionIndex) _conditionIndex = buildConditionIndex(SURFACE_CONDITION_MAP)
     const legacyId = _conditionIndex[surface.condition_type]
     if (legacyId) contract = legacyContracts[legacyId]

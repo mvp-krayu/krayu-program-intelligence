@@ -205,15 +205,37 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
           <summary className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</summary>
           {surface.constituents ? (
             <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
-          ) : surface.affected_domains && surface.affected_domains.length > 0 ? (
+          ) : null}
+          {surface.affected_domains && surface.affected_domains.length > 0 && (
             <div className="sw-intel-surface-detail">
+              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>AFFECTED DOMAINS</span></div>
               {surface.affected_domains.map(d => (
                 <div key={d} className="sw-intel-surface-detail-row">
                   <span className="sw-intel-surface-detail-label" title={d}>{resolveDomain ? resolveDomain(d) : d}</span>
                 </div>
               ))}
             </div>
-          ) : null}
+          )}
+          {surface.source_conditions && surface.source_conditions.length > 0 && (
+            <div className="sw-intel-surface-detail">
+              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>SOURCE CONDITIONS</span></div>
+              {surface.source_conditions.map((sc, i) => (
+                <div key={i} className="sw-intel-surface-detail-row">
+                  <span className="sw-intel-surface-detail-label">{sc.display_title || sc.condition_type}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {surface.causal_types && surface.causal_types.length > 0 && !surface.source_conditions && (
+            <div className="sw-intel-surface-detail">
+              <div className="sw-intel-surface-detail-row"><span className="sw-intel-surface-detail-label" style={{ color: '#5a6580', fontSize: '8px', letterSpacing: '0.08em' }}>CAUSAL DRIVERS</span></div>
+              {surface.causal_types.map((ct, i) => (
+                <div key={i} className="sw-intel-surface-detail-row">
+                  <span className="sw-intel-surface-detail-label">{ct.replace(/_/g, ' ')}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </details>
       ) : (
         <div className="sw-intel-surface-footer">
