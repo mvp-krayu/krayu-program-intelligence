@@ -1188,6 +1188,38 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         </>
       )}
 
+      {isDense && resolvedCognitionContract && resolvedCognitionContract.surface && (() => {
+        const surf = resolvedCognitionContract.surface
+        const interp = resolvedCognitionContract.interpretation
+        const evidence = interp && interp.structuralEvidence ? interp.structuralEvidence : []
+        const affectedDomains = surf.affected_domains || []
+        const allSigs = (fullReport && fullReport.signal_interpretations) || []
+        const rsigSupport = allSigs.filter(s => s.signal_family === 'RSIG' && affectedDomains.some(d => (s.affected_domains || []).includes(d)))
+        const gl = fullReport && fullReport.governance_lifecycle
+        const condCount = surf.condition_ids ? surf.condition_ids.length : (surf.condition_count || 0)
+
+        return densityClass === 'OPERATOR_DENSE' ? (
+          <div className="support-block support-block--evidence-validation">
+            <div className="support-label">EVIDENCE VALIDATION</div>
+            <div className="support-kv-list">
+              <div className="support-kv"><span className="support-kv-key">Supports</span><span className="support-kv-val">{evidence.length} structural · {condCount} conditions</span></div>
+              {rsigSupport.length > 0 && <div className="support-kv"><span className="support-kv-key">Runtime support</span><span className="support-kv-val">{rsigSupport.length} RSIG signal{rsigSupport.length !== 1 ? 's' : ''}</span></div>}
+              <div className="support-kv"><span className="support-kv-key">Affected domains</span><span className="support-kv-val">{affectedDomains.length}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Governance</span><span className="support-kv-val">{gl && gl.available ? `${gl.s_level} governed` : 'Structural only'}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Confidence</span><span className="support-kv-val">{surf.severity === 'CRITICAL' || surf.severity === 'HIGH' ? 'High — multiple evidence sources converge' : 'Moderate — structurally derived'}</span></div>
+            </div>
+            {surf.is_category_surface && (
+              <div className="support-kv" style={{ marginTop: 6, borderTop: '1px solid #1e2330', paddingTop: 6 }}>
+                <span className="support-kv-key" style={{ color: '#ff9e4a' }}>Challenges</span>
+                <span className="support-kv-val" style={{ color: '#7a8aaa' }}>
+                  {surf.surface_id === 'EXECUTION_BLINDNESS' ? 'Redundant runtime paths would eliminate this finding' : 'Gravity convergence would eliminate this divergence'}
+                </span>
+              </div>
+            )}
+          </div>
+        ) : null
+      })()}
+
       {resolvedCognitionContract && resolvedCognitionContract.guidedCognition && resolvedCognitionContract.guidedCognition.length > 0 && (
         <div className="support-block support-block--cognition-queries" data-surface={resolvedCognitionContract.surface.surface_id}>
           <div className="support-zone-header">
@@ -4866,6 +4898,34 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
                   <span className="cognition-progression-effect">{p.effect}</span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {cc.surface.is_category_surface && (() => {
+            const allSurfaces = fullReport && fullReport._synthesisResult && fullReport._synthesisResult._swIntelSurfaces || []
+            const contributing = allSurfaces.filter(s => !s.is_category_surface && s.severity !== 'NOMINAL')
+            return contributing.length > 0 ? (
+              <div className="cognition-contributing">
+                <div className="interp-zone-signals-label">SYNTHESIZES FROM</div>
+                {contributing.slice(0, 5).map((s, i) => (
+                  <div key={i} className="cognition-contributing-item" data-severity={s.severity}>
+                    <span className="cognition-contributing-severity">{s.severity}</span>
+                    <span className="cognition-contributing-name">{s.surface_name}</span>
+                  </div>
+                ))}
+                {contributing.length > 5 && <div className="cognition-contributing-overflow">+{contributing.length - 5} more</div>}
+              </div>
+            ) : null
+          })()}
+
+          {cc.surface.is_category_surface && (
+            <div className="cognition-falsification">
+              <div className="interp-zone-signals-label">WHAT WOULD INVALIDATE THIS</div>
+              <div className="cognition-falsification-text">
+                {cc.surface.surface_id === 'EXECUTION_BLINDNESS'
+                  ? 'If all runtime dependencies had redundant paths and no single broker/event coordination point existed, execution blindness would not manifest.'
+                  : 'If code gravity (structural mass) and operational gravity (execution load) converged on the same domains, this divergence would not exist.'}
+              </div>
             </div>
           )}
         </div>

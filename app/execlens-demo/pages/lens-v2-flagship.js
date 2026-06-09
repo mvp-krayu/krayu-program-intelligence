@@ -2807,6 +2807,51 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .actor-runtime-sev-header[data-severity="HIGH"] { color: #ff9e4a; }
         .actor-runtime-sev-header[data-severity="ELEVATED"] { color: #ffd700; }
 
+        /* ── Apex Cognition Surface (LEFT, OPERATOR) ──────────────── */
+        .cognition-contributing {
+          margin-top: 8px;
+          padding-top: 6px;
+          border-top: 1px solid rgba(74, 158, 255, 0.12);
+        }
+        .cognition-contributing-item {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+          padding: 2px 0;
+        }
+        .cognition-contributing-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.06em;
+          min-width: 52px;
+          color: #5a6580;
+        }
+        .cognition-contributing-item[data-severity="CRITICAL"] .cognition-contributing-severity,
+        .cognition-contributing-item[data-severity="HIGH"] .cognition-contributing-severity { color: #ff9e4a; }
+        .cognition-contributing-name {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+        }
+        .cognition-falsification {
+          margin-top: 8px;
+          padding-top: 6px;
+          border-top: 1px solid rgba(255, 158, 74, 0.12);
+        }
+        .cognition-falsification-text {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #ff9e4a;
+          font-style: italic;
+          line-height: 1.4;
+          margin-top: 3px;
+        }
+
+        /* ── Evidence Validation (RIGHT, OPERATOR SW-INTEL) ──────── */
+        .support-block--evidence-validation {
+          border-top: 1px solid rgba(74, 158, 255, 0.15);
+        }
+
         /* ── Propagation Compact (OPERATOR) ──────────────────────────── */
         .pf-compact-summary {
           display: flex;
