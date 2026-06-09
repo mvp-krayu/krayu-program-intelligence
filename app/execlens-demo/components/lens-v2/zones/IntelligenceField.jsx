@@ -53,6 +53,7 @@ const DENSE_ZONE_REGISTRY = {
   pressureZoneFocus:   { key: 'pressureZoneFocus',     code: 'PZ', label: 'Pressure Zone Focus' },
   governanceLifecycle: { key: 'governanceLifecycle',   code: 'GL', label: 'Governance Lifecycle' },
   evidenceTrace:       { key: 'evidenceTrace',        code: 'ET', label: 'Evidence Lineage' },
+  runtimeConnectivity: { key: 'runtimeConnectivity',  code: 'RC', label: 'Runtime Connectivity' },
 }
 
 const REP_TIER_COLOR = {
@@ -1003,6 +1004,13 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
               <div className="support-kv"><span className="support-kv-key">Backed</span><span className="support-kv-val">{ts.structurally_backed_count || 0}</span></div>
             </>
           )},
+          runtimeConnectivity: { label: 'RUNTIME EVIDENCE', render: () => (
+            <>
+              <div className="support-kv"><span className="support-kv-key">RSIG signals</span><span className="support-kv-val">{rsigCount}</span></div>
+              <div className="support-kv"><span className="support-kv-key">Evidence source</span><span className="support-kv-val">Event flow · MQTT · WebSocket</span></div>
+              <div className="support-kv"><span className="support-kv-key">Elevated</span><span className="support-kv-val">{allSigs.filter(s => s.signal_family === 'RSIG' && s.severity !== 'NOMINAL').length}</span></div>
+            </>
+          )},
           evidenceTrace: { label: 'LINEAGE STATUS', render: () => {
             const rv = fullReport && fullReport.revalidation_intelligence
             const cc = fullReport && fullReport.chronicle_certification
@@ -1642,6 +1650,23 @@ const DENSE_ZONE_INTERPRETATIONS = {
           interpretation: `${cls} — ${count} condition${count !== 1 ? 's' : ''}`,
           concentration: null,
         })),
+      }
+    },
+  },
+  runtimeConnectivity: {
+    sectionLabel: 'RUNTIME CONNECTIVITY',
+    code: 'RC',
+    derive: (fullReport) => {
+      const sigs = (fullReport && fullReport.signal_interpretations) || []
+      const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+      const elevated = rsigs.filter(s => s.severity !== 'NOMINAL')
+      const domains = [...new Set(rsigs.flatMap(s => s.affected_domains || []))]
+      return {
+        heading: 'Where execution pressure flows at runtime',
+        body: rsigs.length > 0
+          ? `${rsigs.length} runtime signal${rsigs.length !== 1 ? 's' : ''} from event flow, messaging, and connectivity graphs. ${elevated.length} elevated — affecting ${domains.length} domain${domains.length !== 1 ? 's' : ''}.`
+          : 'No runtime connectivity evidence available.',
+        structuralNote: domains.length > 0 ? `Runtime-affected: ${domains.slice(0, 4).join(', ')}${domains.length > 4 ? ` +${domains.length - 4}` : ''}` : null,
       }
     },
   },
@@ -7449,24 +7474,60 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
   const aliRules = renderingMeta.ali_rules_applied || []
   const qRules = renderingMeta.qualifier_rules_applied || []
 
+  const allSigs = (fullReport && fullReport.signal_interpretations) || []
+  const synResult = fullReport && fullReport._synthesisResult
+  const allConditions = synResult ? (synResult.conditions || []).filter(c => c.severity !== 'NOMINAL') : []
+  const elevatedConditions = allConditions.filter(c => c.severity === 'HIGH' || c.severity === 'CRITICAL' || c.severity === 'ELEVATED')
+  const criticalConditions = allConditions.filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH')
+  const rsigSigsLocal = allSigs.filter(s => s.signal_family === 'RSIG')
+  const structSigsLocal = allSigs.filter(s => s.signal_family !== 'RSIG')
+  const pLabel = fullReport && fullReport._projectionAuthority ? fullReport._projectionAuthority.projectionLabel : null
+  const qClass = fullReport && fullReport.qualifier_class
+
   return (
     <div className="rep-field rep-field--operator" ref={fieldRef}>
       <RepModeTag
         label="Evidence lens"
-        sub="Analyst · structural substrate → signals → conditions → governance → lineage"
+        sub={`${pLabel || 'P0'}${qClass ? ' · ' + qClass : ''} · ${criticalConditions.length} critical · ${allSigs.length} signals`}
         zones={[
-          { id: 'Z1', name: 'Structural Substrate' },
-          { id: 'Z3', name: 'Signal Intelligence' },
-          { id: 'Z4', name: 'Domain Cognition' },
-          { id: 'Z5', name: 'Governance State' },
-          { id: 'Z6', name: 'Evidence Lineage' },
+          { id: 'Z1', name: 'Topology' },
+          { id: 'Z2', name: 'Runtime' },
+          { id: 'Z3', name: 'Signals' },
+          { id: 'Z4', name: 'Governance' },
+          { id: 'Z5', name: 'Lineage' },
         ]}
       />
 
-      <OperatorReadingGuide />
+      <div className="operator-evidence-summary" data-zone-key="semanticTopology">
+        <div className="operator-evidence-chain">
+          <div className="operator-chain-node" data-has={allSigs.length > 0 ? 'true' : 'false'}>
+            <span className="operator-chain-count">{allSigs.length}</span>
+            <span className="operator-chain-label">signals</span>
+          </div>
+          <span className="operator-chain-arrow">→</span>
+          <div className="operator-chain-node" data-has={allConditions.length > 0 ? 'true' : 'false'}>
+            <span className="operator-chain-count">{allConditions.length}</span>
+            <span className="operator-chain-label">conditions</span>
+          </div>
+          <span className="operator-chain-arrow">→</span>
+          <div className="operator-chain-node" data-has={elevatedConditions.length > 0 ? 'true' : 'false'}>
+            <span className="operator-chain-count">{elevatedConditions.length}</span>
+            <span className="operator-chain-label">elevated</span>
+          </div>
+          <span className="operator-chain-arrow">→</span>
+          <div className="operator-chain-node operator-chain-node--critical" data-has={criticalConditions.length > 0 ? 'true' : 'false'}>
+            <span className="operator-chain-count">{criticalConditions.length}</span>
+            <span className="operator-chain-label">critical</span>
+          </div>
+        </div>
+        <div className="operator-evidence-breakdown">
+          {structSigsLocal.length > 0 && <span className="operator-evidence-chip">{structSigsLocal.length} structural</span>}
+          {rsigSigsLocal.length > 0 && <span className="operator-evidence-chip operator-evidence-chip--runtime">{rsigSigsLocal.length} runtime</span>}
+        </div>
+      </div>
 
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (
-        <div className="operator-topology-preview" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
+        <div className="operator-topology-compact" onClick={openTopoModal} role="button" tabIndex={0} aria-label="Open topology explorer" onKeyDown={e => e.key === 'Enter' && openTopoModal()}>
           <TopologyGraph
             domains={fullReport.semantic_domain_registry}
             clusters={fullReport.semantic_cluster_registry || []}
@@ -7474,12 +7535,36 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
             pressureZoneLabel={pressureZone}
             pressureZoneState={fullReport.pressure_zone_state}
           />
-          <div className="operator-topology-hint">Open forensic topology</div>
+          <div className="operator-topology-hint">Expand topology</div>
         </div>
       )}
 
       {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
         <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+      )}
+
+      {rsigSigsLocal.length > 0 && (
+        <div className="actor actor--runtime-connectivity" data-zone-key="runtimeConnectivity">
+          <div className="actor-tag">
+            <span className="actor-code">RC</span>
+            <span className="actor-name">Runtime Connectivity · {rsigSigsLocal.length} signals</span>
+          </div>
+          <div className="actor-runtime-signals">
+            {rsigSigsLocal.map(sig => (
+              <div key={sig.signal_id} className="actor-runtime-signal" data-severity={sig.severity}>
+                <div className="actor-runtime-signal-head">
+                  <span className="actor-runtime-signal-id">{sig.signal_id}</span>
+                  <span className="actor-runtime-signal-severity" data-severity={sig.severity}>{sig.severity}</span>
+                </div>
+                <div className="actor-runtime-signal-name">{sig.signal_name}</div>
+                {sig.interpretation && <div className="actor-runtime-signal-interp">{sig.interpretation}</div>}
+                {sig.affected_domains && sig.affected_domains.length > 0 && (
+                  <div className="actor-runtime-signal-domains">{sig.affected_domains.join(', ')}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       <OperatorSignalIntelligence signalRows={signalRows} fullReport={fullReport} />
@@ -7602,20 +7687,24 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
     RSIG: { label: 'Runtime Connectivity', hint: null, desc: 'Event flow, messaging, and execution pathway analysis' },
   }
 
+  const structuralSigs = [...isigSigs, ...dpsigSigs, ...psigSigs]
+  const elevatedCount = structuralSigs.filter(s => s.severity !== 'NOMINAL').length
+
   const renderGroup = (familySigs, familyKey) => {
     if (!familySigs.length) return null
     const fl = FAMILY_LABELS[familyKey]
     return (
-      <div key={familyKey} className="osi-family-group" data-family={familyKey}>
-        <div className="osi-family-header">
+      <details key={familyKey} className="osi-family-group" data-family={familyKey}>
+        <summary className="osi-family-header">
           <span className="osi-family-tag" data-family={familyKey}>{fl.hint ? <TermHint term={fl.hint}>{familyKey}</TermHint> : familyKey}</span>
           <span className="osi-family-label">{fl.label}</span>
           <span className="osi-family-count">{familySigs.length}</span>
-        </div>
+          <span className="osi-family-elevated">{familySigs.filter(s => s.severity !== 'NOMINAL').length} elevated</span>
+        </summary>
         <div className="osi-family-cards">
           {familySigs.map(renderCard)}
         </div>
-      </div>
+      </details>
     )
   }
 
@@ -7623,12 +7712,11 @@ function OperatorSignalIntelligence({ signalRows, fullReport }) {
     <div className="actor actor--signal-intelligence" data-zone-key="signalAssessment">
       <div className="actor-tag">
         <span className="actor-code">SI</span>
-        <span className="actor-name">Signal Intelligence · {sigs.length} signals across {familyCount} {familyCount === 1 ? 'family' : 'families'}</span>
+        <span className="actor-name">Signal Decomposition · {structuralSigs.length} structural · {elevatedCount} elevated</span>
       </div>
       {renderGroup(isigSigs, 'ISIG')}
       {renderGroup(dpsigSigs, 'DPSIG')}
       {renderGroup(psigSigs, 'PSIG')}
-      {renderGroup(rsigSigs, 'RSIG')}
     </div>
   )
 }

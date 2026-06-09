@@ -286,6 +286,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     }
 
     const authority = computeProjectionAuthority(qualified)
+    reportObject._projectionAuthority = authority
     let filteredSynResult = synResult
     if (synResult && authority && authority.projectionLevel < 4) {
       const { authorizeConditions } = require('../lib/lens-v2/ProjectionAuthorityKernel')
@@ -2456,6 +2457,148 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .dense-topology-preview:hover .dense-topology-hint,
         .operator-topology-preview:hover .operator-topology-hint {
           color: #4a9eff;
+        }
+
+        /* ── Operator Evidence Summary + Chain ──────────────────────── */
+        .operator-evidence-summary {
+          padding: 16px 0;
+          border-bottom: 1px solid #1e2330;
+        }
+        .operator-evidence-chain {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .operator-chain-node {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 6px 12px;
+          border: 1px solid #2a2f40;
+          border-radius: 4px;
+          min-width: 56px;
+        }
+        .operator-chain-node[data-has="true"] { border-color: #3a4560; }
+        .operator-chain-node--critical[data-has="true"] { border-color: rgba(255, 107, 107, 0.3); }
+        .operator-chain-count {
+          font-family: 'Courier New', monospace;
+          font-size: 16px;
+          font-weight: 700;
+          color: #5a6580;
+        }
+        .operator-chain-node[data-has="true"] .operator-chain-count { color: #ccd6f6; }
+        .operator-chain-node--critical[data-has="true"] .operator-chain-count { color: #ff6b6b; }
+        .operator-chain-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #4a5570;
+          margin-top: 2px;
+        }
+        .operator-chain-arrow {
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          color: #3a4560;
+        }
+        .operator-evidence-breakdown {
+          display: flex;
+          gap: 8px;
+          margin-top: 8px;
+        }
+        .operator-evidence-chip {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #6a7a9a;
+          letter-spacing: 0.04em;
+        }
+        .operator-evidence-chip--runtime { color: #bb86fc; }
+
+        /* ── Compact Topology (OPERATOR) ────────────────────────────── */
+        .operator-topology-compact {
+          padding: 8px 0;
+          cursor: pointer;
+          position: relative;
+          transition: background 0.2s;
+          max-height: 200px;
+          overflow: hidden;
+        }
+        .operator-topology-compact:hover { background: rgba(74, 158, 255, 0.03); }
+        .operator-topology-compact .topo-graph-wrap { margin-bottom: 0; }
+        .operator-topology-compact .topo-graph-heading { font-size: 9px; text-align: center; }
+        .operator-topology-compact .topo-graph-svg { pointer-events: none; }
+
+        /* ── Runtime Connectivity Zone (OPERATOR) ────────────────────── */
+        .actor--runtime-connectivity {
+          border-top: 1px solid rgba(187, 134, 252, 0.15);
+        }
+        .actor--runtime-connectivity .actor-code { color: #bb86fc; }
+        .actor--runtime-connectivity .actor-name { color: #bb86fc; }
+        .actor-runtime-signals {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 8px;
+        }
+        .actor-runtime-signal {
+          padding: 8px 10px;
+          border: 1px solid rgba(187, 134, 252, 0.1);
+          border-radius: 4px;
+          background: rgba(187, 134, 252, 0.02);
+        }
+        .actor-runtime-signal-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .actor-runtime-signal-id {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #bb86fc;
+          letter-spacing: 0.04em;
+        }
+        .actor-runtime-signal-severity {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+        }
+        .actor-runtime-signal-severity[data-severity="ELEVATED"] { color: #ffd700; }
+        .actor-runtime-signal-severity[data-severity="MODERATE"] { color: #7a8aaa; }
+        .actor-runtime-signal-severity[data-severity="HIGH"] { color: #ff9e4a; }
+        .actor-runtime-signal-severity[data-severity="CRITICAL"] { color: #ff6b6b; }
+        .actor-runtime-signal-name {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11.5px;
+          color: #ccd6f6;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+        .actor-runtime-signal-interp {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #7a8aaa;
+          line-height: 1.4;
+          margin-top: 3px;
+        }
+        .actor-runtime-signal-domains {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+          margin-top: 4px;
+        }
+
+        /* ── Collapsed Signal Families (OPERATOR) ────────────────────── */
+        .osi-family-group summary {
+          cursor: pointer;
+          list-style: none;
+        }
+        .osi-family-group summary::-webkit-details-marker { display: none; }
+        .osi-family-elevated {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          color: #5a6580;
+          margin-left: auto;
         }
 
         /* ── Investigation Governance Audit ── */
