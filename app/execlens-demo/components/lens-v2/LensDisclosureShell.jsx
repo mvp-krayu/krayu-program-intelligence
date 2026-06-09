@@ -161,6 +161,7 @@ export default function LensDisclosureShell({
         if (renderState === 'BLOCKED') return null
         return <DeclarationZone renderState={renderState} adapted={adapted} boardroomMode={boardroomMode} fullReport={fullReport} boardroomProjection={boardroomProjection} densityClass={densityClass} />
       case 'QualifierMandate':
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
         return (
           <QualifierMandate
             qualifierClass={qualifierClass}
@@ -171,6 +172,7 @@ export default function LensDisclosureShell({
           />
         )
       case 'GovernanceRibbon':
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
         return (
           <GovernanceRibbon
             governance={governance}
@@ -189,6 +191,7 @@ export default function LensDisclosureShell({
           />
         )
       case 'ReconciliationAwarenessZone':
+        if (boardroomMode || densityClass === 'EXECUTIVE_DENSE' || densityClass === 'OPERATOR_DENSE') return null
         return (
           <ReconciliationAwarenessZone
             awareness={reconciliationAwareness}
