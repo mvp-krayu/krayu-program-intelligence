@@ -12755,6 +12755,59 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         .sw-intel-surface[data-severity="ELEVATED"] { border-left-color: #ff9e4a; }
         .sw-intel-surface[data-severity="MODERATE"] { border-left-color: #ffd700; }
         .sw-intel-surface[data-severity="LOW"] { border-left-color: #64ffda; }
+        /* ── Verification Mode (OPERATOR SW-INTEL) ───────────────────── */
+        .sw-intel-surface--verify {
+          border-left-color: #4a9eff;
+        }
+        .sw-intel-surface-verification {
+          margin-top: 8px;
+          padding-top: 8px;
+          border-top: 1px solid #1e2330;
+        }
+        .sw-intel-verify-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .sw-intel-verify-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+        .sw-intel-verify-key {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #4a5570;
+          min-width: 70px;
+        }
+        .sw-intel-verify-val {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10.5px;
+          color: #8a96b2;
+        }
+        .sw-intel-verify-falsification {
+          margin-top: 8px;
+          padding-top: 6px;
+          border-top: 1px solid rgba(255, 158, 74, 0.1);
+        }
+        .sw-intel-verify-falsification-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8px;
+          letter-spacing: 0.1em;
+          color: #ff9e4a;
+          display: block;
+          margin-bottom: 3px;
+        }
+        .sw-intel-verify-falsification-text {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 10px;
+          color: #7a8aaa;
+          font-style: italic;
+          line-height: 1.4;
+        }
+
         .sw-intel-surface--active {
           background: #181c28;
           border-color: #3a4060;

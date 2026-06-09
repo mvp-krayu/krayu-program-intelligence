@@ -76,10 +76,23 @@ function QualificationContextStrip({ decomposition, qualification }) {
 // ─── COGNITION SURFACE CARD ─────────────────────────────────────────
 // Each surface is a compressed operational assessment, not a list panel
 
-function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain, domainLabelMap }) {
+const FALSIFICATION_PATHS = {
+  EXECUTION_BLINDNESS: 'If all runtime dependencies had redundant paths and no single broker/event coordination point existed, this finding would not manifest.',
+  GRAVITY_DIVERGENCE: 'If code gravity (structural mass) and operational gravity (execution load) converged on the same domains, this divergence would not exist.',
+  DELIVERY_FRAGILITY: 'If delivery pressure were distributed across multiple independent domains rather than concentrated, fragility would not compound.',
+  COORDINATION_SATURATION: 'If coordination paths were decentralized with no single high-centrality orchestrator, saturation would not occur.',
+  INTEGRATION_EXPOSURE: 'If integration boundaries were encapsulated with no pass-through coupling, exposure would not propagate.',
+  STRUCTURAL_DEBT_ACCUMULATION: 'If structural debt were actively remediated and not accumulating across governance cycles, this finding would resolve.',
+  ABSENCE_PROFILE: 'If all expected evidence classes were present and no blindness types were active, this absence profile would be empty.',
+  PROPAGATION_RISK: 'If propagation chains had circuit breakers and no asymmetric fan-out existed, propagation risk would be contained.',
+}
+
+function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeConditions, resolveDomain, domainLabelMap, projectionMode }) {
   const [expanded, setExpanded] = useState(false)
   const icon = SURFACE_ICON[surface.surface_id] || '◆'
   const sevColor = SEVERITY_COLOR[surface.severity] || '#7a8aaa'
+  const isVerify = projectionMode === 'verify'
+  const isExplain = projectionMode === 'explain' || !projectionMode
 
   const relatedConditions = useMemo(() => {
     if (!activeConditions || !activeConditions.length) return []
@@ -89,15 +102,16 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
 
   return (
     <div
-      className={`sw-intel-surface${active ? ' sw-intel-surface--active' : ''}`}
+      className={`sw-intel-surface${active ? ' sw-intel-surface--active' : ''}${isVerify ? ' sw-intel-surface--verify' : ''}`}
       data-severity={surface.severity}
       data-surface={surface.surface_id}
+      data-projection={projectionMode || 'explain'}
       onClick={onSelect ? () => onSelect(surface.surface_id) : undefined}
       role={onSelect ? 'button' : undefined}
       tabIndex={onSelect ? 0 : undefined}
       onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(surface.surface_id) } } : undefined}
     >
-      {relatedConditions.length > 0 && (
+      {isExplain && relatedConditions.length > 0 && (
         <div className="sw-intel-surface-condition-link">
           {relatedConditions.map(c => (
             <span key={c.condition_id} className="sw-intel-condition-tag" data-severity={c.severity}>
@@ -112,38 +126,73 @@ function CognitionSurfaceCard({ surface, expandable, active, onSelect, activeCon
         <span className="sw-intel-surface-severity" style={{ color: sevColor }}>{surface.severity}</span>
       </div>
       <div className="sw-intel-surface-summary">{surface.operational_summary}</div>
-      <div className="sw-intel-surface-consequence">{surface.consequence}</div>
-      {surface.affected_domains && surface.affected_domains.length > 0 && (() => {
-        const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'App', UTILITY: 'Utility' }
-        return (
-          <div className="sw-intel-surface-domains">
-            {surface.affected_domains.slice(0, expanded ? undefined : 4).map(d => {
-              const entry = domainLabelMap && domainLabelMap._profiles && domainLabelMap._profiles[d]
-              const name = resolveDomain ? resolveDomain(d) : d
-              const role = entry ? (ROLE_SHORT[entry.roleRaw] || null) : null
-              return (
-                <span key={d} className="domain-chip" data-severity={surface.severity} title={d}>
-                  {name}
-                  {role && <span className="domain-chip-role">{role}</span>}
-                </span>
-              )
-            })}
-            {!expanded && surface.affected_domains.length > 4 && (
-              <span className="sw-intel-surface-domain-more">+{surface.affected_domains.length - 4}</span>
-            )}
-          </div>
-        )
-      })()}
-      {expandable && surface.constituents && (
+
+      {isExplain && (
         <>
-          {expanded && (
-            <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />
+          <div className="sw-intel-surface-consequence">{surface.consequence}</div>
+          {surface.affected_domains && surface.affected_domains.length > 0 && (() => {
+            const ROLE_SHORT = { FOUNDATION: 'Foundation', SHARED_LIBRARY: 'Shared Library', EXECUTION_ENGINE: 'Execution Engine', API_BOUNDARY: 'API', AUTH_BOUNDARY: 'Auth', TEST_INFRASTRUCTURE: 'Test', CLIENT_INTERFACE: 'Client', STREAMING_INTERFACE: 'Streaming', BUILD_INFRASTRUCTURE: 'Build', APPLICATION_DOMAIN: 'App', UTILITY: 'Utility' }
+            return (
+              <div className="sw-intel-surface-domains">
+                {surface.affected_domains.slice(0, expanded ? undefined : 4).map(d => {
+                  const entry = domainLabelMap && domainLabelMap._profiles && domainLabelMap._profiles[d]
+                  const name = resolveDomain ? resolveDomain(d) : d
+                  const role = entry ? (ROLE_SHORT[entry.roleRaw] || null) : null
+                  return (
+                    <span key={d} className="domain-chip" data-severity={surface.severity} title={d}>
+                      {name}
+                      {role && <span className="domain-chip-role">{role}</span>}
+                    </span>
+                  )
+                })}
+                {!expanded && surface.affected_domains.length > 4 && (
+                  <span className="sw-intel-surface-domain-more">+{surface.affected_domains.length - 4}</span>
+                )}
+              </div>
+            )
+          })()}
+          {expandable && surface.constituents && (
+            <>
+              {expanded && <CognitionSurfaceDetail surface={surface} resolveDomain={resolveDomain} />}
+              <button className="sw-intel-surface-expand" onClick={(e) => { e.stopPropagation(); setExpanded(p => !p) }} type="button">
+                {expanded ? '▴ collapse' : '▾ structural detail'}
+              </button>
+            </>
           )}
-          <button className="sw-intel-surface-expand" onClick={() => setExpanded(p => !p)} type="button">
-            {expanded ? '▴ collapse' : '▾ structural detail'}
-          </button>
         </>
       )}
+
+      {isVerify && (
+        <div className="sw-intel-surface-verification">
+          <div className="sw-intel-verify-grid">
+            <div className="sw-intel-verify-row">
+              <span className="sw-intel-verify-key">Supports</span>
+              <span className="sw-intel-verify-val">{relatedConditions.length} condition{relatedConditions.length !== 1 ? 's' : ''} · {surface.evidence_density || 0} evidence</span>
+            </div>
+            <div className="sw-intel-verify-row">
+              <span className="sw-intel-verify-key">Domains</span>
+              <span className="sw-intel-verify-val">{(surface.affected_domains || []).length} affected</span>
+            </div>
+            {surface.is_runtime && (
+              <div className="sw-intel-verify-row">
+                <span className="sw-intel-verify-key">Runtime</span>
+                <span className="sw-intel-verify-val">Runtime evidence contributes</span>
+              </div>
+            )}
+            <div className="sw-intel-verify-row">
+              <span className="sw-intel-verify-key">Confidence</span>
+              <span className="sw-intel-verify-val">{relatedConditions.length >= 2 ? 'High — multiple sources converge' : relatedConditions.length === 1 ? 'Moderate — single condition' : 'Low — no direct conditions'}</span>
+            </div>
+          </div>
+          {FALSIFICATION_PATHS[surface.surface_id] && (
+            <div className="sw-intel-verify-falsification">
+              <span className="sw-intel-verify-falsification-label">FALSIFICATION</span>
+              <span className="sw-intel-verify-falsification-text">{FALSIFICATION_PATHS[surface.surface_id]}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="sw-intel-surface-footer">
         <span className="sw-intel-surface-density">{surface.evidence_density} evidence item{surface.evidence_density !== 1 ? 's' : ''}</span>
       </div>
@@ -518,7 +567,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
           <React.Fragment key={s.surface_id}>
-            <CognitionSurfaceCard surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
+            <CognitionSurfaceCard surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="explain" />
             {activeSurface === s.surface_id && s.surface_id === 'EXECUTION_BLINDNESS' && fullReport && (
               <ExecutionBlindnessInline fullReport={fullReport} onOpenDeepDive={onOpenDeepDive ? () => onOpenDeepDive('EXECUTION_BLINDNESS') : undefined} />
             )}
@@ -551,7 +600,7 @@ export function SoftwareIntelligenceDenseView({ projection, onDeactivate, active
 
 const VERIFICATION_BADGE_LABEL = { VERIFIED: 'Verified', PARTIALLY_VERIFIED: 'Partial', VERIFICATION_FAILED: 'Failed', CANNOT_INVESTIGATE: 'No target' }
 
-export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen, domainLabelMap, domainProfileMap }) {
+export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, activeSurface, onSurfaceSelect, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationReopen, domainLabelMap, domainProfileMap, activeConditions }) {
   const resolveDomain = (id) => (domainLabelMap && domainLabelMap[id]) || id
   const enrichedMap = useMemo(() => {
     const m = { ...(domainLabelMap || {}) }
@@ -583,7 +632,7 @@ export function SoftwareIntelligenceOperatorView({ projection, onDeactivate, act
 
       <div className="sw-intel-surfaces">
         {surfaces.map(s => (
-          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} />
+          <CognitionSurfaceCard key={s.surface_id} surface={s} expandable={true} active={activeSurface === s.surface_id} onSelect={onSurfaceSelect} activeConditions={activeConditions} resolveDomain={resolveDomain} domainLabelMap={enrichedMap} projectionMode="verify" />
         ))}
       </div>
 
