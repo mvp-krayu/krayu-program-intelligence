@@ -7383,6 +7383,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             radial-gradient(110% 70% at 50% 0%, rgba(74,158,255,0.04) 0%, transparent 60%),
             radial-gradient(70% 50% at 50% 100%, rgba(255,158,74,0.025) 0%, transparent 70%);
           min-height: 620px;
+          overflow: hidden;
         }
         .intelligence-field--boardroom .intel-canvas {
           padding: 72px 64px 80px;
