@@ -5784,17 +5784,19 @@ function ExecutiveInterpretation({ narrative, densityClass, boardroomMode, adapt
   }, [fullReport, activeZoneKey])
 
   if (operatorSwIntelActive) {
-    const allSurfaces = fullReport && fullReport._synthesisResult && fullReport._synthesisResult._swIntelSurfaces || []
-    const critSurfaces = allSurfaces.filter(s => s.severity === 'CRITICAL' || s.severity === 'HIGH')
-    const runtimeSurfaces = allSurfaces.filter(s => s.is_runtime)
+    const allConds = (activeConditions || []).filter(c => c.severity !== 'NOMINAL')
+    const critConds = allConds.filter(c => c.severity === 'CRITICAL' || c.severity === 'HIGH')
+    const sigs = (fullReport && fullReport.signal_interpretations) || []
+    const rsigCount = sigs.filter(s => s.signal_family === 'RSIG').length
+    const teaserCount = swIntelTeaser && swIntelTeaser.active_count ? swIntelTeaser.active_count : allConds.length
     return (
       <aside className="intel-interp intel-interp--operator-swi" data-tone={framing.tone} aria-label="SW-INTEL verification overview">
         <div className="interp-tag">
           <span className="interp-tag-label">VERIFICATION SURFACE</span>
         </div>
         <div className="interp-block interp-block--lead">
-          <div className="interp-section-label">COGNITION SURFACES</div>
-          <div className="interp-synthesis">{allSurfaces.length} surface{allSurfaces.length !== 1 ? 's' : ''} · {critSurfaces.length} critical · {runtimeSurfaces.length} runtime-derived</div>
+          <div className="interp-section-label">SW-INTEL ACTIVE</div>
+          <div className="interp-synthesis">{teaserCount} condition{teaserCount !== 1 ? 's' : ''} · {critConds.length} critical · {rsigCount > 0 ? `${rsigCount} runtime` : 'structural only'}</div>
         </div>
         <div className="interp-block">
           <div className="interp-section-label">VERIFICATION MODE</div>
