@@ -4979,81 +4979,34 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
         }
 
         /* ── Zone 5 — Descent Paths ── */
-        /* ── THORR Lite Interpretation (BALANCED) ────────────────────── */
-        .balanced-zone--interpretations {
-          padding: 16px 0;
+        /* ── Narrative-First Interpretation (BALANCED) ────────────────── */
+        .balanced-zone--narrative {
+          padding: 8px 0 24px;
         }
-        .balanced-discovery-selector {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          margin-bottom: 24px;
+        .balanced-narrative {
+          max-width: 680px;
         }
-        .balanced-discovery-btn {
-          display: block;
-          width: 100%;
-          text-align: left;
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 12.5px;
-          color: #6a7a9a;
-          background: none;
-          border: 1px solid #1e2330;
-          border-left: 3px solid #2a2f40;
-          border-radius: 0 4px 4px 0;
-          padding: 10px 14px;
-          cursor: pointer;
-          transition: border-color 0.2s, color 0.2s, background 0.2s;
-        }
-        .balanced-discovery-btn:hover {
-          border-left-color: #4a9eff;
-          color: #8a96b2;
-          background: rgba(74, 158, 255, 0.02);
-        }
-        .balanced-discovery-btn--active {
-          color: #ccd6f6;
-          border-left-color: #4a9eff;
-          background: rgba(74, 158, 255, 0.04);
-        }
-        .balanced-discovery-hook {
-          line-height: 1.4;
-        }
-
-        .balanced-thorr-interpretation {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-        }
-        .balanced-thorr-section {
-          padding: 16px 0;
-          border-bottom: 1px solid rgba(42, 47, 64, 0.3);
-        }
-        .balanced-thorr-section:last-child { border-bottom: none; }
-        .balanced-thorr-label {
-          font-family: 'Courier New', monospace;
-          font-size: 8.5px;
-          letter-spacing: 0.1em;
-          color: #4a5570;
-          margin-bottom: 8px;
-        }
-        .balanced-thorr-meaning {
+        .balanced-narrative-lead {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           color: #e2e8f6;
-          line-height: 1.7;
-          font-weight: 400;
+          line-height: 1.75;
+          margin-bottom: 16px;
         }
-        .balanced-thorr-body {
+        .balanced-narrative-body {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 13px;
+          font-size: 14px;
           color: #8a96b2;
-          line-height: 1.65;
+          line-height: 1.7;
+          margin-bottom: 14px;
         }
-        .balanced-thorr-actors {
+        .balanced-narrative-actors {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
+          margin-bottom: 16px;
         }
-        .balanced-thorr-actor {
+        .balanced-narrative-actor {
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           font-size: 11px;
           color: #ccd6f6;
@@ -5062,22 +5015,42 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 4px;
           background: rgba(74, 158, 255, 0.03);
         }
-        .balanced-thorr-section--evidence {
-          padding-top: 12px;
+        .balanced-narrative-evidence {
+          font-family: 'Courier New', monospace;
+          font-size: 10px;
+          color: #5a6580;
+          margin-top: 8px;
         }
-        .balanced-thorr-evidence {
+
+        .balanced-other-intents {
+          margin-top: 32px;
+          padding-top: 16px;
+          border-top: 1px solid #1e2330;
+        }
+        .balanced-other-label {
+          font-family: 'Courier New', monospace;
+          font-size: 8.5px;
+          letter-spacing: 0.1em;
+          color: #4a5570;
+          margin-bottom: 8px;
+        }
+        .balanced-other-list {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
         }
-        .balanced-thorr-evidence-chip {
-          font-family: 'Courier New', monospace;
-          font-size: 9px;
-          color: #5a6580;
-          padding: 3px 8px;
+        .balanced-other-btn {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 11px;
+          color: #6a7a9a;
+          background: none;
           border: 1px solid #2a2f40;
-          border-radius: 3px;
+          border-radius: 4px;
+          padding: 6px 12px;
+          cursor: pointer;
+          transition: border-color 0.2s, color 0.2s;
         }
+        .balanced-other-btn:hover { border-color: #4a9eff; color: #8a96b2; }
 
         .balanced-zone--descent {
           padding: 32px 0 40px;
