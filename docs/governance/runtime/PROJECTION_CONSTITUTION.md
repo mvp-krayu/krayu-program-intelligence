@@ -117,6 +117,66 @@ OPERATOR does not explain why. OPERATOR proves whether. Every surface answers: w
 
 **Authority model:** S-level displayed (construction history matters for verification). P-level displayed. Full qualification provenance visible.
 
+### §2.4 — BALANCED
+
+**Question:** What does it mean?
+**Purpose:** Interpret (governed)
+**Verb:** Translate cognition into operational meaning through curated interpretation calls
+**Consumer:** CTO, VP Engineering, Enterprise Architect — operators who accept the posture and want to understand the dynamics
+
+**Pipeline:**
+```
+Evidence → Cognition → Governed Interpretation Calls → Curated Narrative
+```
+
+BALANCED is the curated interpretation surface. It uses THORR-quality interpretation capability but through governed contracts — not freeform prompts. The operator receives interpreted cognition, not raw evidence (OPERATOR) or mechanical explanation (DENSE) or compressed verdict (BOARDROOM).
+
+**Interpretation call model:**
+
+Each BALANCED interpretation is a governed call with:
+- Fixed intent (e.g., `interpret_board_finding`, `interpret_runtime_divergence`)
+- Fixed inputs (cognition objects, evidence context, authority state)
+- Fixed output schema (narrative with evidence anchors)
+- Authority gating (P-level determines which interpretations are available)
+- No open prompt box
+
+Example governed calls:
+- `interpret_board_finding(finding, evidence_context)` → operational meaning
+- `interpret_runtime_divergence(structural_center, execution_center)` → divergence narrative
+- `interpret_execution_blindness(blindness_data, runtime_signals)` → operational impact
+- `interpret_governance_impact(governance_state, qualification_delta)` → governance narrative
+- `interpret_structural_vs_execution_center(topology, runtime)` → dual-axis meaning
+
+**Shows:**
+- Consequence dynamics — how findings relate, reinforce, and sequence
+- Operational meaning — what findings mean for the organization, not just the codebase
+- Emergence patterns — which cognitive functions activated and why
+- Confidence calibration — where the system is certain vs advisory
+- Reinforcement relationships — how consequences amplify each other
+- Curated guided queries — governed interpretation prompts, not freeform
+
+**Forbidden:**
+- Freeform operator prompts (that's THORR)
+- Executive compression into verdict (that's BOARDROOM)
+- Mechanical structural explanation (that's DENSE)
+- Evidence validation and falsification (that's OPERATOR)
+- Raw signal/condition inspection (that's OPERATOR/DENSE)
+- Ungovened interpretation (every interpretation must trace to a governed call contract)
+
+**Boundary with THORR:**
+
+| | BALANCED | THORR |
+|---|---|---|
+| Prompt source | Governed call contracts | Operator freeform / guided |
+| Determinism | Deterministic intent, interpretive output | Interactive, operator-driven |
+| Output schema | Fixed per call type | Flexible per conversation |
+| Authority | P-level gates available interpretations | P-level gates available context |
+| Surface | LENS persona (embedded) | Co-Pilot interface (separate) |
+
+BALANCED is NOT "free THORR inside LENS." BALANCED is curated THORR interpretation through governed contracts. The interpretation is real. The surface is governed.
+
+**Authority model:** P-level determines which interpretation calls are available. S-level visible as context for interpretation (the operator understands what qualification stage produced this intelligence). Governed disclosure wrapping on all interpretive outputs per §3.4.1 of CLAUDE.md.
+
 ---
 
 ## §3 — The Density Trap
@@ -125,23 +185,23 @@ The contracts are NOT density levels:
 
 ```
 WRONG:  BOARDROOM = less  →  OPERATOR = more  →  DENSE = most
-RIGHT:  BOARDROOM = conclude  |  DENSE = explain  |  OPERATOR = verify
+RIGHT:  BOARDROOM = conclude  |  BALANCED = interpret  |  DENSE = explain  |  OPERATOR = verify
 ```
 
-If DENSE becomes "OPERATOR with more text" or OPERATOR becomes "DENSE with less text," the contracts are violated. The test: can you state what each persona FORBIDS? If you cannot, the contracts have collapsed into density.
+If DENSE becomes "OPERATOR with more text" or OPERATOR becomes "DENSE with less text" or BALANCED becomes "THORR without the prompt box," the contracts are violated. The test: can you state what each persona FORBIDS? If you cannot, the contracts have collapsed into density.
 
 ---
 
 ## §4 — SW-INTEL Projection Matrix
 
-SW-INTEL cognition surfaces exist in all three personas. The same surface projects differently:
+SW-INTEL cognition surfaces exist in all four personas. The same surface projects differently:
 
-| Surface | BOARDROOM | DENSE | OPERATOR |
-|---------|-----------|-------|----------|
-| Execution Blindness | "Systemic fragility — invisible failure modes" | Originating conditions → reinforcement chain → consequence widening → synthesis | Supporting signals + runtime correlation + governance + confidence + falsification |
-| Dependency Amplification | "Concentrated dependency pressure" | How hub structure creates amplification → which domains → propagation mechanics | Evidence count + affected domains + runtime support + what would disprove |
-| Gravity Divergence | "Code gravity ≠ operational gravity" | Where structural mass concentrates vs where execution load concentrates → why they diverge | Static gravity evidence vs runtime gravity evidence + confidence delta |
-| Coordination Fragility | Finding card with severity | Propagation chain → coupling corridors → coordination breakdown mechanics | Signal support + condition count + runtime choke points + governance status |
+| Surface | BOARDROOM | BALANCED | DENSE | OPERATOR |
+|---------|-----------|----------|-------|----------|
+| Execution Blindness | "Systemic fragility — invisible failure modes" | Governed interpretation: what this means operationally, which teams are affected, how blindness manifests in daily operations | Originating conditions → reinforcement chain → consequence widening → synthesis | Supporting signals + runtime correlation + governance + confidence + falsification |
+| Dependency Amplification | "Concentrated dependency pressure" | Governed interpretation: why this concentration matters, operational dynamics, reinforcement patterns | How hub structure creates amplification → which domains → propagation mechanics | Evidence count + affected domains + runtime support + what would disprove |
+| Gravity Divergence | "Code gravity ≠ operational gravity" | Governed interpretation: what the divergence means for operational decisions, where attention should shift | Where structural mass concentrates vs where execution load concentrates → why they diverge | Static gravity evidence vs runtime gravity evidence + confidence delta |
+| Coordination Fragility | Finding card with severity | Governed interpretation: coordination breakdown dynamics, operational sequencing implications | Propagation chain → coupling corridors → coordination breakdown mechanics | Signal support + condition count + runtime choke points + governance status |
 
 **Rule:** The same `CognitionSurfaceCard` may render in multiple personas. The projection mode — not the component — determines what sections appear.
 
@@ -152,6 +212,7 @@ SW-INTEL cognition surfaces exist in all three personas. The same surface projec
 Runtime evidence (RSIG family) projects differently per persona:
 
 - **BOARDROOM:** Execution center (dual-axis with structural center). Runtime is visible as a named axis, not as individual signals.
+- **BALANCED:** Runtime divergence interpreted through governed calls — "execution pressure concentrates in Fleet Core Operations while structural mass sits in Platform Infrastructure, meaning operational risk and structural risk require different remediation strategies." Runtime provides the interpretive delta.
 - **DENSE:** Full RSIG decomposition — signal mechanics, affected domains, consequence contribution, propagation reinforcement. Runtime explains why structural findings have operational impact.
 - **OPERATOR:** RSIG as first-class evidence family alongside ISIG/DPSIG/PSIG. Severity-grouped, consequence-bridged (structural regions → conditions reinforced → if degraded). Runtime proves that structural findings have operational backing.
 
