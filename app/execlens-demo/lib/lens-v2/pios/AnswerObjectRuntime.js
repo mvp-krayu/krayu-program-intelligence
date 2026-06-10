@@ -81,6 +81,13 @@ const KNOWN_ANSWER_OBJECTS = {
     question_classes: ['challenge', 'implication'],
     evidence_requirements: ['convergence_inventory', 'independence_assessment'],
   },
+  'AO-011': {
+    id: 'AO-011',
+    type: 'DIVERGENCE_PAIR',
+    schema_keys: ['domain_a', 'domain_b', 'divergence'],
+    question_classes: ['clarify', 'implication', 'ascent'],
+    evidence_requirements: ['domain_concentration', 'execution_center', 'P2_projection_authority', 'rsig_signals'],
+  },
 }
 
 // ─── Candidate Schema ──────────────────────────────────────────

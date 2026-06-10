@@ -448,6 +448,70 @@ Appears for any compound finding. The operator always wants to know: "If I can o
 
 ---
 
+## AO-011: Divergence Pair
+
+Two domains with contrasting gravity types — structural vs operational — where investment follows one and risk follows the other.
+
+### Schema
+
+```json
+{
+  "ao_type": "DIVERGENCE_PAIR",
+  "domain_a": {
+    "domain": "string",
+    "gravity_type": "STRUCTURAL",
+    "evidence": {
+      "condition_count": "number",
+      "peak_condition": "string",
+      "rsig_count": "number",
+      "narrative": "string — domain risk label from consequence compiler"
+    }
+  },
+  "domain_b": {
+    "domain": "string",
+    "gravity_type": "OPERATIONAL",
+    "evidence": {
+      "condition_count": "number",
+      "peak_condition": "string",
+      "rsig_count": "number",
+      "narrative": "string"
+    }
+  },
+  "divergence": {
+    "structural_center_has": "string[] — what concentrates structurally",
+    "execution_center_has": "string[] — what concentrates operationally",
+    "overlap": "boolean — do the gravity profiles share any concentration type?",
+    "mechanism": "string — why they differ"
+  }
+}
+```
+
+### Required Evidence
+
+- `domain_concentration[0]` — structural center (highest condition count)
+- `execution_center` — operational center (from crossDomainCognition, derived from runtime signal concentration)
+- `structural_center != execution_center` — divergence must exist
+- P2+ projection authority — runtime evidence required to identify execution center
+- RSIG signals per domain — to quantify operational gravity
+- Domain narratives — for mechanism description
+
+### Generating Question Classes
+
+- CLARIFY: "Why is [execution center] the execution center rather than [structural center]?"
+- CLARIFY: "Why do gravity centers diverge?"
+- IMPLICATION: "Which investment assumptions are invalidated by divergence?"
+- ASCENT: "How does the board see this divergence?"
+
+### Universality
+
+Appears for any specimen where `structural_center != execution_center`. At P1 (structural only), execution center is unknown — produces AO-006 (Temporal Unavailability) instead. At P2+, divergence is detectable. The schema is invariant across specimens — two domains, two gravity profiles, one mechanism.
+
+### Promotion Record
+
+Originally classified as "genuinely one-off" in discovery catalog. Reclassified as finding-type-specific but reusable after validation against AF-001 evidence. Stable schema, clear evidence requirements, clear generating question classes. Promoted 2026-06-10.
+
+---
+
 ## Ontology Relationships
 
 ```
@@ -464,12 +528,15 @@ AO-007 Convergence Inventory        ← requires multi-condition domain
   └── AO-008 Evidence Family Partition  ← requires mixed evidence families
   └── AO-009 Independence Assessment   ← requires multiple conditions
       └── AO-010 Load-Bearing Condition ← requires AO-007 + AO-009
+
+AO-011 Divergence Pair              ← requires P2+ (structural ≠ operational center)
 ```
 
-Three independent trees:
+Four independent trees:
 1. **Universal** (AO-001, AO-002, AO-006) — always producible
 2. **Impact** (AO-003 → AO-004, AO-005) — requires concentrated node or flow
 3. **Convergence** (AO-007 → AO-008, AO-009 → AO-010) — requires multi-condition domain
+4. **Divergence** (AO-011) — requires P2+ evidence revealing split gravity
 
 ---
 
@@ -487,6 +554,7 @@ Three independent trees:
 | 008 | Mixed structural + runtime conditions | Condition claim descriptions |
 | 009 | Multiple conditions on one domain + traces | Structural enrichment for root detection |
 | 010 | AO-007 + AO-009 | Cascade reasoning |
+| 011 | domain_concentration + execution_center + P2+ | RSIG signals per domain, domain narratives |
 
 ---
 
@@ -503,4 +571,5 @@ Three independent trees:
 | IMPLICATION (temporal) | AO-006 | — |
 | CLARIFY (mechanism) | AO-007 | AO-009 |
 | CLARIFY (convergence) | AO-009 | AO-010 |
+| CLARIFY (divergence) | AO-011 | AO-002 |
 | ASCENT (board projection) | AO-004 | AO-001 |
