@@ -329,13 +329,25 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
 
   const cognitionEmphasis = useMemo(() => {
     if (!cognitionOverlay) return null
-    return new Set(cognitionOverlay.emphasis_domains || [])
-  }, [cognitionOverlay])
+    const set = new Set(cognitionOverlay.emphasis_domains || [])
+    if (cognitionOverlay._steering_contract) {
+      ;(domains || []).forEach(d => {
+        if (set.has(d.business_label) || set.has(d.domain_name)) set.add(d.domain_id)
+      })
+    }
+    return set
+  }, [cognitionOverlay, domains])
 
   const cognitionDim = useMemo(() => {
     if (!cognitionOverlay) return null
-    return new Set(cognitionOverlay.dim_domains || [])
-  }, [cognitionOverlay])
+    const set = new Set(cognitionOverlay.dim_domains || [])
+    if (cognitionOverlay._steering_contract) {
+      ;(domains || []).forEach(d => {
+        if (set.has(d.business_label) || set.has(d.domain_name)) set.add(d.domain_id)
+      })
+    }
+    return set
+  }, [cognitionOverlay, domains])
 
   const cognitionAdvisory = useMemo(() => {
     if (!cognitionOverlay) return null
@@ -664,7 +676,7 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                onClick={(e) => { e.stopPropagation(); handleNodeClick(d) }}
             >
               {isEmphasized && cognitionOverlay && (() => {
-                const nodeColor = (cognitionOverlay._primary_colors && cognitionOverlay._primary_colors[d.business_label || d.domain_name]) || overlayColor
+                const nodeColor = (cognitionOverlay._primary_colors && (cognitionOverlay._primary_colors[d.business_label] || cognitionOverlay._primary_colors[d.domain_name] || cognitionOverlay._primary_colors[d.domain_id])) || overlayColor
                 const isSteered = cognitionOverlay._steering_contract
                 return (
                 <circle cx={pos.cx} cy={pos.cy} r={innerR + 8}
