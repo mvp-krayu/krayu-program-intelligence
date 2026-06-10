@@ -115,7 +115,7 @@ function fillZones(contract, ao) {
   contract.zones.collapse_others = true
 
   if (ao.ao_type === 'DIVERGENCE_PAIR') {
-    contract.zones.investigation_relevant = ['propagationFlow', 'runtimeConnectivity', 'signalAssessment']
+    contract.zones.investigation_relevant = ['propagationFlow']
   } else if (ao.ao_type === 'FAILURE_IMPACT_MAP') {
     contract.zones.investigation_relevant = ['runtimeConnectivity', 'signalAssessment', 'propagationFlow']
   } else if (ao.ao_type === 'CONVERGENCE_FOCUS') {

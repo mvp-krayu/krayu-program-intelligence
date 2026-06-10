@@ -7686,14 +7686,18 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
+      <div data-investigation-collapsed={isZoneCollapsed('signalAssessment') || undefined} className={isZoneCollapsed('signalAssessment') ? 'actor actor--collapsed-wrap' : undefined}>
+        <SynthesizedConditionSection fullReport={fullReport} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} />
+      </div>
 
       {swIntelActive && balancedBriefing && balancedBriefing.ontology_groups && balancedBriefing.ontology_groups.length > 0 && (
-        <DenseBehavioralClassView ontologyGroups={balancedBriefing.ontology_groups} />
+        <div data-investigation-collapsed={isZoneCollapsed('behavioralClassView') || undefined} className={isZoneCollapsed('behavioralClassView') ? 'actor actor--collapsed-wrap' : undefined}>
+          <DenseBehavioralClassView ontologyGroups={balancedBriefing.ontology_groups} />
+        </div>
       )}
 
       {!isS1 && (origin || passthrough || receiver) && (
-        <div className="actor actor--propagation-flow" data-zone-key="propagationFlow">
+        <div className="actor actor--propagation-flow" data-zone-key="propagationFlow" data-investigation-collapsed={isZoneCollapsed('propagationFlow') || undefined}>
           <div className="actor-tag">
             <span className="actor-code">PF</span>
             <span className="actor-name">Pressure Propagation Flow</span>
@@ -7723,9 +7727,15 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         </div>
       )}
 
-      {!isS1 && <PressureZoneFocusBlock fullReport={fullReport} />}
+      {!isS1 && (
+        <div data-investigation-collapsed={isZoneCollapsed('pressureZoneFocus') || undefined} className={isZoneCollapsed('pressureZoneFocus') ? 'actor actor--collapsed-wrap' : undefined}>
+          <PressureZoneFocusBlock fullReport={fullReport} />
+        </div>
+      )}
 
-      <DenseGovernanceZone fullReport={fullReport} />
+      <div data-investigation-collapsed={isZoneCollapsed('governanceLifecycle') || undefined} className={isZoneCollapsed('governanceLifecycle') ? 'actor actor--collapsed-wrap' : undefined}>
+        <DenseGovernanceZone fullReport={fullReport} />
+      </div>
 
       {fullReport && fullReport.semantic_domain_registry && fullReport.semantic_domain_registry.length > 0 && (() => {
         const tm = (fullReport && fullReport.topology_maturity) || {}
@@ -7786,7 +7796,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       })()}
 
       {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
-        <div data-zone-key="structuralCentrality">
+        <div data-zone-key="structuralCentrality" data-investigation-collapsed={isZoneCollapsed('structuralCentrality') || undefined}>
           <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
         </div>
       )}

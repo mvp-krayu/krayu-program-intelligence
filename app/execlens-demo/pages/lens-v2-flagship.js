@@ -11675,19 +11675,21 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 0;
           position: relative;
         }
-        .actor[data-investigation-collapsed] {
+        .actor[data-investigation-collapsed],
+        [data-investigation-collapsed] {
           padding: 6px 22px;
           gap: 0;
-          opacity: 0.4;
-          max-height: 28px;
+          opacity: 0.35;
+          max-height: 32px;
           overflow: hidden;
-          cursor: pointer;
           transition: opacity 0.2s, max-height 0.3s;
         }
-        .actor[data-investigation-collapsed]:hover {
-          opacity: 0.6;
+        .actor[data-investigation-collapsed]:hover,
+        [data-investigation-collapsed]:hover {
+          opacity: 0.55;
         }
-        .actor[data-investigation-collapsed] > *:not(.actor-tag) {
+        .actor[data-investigation-collapsed] > *:not(.actor-tag),
+        [data-investigation-collapsed] > * > *:not(.actor-tag):not(:first-child) {
           display: none;
         }
         .actor::before {
