@@ -6511,6 +6511,7 @@ function BalancedPressureSynthesis({ signals, pressureZone }) {
 }
 
 function BalancedVisualInterpretationZone({ fullReport, crossDomainCognition, visibilityLayerCompleteness, projectionLevel }) {
+  const [expanded, setExpanded] = useState(false)
   const resolved = useMemo(() => {
     try {
       const { resolveAvailable, VISUAL_SPEC_REGISTRY } = require('../../../lib/lens-v2/visual-specs/resolveVisualSpecs')
@@ -6524,15 +6525,36 @@ function BalancedVisualInterpretationZone({ fullReport, crossDomainCognition, vi
 
   return (
     <div className="balanced-zone balanced-zone--visual">
-      {available.map(s => (
+      <button
+        type="button"
+        onClick={() => setExpanded(prev => !prev)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          background: 'none', border: 'none', cursor: 'pointer',
+          padding: '8px 0', width: '100%', textAlign: 'left',
+        }}
+      >
+        <span style={{ fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.1em', color: '#7a8aaa' }}>
+          {expanded ? 'Hide' : 'Show'} Risk Concentration
+        </span>
+        <span style={{ fontSize: 10, color: '#5a6580', transition: 'transform 0.2s', transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+      </button>
+      {expanded && available.map(s => (
         <VisualSpecRenderer key={s.specId} specId={s.specId} fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
       ))}
     </div>
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel, onModeTransition }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel, onModeTransition, pendingIntent, onIntentConsumed }) {
   const [activeIntent, setActiveIntent] = useState(null)
+
+  useEffect(() => {
+    if (pendingIntent && balancedInterpretations && balancedInterpretations[pendingIntent] && balancedInterpretations[pendingIntent].available) {
+      setActiveIntent(pendingIntent)
+      if (onIntentConsumed) onIntentConsumed()
+    }
+  }, [pendingIntent, balancedInterpretations, onIntentConsumed])
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
@@ -10934,7 +10956,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness, pendingBalancedIntent, onBalancedIntentConsumed }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} />
@@ -10957,7 +10979,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} onModeTransition={onModeTransition} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} onModeTransition={onModeTransition} pendingIntent={pendingBalancedIntent} onIntentConsumed={onBalancedIntentConsumed} />
     )
   }
   return (
@@ -10982,6 +11004,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   const [activeExpansionIndex, setActiveExpansionIndex] = useState(null)
 
   const [deepDiveModal, setDeepDiveModal] = useState(null)
+  const [pendingBalancedIntent, setPendingBalancedIntent] = useState(null)
   const prevSwIntelActive = useRef(swIntelActive)
   const prevDensityClass = useRef(densityClass)
   const prevBoardroomMode = useRef(boardroomMode)
@@ -11397,6 +11420,14 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [isBalanced, onAuthorityChange])
 
   useEffect(() => {
+    if (!pendingTransitionZone || !isBalanced) return
+    if (pendingTransitionZone.startsWith('interpret_')) {
+      setPendingBalancedIntent(pendingTransitionZone)
+      if (onTransitionZoneConsumed) onTransitionZoneConsumed()
+    }
+  }, [pendingTransitionZone, isBalanced, onTransitionZoneConsumed])
+
+  useEffect(() => {
     if (!pendingTransitionZone || !isDense) return
     setActiveZoneKey(pendingTransitionZone)
     const zoneKey = pendingTransitionZone
@@ -11542,6 +11573,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           cognitionSubstrate={cognitionSubstrate}
           crossDomainCognition={boardroomCrossDomainCognition}
           visibilityLayerCompleteness={visibilityLayerCompleteness}
+          pendingBalancedIntent={pendingBalancedIntent}
+          onBalancedIntentConsumed={() => setPendingBalancedIntent(null)}
         />
 
         {!boardroomMode && !isBalanced && (
