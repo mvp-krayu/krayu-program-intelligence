@@ -100,11 +100,33 @@ Two additional action types emerge from Visual Spec integration:
     "zone": "string | null -- target LENS zone"
   },
   "authority_required": "number -- minimum P-level",
+  "qualification": {
+    "question_class": "string -- I (structural_propagation) | II (coordination_failure) | III (telemetry_continuity) | IV (external_interface) | V (compound)",
+    "required_layers": ["string -- evidence layers the question class demands"],
+    "present_layers": ["string -- evidence layers available for the target artifact"],
+    "state": "string -- QUALIFIED | PARTIALLY_QUALIFIED | UNQUALIFIED",
+    "coverage_gap": "string | null -- what is missing and why"
+  },
   "trace": "object -- cognition object path (from continuation)",
   "reason": "string -- why this navigation is relevant",
   "altitude": "string -- persona altitude that generated this"
 }
 ```
+
+The `qualification` field is governed by PCD-008 (Artifact Qualification / AQ-001). It is computed at navigation-resolve time from two dimensions: `question_class` (derived from the continuation type and target) determines the required evidence layers; `target.surface × required_layers` determines whether coverage exists. The computation is:
+
+```
+continuation.type → question_class → required_layers
+required_layers × target.surface → present_layers
+present_layers / required_layers → qualification state
+```
+
+LENS consumes the qualification state to control navigation behavior:
+- **QUALIFIED**: navigate directly, no disclosure needed
+- **PARTIALLY_QUALIFIED**: navigate with evidence-gap disclosure banner
+- **UNQUALIFIED**: gate navigation or render as advisory-only with explicit gap explanation
+
+This makes AQ-001 preventive rather than disclosive. The operator is warned BEFORE traversing an unqualified path, not after consuming an unqualified artifact.
 
 ---
 
@@ -227,7 +249,25 @@ Finding (Narrative)
     --> Navigate from diagram to evidence (Navigation)
 ```
 
-### 9.3 Projection Constitution (PI.PROJECTION.CONSTITUTION.01)
+### 9.3 Artifact Qualification (PCD-008 / AQ-001)
+
+Navigation Specs are the runtime vehicle for artifact qualification. The convergence is structural, not designed:
+
+- N-Specs already carry `type` (maps to question class), `targetSurface` (the artifact), and `targetEvidence` (the required layer).
+- AQ-001 requires `question_class × artifact → qualification_state`.
+- The N-Spec contract already contains both dimensions. Adding `qualification` as a computed field closes the loop.
+
+The relationship between the three spec types and AQ-001:
+
+| Spec | AQ-001 Role | Timing |
+|------|------------|--------|
+| Narrative | Carries implicit qualification via text disclosure | After the fact |
+| Visual | Carries evidence layer chips on rendered diagrams | After the fact |
+| Navigation | Carries computable qualification state | Before traversal |
+
+Navigation is the only spec that makes artifact qualification PREVENTIVE. Narrative and Visual specs disclose qualification after consumption. Navigation specs gate or warn before the operator traverses an unqualified path. This is why AQ-001 belongs in the N-Spec contract rather than as a separate governance layer.
+
+### 9.4 Projection Constitution (PI.PROJECTION.CONSTITUTION.01)
 
 Navigation Specs respect persona boundaries. A BOARDROOM navigation path does not offer DESCENT actions (weight = 0). An OPERATOR path does not offer ASCENT. The Projection Constitution governs what navigation is available per persona.
 

@@ -8,6 +8,7 @@ import { buildAssessmentPackage } from '../../../lib/lens-v2/AssessmentPackageBu
 import { SoftwareIntelligenceDenseView, SoftwareIntelligenceOperatorView } from './SoftwareIntelligenceField'
 import DenseVisualArchitectureZone from './DenseVisualArchitectureZone'
 import VisualSpecRenderer from './VisualSpecRenderer'
+import NavigationChips from './NavigationChips'
 import OrchestrationGuidanceRuntime from './OrchestrationGuidanceRuntime'
 import { deriveTopologyCognitionState, derivePressureZoneCognitionState, deriveConditionCognitionState, translateSignal, SURFACE_CONDITION_MAP } from '../../../lib/lens-v2/SoftwareIntelligenceProjectionAdapter'
 import { ExecutionBlindnessModal, GravityDivergenceModal } from './ExecutionBlindnessModal'
@@ -6530,7 +6531,7 @@ function BalancedVisualInterpretationZone({ fullReport, crossDomainCognition, vi
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel, onModeTransition }) {
   const [activeIntent, setActiveIntent] = useState(null)
   const origin = findByRole(blocks, 'ORIGIN')
   const badge = (adapted && adapted.readinessBadge) || {}
@@ -6778,6 +6779,8 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
           </div>
         )
       })()}
+
+      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionLevel || 0} altitude="operational" onModeTransition={onModeTransition} />
 
       <BalancedVisualInterpretationZone fullReport={fullReport} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionLevel} />
 
@@ -10365,6 +10368,8 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           <VisualSpecRenderer specId="executive_risk_card" fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
         )}
 
+        <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={pLevel} altitude="executive" evidenceLayers={fullReport && fullReport._visibilityLayers} onModeTransition={onModeTransition} compact />
+
         {domNarratives.length > 0 && (
           <div className="cockpit-where-section">
             <div className="cockpit-where-label">WHERE IT MANIFESTS</div>
@@ -10952,13 +10957,14 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} onModeTransition={onModeTransition} />
     )
   }
   return (
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       <DenseVisualArchitectureZone fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} visibilityLayerCompleteness={visibilityLayerCompleteness} crossDomainCognition={crossDomainCognition} />
+      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} altitude="structural" onModeTransition={onModeTransition} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={(suppressedConditions || []).length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
       )}
