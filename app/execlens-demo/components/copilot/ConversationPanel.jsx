@@ -76,7 +76,19 @@ function CognitiveContinuationsPanel({ continuations, onSelect }) {
   )
 }
 
-function SystemMessage({ content, mode, validation, usage, streaming, cognitiveContinuations, onContinuationSelect }) {
+function RoutingTrace({ routing }) {
+  if (!routing) return null
+  return (
+    <div style={{ display: 'flex', gap: 12, fontSize: 9, fontFamily: 'monospace', color: '#5a6580', padding: '2px 0' }}>
+      <span>req: <span style={{ color: '#7a8aaa' }}>{routing.requested}</span></span>
+      <span>res: <span style={{ color: '#7a8aaa' }}>{routing.resolved}</span></span>
+      <span>alt: <span style={{ color: '#4a9eff' }}>{routing.altitude || '—'}</span></span>
+      <span>cont: <span style={{ color: '#64ffda' }}>{routing.continuationProfile}</span></span>
+    </div>
+  )
+}
+
+function SystemMessage({ content, mode, validation, usage, streaming, cognitiveContinuations, onContinuationSelect, routing }) {
   return (
     <div className="copilot-msg copilot-msg-system">
       <div className="copilot-msg-meta">
@@ -84,6 +96,7 @@ function SystemMessage({ content, mode, validation, usage, streaming, cognitiveC
         <ValidationIndicator validation={validation} />
         <UsageLine usage={usage} />
       </div>
+      <RoutingTrace routing={routing} />
       <div className="copilot-msg-content copilot-msg-result">
         <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
         {streaming && <span className="copilot-cursor" />}
@@ -168,6 +181,7 @@ export default function ConversationPanel({ messages, streamingContent, streamin
             usage={msg.usage}
             cognitiveContinuations={msg.cognitiveContinuations}
             onContinuationSelect={onContinuationSelect}
+            routing={msg.routing}
           />
         )
       })}

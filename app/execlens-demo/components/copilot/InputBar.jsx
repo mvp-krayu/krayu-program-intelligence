@@ -14,10 +14,14 @@ const AUDIENCE_PRESETS = [
   'GOD / Founder-Operator',
 ]
 
-export default function InputBar({ onSubmit, disabled }) {
+export default function InputBar({ onSubmit, disabled, activeAudience, onAudienceChange }) {
   const [message, setMessage] = useState('')
-  const [audience, setAudience] = useState('')
+  const audience = activeAudience || ''
   const textareaRef = useRef(null)
+
+  const handleAudienceChange = useCallback((e) => {
+    if (onAudienceChange) onAudienceChange(e.target.value)
+  }, [onAudienceChange])
 
   const handleSubmit = useCallback(() => {
     const trimmed = message.trim()
@@ -71,7 +75,7 @@ export default function InputBar({ onSubmit, disabled }) {
           <select
             className="copilot-audience-select"
             value={audience}
-            onChange={(e) => setAudience(e.target.value)}
+            onChange={handleAudienceChange}
           >
             <option value="">General</option>
             {AUDIENCE_PRESETS.filter(Boolean).map(a => (

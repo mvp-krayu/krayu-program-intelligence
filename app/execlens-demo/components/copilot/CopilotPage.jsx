@@ -19,22 +19,26 @@ export default function CopilotPage({ client, runId }) {
   const abortRef = useRef(null)
 
   const [assembling, setAssembling] = useState(false)
+  const [activeAudience, setActiveAudience] = useState('')
 
   const handleSubmit = useCallback(async ({ message, audience }) => {
+    const resolvedAudience = audience || activeAudience || undefined
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
     const prevAudience = lastUserMsg?.audience
-    const audienceChanged = prevAudience && audience && prevAudience !== audience
+    const audienceChanged = prevAudience && resolvedAudience && prevAudience !== resolvedAudience
+
+    if (resolvedAudience) setActiveAudience(resolvedAudience)
 
     const newMessages = []
     if (audienceChanged) {
       newMessages.push({
         role: 'system_event',
-        content: `Persona changed: ${prevAudience} → ${audience}`,
+        content: `Persona changed: ${prevAudience} → ${resolvedAudience}`,
         fromAudience: prevAudience,
-        toAudience: audience,
+        toAudience: resolvedAudience,
       })
     }
-    newMessages.push({ role: 'user', content: message, audience })
+    newMessages.push({ role: 'user', content: message, audience: resolvedAudience })
 
     setMessages(prev => [...prev, ...newMessages])
 
@@ -59,7 +63,7 @@ export default function CopilotPage({ client, runId }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
-          audience,
+          audience: resolvedAudience,
           client: client || undefined,
           runId: runId || undefined,
           history,
@@ -138,6 +142,7 @@ export default function CopilotPage({ client, runId }) {
         contextLevel: meta?.contextLevel,
         retrievedTopics: meta?.retrievedTopics,
         cognitiveContinuations: finalEvent?.cognitiveContinuations || null,
+        routing: meta?.routing || null,
       }])
 
     } catch (err) {
@@ -189,7 +194,7 @@ export default function CopilotPage({ client, runId }) {
       </div>
 
       <div className="copilot-footer">
-        <InputBar onSubmit={handleSubmit} disabled={streaming} />
+        <InputBar onSubmit={handleSubmit} disabled={streaming} activeAudience={activeAudience} onAudienceChange={setActiveAudience} />
         <div className="copilot-footer-meta">
           <button
             className="copilot-context-toggle"

@@ -300,6 +300,7 @@ async function* transformStream({
 
   const anthropic = createClient();
 
+  const personaSummary = extractPersonaSummary(audience)
   yield {
     type: 'meta',
     mode: resolvedMode,
@@ -308,7 +309,13 @@ async function* transformStream({
     availableDomains: assembled.availableDomains,
     retrievedTopics: allTopics,
     vitals: extractVitals(assembled),
-    persona: extractPersonaSummary(audience),
+    persona: personaSummary,
+    routing: {
+      requested: audience || '(none)',
+      resolved: personaSummary ? personaSummary.name : 'General',
+      altitude: personaSummary ? personaSummary.altitude : null,
+      continuationProfile: resolveContinuationAltitude(audience),
+    },
   };
 
   const stream = anthropic.messages.stream({
