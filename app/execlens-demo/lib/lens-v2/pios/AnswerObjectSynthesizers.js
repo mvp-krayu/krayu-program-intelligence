@@ -279,8 +279,228 @@ function detectSPOFTriggers(conditions, runtimeGraphs) {
   return triggers
 }
 
+// ─── Investigation Step Synthesizers ────────────────────────────
+//
+// Given an investigation step + evidence, synthesize a structured answer.
+// These are the synthesis contracts — AOs tell THORR what to synthesize.
+// v1: deterministic code synthesis. v2: THORR API call with AO as input.
+
+function synthesizeStepAnswer(step, investigation, fullReport, runtimeGraphs, crossDomainCognition) {
+  if (!step || !investigation) return null
+
+  const cdc = crossDomainCognition || {}
+  const type = step.continuationType
+
+  if (type === 'descent') {
+    return synthesizeRuntimePressureAnswer(investigation, fullReport, runtimeGraphs)
+  }
+  if (type === 'adjacent') {
+    return synthesizeCompoundingAnswer(step, investigation, fullReport, cdc)
+  }
+  if (type === 'challenge') {
+    return synthesizeFalsificationAnswer(investigation, cdc)
+  }
+
+  return null
+}
+
+function synthesizeRuntimePressureAnswer(investigation, fullReport, runtimeGraphs) {
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const execCenter = investigation.executionCenter
+
+  if (rsigs.length === 0) {
+    return {
+      synthesis_type: 'RUNTIME_PRESSURE',
+      answerable: false,
+      summary: 'No runtime signals available. Runtime pressure paths cannot be identified from structural evidence alone.',
+      evidence: [],
+      qualification: 'Requires EVENT_FLOW, MQTT_TOPIC_FLOW, or WEBSOCKET_FLOW evidence layers.',
+      next: ['Ingest runtime connectivity evidence to enable this analysis'],
+    }
+  }
+
+  const corridors = []
+  const eventRsigs = rsigs.filter(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))
+  const brokerRsigs = rsigs.filter(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))
+  const chokeRsigs = rsigs.filter(s => (s.signal_id || '').includes('002'))
+
+  if (eventRsigs.length > 0) {
+    corridors.push({
+      label: 'Event coordination bottleneck',
+      severity: 'ELEVATED',
+      description: 'Events funnel through a small number of cross-cutting handlers. Handler failure is systemic, not regional.',
+      signals: eventRsigs.map(s => s.signal_id),
+      domains: [...new Set(eventRsigs.flatMap(s => s.affected_domains || []))],
+    })
+  }
+  if (brokerRsigs.length > 0) {
+    const mqtt = runtimeGraphs && (runtimeGraphs.mqtt_topic_flow || runtimeGraphs._mqtt)
+    corridors.push({
+      label: 'Single broker dependency',
+      severity: 'ELEVATED',
+      description: mqtt && mqtt.broker
+        ? `All edge-to-cloud telemetry routes through ${mqtt.broker}. Broker failure eliminates field data ingestion.`
+        : 'All edge-to-cloud telemetry routes through a single MQTT broker with no failover.',
+      signals: brokerRsigs.map(s => s.signal_id),
+      domains: [...new Set(brokerRsigs.flatMap(s => s.affected_domains || []))],
+    })
+  }
+  if (chokeRsigs.length > 0) {
+    corridors.push({
+      label: 'WebSocket gateway funnel',
+      severity: 'HIGH',
+      description: 'All real-time frontend updates pass through a single WebSocket gateway. Gateway failure disconnects all live UI.',
+      signals: chokeRsigs.map(s => s.signal_id),
+      domains: [...new Set(chokeRsigs.flatMap(s => s.affected_domains || []))],
+    })
+  }
+
+  if (corridors.length === 0 && rsigs.length > 0) {
+    corridors.push({
+      label: 'Runtime signal concentration',
+      severity: rsigs[0].severity || 'ELEVATED',
+      description: `${rsigs.length} runtime signals detected across ${[...new Set(rsigs.flatMap(s => s.affected_domains || []))].length} domains.`,
+      signals: rsigs.map(s => s.signal_id),
+      domains: [...new Set(rsigs.flatMap(s => s.affected_domains || []))],
+    })
+  }
+
+  const execCenterCorridors = execCenter
+    ? corridors.filter(c => c.domains.some(d => d === execCenter || d.includes('Fleet Core')))
+    : corridors
+
+  return {
+    synthesis_type: 'RUNTIME_PRESSURE',
+    answerable: true,
+    summary: `${corridors.length} runtime pressure corridor${corridors.length !== 1 ? 's' : ''} identified from ${rsigs.length} RSIG signals.${execCenter ? ` ${execCenterCorridors.length} of ${corridors.length} concentrate on ${execCenter}.` : ''}`,
+    corridors,
+    evidence: rsigs.map(s => ({
+      signal_id: s.signal_id,
+      severity: s.severity,
+      domains: s.affected_domains || [],
+    })),
+    qualification: rsigs.length >= 3 ? 'HIGH — multiple independent runtime evidence sources converge' : 'MODERATE — limited runtime evidence',
+    next: [
+      'Examine which capabilities each corridor carries',
+      'Test whether corridors have redundancy',
+      'Check if corridors compound with structural findings',
+    ],
+  }
+}
+
+function synthesizeCompoundingAnswer(step, investigation, fullReport, cdc) {
+  const targetSurface = step.targetSurface
+  if (!targetSurface) {
+    return {
+      synthesis_type: 'COMPOUNDING_VERDICT',
+      answerable: false,
+      summary: 'No target surface specified for compounding analysis.',
+      evidence: [],
+      next: [],
+    }
+  }
+
+  const { SURFACE_NAMES } = require('./CognitiveContinuations')
+  const surfaceName = (SURFACE_NAMES && SURFACE_NAMES[targetSurface]) || targetSurface
+
+  const domConc = cdc.domain_concentration || []
+  const structCenter = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || investigation.executionCenter
+
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const divergenceDomains = new Set([structCenter, execCenter].filter(Boolean))
+
+  let targetDomains = new Set()
+  if (targetSurface === 'EXECUTION_BLINDNESS') {
+    for (const s of rsigs) {
+      for (const d of (s.affected_domains || [])) targetDomains.add(d)
+    }
+  } else {
+    for (const d of domConc.slice(0, 3)) targetDomains.add(d.domain)
+  }
+
+  const bridge = [...divergenceDomains].filter(d => targetDomains.has(d))
+  const compounds = bridge.length > 0
+
+  return {
+    synthesis_type: 'COMPOUNDING_VERDICT',
+    answerable: true,
+    summary: compounds
+      ? `Yes — the divergence compounds with ${surfaceName}. ${bridge.length} domain${bridge.length !== 1 ? 's' : ''} appear in both findings: ${bridge.join(', ')}. Operational gravity concentrates in the same region where ${surfaceName.toLowerCase()} occurs.`
+      : `No clear compounding detected. The divergence domains (${[...divergenceDomains].join(', ')}) do not overlap with ${surfaceName} domains.`,
+    compounds,
+    bridge_domains: bridge,
+    divergence_domains: [...divergenceDomains],
+    target_surface: targetSurface,
+    target_surface_name: surfaceName,
+    target_domains: [...targetDomains],
+    qualification: compounds ? 'HIGH — domain overlap confirmed from independent evidence' : 'MODERATE — no overlap detected but lateral effects possible',
+    next: compounds
+      ? [`Examine which conditions on ${bridge[0]} are shared`, `Assess combined severity`, `Check whether addressing one finding reduces the other`]
+      : [`Verify ${surfaceName} domains independently`, `Check for indirect compounding through propagation chains`],
+  }
+}
+
+function synthesizeFalsificationAnswer(investigation, cdc) {
+  const { SURFACE_NAMES } = require('./CognitiveContinuations')
+  const surface = investigation.surface || 'GRAVITY_DIVERGENCE'
+
+  const FALSIFICATION_PATHS = {
+    GRAVITY_DIVERGENCE: 'code gravity (structural mass) and operational gravity (execution load) converged on the same domains',
+    EXECUTION_BLINDNESS: 'all runtime dependencies had redundant paths and no single broker/event coordination point existed',
+    DELIVERY_FRAGILITY: 'delivery pressure were distributed across multiple independent domains',
+    SYSTEMIC_OPERATIONAL_FRAGILITY: 'structural indicators were distributed rather than compounding in one region',
+  }
+
+  const falsification = FALSIFICATION_PATHS[surface]
+  if (!falsification) {
+    return {
+      synthesis_type: 'FALSIFICATION_STATEMENT',
+      answerable: true,
+      summary: 'No defined falsification path for this finding.',
+      statement: null,
+      evidence_for: [],
+      evidence_against: [],
+      verdict: 'INCONCLUSIVE',
+      next: ['Define what evidence would disprove this finding'],
+    }
+  }
+
+  const domConc = cdc.domain_concentration || []
+  const structCenter = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || investigation.executionCenter
+  const convergenceEvidence = structCenter && execCenter && structCenter === execCenter
+
+  return {
+    synthesis_type: 'FALSIFICATION_STATEMENT',
+    answerable: true,
+    summary: convergenceEvidence
+      ? `The falsification condition may be partially met — structural and execution centers show convergence.`
+      : `This finding would disappear if ${falsification}. Currently, no evidence of convergence exists. The divergence holds.`,
+    statement: `This finding would disappear if ${falsification}.`,
+    evidence_for: convergenceEvidence
+      ? [`Structural center (${structCenter}) equals execution center — gravity converging`]
+      : [],
+    evidence_against: !convergenceEvidence && structCenter && execCenter
+      ? [
+          `Structural center: ${structCenter}`,
+          `Execution center: ${execCenter}`,
+          `These are different domains — divergence confirmed`,
+        ]
+      : [],
+    verdict: convergenceEvidence ? 'WEAKENING' : 'HOLDS',
+    qualification: 'HIGH — evidence from independent structural and runtime analysis',
+    next: convergenceEvidence
+      ? ['Monitor whether convergence continues', 'Reassess after next evidence intake']
+      : ['No action needed — divergence is confirmed', 'Continue investigation on implications'],
+  }
+}
+
 module.exports = {
   synthesizeFailureImpactMap,
   detectSPOFTriggers,
+  synthesizeStepAnswer,
   DOMAIN_LABELS,
 }

@@ -276,13 +276,21 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
   const handleInvestigationStep = useCallback((step) => {
     const { examineStep } = require('../lib/lens-v2/pios/InvestigationRuntime')
+    const { synthesizeStepAnswer } = require('../lib/lens-v2/pios/AnswerObjectSynthesizers')
     setInvestigationContext(prev => {
       if (!prev) return prev
       const updated = examineStep(prev, step.id)
-      if (step.targetSurface) {
-        return { ...updated, surface: step.targetSurface }
+      const synthesis = synthesizeStepAnswer(step, prev, fullReportRef.current, null, crossDomainCognitionRef.current)
+      const withSynthesis = {
+        ...updated,
+        activeSynthesis: synthesis,
+        activeStepId: step.id,
+        syntheses: { ...(updated.syntheses || {}), [step.id]: synthesis },
       }
-      return updated
+      if (step.targetSurface) {
+        return { ...withSynthesis, surface: step.targetSurface }
+      }
+      return withSynthesis
     })
     if (step.boardroom) {
       setBoardroomMode(true)

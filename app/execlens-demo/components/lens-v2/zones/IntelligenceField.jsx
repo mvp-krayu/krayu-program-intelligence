@@ -923,11 +923,93 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
           </div>
         </div>
 
-        {provenSteps.length > 0 && (
+        {inv.activeSynthesis && (() => {
+          const syn = inv.activeSynthesis
+          const activeStep = inv.proofSteps.find(s => s.id === inv.activeStepId)
+          const VERDICT_COLORS = { HOLDS: '#64ffda', WEAKENING: '#e6b800', INCONCLUSIVE: '#ff9e4a' }
+          return (
+            <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+              <div className="support-label">SYNTHESIS</div>
+              {activeStep && (
+                <div style={{ fontSize: 9, color: '#5a6580', marginBottom: 4 }}>{activeStep.label}</div>
+              )}
+              <div style={{ fontSize: 11, color: '#e8edf8', lineHeight: 1.5, marginBottom: 8 }}>
+                {syn.summary}
+              </div>
+
+              {syn.corridors && syn.corridors.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+                  {syn.corridors.map((c, i) => (
+                    <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 10, color: '#ccd6f6', fontWeight: 600 }}>{c.label}</span>
+                        <span style={{ fontSize: 8, color: c.severity === 'HIGH' ? '#ff6b6b' : '#ff9e4a', letterSpacing: '0.08em' }}>{c.severity}</span>
+                      </div>
+                      <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5, marginTop: 3 }}>{c.description}</div>
+                      {c.domains && c.domains.length > 0 && (
+                        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+                          {c.domains.map(d => (
+                            <span key={d} style={{ fontSize: 8, padding: '1px 5px', borderRadius: 2, background: '#1e2330', color: '#7a8aaa' }}>{d}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {syn.statement && (
+                <div style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330', marginBottom: 8 }}>
+                  <div style={{ fontSize: 10, color: '#e8edf8', lineHeight: 1.5, fontStyle: 'italic' }}>{syn.statement}</div>
+                  {syn.verdict && (
+                    <div style={{ fontSize: 9, color: VERDICT_COLORS[syn.verdict] || '#7a8aaa', marginTop: 4, letterSpacing: '0.08em' }}>
+                      VERDICT: {syn.verdict}
+                    </div>
+                  )}
+                  {syn.evidence_against && syn.evidence_against.length > 0 && (
+                    <div style={{ marginTop: 6 }}>
+                      {syn.evidence_against.map((e, i) => (
+                        <div key={i} style={{ fontSize: 9, color: '#7a8aaa', lineHeight: 1.5 }}>· {e}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {syn.bridge_domains && syn.bridge_domains.length > 0 && (
+                <div style={{ marginBottom: 6 }}>
+                  <div style={{ fontSize: 9, color: '#5a6580', marginBottom: 3 }}>BRIDGE DOMAINS</div>
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                    {syn.bridge_domains.map(d => (
+                      <span key={d} style={{ fontSize: 9, padding: '2px 6px', borderRadius: 2, background: '#64ffda15', color: '#64ffda', border: '1px solid #64ffda30' }}>{d}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {syn.qualification && (
+                <div style={{ fontSize: 9, color: '#5a6580', lineHeight: 1.4 }}>
+                  Confidence: {syn.qualification}
+                </div>
+              )}
+
+              {syn.next && syn.next.length > 0 && (
+                <div style={{ marginTop: 8, borderTop: '1px solid #1a2030', paddingTop: 8 }}>
+                  <div style={{ fontSize: 9, color: '#5a6580', marginBottom: 4 }}>NEXT</div>
+                  {syn.next.map((n, i) => (
+                    <div key={i} style={{ fontSize: 9, color: '#7a8aaa', lineHeight: 1.6 }}>→ {n}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })()}
+
+        {provenSteps.length > 0 && !inv.activeSynthesis && (
           <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
             <div className="support-label">PROVEN</div>
             {provenSteps.map(s => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#64ffda', lineHeight: 1.6 }}>
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#64ffda', lineHeight: 1.6, cursor: inv.syntheses && inv.syntheses[s.id] ? 'pointer' : undefined }} onClick={() => { if (inv.syntheses && inv.syntheses[s.id]) onInvestigationStep && onInvestigationStep(s) }}>
                 <span style={{ fontSize: 9, opacity: 0.7 }}>✓</span>
                 <span>{s.label}</span>
               </div>
@@ -936,8 +1018,8 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
         )}
 
         {unresolvedSteps.length > 0 && (
-          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
-            <div className="support-label">TO RESOLVE</div>
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: inv.activeSynthesis ? 8 : 14 }}>
+            <div className="support-label">{inv.activeSynthesis ? 'CONTINUE' : 'TO RESOLVE'}</div>
             {unresolvedSteps.map(s => (
               <button
                 key={s.id}
