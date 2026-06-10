@@ -135,6 +135,25 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 
 ---
 
+## PCD-009: Investigation as PiOS Primitive
+
+| | |
+|---|---|
+| **Origin Stream** | Navigation Spec implementation session (2026-06-10). Navigation chips proved state continuity across personas but failed cognitive orientation — the operator landed in the right place but had no signal of what they were investigating, what was proven, or what remained. |
+| **Trigger** | Three sequential challenges: (1) Navigation drops the operator at the destination's front door without context. (2) A Guide Runtime that tracks persona traversal is projection-centric, not investigation-centric. (3) If investigations are discovered, how can the same finding support multiple simultaneous investigations with different objectives? Each challenge refined the primitive. |
+| **Problem** | LENS has findings, continuations, navigation, and persona transitions — but no object that represents "what the operator is trying to resolve." Each persona renders independently. There is no shared state that tracks: what was claimed, what has been examined, what remains unproven, and when the investigation is complete. Navigation Specs solved state continuity (the context carries across personas). They did NOT solve cognitive orientation (the operator knowing where they are in a proof path). |
+| **Discovery** | Investigation is a first-class PiOS runtime object with lifecycle, state, completion criteria, and proof paths. It has two layers: **Investigation Archetype** (discovered) — the proof structure implied by a finding's cognition graph. Proof paths from continuations, evidence requirements from AQ-001, reachable surfaces from adjacency, falsification conditions from challenge continuations. The archetype exists whether or not anyone investigates. **Investigation Instance** (constructed) — archetype + operator parameters. Construction parameters: altitude (how to investigate — proof depth, evidence sufficiency), intent (what triggered it — the action label), decisionHorizon (why — from PERSONA_PROJECTIONS, e.g. "governance, risk, exposure" vs "due diligence, integration risk"), scope (single-finding or cross-finding). |
+| **Lifecycle** | OPENED (first continuation click) → ACTIVE (traversal in progress) → CONVERGING (evidence paths narrowing) → RESOLVED (operator has sufficient proof) or INCONCLUSIVE (evidence doesn't support conclusion). Investigations are not eagerly created — they materialize when the first navigation occurs. Before that, it's a THORR answer with available continuations. |
+| **Proof Path Model** | Progress tracks proof completion, not persona traversal. The operator doesn't care which persona they visited — they care whether the claim is proven. Proof steps complete when evidence is examined, regardless of which persona was used. The Guide Runtime shows: what is proven, what is unresolved, what to do next. No persona labels in progress. No "you are here" — just: what's proven and what isn't. |
+| **Guide Runtime** | Right panel override when investigation is active. Replaces Support Rail temporarily. Shows: investigation question, proof status (proven/unresolved), remaining continuations filtered to investigation's proof path, next actions. Returns to Support Rail when investigation resolves or is dismissed. The Guide doesn't describe the surface — it describes what remains unresolved. Investigation-centric, not projection-centric. |
+| **Primitive Relationships** | Investigation is the orchestrating object. Cognitive Continuations generate its edges (what CAN be explored). Navigation Specs traverse them (HOW to get there). Investigation Context holds the question (WHAT you're resolving). Guide Runtime tracks progress (WHERE you are in the proof). THORR contributes cognition when paths are exhausted. LENS projects investigation state per persona. AQ-001 defines completion criteria per question class. |
+| **Falsification Record** | Three challenges survived: (1) "Is this just navigation with extra state?" — No. Navigation moves. Investigation tracks proof. They compose but are independent. (2) "Are investigations discovered or constructed?" — Both. Archetypes are discovered from the cognition graph. Instances are constructed from archetype + operator parameters. (3) "Is altitude the only construction parameter?" — No. altitude + intent + decisionHorizon + scope. PERSONA_PROJECTIONS.decisionHorizon carries the objective hint. |
+| **Affected Components** | lens-v2-flagship.js (investigation state), IntelligenceField (investigation context threading + Guide override), NavigationChips (investigation construction on click), Support Rail (Guide mode), all personas (consume investigation for cognitive orientation) |
+| **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_INVESTIGATION_PRIMITIVE.md` |
+| **Maturity State** | DISCOVERED — archetype/instance model defined, lifecycle defined, Guide Runtime designed, primitive relationships mapped. Not yet implemented. Prototype investigation context (flat object) operational in production code. Full lifecycle implementation pending. |
+
+---
+
 ## Registry Metadata
 
 | | |
@@ -153,5 +172,6 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | VALIDATED | Taxonomy complete, not yet implemented as separate layer | 2 | PCD-005, PCD-008 |
 | ARCHITECTURAL | Design locked, implementation pending | 1 | PCD-006 |
 | OPERATIONAL | Running in production code, location/naming may evolve | 1 | PCD-007 |
+| DISCOVERED | Hypothesis validated, not yet implemented | 1 | PCD-009 |
 
 All discoveries governed under [PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md](PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md).
