@@ -821,7 +821,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness, projectionAuthority, suppressedConditions, crossDomainCognition }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness, projectionAuthority, suppressedConditions, crossDomainCognition, investigationContext, onInvestigationStep, onInvestigationResolve, onInvestigationClear }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -859,6 +859,158 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   const hasRuntime = pa && pa.evidenceCapabilities && pa.evidenceCapabilities.some(e => e === 'E-RUNTIME' || e === 'E-GOVERNED')
   const sLevel = pa ? pa.qualificationState : (fullReport && fullReport.qualification_level) || 'S0'
   const hasSemantic = sLevel === 'S2' || sLevel === 'S3'
+
+  const investigationActive = investigationContext && investigationContext.proofSteps && investigationContext.state !== 'RESOLVED' && investigationContext.state !== 'INCONCLUSIVE'
+
+  if (investigationActive) {
+    const inv = investigationContext
+    const provenSteps = inv.proofSteps.filter(s => s.status === 'EXAMINED')
+    const unresolvedSteps = inv.proofSteps.filter(s => s.status === 'UNEXAMINED')
+    const progress = inv.proofSteps.length > 0 ? provenSteps.length / inv.proofSteps.length : 0
+
+    const STATE_LABELS = {
+      OPENED: 'Investigation started',
+      ACTIVE: 'Evidence gathering',
+      CONVERGING: 'Evidence narrowing',
+    }
+    const STATE_COLORS = {
+      OPENED: '#4a9eff',
+      ACTIVE: '#64ffda',
+      CONVERGING: '#e6b800',
+    }
+    const CATEGORY_ICONS = {
+      EVIDENCE: '◈',
+      CONSEQUENCE: '→',
+      FALSIFICATION: '?',
+      CORRELATION: '◇',
+    }
+
+    return (
+      <aside className="intel-support" aria-label="Investigation guide — proof tracking">
+        <div className="support-block">
+          <div className="support-label">INVESTIGATION</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ color: STATE_COLORS[inv.state] || '#4a9eff', fontSize: 12 }}>◆</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#e8edf8', lineHeight: 1.3 }}>
+              {inv.postureLabel || (inv.finding || '').replace(/_/g, ' ')}
+            </span>
+          </div>
+          {inv.question && (
+            <div style={{ fontSize: 10, color: '#9aa0bc', lineHeight: 1.5, marginTop: 2 }}>
+              {inv.question}
+            </div>
+          )}
+        </div>
+
+        <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 18 }}>
+          <div className="support-label">PROOF STATUS</div>
+          <div style={{ display: 'flex', gap: 2, marginBottom: 4 }}>
+            {inv.proofSteps.map((s, i) => (
+              <div key={i} style={{
+                flex: 1, height: 3, borderRadius: 1,
+                background: s.status === 'EXAMINED' ? (STATE_COLORS[inv.state] || '#64ffda') : '#1e2330',
+                transition: 'background 0.3s',
+              }} />
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 10, color: STATE_COLORS[inv.state] || '#4a9eff', fontFamily: 'monospace' }}>
+              {provenSteps.length}/{inv.proofSteps.length}
+            </span>
+            <span style={{ fontSize: 9, color: '#7a8aaa', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              {STATE_LABELS[inv.state] || inv.state}
+            </span>
+          </div>
+        </div>
+
+        {provenSteps.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">PROVEN</div>
+            {provenSteps.map(s => (
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#64ffda', lineHeight: 1.6 }}>
+                <span style={{ fontSize: 9, opacity: 0.7 }}>✓</span>
+                <span>{s.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {unresolvedSteps.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">TO RESOLVE</div>
+            {unresolvedSteps.map(s => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => onInvestigationStep && onInvestigationStep(s)}
+                style={{
+                  display: 'flex', flexDirection: 'column', gap: 2,
+                  padding: '6px 8px', borderRadius: 3,
+                  background: '#4a9eff06', border: '1px solid #4a9eff15',
+                  cursor: 'pointer', fontSize: 10, fontFamily: 'monospace',
+                  color: '#ccd6f6', textAlign: 'left', width: '100%',
+                  transition: 'border-color 0.15s, background 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#4a9eff14'; e.currentTarget.style.borderColor = '#4a9eff35' }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#4a9eff06'; e.currentTarget.style.borderColor = '#4a9eff15' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ color: '#4a9eff', fontSize: 10 }}>{CATEGORY_ICONS[s.category] || '→'}</span>
+                  <span style={{ flex: 1 }}>{s.label}</span>
+                  {s.targetMode && (
+                    <span style={{ fontSize: 8, color: '#5a6580', letterSpacing: '0.08em', flexShrink: 0 }}>
+                      {s.targetMode === 'OPERATOR_DENSE' ? 'OPERATOR' : s.targetMode === 'EXECUTIVE_DENSE' ? 'DENSE' : s.targetMode === 'EXECUTIVE_BALANCED' ? 'BALANCED' : ''}
+                    </span>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: 'flex', gap: 6, marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #1a2030' }}>
+          {progress > 0.3 && (
+            <button
+              type="button"
+              onClick={() => onInvestigationResolve && onInvestigationResolve('RESOLVED')}
+              style={{
+                flex: 1, padding: '5px 0', borderRadius: 3,
+                background: '#64ffda10', border: '1px solid #64ffda30',
+                cursor: 'pointer', fontSize: 9, fontFamily: 'monospace',
+                color: '#64ffda', letterSpacing: '0.12em',
+              }}
+            >
+              RESOLVED
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => onInvestigationResolve && onInvestigationResolve('INCONCLUSIVE')}
+            style={{
+              flex: 1, padding: '5px 0', borderRadius: 3,
+              background: '#ff9e4a08', border: '1px solid #ff9e4a20',
+              cursor: 'pointer', fontSize: 9, fontFamily: 'monospace',
+              color: '#ff9e4a', letterSpacing: '0.12em',
+            }}
+          >
+            INCONCLUSIVE
+          </button>
+          <button
+            type="button"
+            onClick={onInvestigationClear}
+            style={{
+              padding: '5px 8px', borderRadius: 3,
+              background: 'transparent', border: '1px solid #2a3040',
+              cursor: 'pointer', fontSize: 9, fontFamily: 'monospace',
+              color: '#5a6580', letterSpacing: '0.08em',
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      </aside>
+    )
+  }
 
   return (
     <aside className="intel-support" aria-label="Support rail — evidence, confidence, report pack">
@@ -10994,7 +11146,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -11429,8 +11581,9 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
 
   useEffect(() => {
     if (!investigationContext || boardroomMode) return
+    if (!isOperator && !swIntelActive) return
     const surface = investigationContext.surface
-    if (surface && (isDense || isOperator)) {
+    if (surface) {
       setCognitionState(prev => ({
         ...prev,
         activeSurface: surface,
@@ -11439,14 +11592,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         activeConditionId: null,
       }))
     }
-    if (investigationContext.primaryDomain && isDense) {
-      const domainId = Object.keys(domainLabelMap || {}).find(id => {
-        const label = domainLabelMap[id]
-        return label && label.toLowerCase() === investigationContext.primaryDomain.toLowerCase()
-      })
-      if (domainId) setFocusedDomainId(domainId)
-    }
-  }, [investigationContext, isDense, isOperator, boardroomMode, domainLabelMap])
+  }, [investigationContext, isOperator, swIntelActive, boardroomMode])
 
   useEffect(() => {
     if (!pendingTransitionZone || !isDense) return
@@ -11529,31 +11675,42 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         <DomainFocusPanel
           domainId={focusedDomainId}
           profile={domainProfileMap[focusedDomainId]}
-          conditions={activeConditionsForDomain}
+          conditions={activeConditions}
           onClose={() => onDomainChipClick(null)}
         />
       )}
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
-        {investigationContext && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px',
-            background: '#4a9eff08', borderBottom: '1px solid #4a9eff20',
-            fontSize: 10, fontFamily: 'monospace', color: '#7a8aaa',
-          }}>
-            <span style={{ color: '#4a9eff', fontSize: 11 }}>◆</span>
-            <span>Investigating:</span>
-            <span style={{ color: '#e8edf8' }}>{investigationContext.postureLabel || investigationContext.finding}</span>
-            {investigationContext.primaryDomain && (
-              <span style={{ color: '#7a8aaa' }}>· {investigationContext.primaryDomain}</span>
-            )}
-            {investigationContext.executionCenter && investigationContext.executionCenter !== investigationContext.primaryDomain && (
-              <span style={{ color: '#bb86fc' }}>↔ {investigationContext.executionCenter}</span>
-            )}
-            <span style={{ marginLeft: 'auto', color: '#4a9eff80' }}>via {investigationContext.action}</span>
-            <button type="button" onClick={onInvestigationClear} style={{ background: 'none', border: 'none', color: '#5a6580', cursor: 'pointer', fontSize: 11, padding: '0 4px' }}>✕</button>
-          </div>
-        )}
+        {investigationContext && (() => {
+          const hasLifecycle = investigationContext.proofSteps && investigationContext.state
+          const stateColor = hasLifecycle ? ({ OPENED: '#4a9eff', ACTIVE: '#64ffda', CONVERGING: '#e6b800', RESOLVED: '#64ffda', INCONCLUSIVE: '#ff9e4a' }[investigationContext.state] || '#4a9eff') : '#4a9eff'
+          const proven = hasLifecycle ? investigationContext.proofSteps.filter(s => s.status === 'EXAMINED').length : 0
+          const total = hasLifecycle ? investigationContext.proofSteps.length : 0
+          return (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px',
+              background: stateColor + '08', borderBottom: `1px solid ${stateColor}20`,
+              fontSize: 10, fontFamily: 'monospace', color: '#7a8aaa',
+            }}>
+              <span style={{ color: stateColor, fontSize: 11 }}>◆</span>
+              <span>Investigating:</span>
+              <span style={{ color: '#e8edf8' }}>{investigationContext.postureLabel || (investigationContext.finding || '').replace(/_/g, ' ')}</span>
+              {investigationContext.primaryDomain && (
+                <span style={{ color: '#7a8aaa' }}>· {investigationContext.primaryDomain}</span>
+              )}
+              {investigationContext.executionCenter && investigationContext.executionCenter !== investigationContext.primaryDomain && (
+                <span style={{ color: '#bb86fc' }}>↔ {investigationContext.executionCenter}</span>
+              )}
+              {hasLifecycle && (
+                <span style={{ color: stateColor, fontSize: 9, letterSpacing: '0.08em' }}>
+                  {investigationContext.state} {proven}/{total}
+                </span>
+              )}
+              <span style={{ marginLeft: 'auto', color: stateColor + '80' }}>via {investigationContext.action}</span>
+              <button type="button" onClick={onInvestigationClear} style={{ background: 'none', border: 'none', color: '#5a6580', cursor: 'pointer', fontSize: 11, padding: '0 4px' }}>✕</button>
+            </div>
+          )
+        })()}
         <RepresentationField
           boardroomMode={boardroomMode}
           densityClass={densityClass}
@@ -11662,6 +11819,10 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         projectionAuthority={projectionAuthority}
         suppressedConditions={suppressedConditions}
         crossDomainCognition={boardroomCrossDomainCognition}
+        investigationContext={investigationContext}
+        onInvestigationStep={onInvestigationStep}
+        onInvestigationResolve={onInvestigationResolve}
+        onInvestigationClear={onInvestigationClear}
       />
       {deepDiveModal === 'EXECUTION_BLINDNESS' && fullReport && (
         <ExecutionBlindnessModal fullReport={fullReport} onClose={() => setDeepDiveModal(null)} />

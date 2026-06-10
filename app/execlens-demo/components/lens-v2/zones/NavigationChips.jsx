@@ -125,6 +125,7 @@ function buildInvestigationContext(crossDomainCognition, altitude, actionLabel) 
     postureLabel: cdc.posture_label || null,
     fromAltitude: altitude,
     action: actionLabel,
+    _crossDomainCognition: cdc,
   }
 }
 
@@ -195,6 +196,7 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
       {traversalPath.map(t => renderChip(t.label, t.icon, t.color, () => {
         const ctx = buildInvestigationContext(crossDomainCognition, altitude, t.label)
+        ctx.continuationType = t.typeKey
         const zoneKey = t.targetMode === 'EXECUTIVE_BALANCED' ? resolveTargetZoneKeyFromContext(crossDomainCognition) : null
         if (t.boardroom && onModeTransition) onModeTransition('EXECUTIVE_DENSE', null, null, ctx)
         else if (t.targetMode && onModeTransition) onModeTransition(t.targetMode, null, zoneKey, ctx)
@@ -207,6 +209,7 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
         const qual = resolveQualification(c, evidenceLayers)
         return renderChip(action.label, action.icon, color, () => {
           const ctx = buildInvestigationContext(crossDomainCognition, altitude, action.label)
+          ctx.continuationType = c.typeKey
           if (action.targetMode && onModeTransition) {
             const zoneKey = action.targetMode === 'EXECUTIVE_BALANCED' ? resolveTargetZoneKey(c) : null
             onModeTransition(action.targetMode, null, zoneKey, ctx)

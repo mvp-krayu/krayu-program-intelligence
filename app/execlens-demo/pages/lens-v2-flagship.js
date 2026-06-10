@@ -15,7 +15,7 @@
  */
 
 import Head from 'next/head'
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useRef } from 'react'
 import LensDisclosureShell from '../components/lens-v2/LensDisclosureShell'
 import { SoftwareIntelligenceModuleToggle } from '../components/lens-v2/zones/SoftwareIntelligenceField'
 
@@ -247,17 +247,63 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const [swIntelActive, setSwIntelActive] = useState(false)
   const [investigationContext, setInvestigationContext] = useState(null)
 
+  const crossDomainCognitionRef = useRef(null)
+  const fullReportRef = useRef(null)
+  const projectionAuthorityRef = useRef(null)
+
+  const SW_INTEL_TYPES = new Set(['descent', 'challenge'])
+
   const handleModeTransition = useCallback((targetMode, focusedDomainId, targetZoneKey, navContext) => {
     setBoardroomMode(false)
     setDensityClass(targetMode)
     if (focusedDomainId) setPendingTransitionDomain(focusedDomainId)
     if (targetZoneKey) setPendingTransitionZone(targetZoneKey)
     if (navContext) {
-      setInvestigationContext(navContext)
-      if (navContext.surface && (targetMode === 'OPERATOR_DENSE' || targetMode === 'EXECUTIVE_DENSE')) {
+      const { createInvestigation, advanceFromNavigation, isActive } = require('../lib/lens-v2/pios/InvestigationRuntime')
+      const cdc = navContext._crossDomainCognition || crossDomainCognitionRef.current
+      setInvestigationContext(prev => {
+        if (prev && prev.proofSteps && isActive(prev)) {
+          const advanced = advanceFromNavigation(prev, navContext.continuationType || navContext.action)
+          if (advanced !== prev) return advanced
+        }
+        return createInvestigation(navContext, cdc, fullReportRef.current, projectionAuthorityRef.current)
+      })
+      if (navContext.surface && targetMode === 'OPERATOR_DENSE' && SW_INTEL_TYPES.has(navContext.continuationType)) {
         setSwIntelActive(true)
       }
     }
+  }, [])
+
+  const handleInvestigationStep = useCallback((step) => {
+    const { examineStep } = require('../lib/lens-v2/pios/InvestigationRuntime')
+    setInvestigationContext(prev => {
+      if (!prev) return prev
+      const updated = examineStep(prev, step.id)
+      if (step.targetSurface) {
+        return { ...updated, surface: step.targetSurface }
+      }
+      return updated
+    })
+    if (step.boardroom) {
+      setBoardroomMode(true)
+    } else if (step.targetMode) {
+      setBoardroomMode(false)
+      setDensityClass(step.targetMode)
+      if (step.targetZone) setPendingTransitionZone(step.targetZone)
+      const needsSwIntel = SW_INTEL_TYPES.has(step.continuationType) || step.targetSurface
+      if (needsSwIntel) {
+        setSwIntelActive(true)
+      }
+    }
+  }, [])
+
+  const handleInvestigationResolve = useCallback((outcome) => {
+    const { resolveInvestigation } = require('../lib/lens-v2/pios/InvestigationRuntime')
+    setInvestigationContext(prev => prev ? resolveInvestigation(prev, outcome) : null)
+  }, [])
+
+  const handleInvestigationDismiss = useCallback(() => {
+    setInvestigationContext(null)
   }, [])
 
   const reportObject = livePayload || null
@@ -318,6 +364,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const swIntelAvailable = swIntelProjection && swIntelProjection.module_state !== PROJECTION_STATUS.ABSENT
   const handleSwIntelToggle = useCallback(() => setSwIntelActive(p => !p), [])
   const handleSwIntelDeactivate = useCallback(() => setSwIntelActive(false), [])
+
+  fullReportRef.current = reportObject
+  projectionAuthorityRef.current = projectionAuthority
 
   // Live binding failure surface — fixture fallback DISABLED per contract
   if (!reportObject || !result) {
@@ -531,7 +580,9 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={() => setPendingTransitionZone(null)}
             investigationContext={investigationContext}
-            onInvestigationClear={() => setInvestigationContext(null)}
+            onInvestigationClear={handleInvestigationDismiss}
+            onInvestigationStep={handleInvestigationStep}
+            onInvestigationResolve={handleInvestigationResolve}
             swIntelActive={swIntelActive}
             swIntelProjection={swIntelProjection}
             onSwIntelDeactivate={handleSwIntelDeactivate}

@@ -113,6 +113,10 @@ export default function LensDisclosureShell({
   projectionAuthority,
   domainCognition,
   cognitionSubstrate,
+  investigationContext,
+  onInvestigationClear,
+  onInvestigationStep,
+  onInvestigationResolve,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -236,6 +240,10 @@ export default function LensDisclosureShell({
             projectionAuthority={projectionAuthority}
             domainCognition={domainCognition}
             cognitionSubstrate={cognitionSubstrate}
+            investigationContext={investigationContext}
+            onInvestigationClear={onInvestigationClear}
+            onInvestigationStep={onInvestigationStep}
+            onInvestigationResolve={onInvestigationResolve}
           />
         )
       case 'SQOIntelligenceZone':
