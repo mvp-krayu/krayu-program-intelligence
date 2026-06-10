@@ -7806,9 +7806,16 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   )
 }
 
-function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot, onZoneChange }) {
+function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, swIntelSlot, onZoneChange, cognitionOverlay }) {
   const fieldRef = useRef(null)
   const [topoModalOpen, setTopoModalOpen] = useState(false)
+  const zoneCollapse = cognitionOverlay && cognitionOverlay._zone_collapse
+  function isZoneCollapsed(zoneKey) {
+    if (!zoneCollapse) return false
+    if (zoneCollapse.always_expanded.has(zoneKey)) return false
+    if (zoneCollapse.investigation_relevant.has(zoneKey)) return false
+    return true
+  }
 
   useEffect(() => {
     if (!fieldRef.current || !onZoneChange) return
@@ -7944,13 +7951,16 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
             pressureZoneLabel={pressureZone}
             pressureZoneState={fullReport.pressure_zone_state}
             boardroomMode={true}
+            cognitionOverlay={cognitionOverlay}
           />
           <div className="operator-topology-hint">Open full forensic topology</div>
         </div>
       )}
 
       {fullReport && fullReport.structural_enrichment && fullReport.structural_enrichment.available && (
-        <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+        <div data-investigation-collapsed={isZoneCollapsed('structuralCentrality') || undefined} className={isZoneCollapsed('structuralCentrality') ? 'actor actor--collapsed-wrap' : undefined}>
+          <StructuralSpinesPanel structuralEnrichment={fullReport.structural_enrichment} />
+        </div>
       )}
 
       {rsigSigsLocal.length > 0 && (() => {
@@ -8059,7 +8069,7 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         const receivers = blocks.filter(b => b.propagation_role === 'RECEIVER' || b.propagation_role === 'PASS_THROUGH')
         const elevatedBlocks = blocks.filter(b => b.signal_cards && b.signal_cards.some(c => c.pressure_tier === 'HIGH' || c.pressure_tier === 'CRITICAL'))
         return (
-          <div className="actor actor--signal-evidence-inline" data-zone-key="propagationFlow">
+          <div className="actor actor--signal-evidence-inline" data-zone-key="propagationFlow" data-investigation-collapsed={isZoneCollapsed('propagationFlow') || undefined}>
             <div className="actor-tag">
               <span className="actor-code">PF</span>
               <span className="actor-name">Pressure Flow · {blocks.length} domains · {origins.length} origin{origins.length !== 1 ? 's' : ''}</span>
@@ -8111,9 +8121,11 @@ function OperatorTraceField({ adapted, blocks, scope, fullReport, correspondence
         ) : swIntelSlot
       })()}
 
-      <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
+      <div data-investigation-collapsed={isZoneCollapsed('governanceLifecycle') || undefined} className={isZoneCollapsed('governanceLifecycle') ? 'actor actor--collapsed-wrap' : undefined}>
+        <InvestigationGovernanceAudit fullReport={fullReport} aliRules={aliRules} qRules={qRules} />
+      </div>
 
-      <div className="actor actor--evidence-trace" data-zone-key="evidenceTrace">
+      <div className="actor actor--evidence-trace" data-zone-key="evidenceTrace" data-investigation-collapsed={isZoneCollapsed('evidenceTrace') || undefined}>
         <div className="actor-tag">
           <span className="actor-code">ET</span>
           <span className="actor-name">Evidence Trace · lineage</span>
@@ -8244,7 +8256,7 @@ function InvestigationGovernanceAudit({ fullReport, aliRules, qRules }) {
   if (!gl || !gl.available) {
     const qClass = fullReport && fullReport.qualifier_class
     return (
-      <div className="actor actor--operator-governance" data-zone-key="governanceLifecycle">
+      <div className="actor actor--operator-governance" data-zone-key="governanceLifecycle" data-investigation-collapsed={isZoneCollapsed('governanceLifecycle') || undefined}>
         <div className="actor-tag">
           <span className="actor-code">GA</span>
           <span className="actor-name">Governance</span>
@@ -11145,7 +11157,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
       </>
     )
     return (
-      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} onZoneChange={onZoneChange} />
+      <OperatorTraceField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} swIntelSlot={swIntelSlot} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} />
     )
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
