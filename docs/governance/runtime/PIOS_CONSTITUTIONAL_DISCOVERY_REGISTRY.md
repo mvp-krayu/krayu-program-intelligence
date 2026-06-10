@@ -117,11 +117,28 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 
 ---
 
+## PCD-008: Artifact Qualification (AQ-001)
+
+| | |
+|---|---|
+| **Origin Stream** | THORR interrogation session — Chief Architect VISUALIZE + Board challenge sequence (2026-06-09 → 2026-06-10) |
+| **Trigger** | AF-001 (structural/operational divergence) was challenged iteratively through deployment architecture, resilience mapping, failure domain modeling, change impact assessment, and dependency inventory. Each challenge revealed the same structural gap: the artifact presented as universally valid while being conditionally valid. |
+| **Problem** | Architectural artifacts derived from PI intelligence carry implicit evidence completeness assumptions. A deployment model built from static analysis presents as THE deployment model — not as "a deployment model qualified by STATIC_IMPORT evidence." A resilience map built without runtime evidence presents resilience conclusions that runtime connectivity would contradict. The artifact does not disclose what it cannot answer. |
+| **Discovery** | Artifact validity is question-dependent. The same artifact can be qualified for one question and unqualified for another. A deployment model answering "where does code run?" requires STATIC_IMPORT only. The same model answering "what fails if this node dies?" requires STATIC + RUNTIME. The required evidence layers are determined by the question, not by the artifact. Without explicit qualification, every architectural artifact presents unconditional authority it does not possess. This is distinct from VLC (which qualifies evidence), P-levels (which qualify PI projection), and Doctrine B (which qualifies individual conditions). AQ-001 qualifies composite consumer artifacts — the downstream objects derived FROM PI intelligence. |
+| **Constitutional Impact** | Introduces a new governance primitive: artifact-level evidence qualification. Every architectural artifact derived from PI intelligence should carry: (1) the evidence layers it was derived from, (2) the set of questions it is qualified to answer, (3) the questions it is NOT qualified to answer given its evidence basis. This applies across all artifact classes: deployment models, resilience maps, failure domain models, change impact models, dependency inventories. The qualification is constitutional — it applies to all specimens, all artifact classes. The severity is specimen-specific — it depends on how much the system's runtime surface exceeds measured evidence layers. |
+| **Falsification Record** | Five falsification attempts survived: (1) Not a restatement of AF-001 — AF-001 is measurement observation, AQ-001 is governance primitive. (2) Not VLC — VLC qualifies evidence input, AQ-001 qualifies artifact output. (3) Not P-levels — P-levels gate PI projection, AQ-001 gates consumer derivation. (4) Not existing finding qualification — individual findings are qualified, composite artifacts are not. (5) Not specimen-specific — StackStorm and NetBox exhibit the same structural gap at different severity. |
+| **Cross-Artifact Survival** | Deployment Model (static-only misses runtime SPOF), Resilience Map (misses MQTT broker as true SPOF), Failure Domain Model (misses event coordination crossing all domains), Change Impact Model (misses runtime propagation through event bus), Dependency Inventory (misses DI-injected services with no import edge). All five artifact classes affected. |
+| **Affected Components** | Visual Spec renderers (should carry evidence qualification), THORR answer generation (should disclose artifact qualification when producing specifications), EIR exports (should carry evidence basis metadata), future marketplace artifacts (must inherit qualification from source evidence) |
+| **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_ARTIFACT_QUALIFICATION.md` |
+| **Maturity State** | DISCOVERED — hypothesis validated through falsification. Not yet implemented as governance primitive. Evidence basis: BlueEdge AF-001 through AF-005, StackStorm cross-validation. |
+
+---
+
 ## Registry Metadata
 
 | | |
 |---|---|
-| **Discovery Period** | 2026-06-04 through 2026-06-07 |
+| **Discovery Period** | 2026-06-04 through 2026-06-10 |
 | **Primary Streams** | PI.LENS-SURFACE-ACTIVATION-CONTRACT.01, PI.LENS-RUNTIME-SURFACES-INLINE.01, PI.LENS-COGNITION-CONTRACT-MODEL.01, PI.LENS-COGNITION-CONTRACT-TESTS.01, PI.SIGNAL-LAYER-BACKFILL.01, PI.PIOS-LAYER-CONSOLIDATION-AUDIT.01, PI.STATE-ENGINE-AND-PROJECTION-GOVERNANCE.01 |
 | **Specimens Used** | StackStorm (run_github_st2_20260520_131000), BlueEdge (run_blueedge_genesis_e2e_03) |
 | **Key Commits** | 513e593 (surface activation), 569f1be (CognitionContractModel), 86cd02c (signal backfill), 307b648 (PI_STATE_MACHINE_CONTRACT), 6367609 (ProjectionAuthorityKernel), 6cf9cda (Doctrine B) |
@@ -135,5 +152,6 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | VALIDATED | Taxonomy complete, not yet implemented as separate layer | 1 | PCD-005 |
 | ARCHITECTURAL | Design locked, implementation pending | 1 | PCD-006 |
 | OPERATIONAL | Running in production code, location/naming may evolve | 1 | PCD-007 |
+| DISCOVERED | Hypothesis validated through falsification, not yet implemented | 1 | PCD-008 |
 
 All discoveries governed under [PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md](PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md).
