@@ -11722,6 +11722,20 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     }
   }, [investigationContext, isOperator, swIntelActive, boardroomMode])
 
+  const prevActiveStepRef = useRef(null)
+  useEffect(() => {
+    const activeStepId = investigationContext && investigationContext.activeStepId
+    if (activeStepId && activeStepId !== prevActiveStepRef.current && canvasRef.current) {
+      requestAnimationFrame(() => {
+        if (canvasRef.current) {
+          canvasRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+          window.scrollTo({ top: canvasRef.current.offsetTop - 80, behavior: 'smooth' })
+        }
+      })
+    }
+    prevActiveStepRef.current = activeStepId
+  }, [investigationContext && investigationContext.activeStepId])
+
   useEffect(() => {
     if (!pendingTransitionZone || !isDense) return
     setActiveZoneKey(pendingTransitionZone)
