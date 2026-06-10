@@ -231,9 +231,28 @@ function computeState(investigation) {
 }
 
 function examineStep(investigation, stepId) {
+  const step = investigation.proofSteps.find(s => s.id === stepId)
   const steps = investigation.proofSteps.map(s =>
     s.id === stepId ? { ...s, status: PROOF_STATUS.EXAMINED } : s
   )
+
+  if (step && step.status === PROOF_STATUS.UNEXAMINED) {
+    try {
+      const { synthesizeAndCapture } = require('./AnswerObjectRuntime')
+      synthesizeAndCapture({
+        specimen_id: investigation.id,
+        finding_id: investigation.finding,
+        question: step.label,
+        question_class: step.continuationType,
+        persona: investigation.altitude,
+        evidence_layers_used: [step.targetSurface, step.continuationType].filter(Boolean),
+        source_traces: step.detail ? [step.detail] : [],
+        answer_object_type: resolveExpectedObjectType(step),
+        answer_data: null,
+      })
+    } catch (_) {}
+  }
+
   const updated = {
     ...investigation,
     proofSteps: steps,
@@ -241,6 +260,21 @@ function examineStep(investigation, stepId) {
   }
   updated.state = computeState(updated)
   return updated
+}
+
+function resolveExpectedObjectType(step) {
+  const TYPE_MAP = {
+    challenge: 'FALSIFICATION_STATEMENT',
+    adjacent: 'COMPOUNDING_VERDICT',
+    descent: null,
+    clarify: null,
+    implication: null,
+    ascent: null,
+  }
+  if (TYPE_MAP[step.continuationType]) return TYPE_MAP[step.continuationType]
+  if (step.targetSurface) return 'COMPOUNDING_VERDICT'
+  if (step.category === PROOF_CATEGORIES.EVIDENCE) return 'CONVERGENCE_INVENTORY'
+  return null
 }
 
 function advanceFromNavigation(investigation, continuationType) {
