@@ -95,6 +95,39 @@ function deriveChipsFromContinuations(crossDomainCognition, fullReport, projecti
   } catch { return null }
 }
 
+function resolveTargetZoneKeyFromContext(crossDomainCognition) {
+  const cdc = crossDomainCognition || {}
+  const domConc = cdc.domain_concentration || []
+  const primaryDomain = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || null
+  const hasDivergence = execCenter && primaryDomain && execCenter.toLowerCase() !== primaryDomain.toLowerCase()
+  if (hasDivergence) return 'interpret_runtime_divergence'
+  const themes = cdc.consequence_themes || []
+  if (themes.length > 0 && (themes[0].severity === 'CRITICAL' || themes[0].severity === 'HIGH')) return 'interpret_primary_finding'
+  if (cdc.posture_scope === 'SYSTEMIC') return 'interpret_operational_posture'
+  return 'interpret_primary_finding'
+}
+
+function buildInvestigationContext(crossDomainCognition, altitude, actionLabel) {
+  const cdc = crossDomainCognition || {}
+  const domConc = cdc.domain_concentration || []
+  const themes = cdc.consequence_themes || []
+  const primaryDomain = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || null
+  const hasDivergence = execCenter && primaryDomain && execCenter.toLowerCase() !== primaryDomain.toLowerCase()
+  const primaryTheme = themes.length > 0 ? themes[0] : null
+
+  return {
+    finding: hasDivergence ? 'structural_operational_divergence' : (primaryTheme ? primaryTheme.theme_label : cdc.posture_label || 'structural_assessment'),
+    surface: hasDivergence ? 'GRAVITY_DIVERGENCE' : 'SYSTEMIC_OPERATIONAL_FRAGILITY',
+    primaryDomain,
+    executionCenter: execCenter,
+    postureLabel: cdc.posture_label || null,
+    fromAltitude: altitude,
+    action: actionLabel,
+  }
+}
+
 export default function NavigationChips({ crossDomainCognition, fullReport, projectionLevel, altitude, evidenceLayers, onModeTransition, onNavigate, compact }) {
   const continuations = useMemo(() =>
     deriveChipsFromContinuations(crossDomainCognition, fullReport, projectionLevel, altitude),
@@ -161,8 +194,10 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
   return (
     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
       {traversalPath.map(t => renderChip(t.label, t.icon, t.color, () => {
-        if (t.boardroom && onModeTransition) onModeTransition('EXECUTIVE_DENSE')
-        else if (t.targetMode && onModeTransition) onModeTransition(t.targetMode)
+        const ctx = buildInvestigationContext(crossDomainCognition, altitude, t.label)
+        const zoneKey = t.targetMode === 'EXECUTIVE_BALANCED' ? resolveTargetZoneKeyFromContext(crossDomainCognition) : null
+        if (t.boardroom && onModeTransition) onModeTransition('EXECUTIVE_DENSE', null, null, ctx)
+        else if (t.targetMode && onModeTransition) onModeTransition(t.targetMode, null, zoneKey, ctx)
       }))}
       {continuationChips.map((c, i) => {
         const altActions = ACTION_MAP[altitude] || ACTION_MAP.operational || {}
@@ -171,9 +206,10 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
         const color = TYPE_COLORS[c.typeKey] || '#7a8aaa'
         const qual = resolveQualification(c, evidenceLayers)
         return renderChip(action.label, action.icon, color, () => {
+          const ctx = buildInvestigationContext(crossDomainCognition, altitude, action.label)
           if (action.targetMode && onModeTransition) {
             const zoneKey = action.targetMode === 'EXECUTIVE_BALANCED' ? resolveTargetZoneKey(c) : null
-            onModeTransition(action.targetMode, null, zoneKey)
+            onModeTransition(action.targetMode, null, zoneKey, ctx)
           }
           if (onNavigate) onNavigate(c)
         }, qual.state)

@@ -10956,7 +10956,7 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness, pendingBalancedIntent, onBalancedIntentConsumed }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness, pendingBalancedIntent, onBalancedIntentConsumed, investigationContext }) {
   if (boardroomMode) {
     return (
       <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} />
@@ -10994,7 +10994,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -11428,6 +11428,27 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
   }, [pendingTransitionZone, isBalanced, onTransitionZoneConsumed])
 
   useEffect(() => {
+    if (!investigationContext || boardroomMode) return
+    const surface = investigationContext.surface
+    if (surface && (isDense || isOperator)) {
+      setCognitionState(prev => ({
+        ...prev,
+        activeSurface: surface,
+        activePressureZone: null,
+        activeQueryIndex: null,
+        activeConditionId: null,
+      }))
+    }
+    if (investigationContext.primaryDomain && isDense) {
+      const domainId = Object.keys(domainLabelMap || {}).find(id => {
+        const label = domainLabelMap[id]
+        return label && label.toLowerCase() === investigationContext.primaryDomain.toLowerCase()
+      })
+      if (domainId) setFocusedDomainId(domainId)
+    }
+  }, [investigationContext, isDense, isOperator, boardroomMode, domainLabelMap])
+
+  useEffect(() => {
     if (!pendingTransitionZone || !isDense) return
     setActiveZoneKey(pendingTransitionZone)
     const zoneKey = pendingTransitionZone
@@ -11514,6 +11535,25 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       )}
 
       <main ref={canvasRef} className="intel-canvas" role="region" aria-label="Semantic operational canvas">
+        {investigationContext && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px',
+            background: '#4a9eff08', borderBottom: '1px solid #4a9eff20',
+            fontSize: 10, fontFamily: 'monospace', color: '#7a8aaa',
+          }}>
+            <span style={{ color: '#4a9eff', fontSize: 11 }}>◆</span>
+            <span>Investigating:</span>
+            <span style={{ color: '#e8edf8' }}>{investigationContext.postureLabel || investigationContext.finding}</span>
+            {investigationContext.primaryDomain && (
+              <span style={{ color: '#7a8aaa' }}>· {investigationContext.primaryDomain}</span>
+            )}
+            {investigationContext.executionCenter && investigationContext.executionCenter !== investigationContext.primaryDomain && (
+              <span style={{ color: '#bb86fc' }}>↔ {investigationContext.executionCenter}</span>
+            )}
+            <span style={{ marginLeft: 'auto', color: '#4a9eff80' }}>via {investigationContext.action}</span>
+            <button type="button" onClick={onInvestigationClear} style={{ background: 'none', border: 'none', color: '#5a6580', cursor: 'pointer', fontSize: 11, padding: '0 4px' }}>✕</button>
+          </div>
+        )}
         <RepresentationField
           boardroomMode={boardroomMode}
           densityClass={densityClass}
@@ -11575,6 +11615,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           visibilityLayerCompleteness={visibilityLayerCompleteness}
           pendingBalancedIntent={pendingBalancedIntent}
           onBalancedIntentConsumed={() => setPendingBalancedIntent(null)}
+          investigationContext={investigationContext}
         />
 
         {!boardroomMode && !isBalanced && (

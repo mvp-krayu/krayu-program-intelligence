@@ -245,12 +245,19 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const [pendingTransitionDomain, setPendingTransitionDomain] = useState(null)
   const [pendingTransitionZone, setPendingTransitionZone] = useState(null)
   const [swIntelActive, setSwIntelActive] = useState(false)
+  const [investigationContext, setInvestigationContext] = useState(null)
 
-  const handleModeTransition = useCallback((targetMode, focusedDomainId, targetZoneKey) => {
+  const handleModeTransition = useCallback((targetMode, focusedDomainId, targetZoneKey, navContext) => {
     setBoardroomMode(false)
     setDensityClass(targetMode)
     if (focusedDomainId) setPendingTransitionDomain(focusedDomainId)
     if (targetZoneKey) setPendingTransitionZone(targetZoneKey)
+    if (navContext) {
+      setInvestigationContext(navContext)
+      if (navContext.surface && (targetMode === 'OPERATOR_DENSE' || targetMode === 'EXECUTIVE_DENSE')) {
+        setSwIntelActive(true)
+      }
+    }
   }, [])
 
   const reportObject = livePayload || null
@@ -523,6 +530,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onModeTransition={handleModeTransition}
             pendingTransitionZone={pendingTransitionZone}
             onTransitionZoneConsumed={() => setPendingTransitionZone(null)}
+            investigationContext={investigationContext}
+            onInvestigationClear={() => setInvestigationContext(null)}
             swIntelActive={swIntelActive}
             swIntelProjection={swIntelProjection}
             onSwIntelDeactivate={handleSwIntelDeactivate}
