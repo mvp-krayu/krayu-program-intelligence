@@ -11675,6 +11675,21 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
           border-radius: 0;
           position: relative;
         }
+        .actor[data-investigation-collapsed] {
+          padding: 6px 22px;
+          gap: 0;
+          opacity: 0.4;
+          max-height: 28px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: opacity 0.2s, max-height 0.3s;
+        }
+        .actor[data-investigation-collapsed]:hover {
+          opacity: 0.6;
+        }
+        .actor[data-investigation-collapsed] > *:not(.actor-tag) {
+          display: none;
+        }
         .actor::before {
           content: '';
           position: absolute;

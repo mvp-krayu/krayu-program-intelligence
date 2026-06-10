@@ -7563,6 +7563,15 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
   const semanticOnly = Math.max(0, total - grounded)
   const ps = (fullReport && fullReport.propagation_summary) || {}
   const pressureZone = ps.primary_zone_business_label || ''
+
+  const zoneCollapse = cognitionOverlay && cognitionOverlay._zone_collapse
+  function isZoneCollapsed(zoneKey) {
+    if (!zoneCollapse) return false
+    if (zoneCollapse.always_expanded.has(zoneKey)) return false
+    if (zoneCollapse.investigation_relevant.has(zoneKey)) return false
+    return true
+  }
+
   return (
     <div className="rep-field rep-field--dense" ref={fieldRef}>
       <RepModeTag
@@ -7619,7 +7628,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
         const ts = (fullReport && fullReport.topology_summary) || {}
         const enriched = ts.enrichment_source
         return (
-        <div className="actor actor--cluster-concentration" data-zone-key="clusterConcentration">
+        <div className="actor actor--cluster-concentration" data-zone-key="clusterConcentration" data-investigation-collapsed={isZoneCollapsed('clusterConcentration') || undefined}>
           <div className="actor-tag">
             <span className="actor-code">CC</span>
             <span className="actor-name">Cluster Concentration{enriched ? ' · Code Graph Enriched' : ''}</span>
@@ -7655,7 +7664,7 @@ function DenseTopologyField({ adapted, blocks, scope, fullReport, correspondence
       })()}
 
       {!isS1 && passthrough && (
-        <div className="actor actor--absorption-load" data-zone-key="absorptionLoad">
+        <div className="actor actor--absorption-load" data-zone-key="absorptionLoad" data-investigation-collapsed={isZoneCollapsed('absorptionLoad') || undefined}>
           <div className="actor-tag">
             <span className="actor-code">AL</span>
             <span className="actor-name">Absorption Load</span>
@@ -11373,7 +11382,22 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     return resolveContract(cognitionState.activeSurface, surface, fullReport, SW_INTEL_DOMAIN_REASONING_CONTRACTS)
   }, [cognitionState.activeSurface, fullReport, swIntelProjection])
 
+  const steeringContract = useMemo(() => {
+    if (!investigationContext || !investigationContext.proofSteps) return null
+    if (investigationContext.state === 'RESOLVED' || investigationContext.state === 'INCONCLUSIVE') return null
+    try {
+      const { deriveSteeringContract } = require('../../../lib/lens-v2/pios/AnswerObjectSteeringContract')
+      return deriveSteeringContract(investigationContext, boardroomCrossDomainCognition)
+    } catch { return null }
+  }, [investigationContext, boardroomCrossDomainCognition])
+
   const topologyCognitionOverlay = useMemo(() => {
+    if (steeringContract) {
+      const { contractToTopologyOverlay } = require('../../../lib/lens-v2/pios/AnswerObjectSteeringContract')
+      const domainIds = (fullReport && fullReport.semantic_domain_registry || []).map(d => d.business_label || d.domain_name)
+      const overlay = contractToTopologyOverlay(steeringContract, domainIds)
+      if (overlay) return overlay
+    }
     if (swIntelActive && resolvedCondition && fullReport) {
       return deriveConditionCognitionState(resolvedCondition, fullReport)
     }
@@ -11384,7 +11408,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
     const surface = (swIntelProjection.surfaces || []).find(s => s.surface_id === cognitionState.activeSurface)
     if (!surface) return null
     return deriveTopologyCognitionState(cognitionState.activeSurface, fullReport, surface)
-  }, [resolvedCondition, cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
+  }, [steeringContract, resolvedCondition, cognitionState.activeSurface, cognitionState.activePressureZone, fullReport, swIntelProjection, swIntelActive])
 
   const [verificationState, setVerificationState] = useState(() => ({ active: false, result: _verificationCache.result, timestamp: _verificationCache.timestamp, proofData: _verificationCache.proofData }))
   const verificationTargetReady = useMemo(() => !!(consequenceResult && consequenceResult.consequences && consequenceResult.consequences.length > 0 && synthesisResult && fullReport), [consequenceResult, synthesisResult, fullReport])

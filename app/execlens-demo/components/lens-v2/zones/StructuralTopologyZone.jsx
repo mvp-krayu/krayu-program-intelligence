@@ -245,6 +245,9 @@ const COGNITION_OVERLAY_COLORS = {
   COVERAGE_COMPLETE: '#64ffda',
   TOPOLOGY_POSTURE: '#64ffda',
   QUALIFICATION_POSTURE: '#64ffda',
+  DIVERGENCE_CONTRAST: '#bb86fc',
+  CONVERGENCE_FOCUS: '#ffd700',
+  FAILURE_CHAIN: '#ff6b6b',
   PRESSURE_ZONE: '#ff6b6b',
   EVIDENCE_GAP: '#5e6d8a',
   SW_INTEL_POSTURE: '#ff6b6b',
@@ -660,9 +663,12 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                onMouseLeave={handleNodeLeave}
                onClick={(e) => { e.stopPropagation(); handleNodeClick(d) }}
             >
-              {isEmphasized && cognitionOverlay && (
+              {isEmphasized && cognitionOverlay && (() => {
+                const nodeColor = (cognitionOverlay._primary_colors && cognitionOverlay._primary_colors[d.business_label || d.domain_name]) || overlayColor
+                const isSteered = cognitionOverlay._steering_contract
+                return (
                 <circle cx={pos.cx} cy={pos.cy} r={innerR + 8}
-                  fill="none" stroke={overlayColor} strokeWidth={cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' ? 2 : 1.5} strokeOpacity={0.5}
+                  fill="none" stroke={nodeColor} strokeWidth={isSteered ? 2.2 : cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' ? 2 : 1.5} strokeOpacity={isSteered ? 0.7 : 0.5}
                   strokeDasharray={isAdvisory ? '3,3' : undefined}
                   style={{ transition: 'stroke-opacity 0.3s' }}
                 >
@@ -672,8 +678,12 @@ export function TopologyGraph({ domains, clusters, edges, runtimeEdges, pressure
                   {cognitionOverlay.overlay_mode === 'CLUSTER_PRESSURE' && (
                     <animate attributeName="stroke-opacity" values="0.5;0.2;0.5" dur="4s" repeatCount="indefinite" />
                   )}
+                  {isSteered && (
+                    <animate attributeName="stroke-opacity" values="0.8;0.4;0.8" dur="3s" repeatCount="indefinite" />
+                  )}
                 </circle>
-              )}
+                )
+              })()}
               {!isEmphasized && !isCognitionDimmed && isAdvisory && cognitionOverlay && cognitionOverlay.overlay_mode === 'PRESSURE_ZONE' && (
                 <circle cx={pos.cx} cy={pos.cy} r={innerR + 6}
                   fill="none" stroke="#5e6d8a" strokeWidth={1} strokeOpacity={0.4}
