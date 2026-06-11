@@ -311,47 +311,16 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
   const handleInlineSynthesis = useCallback((intent, chipLabel) => {
     const { synthesizeByIntent } = require('../lib/lens-v2/pios/IntentSynthesizer')
+    const { buildSynthesisContext } = require('../lib/lens-v2/pios/SynthesisContext')
     const { resolveQuestionForAnchor } = require('../lib/lens-v2/pios/CognitiveAnchor')
 
     const anchor = resolveCurrentAnchor()
     const resolvedQuestion = resolveQuestionForAnchor(anchor, chipLabel)
+    const ctx = buildSynthesisContext(crossDomainCognitionRef.current, fullReportRef.current, projectionAuthorityRef.current, anchor)
 
-    let ao = null
-    if (anchor.hasDivergence && anchor.structuralCenter && anchor.executionCenter) {
-      ao = { ao_type: 'DIVERGENCE_PAIR', ao_id: 'AO-011', instance: { domain_a: { domain: anchor.structuralCenter }, domain_b: { domain: anchor.executionCenter } } }
-    }
-
-    const cog = anchor.context || {}
-    const fr = fullReportRef.current || {}
-    const pa = projectionAuthorityRef.current
-    const sigs = fr.signal_interpretations || []
-    const layers = []
-    if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
-    if (sigs.some(s => s.signal_family === 'RSIG')) {
-      if (sigs.some(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))) layers.push('EVENT_FLOW')
-      if (sigs.some(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))) layers.push('MQTT_TOPIC_FLOW')
-      if (sigs.some(s => (s.signal_id || '').includes('002'))) layers.push('WEBSOCKET_FLOW')
-    }
-
-    const invocation = {
-      intent,
-      finding: { surface: anchor.surface || 'SYSTEMIC_OPERATIONAL_FRAGILITY', posture_label: anchor.label },
-      answer_object: ao,
-      persona: densityClass,
-      investigation: null,
-      evidence: {
-        projection_level: pa ? pa.projectionLevel : 0,
-        qualification_state: pa ? pa.qualificationState : (anchor.qualification || 'S0'),
-        evidence_layers: layers,
-        rsig_count: sigs.filter(s => s.signal_family === 'RSIG').length,
-        condition_count: sigs.length,
-        domain_count: (fr.topology_scope && fr.topology_scope.domain_count) || 0,
-      },
-    }
-
-    const synthesis = synthesizeByIntent(invocation)
+    const synthesis = synthesizeByIntent(intent, ctx)
     setInlineSynthesis({ synthesis, label: resolvedQuestion, intent, anchor })
-  }, [densityClass, resolveCurrentAnchor])
+  }, [resolveCurrentAnchor])
 
   const handleProjectionShift = useCallback((targetMode) => {
     if (targetMode === 'BOARDROOM') {
@@ -423,6 +392,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
   fullReportRef.current = reportObject
   projectionAuthorityRef.current = projectionAuthority
+  const handleCDCReady = useCallback((cdc) => { crossDomainCognitionRef.current = cdc }, [])
 
   // Live binding failure surface — fixture fallback DISABLED per contract
   if (!reportObject || !result) {
@@ -643,6 +613,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onProjectionShift={handleProjectionShift}
             inlineSynthesis={inlineSynthesis}
             onInlineSynthesisClear={() => setInlineSynthesis(null)}
+            onCDCReady={handleCDCReady}
             swIntelActive={swIntelActive}
             swIntelProjection={swIntelProjection}
             onSwIntelDeactivate={handleSwIntelDeactivate}

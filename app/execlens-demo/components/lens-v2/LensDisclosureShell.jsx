@@ -121,6 +121,7 @@ export default function LensDisclosureShell({
   onProjectionShift,
   inlineSynthesis,
   onInlineSynthesisClear,
+  onCDCReady,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -252,6 +253,7 @@ export default function LensDisclosureShell({
             onProjectionShift={onProjectionShift}
             inlineSynthesis={inlineSynthesis}
             onInlineSynthesisClear={onInlineSynthesisClear}
+            onCDCReady={onCDCReady}
           />
         )
       case 'SQOIntelligenceZone':

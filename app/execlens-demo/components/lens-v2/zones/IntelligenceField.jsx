@@ -11414,7 +11414,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve, onInlineSynthesis, onProjectionShift, inlineSynthesis, onInlineSynthesisClear }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve, onInlineSynthesis, onProjectionShift, inlineSynthesis, onInlineSynthesisClear, onCDCReady }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -11621,6 +11621,7 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
       return csq ? consequencesForBoardroom(csq, syn, qualifiedReport) : null
     } catch { return null }
   }, [consequencePosture, fullReport, qualifiedReport])
+  useEffect(() => { if (boardroomCrossDomainCognition && onCDCReady) onCDCReady(boardroomCrossDomainCognition) }, [boardroomCrossDomainCognition, onCDCReady])
   const balancedProjection = useMemo(() => consequenceResult ? consequencesForBalanced(consequenceResult, synthesisResult, qualifiedReport) : null, [consequenceResult, synthesisResult, qualifiedReport])
   const balancedBriefing = useMemo(() => balancedProjection ? composeBalancedBriefing(balancedProjection, synthesisResult, fullReport) : null, [balancedProjection, synthesisResult, fullReport])
   const balancedInterpretations = useMemo(() => {
