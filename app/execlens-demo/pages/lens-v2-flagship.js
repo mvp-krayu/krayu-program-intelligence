@@ -246,6 +246,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const [pendingTransitionZone, setPendingTransitionZone] = useState(null)
   const [swIntelActive, setSwIntelActive] = useState(false)
   const [investigationContext, setInvestigationContext] = useState(null)
+  const [inlineSynthesis, setInlineSynthesis] = useState(null)
 
   const crossDomainCognitionRef = useRef(null)
   const fullReportRef = useRef(null)
@@ -316,7 +317,6 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
 
   const handleInlineSynthesis = useCallback((intent, chipLabel) => {
     const { synthesizeByIntent } = require('../lib/lens-v2/pios/IntentSynthesizer')
-    const { deriveSteeringContract } = require('../lib/lens-v2/pios/AnswerObjectSteeringContract')
 
     const cdc = crossDomainCognitionRef.current
     const domConc = (cdc && cdc.domain_concentration) || []
@@ -333,7 +333,7 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
       finding: { surface: 'GRAVITY_DIVERGENCE', posture_label: cdc && cdc.posture_label },
       answer_object: ao,
       persona: densityClass,
-      investigation: investigationContext ? { id: investigationContext.id, state: investigationContext.state } : null,
+      investigation: null,
       evidence: {
         projection_level: projectionAuthorityRef.current ? projectionAuthorityRef.current.projectionLevel : 0,
         qualification_state: projectionAuthorityRef.current ? projectionAuthorityRef.current.qualificationState : 'S0',
@@ -345,20 +345,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     }
 
     const synthesis = synthesizeByIntent(invocation)
-    setInvestigationContext(prev => ({
-      ...(prev || {}),
-      activeSynthesis: synthesis,
-      activeStepId: null,
-      inlineSynthesisLabel: chipLabel,
-      finding: prev ? prev.finding : (cdc && cdc.posture_label) || 'structural_assessment',
-      surface: prev ? prev.surface : 'GRAVITY_DIVERGENCE',
-      postureLabel: prev ? prev.postureLabel : (cdc && cdc.posture_label),
-      primaryDomain: prev ? prev.primaryDomain : structCenter,
-      executionCenter: prev ? prev.executionCenter : execCenter,
-      proofSteps: prev ? prev.proofSteps : [],
-      state: prev ? prev.state : 'OPENED',
-    }))
-  }, [densityClass, investigationContext])
+    setInlineSynthesis({ synthesis, label: chipLabel, intent })
+  }, [densityClass])
 
   const handleProjectionShift = useCallback((targetMode) => {
     if (targetMode === 'BOARDROOM') {
@@ -648,6 +636,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onInvestigationResolve={handleInvestigationResolve}
             onInlineSynthesis={handleInlineSynthesis}
             onProjectionShift={handleProjectionShift}
+            inlineSynthesis={inlineSynthesis}
+            onInlineSynthesisClear={() => setInlineSynthesis(null)}
             swIntelActive={swIntelActive}
             swIntelProjection={swIntelProjection}
             onSwIntelDeactivate={handleSwIntelDeactivate}

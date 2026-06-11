@@ -821,7 +821,7 @@ const BALANCED_INTERPRETIVE_NARRATIVES = {
   },
 }
 
-function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness, projectionAuthority, suppressedConditions, crossDomainCognition, investigationContext, onInvestigationStep, onInvestigationResolve, onInvestigationClear }) {
+function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullReport, qualifierClass, activeZoneKey, densityClass, activeQueryKey, onQuerySelect, exploredQueries, emergenceState, escalationAvailable, piRuntimeActive, onEscalate, onDeescalate, expansions, activeExpansionIndex, onExpansionSelect, interrogationTrail, onTrailExport, onAssessmentExport, selectedNarrativeArc, resolvedCognitionContract, cognitionQueryIndex, onCognitionQuerySelect, activeConditions, resolvedCondition, swIntelActive, visibilityLayerCompleteness, projectionAuthority, suppressedConditions, crossDomainCognition, investigationContext, onInvestigationStep, onInvestigationResolve, onInvestigationClear, inlineSynthesis, onInlineSynthesisClear }) {
   const badge = (adapted && adapted.readinessBadge) || {}
   const chip = (adapted && adapted.qualifierChip) || {}
   const artifacts = (reportPackArtifacts && reportPackArtifacts.length > 0)
@@ -859,6 +859,119 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
   const hasRuntime = pa && pa.evidenceCapabilities && pa.evidenceCapabilities.some(e => e === 'E-RUNTIME' || e === 'E-GOVERNED')
   const sLevel = pa ? pa.qualificationState : (fullReport && fullReport.qualification_level) || 'S0'
   const hasSemantic = sLevel === 'S2' || sLevel === 'S3'
+
+  if (inlineSynthesis && inlineSynthesis.synthesis && !investigationContext) {
+    const syn = inlineSynthesis.synthesis
+    const VERDICT_COLORS = { HOLDS: '#64ffda', WEAKENING: '#e6b800', INCONCLUSIVE: '#ff9e4a' }
+    return (
+      <aside className="intel-support" aria-label="Synthesis panel">
+        <div className="support-block">
+          <div className="support-label">SYNTHESIS</div>
+          <div style={{ fontSize: 9, color: '#5a6580', marginBottom: 4 }}>{inlineSynthesis.label}</div>
+          <div style={{ fontSize: 11, color: '#e8edf8', lineHeight: 1.5 }}>{syn.summary}</div>
+        </div>
+
+        {syn.decisions && syn.decisions.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            {syn.decisions.map((d, i) => (
+              <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330', marginBottom: 6 }}>
+                <div style={{ fontSize: 10, color: '#ccd6f6', fontWeight: 600 }}>{d.decision}</div>
+                <div style={{ fontSize: 9, color: '#7a8aaa', lineHeight: 1.5, marginTop: 3 }}>Assumption: {d.assumption}</div>
+                <div style={{ fontSize: 9, color: '#ff9e4a', lineHeight: 1.5, marginTop: 2 }}>Exposure: {d.exposure}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {syn.impacts && syn.impacts.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            {syn.impacts.map((imp, i) => (
+              <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330', marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 10, color: '#ccd6f6', fontWeight: 600 }}>{imp.operation}</span>
+                  <span style={{ fontSize: 8, color: imp.severity === 'HIGH' ? '#ff6b6b' : '#ff9e4a', letterSpacing: '0.08em' }}>{imp.severity}</span>
+                </div>
+                <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5, marginTop: 3 }}>{imp.consequence}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {syn.evidence_basis && syn.evidence_basis.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">EVIDENCE BASIS</div>
+            {syn.evidence_basis.map((eb, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9, color: '#7a8aaa', lineHeight: 1.6 }}>
+                <span style={{ color: eb.status === 'PRESENT' ? '#64ffda' : '#ff6b6b', fontSize: 10 }}>{eb.status === 'PRESENT' ? '✓' : '✗'}</span>
+                <span>{eb.layer}</span>
+                <span style={{ color: '#5a6580', marginLeft: 'auto' }}>{eb.contribution}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {syn.verdicts && syn.verdicts.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">COMPOUNDING</div>
+            {syn.verdicts.map((v, i) => (
+              <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330', marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 10, color: '#ccd6f6' }}>{v.surface_name}</span>
+                  <span style={{ fontSize: 9, color: v.compounds ? '#ff6b6b' : '#64ffda' }}>{v.compounds ? 'COMPOUNDS' : 'INDEPENDENT'}</span>
+                </div>
+                {v.mechanism && <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5, marginTop: 3 }}>{v.mechanism}</div>}
+                {v.bridge_domains && v.bridge_domains.length > 0 && (
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+                    {v.bridge_domains.map(d => <span key={d} style={{ fontSize: 8, padding: '1px 5px', borderRadius: 2, background: '#64ffda15', color: '#64ffda', border: '1px solid #64ffda30' }}>{d}</span>)}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {syn.mechanism && syn.mechanism.cause && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">MECHANISM</div>
+            <div style={{ fontSize: 10, color: '#e8edf8', lineHeight: 1.5 }}>{syn.mechanism.cause}</div>
+          </div>
+        )}
+
+        {syn.verification_steps && syn.verification_steps.length > 0 && (
+          <div className="support-block" style={{ borderTop: '1px solid #1a2030', paddingTop: 14 }}>
+            <div className="support-label">VERIFICATION</div>
+            {syn.verification_steps.map((s, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9, lineHeight: 1.6 }}>
+                <span style={{ color: s.status === 'VERIFIED' ? '#64ffda' : s.status === 'FAILED' ? '#ff6b6b' : '#5a6580' }}>{s.status === 'VERIFIED' ? '✓' : s.status === 'FAILED' ? '✗' : '?'}</span>
+                <span style={{ color: '#7a8aaa' }}>{s.claim}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {syn.qualification && (
+          <div style={{ fontSize: 9, color: '#5a6580', lineHeight: 1.4, marginTop: 8 }}>Confidence: {syn.qualification}</div>
+        )}
+
+        {syn.next_intents && syn.next_intents.length > 0 && (
+          <div style={{ marginTop: 12, borderTop: '1px solid #1a2030', paddingTop: 8 }}>
+            <div style={{ fontSize: 9, color: '#5a6580', marginBottom: 4 }}>RELATED</div>
+            {syn.next_intents.map(ni => (
+              <div key={ni} style={{ fontSize: 9, color: '#4a9eff80', lineHeight: 1.6 }}>→ {ni.replace(/_/g, ' ')}</div>
+            ))}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={onInlineSynthesisClear}
+          style={{ marginTop: 'auto', paddingTop: 12, borderTop: '1px solid #1a2030', background: 'none', border: 'none', color: '#5a6580', cursor: 'pointer', fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.08em' }}
+        >
+          ✕ DISMISS
+        </button>
+      </aside>
+    )
+  }
 
   const investigationActive = investigationContext && investigationContext.proofSteps && investigationContext.state !== 'RESOLVED' && investigationContext.state !== 'INCONCLUSIVE'
 
@@ -11259,7 +11372,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve, onInlineSynthesis, onProjectionShift }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve, onInlineSynthesis, onProjectionShift, inlineSynthesis, onInlineSynthesisClear }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -11967,6 +12080,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
         onInvestigationStep={onInvestigationStep}
         onInvestigationResolve={onInvestigationResolve}
         onInvestigationClear={onInvestigationClear}
+        inlineSynthesis={inlineSynthesis}
+        onInlineSynthesisClear={onInlineSynthesisClear}
       />
       {deepDiveModal === 'EXECUTION_BLINDNESS' && fullReport && (
         <ExecutionBlindnessModal fullReport={fullReport} onClose={() => setDeepDiveModal(null)} />

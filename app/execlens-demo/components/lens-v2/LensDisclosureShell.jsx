@@ -119,6 +119,8 @@ export default function LensDisclosureShell({
   onInvestigationResolve,
   onInlineSynthesis,
   onProjectionShift,
+  inlineSynthesis,
+  onInlineSynthesisClear,
 }) {
   const directives = useMemo(() => {
     return resolveLayoutDirectives({
@@ -248,6 +250,8 @@ export default function LensDisclosureShell({
             onInvestigationResolve={onInvestigationResolve}
             onInlineSynthesis={onInlineSynthesis}
             onProjectionShift={onProjectionShift}
+            inlineSynthesis={inlineSynthesis}
+            onInlineSynthesisClear={onInlineSynthesisClear}
           />
         )
       case 'SQOIntelligenceZone':
