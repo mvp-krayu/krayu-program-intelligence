@@ -304,50 +304,54 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     setInvestigationContext(null)
   }, [])
 
+  const resolveCurrentAnchor = useCallback(() => {
+    const { resolveAnchor } = require('../lib/lens-v2/pios/CognitiveAnchor')
+    return resolveAnchor(crossDomainCognitionRef.current, fullReportRef.current, investigationContext, null)
+  }, [investigationContext])
+
   const handleInlineSynthesis = useCallback((intent, chipLabel) => {
     const { synthesizeByIntent } = require('../lib/lens-v2/pios/IntentSynthesizer')
+    const { resolveQuestionForAnchor } = require('../lib/lens-v2/pios/CognitiveAnchor')
 
-    const cdc = crossDomainCognitionRef.current
-    const domConc = (cdc && cdc.domain_concentration) || []
-    const structCenter = domConc.length > 0 ? domConc[0].domain : null
-    const execCenter = cdc && cdc.execution_center
+    const anchor = resolveCurrentAnchor()
+    const resolvedQuestion = resolveQuestionForAnchor(anchor, chipLabel)
 
     let ao = null
-    if (structCenter && execCenter && structCenter.toLowerCase() !== execCenter.toLowerCase()) {
-      ao = { ao_type: 'DIVERGENCE_PAIR', ao_id: 'AO-011', instance: { domain_a: { domain: structCenter }, domain_b: { domain: execCenter } } }
+    if (anchor.hasDivergence && anchor.structuralCenter && anchor.executionCenter) {
+      ao = { ao_type: 'DIVERGENCE_PAIR', ao_id: 'AO-011', instance: { domain_a: { domain: anchor.structuralCenter }, domain_b: { domain: anchor.executionCenter } } }
+    }
+
+    const cog = anchor.context || {}
+    const fr = fullReportRef.current || {}
+    const pa = projectionAuthorityRef.current
+    const sigs = fr.signal_interpretations || []
+    const layers = []
+    if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
+    if (sigs.some(s => s.signal_family === 'RSIG')) {
+      if (sigs.some(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))) layers.push('EVENT_FLOW')
+      if (sigs.some(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))) layers.push('MQTT_TOPIC_FLOW')
+      if (sigs.some(s => (s.signal_id || '').includes('002'))) layers.push('WEBSOCKET_FLOW')
     }
 
     const invocation = {
       intent,
-      finding: { surface: 'GRAVITY_DIVERGENCE', posture_label: cdc && cdc.posture_label },
+      finding: { surface: anchor.surface || 'SYSTEMIC_OPERATIONAL_FRAGILITY', posture_label: anchor.label },
       answer_object: ao,
       persona: densityClass,
       investigation: null,
-      evidence: (() => {
-        const fr = fullReportRef.current || {}
-        const pa = projectionAuthorityRef.current
-        const sigs = fr.signal_interpretations || []
-        const layers = []
-        if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
-        if (sigs.some(s => (s.signal_id || '').startsWith('RSIG') || s.signal_family === 'RSIG')) {
-          if (sigs.some(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))) layers.push('EVENT_FLOW')
-          if (sigs.some(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))) layers.push('MQTT_TOPIC_FLOW')
-          if (sigs.some(s => (s.signal_id || '').includes('002'))) layers.push('WEBSOCKET_FLOW')
-        }
-        return {
-          projection_level: pa ? pa.projectionLevel : 0,
-          qualification_state: pa ? pa.qualificationState : 'S0',
-          evidence_layers: layers,
-          rsig_count: sigs.filter(s => s.signal_family === 'RSIG').length,
-          condition_count: sigs.length,
-          domain_count: (fr.topology_scope && fr.topology_scope.domain_count) || 0,
-        }
-      })(),
+      evidence: {
+        projection_level: pa ? pa.projectionLevel : 0,
+        qualification_state: pa ? pa.qualificationState : (anchor.qualification || 'S0'),
+        evidence_layers: layers,
+        rsig_count: sigs.filter(s => s.signal_family === 'RSIG').length,
+        condition_count: sigs.length,
+        domain_count: (fr.topology_scope && fr.topology_scope.domain_count) || 0,
+      },
     }
 
     const synthesis = synthesizeByIntent(invocation)
-    setInlineSynthesis({ synthesis, label: chipLabel, intent })
-  }, [densityClass])
+    setInlineSynthesis({ synthesis, label: resolvedQuestion, intent, anchor })
+  }, [densityClass, resolveCurrentAnchor])
 
   const handleProjectionShift = useCallback((targetMode) => {
     if (targetMode === 'BOARDROOM') {

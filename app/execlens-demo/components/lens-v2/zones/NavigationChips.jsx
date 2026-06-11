@@ -67,10 +67,20 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
 
   if (chips.length === 0) return null
 
+  const anchor = useMemo(() => {
+    try {
+      const { resolveAnchor } = require('../../../lib/lens-v2/pios/CognitiveAnchor')
+      return resolveAnchor(crossDomainCognition, fullReport, null, null)
+    } catch { return null }
+  }, [crossDomainCognition, fullReport])
+
   return (
     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
       {chips.map(chip => {
         const badge = TYPE_BADGES[chip.chipType]
+        const resolvedLabel = anchor && anchor.question_framing && anchor.question_framing[chip.label]
+          ? anchor.question_framing[chip.label]
+          : chip.label
         return (
           <button
             key={chip.label}
@@ -101,7 +111,7 @@ export default function NavigationChips({ crossDomainCognition, fullReport, proj
             onMouseLeave={e => { e.currentTarget.style.background = chip.color + '08'; e.currentTarget.style.borderColor = chip.color + '30' }}
           >
             <span style={{ fontSize: 11 }}>{chip.icon}</span>
-            <span>{chip.label}</span>
+            <span>{compact ? chip.label : resolvedLabel}</span>
             {badge && (
               <span style={{ fontSize: 7, color: chip.color + '80', letterSpacing: '0.06em', marginLeft: 2 }}>{badge}</span>
             )}
