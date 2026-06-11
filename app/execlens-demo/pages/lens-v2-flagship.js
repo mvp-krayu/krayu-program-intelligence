@@ -334,14 +334,26 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
       answer_object: ao,
       persona: densityClass,
       investigation: null,
-      evidence: {
-        projection_level: projectionAuthorityRef.current ? projectionAuthorityRef.current.projectionLevel : 0,
-        qualification_state: projectionAuthorityRef.current ? projectionAuthorityRef.current.qualificationState : 'S0',
-        evidence_layers: [],
-        rsig_count: (fullReportRef.current && fullReportRef.current.signal_interpretations || []).filter(s => s.signal_family === 'RSIG').length,
-        condition_count: 0,
-        domain_count: 0,
-      },
+      evidence: (() => {
+        const fr = fullReportRef.current || {}
+        const pa = projectionAuthorityRef.current
+        const sigs = fr.signal_interpretations || []
+        const layers = []
+        if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
+        if (sigs.some(s => (s.signal_id || '').startsWith('RSIG') || s.signal_family === 'RSIG')) {
+          if (sigs.some(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))) layers.push('EVENT_FLOW')
+          if (sigs.some(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))) layers.push('MQTT_TOPIC_FLOW')
+          if (sigs.some(s => (s.signal_id || '').includes('002'))) layers.push('WEBSOCKET_FLOW')
+        }
+        return {
+          projection_level: pa ? pa.projectionLevel : 0,
+          qualification_state: pa ? pa.qualificationState : 'S0',
+          evidence_layers: layers,
+          rsig_count: sigs.filter(s => s.signal_family === 'RSIG').length,
+          condition_count: sigs.length,
+          domain_count: (fr.topology_scope && fr.topology_scope.domain_count) || 0,
+        }
+      })(),
     }
 
     const synthesis = synthesizeByIntent(invocation)
