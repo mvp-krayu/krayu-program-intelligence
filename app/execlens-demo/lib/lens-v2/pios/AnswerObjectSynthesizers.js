@@ -289,19 +289,109 @@ function synthesizeStepAnswer(step, investigation, fullReport, runtimeGraphs, cr
   if (!step || !investigation) return null
 
   const cdc = crossDomainCognition || {}
-  const type = step.continuationType
+  const label = (step.label || step.detail || '').toLowerCase()
 
-  if (type === 'descent') {
+  if (label.includes('runtime') || label.includes('pressure') || label.includes('rsig') || label.includes('signal')) {
     return synthesizeRuntimePressureAnswer(investigation, fullReport, runtimeGraphs)
   }
-  if (type === 'adjacent') {
+  if (label.includes('compound') || label.includes('blindness') || label.includes('adjacent') || step.continuationType === 'adjacent') {
     return synthesizeCompoundingAnswer(step, investigation, fullReport, cdc)
   }
-  if (type === 'challenge') {
+  if (label.includes('disprove') || label.includes('falsif') || label.includes('invalidate') || step.continuationType === 'challenge') {
     return synthesizeFalsificationAnswer(investigation, cdc)
+  }
+  if (label.includes('diverge') || label.includes('gravity') || label.includes('why do') || label.includes('why does') || label.includes('mechanism')) {
+    return synthesizeDivergenceMechanismAnswer(investigation, fullReport, cdc)
+  }
+  if (label.includes('board') || label.includes('governance') || label.includes('decide') || step.continuationType === 'ascent') {
+    return synthesizeGovernanceAnswer(investigation, cdc)
+  }
+  if (label.includes('downstream') || label.includes('propagat') || label.includes('domain')) {
+    return synthesizePropagationAnswer(investigation, fullReport, cdc)
   }
 
   return null
+}
+
+function synthesizeDivergenceMechanismAnswer(investigation, fullReport, cdc) {
+  const domConc = cdc.domain_concentration || []
+  const structCenter = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || investigation.executionCenter
+  const sigs = (fullReport && fullReport.signal_interpretations) || []
+  const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const structConditions = domConc.length > 0 ? domConc[0].condition_count : 0
+  const narratives = cdc.domain_narratives || []
+  const structNarrative = narratives.find(n => n.domain === structCenter)
+  const execNarrative = narratives.find(n => n.domain === execCenter)
+
+  if (!structCenter || !execCenter) {
+    return { synthesis_type: 'DIVERGENCE_MECHANISM', answerable: false, summary: 'Divergence data not available.' }
+  }
+
+  return {
+    synthesis_type: 'DIVERGENCE_MECHANISM',
+    answerable: true,
+    summary: `Structural gravity concentrates in ${structCenter}. Operational gravity concentrates in ${execCenter}. They don't overlap.`,
+    mechanism: [
+      { label: 'Structural center', domain: structCenter, detail: structNarrative ? structNarrative.risk_label : `${structConditions} conditions converge here — highest structural mass`, evidence: 'Import graph, coupling analysis, domain concentration' },
+      { label: 'Execution center', domain: execCenter, detail: execNarrative ? execNarrative.risk_label : `${rsigs.length} runtime signals concentrate here — highest operational load`, evidence: `${rsigs.length} RSIG signals from event flow, MQTT, WebSocket` },
+    ],
+    divergence_reason: 'Code was built around the structural center (monolith origin). Operations evolved around the execution center (event-driven runtime). Investment follows code structure. Risk follows runtime reality.',
+    qualification: 'HIGH — structural and runtime evidence independently confirm different centers',
+    next: ['Examine which runtime paths carry the operational load', 'Check whether this compounds with Execution Blindness'],
+  }
+}
+
+function synthesizeGovernanceAnswer(investigation, cdc) {
+  const domConc = cdc.domain_concentration || []
+  const structCenter = domConc.length > 0 ? domConc[0].domain : null
+  const execCenter = cdc.execution_center || investigation.executionCenter
+  const themes = cdc.consequence_themes || []
+  const criticalThemes = themes.filter(t => t.severity === 'CRITICAL')
+
+  return {
+    synthesis_type: 'GOVERNANCE_DECISION',
+    answerable: true,
+    summary: structCenter && execCenter && structCenter !== execCenter
+      ? `The board sees a qualified structural posture — but the qualification was earned on ${structCenter}. Operational risk concentrates in ${execCenter}, which the structural qualification does not fully cover.`
+      : `${criticalThemes.length} critical finding${criticalThemes.length !== 1 ? 's' : ''} affect governance confidence.`,
+    decisions: [
+      ...(structCenter && execCenter && structCenter !== execCenter ? [{
+        decision: 'Investment allocation confidence',
+        assumption: `Structural qualification (S2) covers operational risk`,
+        exposure: `Qualification earned on ${structCenter}. Operational risk in ${execCenter} is confirmed by runtime evidence but not by structural qualification alone.`,
+      }] : []),
+      ...(criticalThemes.length > 0 ? [{
+        decision: 'Risk disclosure to stakeholders',
+        assumption: 'Reported risk matches actual operational exposure',
+        exposure: `${criticalThemes.length} critical theme${criticalThemes.length !== 1 ? 's' : ''}: ${criticalThemes.map(t => t.theme_label).join(', ')}`,
+      }] : []),
+    ],
+    qualification: 'Governed — S2 qualified, replay-certified. But qualification scope may not cover execution center risk.',
+    next: ['Review qualification scope', 'Assess investment exposure'],
+  }
+}
+
+function synthesizePropagationAnswer(investigation, fullReport, cdc) {
+  const narratives = cdc.domain_narratives || []
+  const domConc = cdc.domain_concentration || []
+  const origin = domConc.length > 0 ? domConc[0].domain : null
+  const receivers = narratives.filter(n => n.domain !== origin).slice(0, 4)
+
+  return {
+    synthesis_type: 'PROPAGATION_CHAIN',
+    answerable: narratives.length > 0,
+    summary: narratives.length > 0
+      ? `Pressure originates from ${origin || 'the primary domain'} and propagates to ${receivers.length} downstream domain${receivers.length !== 1 ? 's' : ''}.`
+      : 'Propagation data not available.',
+    origin: origin ? { domain: origin, role: 'pressure origin', detail: narratives.find(n => n.domain === origin)?.risk_label || 'structural concentration' } : null,
+    downstream: receivers.map(n => ({
+      domain: n.domain,
+      risk: n.risk_label || 'receives propagated pressure',
+    })),
+    qualification: receivers.length >= 2 ? 'HIGH — multiple downstream domains confirmed' : 'MODERATE — limited propagation evidence',
+    next: ['Examine whether downstream domains have redundancy', 'Check blast radius if origin degrades'],
+  }
 }
 
 function synthesizeRuntimePressureAnswer(investigation, fullReport, runtimeGraphs) {

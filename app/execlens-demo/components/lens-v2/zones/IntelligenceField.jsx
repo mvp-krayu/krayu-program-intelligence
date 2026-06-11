@@ -1100,6 +1100,53 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
                 </div>
               )}
 
+              {syn.mechanism && Array.isArray(syn.mechanism) && syn.mechanism.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+                  {syn.mechanism.map((m, i) => (
+                    <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330' }}>
+                      <div style={{ fontSize: 9, color: '#5a6580', letterSpacing: '0.08em', marginBottom: 2 }}>{m.label}</div>
+                      <div style={{ fontSize: 10, color: '#e8edf8', fontWeight: 600 }}>{m.domain}</div>
+                      <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5, marginTop: 2 }}>{m.detail}</div>
+                      {m.evidence && <div style={{ fontSize: 8, color: '#5a6580', marginTop: 3 }}>Evidence: {m.evidence}</div>}
+                    </div>
+                  ))}
+                  {syn.divergence_reason && <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5, fontStyle: 'italic' }}>{syn.divergence_reason}</div>}
+                </div>
+              )}
+
+              {syn.decisions && syn.decisions.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+                  {syn.decisions.map((d, i) => (
+                    <div key={i} style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330' }}>
+                      <div style={{ fontSize: 10, color: '#ccd6f6', fontWeight: 600 }}>{d.decision}</div>
+                      {d.assumption && <div style={{ fontSize: 9, color: '#7a8aaa', lineHeight: 1.5, marginTop: 3 }}>Assumption: {d.assumption}</div>}
+                      {d.exposure && <div style={{ fontSize: 9, color: '#ff9e4a', lineHeight: 1.5, marginTop: 2 }}>{d.exposure}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {syn.origin && (
+                <div style={{ marginBottom: 8 }}>
+                  <div style={{ padding: '6px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1e2330', marginBottom: 4 }}>
+                    <div style={{ fontSize: 9, color: '#ff9e4a', letterSpacing: '0.08em' }}>ORIGIN</div>
+                    <div style={{ fontSize: 10, color: '#e8edf8', fontWeight: 600 }}>{syn.origin.domain}</div>
+                    <div style={{ fontSize: 9, color: '#9aa0bc', lineHeight: 1.5 }}>{syn.origin.detail}</div>
+                  </div>
+                  {syn.downstream && syn.downstream.length > 0 && (
+                    <>
+                      <div style={{ fontSize: 9, color: '#5a6580', margin: '6px 0 4px', letterSpacing: '0.08em' }}>DOWNSTREAM ({syn.downstream.length})</div>
+                      {syn.downstream.map((d, i) => (
+                        <div key={i} style={{ padding: '4px 8px', borderRadius: 3, background: '#111420', border: '1px solid #1a2030', marginBottom: 3 }}>
+                          <div style={{ fontSize: 10, color: '#ccd6f6' }}>{d.domain}</div>
+                          <div style={{ fontSize: 9, color: '#7a8aaa' }}>{d.risk}</div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
+
               {syn.qualification && (
                 <div style={{ fontSize: 9, color: '#5a6580', lineHeight: 1.4 }}>
                   Confidence: {syn.qualification}
