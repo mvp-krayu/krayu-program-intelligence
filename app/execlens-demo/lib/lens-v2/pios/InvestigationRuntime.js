@@ -184,17 +184,25 @@ function createInvestigation(intent, crossDomainCognition, fullReport, projectio
   const altitude = intent.fromAltitude || 'structural'
   const pLevel = projectionAuthority ? projectionAuthority.projectionLevel : 0
   const surfaceId = intent.surface || 'SYSTEMIC_OPERATIONAL_FRAGILITY'
+  const cdc = crossDomainCognition || {}
+  const fr = fullReport || {}
+  const pa = projectionAuthority || {}
 
-  const ctx = {
-    crossDomainCognition: crossDomainCognition || {},
-    fullReport: fullReport || {},
-  }
+  const ctx = { crossDomainCognition: cdc, fullReport: fr }
 
   const continuations = deriveContinuations(surfaceId, ctx, pLevel, altitude)
   const originType = intent.continuationType || null
   const proofSteps = deriveProofSteps(continuations, altitude)
     .filter(s => s.continuationType !== originType)
   const question = deriveInvestigationQuestion(intent, continuations, altitude)
+
+  const sigs = fr.signal_interpretations || []
+  const rsigs = sigs.filter(s => s.signal_family === 'RSIG')
+  const layers = []
+  if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
+  if (rsigs.some(s => (s.signal_id || '').includes('001') || (s.signal_id || '').includes('005'))) layers.push('EVENT_FLOW')
+  if (rsigs.some(s => (s.signal_id || '').includes('003') || (s.signal_id || '').includes('006'))) layers.push('MQTT_TOPIC_FLOW')
+  if (rsigs.some(s => (s.signal_id || '').includes('002'))) layers.push('WEBSOCKET_FLOW')
 
   instanceCounter++
 
@@ -215,6 +223,25 @@ function createInvestigation(intent, crossDomainCognition, fullReport, projectio
     history: [],
     fromAltitude: intent.fromAltitude || null,
     action: intent.action || null,
+
+    // Durable cognition payload — owned by the investigation, not refs
+    cognition: {
+      crossDomainCognition: cdc,
+      domainConcentration: cdc.domain_concentration || [],
+      executionCenter: cdc.execution_center || intent.executionCenter || null,
+      structuralCenter: (cdc.domain_concentration || []).length > 0 ? cdc.domain_concentration[0].domain : null,
+      consequenceThemes: cdc.consequence_themes || [],
+      domainNarratives: cdc.domain_narratives || [],
+      postureLabel: cdc.posture_label || intent.postureLabel || null,
+      signals: sigs,
+      rsigSignals: rsigs,
+      evidenceLayers: layers,
+      projectionLevel: pa.projectionLevel || pLevel,
+      qualificationState: pa.qualificationState || 'S0',
+      rsigCount: rsigs.length,
+      conditionCount: sigs.length,
+      domainCount: (fr.topology_scope && fr.topology_scope.domain_count) || 0,
+    },
   }
 }
 

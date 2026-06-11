@@ -278,53 +278,13 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
   const handleInvestigationStep = useCallback((step) => {
     const { examineStep } = require('../lib/lens-v2/pios/InvestigationRuntime')
     const { synthesizeStepAnswer } = require('../lib/lens-v2/pios/AnswerObjectSynthesizers')
-    const { synthesizeByIntent } = require('../lib/lens-v2/pios/IntentSynthesizer')
 
     setInvestigationContext(prev => {
       if (!prev) return prev
       const updated = examineStep(prev, step.id)
+      const cog = prev.cognition || {}
 
-      let synthesis = synthesizeStepAnswer(step, prev, fullReportRef.current, null, crossDomainCognitionRef.current)
-
-      if (!synthesis) {
-        const intentMap = {
-          clarify: 'structural_mechanism',
-          implication: 'operational_impact',
-          ascent: 'governance_decision',
-          descent: 'evidence_verification',
-        }
-        const intent = intentMap[step.continuationType]
-        if (intent) {
-          const cdc = crossDomainCognitionRef.current || {}
-          const domConc = (cdc.domain_concentration || [])
-          const structCenter = domConc.length > 0 ? domConc[0].domain : null
-          const execCenter = cdc.execution_center
-          let ao = null
-          if (structCenter && execCenter && structCenter.toLowerCase() !== execCenter.toLowerCase()) {
-            ao = { ao_type: 'DIVERGENCE_PAIR', ao_id: 'AO-011', instance: { domain_a: { domain: structCenter }, domain_b: { domain: execCenter } } }
-          }
-          const fr = fullReportRef.current || {}
-          const sigs = fr.signal_interpretations || []
-          const layers = []
-          if (fr.structural_enrichment && fr.structural_enrichment.available) layers.push('STATIC_IMPORT')
-          if (sigs.some(s => s.signal_family === 'RSIG')) { layers.push('EVENT_FLOW'); layers.push('MQTT_TOPIC_FLOW'); layers.push('WEBSOCKET_FLOW') }
-          synthesis = synthesizeByIntent({
-            intent,
-            finding: { surface: prev.surface, posture_label: prev.postureLabel },
-            answer_object: ao,
-            persona: null,
-            investigation: { id: prev.id, state: prev.state },
-            evidence: {
-              projection_level: projectionAuthorityRef.current ? projectionAuthorityRef.current.projectionLevel : 0,
-              qualification_state: projectionAuthorityRef.current ? projectionAuthorityRef.current.qualificationState : 'S0',
-              evidence_layers: layers,
-              rsig_count: sigs.filter(s => s.signal_family === 'RSIG').length,
-              condition_count: sigs.length,
-              domain_count: 0,
-            },
-          })
-        }
-      }
+      const synthesis = synthesizeStepAnswer(step, prev, { signal_interpretations: cog.signals || [] }, null, cog.crossDomainCognition || {})
 
       return {
         ...updated,
