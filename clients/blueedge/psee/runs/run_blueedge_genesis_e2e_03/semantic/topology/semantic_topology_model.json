@@ -1,0 +1,425 @@
+{
+  "schema_version": "1.0",
+  "client": "blueedge",
+  "generated_by": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+  "generation_basis": "CSR_DETERMINISTIC",
+  "generation_date": "2026-05-23",
+  "generator_version": "1.0.0",
+  "source_contracts": [
+    "PI.SUBSTRATE.CSR-IMPLEMENTATION.01"
+  ],
+  "domains": [
+    {
+      "domain_id": "DOMAIN-01",
+      "domain_name": "Edge Data Acquisition",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "lineage_status": "EXACT",
+      "zone_anchor": false,
+      "dominant_dom_id": "DOM-13",
+      "confidence": 0.95,
+      "business_label": "Edge Data Acquisition",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-02",
+      "domain_name": "Telemetry Transport and Messaging",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Telemetry Transport and Messaging",
+      "original_status": "inferred"
+    },
+    {
+      "domain_id": "DOMAIN-03",
+      "domain_name": "Fleet Core Operations",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Fleet Core Operations",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-04",
+      "domain_name": "Fleet Vertical Extensions",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Fleet Vertical Extensions",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-05",
+      "domain_name": "Analytics and Intelligence",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Analytics and Intelligence",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-06",
+      "domain_name": "AI/ML Intelligence Layer",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "AI/ML Intelligence Layer",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-07",
+      "domain_name": "Sensor and Security Ingestion",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-01",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Sensor and Security Ingestion",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-08",
+      "domain_name": "Real-Time Streaming and Gateway",
+      "domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-04",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Real-Time Streaming and Gateway",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-09",
+      "domain_name": "Access Control and Identity",
+      "domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-05",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Access Control and Identity",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "domain_name": "Platform Infrastructure and Data",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-04",
+      "lineage_status": "STRONG",
+      "zone_anchor": true,
+      "dominant_dom_id": "DOM-04",
+      "confidence": 0.78,
+      "business_label": "Platform Infrastructure and Data",
+      "original_status": "inferred",
+      "structural_import_evidence": {
+        "import_in_count": 1,
+        "import_out_count": 71,
+        "backing_dom_id": "DOM-04",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "centrality_evidence": {
+        "files_ranked": 2,
+        "hub_file": "backend/src/app.module.ts",
+        "hub_import_in_degree": 1,
+        "hub_structural_role": "INTERFACE_BOUNDARY",
+        "structural_role_distribution": {
+          "INTERFACE_BOUNDARY": 2
+        },
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "domain_name": "Event-Driven Architecture",
+      "domain_type": "CROSS-CUTTING",
+      "cluster_id": "CLU-04",
+      "lineage_status": "PARTIAL",
+      "zone_anchor": false,
+      "dominant_dom_id": "DOM-07",
+      "confidence": 0.65,
+      "business_label": "Event-Driven Architecture",
+      "original_status": "verified",
+      "structural_import_evidence": {
+        "import_in_count": 0,
+        "import_out_count": 5,
+        "backing_dom_id": "DOM-07",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "centrality_evidence": {
+        "files_ranked": 1,
+        "hub_file": "backend/src/events/fleet-events.spec.ts",
+        "hub_import_in_degree": 0,
+        "hub_structural_role": "VALIDATION_SUPPORT",
+        "structural_role_distribution": {
+          "VALIDATION_SUPPORT": 1
+        },
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "domain_id": "DOMAIN-12",
+      "domain_name": "SaaS Platform Layer",
+      "domain_type": "OPERATIONAL",
+      "cluster_id": "CLU-05",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "SaaS Platform Layer",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-13",
+      "domain_name": "External Integration",
+      "domain_type": "INTEGRATION",
+      "cluster_id": "CLU-05",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "External Integration",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "domain_name": "Frontend Application",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-05",
+      "lineage_status": "EXACT",
+      "zone_anchor": false,
+      "dominant_dom_id": "DOM-10",
+      "confidence": 0.92,
+      "business_label": "Frontend Application",
+      "original_status": "verified",
+      "structural_import_evidence": {
+        "import_in_count": 1,
+        "import_out_count": 77,
+        "backing_dom_id": "DOM-10",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "centrality_evidence": {
+        "files_ranked": 2,
+        "hub_file": "frontend/App.tsx",
+        "hub_import_in_degree": 1,
+        "hub_structural_role": "INTERFACE_BOUNDARY",
+        "structural_role_distribution": {
+          "INTERFACE_BOUNDARY": 1,
+          "VALIDATION_SUPPORT": 1
+        },
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "domain_id": "DOMAIN-15",
+      "domain_name": "EV and Electrification",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-03",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "EV and Electrification",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "domain_name": "Operational Engineering",
+      "domain_type": "INFRASTRUCTURE",
+      "cluster_id": "CLU-03",
+      "lineage_status": "EXACT",
+      "zone_anchor": false,
+      "dominant_dom_id": "DOM-11",
+      "confidence": 0.93,
+      "business_label": "Operational Engineering",
+      "original_status": "verified"
+    },
+    {
+      "domain_id": "DOMAIN-17",
+      "domain_name": "Extended Operations and Driver Services",
+      "domain_type": "FUNCTIONAL",
+      "cluster_id": "CLU-02",
+      "lineage_status": "NONE",
+      "zone_anchor": false,
+      "dominant_dom_id": null,
+      "confidence": 0.0,
+      "business_label": "Extended Operations and Driver Services",
+      "original_status": "verified"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "CLU-01",
+      "cluster_label": "Operational Intelligence",
+      "color_accent": "#3fb950",
+      "domain_count": 4
+    },
+    {
+      "cluster_id": "CLU-02",
+      "cluster_label": "Fleet Operations",
+      "color_accent": "#58a6ff",
+      "domain_count": 3
+    },
+    {
+      "cluster_id": "CLU-03",
+      "cluster_label": "Emerging Capabilities",
+      "color_accent": "#79c0ff",
+      "domain_count": 2
+    },
+    {
+      "cluster_id": "CLU-04",
+      "cluster_label": "Platform Infrastructure",
+      "color_accent": "#d29922",
+      "domain_count": 4
+    },
+    {
+      "cluster_id": "CLU-05",
+      "cluster_label": "Platform Services",
+      "color_accent": "#a5d6ff",
+      "domain_count": 4
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "L-DOM-01",
+      "source_domain": "DOMAIN-01",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-02",
+      "source_domain": "DOMAIN-05",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-03",
+      "source_domain": "DOMAIN-01",
+      "target_domain": "DOMAIN-10",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-04",
+      "source_domain": "DOMAIN-07",
+      "target_domain": "DOMAIN-10",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-05",
+      "source_domain": "DOMAIN-03",
+      "target_domain": "DOMAIN-09",
+      "relationship_type": "inferred_semantic"
+    },
+    {
+      "edge_id": "L-DOM-06",
+      "source_domain": "DOMAIN-03",
+      "target_domain": "DOMAIN-16",
+      "relationship_type": "inferred_semantic"
+    },
+    {
+      "edge_id": "L-DOM-07",
+      "source_domain": "DOMAIN-04",
+      "target_domain": "DOMAIN-15",
+      "relationship_type": "structural_co_membership"
+    },
+    {
+      "edge_id": "L-DOM-08",
+      "source_domain": "DOMAIN-02",
+      "target_domain": "DOMAIN-05",
+      "relationship_type": "EMITS"
+    },
+    {
+      "edge_id": "L-DOM-09",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-10",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-12",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-11",
+      "source_domain": "DOMAIN-10",
+      "target_domain": "DOMAIN-16",
+      "relationship_type": "CALLS"
+    },
+    {
+      "edge_id": "L-DOM-12",
+      "source_domain": "DOMAIN-09",
+      "target_domain": "DOMAIN-03",
+      "relationship_type": "CALLS"
+    }
+  ],
+  "metrics": {
+    "total_domains": 17,
+    "total_clusters": 5,
+    "total_edges": 12,
+    "domains_with_structural_evidence": 5
+  },
+  "dom_bindings_summary": [
+    {
+      "domain_id": "DOMAIN-01",
+      "dom_id": "DOM-13",
+      "lineage_status": "EXACT",
+      "confidence": 0.95
+    },
+    {
+      "domain_id": "DOMAIN-10",
+      "dom_id": "DOM-04",
+      "lineage_status": "STRONG",
+      "confidence": 0.78
+    },
+    {
+      "domain_id": "DOMAIN-11",
+      "dom_id": "DOM-07",
+      "lineage_status": "PARTIAL",
+      "confidence": 0.65
+    },
+    {
+      "domain_id": "DOMAIN-14",
+      "dom_id": "DOM-10",
+      "lineage_status": "EXACT",
+      "confidence": 0.92
+    },
+    {
+      "domain_id": "DOMAIN-16",
+      "dom_id": "DOM-11",
+      "lineage_status": "EXACT",
+      "confidence": 0.93
+    }
+  ],
+  "provenance": {
+    "csr_hash": "784792441efce9dc",
+    "lineage_hash": null,
+    "crosswalk_hash": null,
+    "generator_version": "1.0.0",
+    "generation_contract": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+    "cluster_assignment_source": "CSR_EXPLICIT",
+    "structural_enrichment": {
+      "enriched_by": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01",
+      "artifacts_consumed": [
+        "structure/40.3s/code_graph.json",
+        "structure/40.3c/structural_centrality.json"
+      ]
+    }
+  }
+}
