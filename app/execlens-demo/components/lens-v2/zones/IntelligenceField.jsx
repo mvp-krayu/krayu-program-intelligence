@@ -1152,11 +1152,6 @@ function SupportRail({ adapted, scope, boardroomMode, reportPackArtifacts, fullR
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span style={{ color: '#4a9eff', fontSize: 10 }}>{CATEGORY_ICONS[s.category] || '→'}</span>
                   <span style={{ flex: 1 }}>{s.label}</span>
-                  {s.targetMode && (
-                    <span style={{ fontSize: 8, color: '#5a6580', letterSpacing: '0.08em', flexShrink: 0 }}>
-                      {s.targetMode === 'OPERATOR_DENSE' ? 'OPERATOR' : s.targetMode === 'EXECUTIVE_DENSE' ? 'DENSE' : s.targetMode === 'EXECUTIVE_BALANCED' ? 'BALANCED' : ''}
-                    </span>
-                  )}
                 </div>
               </button>
             ))}
