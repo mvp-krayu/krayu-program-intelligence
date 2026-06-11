@@ -1,0 +1,337 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+  "sqo_stage": "enrichment_planning",
+  "s1_to_s2_stage": 1,
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "timestamp": "2026-05-23T11:31:05.431613+00:00",
+  "entry_state": {
+    "s_level": "S1",
+    "total_propositions": 85,
+    "derived_count": 32,
+    "direct_evidence_count": 53,
+    "rejected_count": 3,
+    "anchor_elevated_dimensions": [
+      "review_obligations",
+      "enrichment_activity"
+    ]
+  },
+  "enrichment_targets": {
+    "total": 29,
+    "by_mechanism": {
+      "DOMAIN_ID_CORRECTION": 1,
+      "DOMAIN_REF_CORRECTION": 3,
+      "VAULT_STRUCTURAL_VERIFICATION": 6,
+      "TOPOLOGY_EDGE_VERIFICATION": 19
+    },
+    "propositions": [
+      {
+        "proposition_id": "SP-blueedge-0017",
+        "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.55,
+        "disposition": "ARBITRATED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "DOMAIN_ID_CORRECTION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0039",
+        "proposition_class": "CAPABILITY_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.55,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "DOMAIN_REF_CORRECTION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0040",
+        "proposition_class": "CAPABILITY_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.55,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "DOMAIN_REF_CORRECTION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0041",
+        "proposition_class": "CAPABILITY_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.55,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "DOMAIN_REF_CORRECTION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0045",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0048",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0050",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0052",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0053",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0057",
+        "proposition_class": "VAULT_CLAIM_STRUCTURAL",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.65,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "VAULT_STRUCTURAL_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0067",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0068",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0069",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0070",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0071",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0072",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0073",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0074",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0075",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0076",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0077",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0078",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.6,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0079",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0080",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0081",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0082",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0083",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0084",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      },
+      {
+        "proposition_id": "SP-blueedge-0085",
+        "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+        "current_tier": "DERIVED",
+        "current_confidence": 0.5,
+        "disposition": "ACCEPTED",
+        "enrichment_type": "CONFIDENCE_AND_EVIDENCE_STRENGTHENING",
+        "enrichment_mechanism": "TOPOLOGY_EDGE_VERIFICATION"
+      }
+    ]
+  },
+  "evidence_sources": [
+    {
+      "source": "SDC derivation report",
+      "path": "clients/blueedge/psee/runs/run_blueedge_sdc_validation_01/semantic/compiler/derivation_report.json",
+      "mechanism": "Domain ID name-matching corrects component counts and confidence",
+      "affects": "DOMAIN_EVIDENCE_GROUNDING, CAPABILITY_EVIDENCE"
+    },
+    {
+      "source": "HTML architecture document",
+      "path": "clients/blueedge/sqo/evidence/blueedge_explicit_html_rebase_01/BlueEdge_Unified_Architecture_v3_23_0.html",
+      "mechanism": "Module cards, layer descriptions, capability groups provide structural backing",
+      "affects": "DOMAIN_EVIDENCE_GROUNDING, CAPABILITY_EVIDENCE"
+    }
+  ],
+  "debt_inventory": {
+    "source": "clients/blueedge/psee/runs/run_blueedge_productized_01_fixed/sqo/qualification_blockers.json",
+    "total_items": 15,
+    "irreducible": 4,
+    "reduced_by_enrichment": 8,
+    "reducible_by_evidence": 1,
+    "unclassified": 2
+  },
+  "enrichment_strategy": {
+    "primary": "DOMAIN_ID_CORRECTION \u2014 semantic name matching between canonical CSR and SDC candidate CSR to correct component counts and recalculate confidence",
+    "secondary": "DEBT_EVOLUTION \u2014 re-assess 15 debt items against enriched proposition evidence",
+    "path_b_limitation": "No code graph available. Enrichment limited to SDC-extracted HTML evidence. Cannot provide L5 structural authority from document evidence alone.",
+    "expected_outcomes": [
+      "14 domain propositions get corrected component counts via name-matching (3 NO_SDC_MATCH domains get reduced confidence)",
+      "Capability propositions get corrected domain_id references",
+      "Vault claim and cross-domain propositions: no direct enrichment mechanism (structural verification only)",
+      "Debt items: evidence quality improved but reducibility classifications likely unchanged (blockers require L5 structural authority)"
+    ]
+  },
+  "materializer": {
+    "script": "scripts/pios/sdc/evidence_enrichment_rc04.py",
+    "status": "EXISTS_NEEDS_PARAMETERIZATION",
+    "action": "Parameterize with --client, --run-id, --sdc-run. Redirect output from chronicle/ to pipeline paths (semantic/spe/)."
+  },
+  "completion_artifacts": [
+    "semantic/spe/enrichment_plan.json (this file)",
+    "semantic/spe/enrichment_log.json (Stage 2 output)",
+    "semantic/spe/enrichment_activity_event.json (Stage 2 output)",
+    "semantic/spe/debt_reassessment.json (Stage 3 output)",
+    "semantic/spe/enrichment_summary.json (Stage 4 output)"
+  ]
+}

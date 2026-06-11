@@ -1,0 +1,60 @@
+# ══════════════════════════════════════════════════════════════
+# Blue Edge SVG 2.0 Agent Configuration
+# Path: /opt/blueedge/config/blueedge.yaml
+# ══════════════════════════════════════════════════════════════
+
+# ── Device Identity ─────────────────────────────────────────
+device:
+  hardware_id: "SVG-A1B2C3-AE"        # Unique SVG hardware ID (set during provisioning)
+  vehicle_id: "TANKER-047"             # Linked vehicle identifier
+  fleet_id: "fleet-hazmat-uae-01"      # Fleet assignment
+  tenant_id: "blueedge-demo"           # Multi-tenant org ID
+
+# ── Blue Edge Cloud ─────────────────────────────────────────
+cloud:
+  api_url: "https://api.blueedge.network/api/v1"
+  api_key: "${BLUEEDGE_API_KEY}"       # Injected from secure store / TPM
+  websocket_url: "wss://ws.blueedge.network"
+
+# ── MQTT Broker ─────────────────────────────────────────────
+mqtt:
+  enabled: true
+  broker: "mqtt.blueedge.network"
+  port: 8883
+  use_tls: true
+  client_cert: "/opt/blueedge/certs/client.pem"
+  client_key: "/opt/blueedge/certs/client.key"
+  ca_cert: "/opt/blueedge/certs/ca.pem"
+  topics:
+    telemetry: "blueedge/telemetry/${device.hardware_id}"
+    sensors: "blueedge/sensors/${device.hardware_id}"
+    hasi: "blueedge/hasi/${device.hardware_id}"
+    commands: "blueedge/commands/${device.hardware_id}"
+    ota: "blueedge/ota/${device.hardware_id}"
+
+# ── HASI Bridge ─────────────────────────────────────────────
+hasi:
+  enabled: true
+  db_path: "/opt/hasi/data/hasi.db"
+  captures_dir: "/opt/hasi/data/captures"
+  poll_interval_sec: 30
+  batch_size: 10
+  state_file: "/opt/blueedge/hasi-bridge/state.json"
+  # HASI's own config override
+  hasi_config_path: "/opt/hasi/config/config.yaml"
+
+# ── Sensor Collector ────────────────────────────────────────
+sensor_collector:
+  enabled: true
+  batch_size: 50
+  flush_interval_sec: 5
+  max_buffer_size: 10000
+  gps_shm_path: "/dev/shm/blueedge_gps"
+
+# ── Logging ─────────────────────────────────────────────────
+logging:
+  level: "INFO"                        # DEBUG, INFO, WARNING, ERROR
+  directory: "/var/log/blueedge"
+  max_size_mb: 50
+  retention_days: 7
+  syslog_enabled: true

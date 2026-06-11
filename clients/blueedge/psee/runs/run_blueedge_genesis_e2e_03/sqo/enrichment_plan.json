@@ -1,0 +1,229 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+  "plan_type": "ENRICHMENT_PLAN",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "specimen_path": "PATH_B",
+  "generated_at": "2026-05-25T07:56:13.779798+00:00",
+  "total_propositions": 85,
+  "enrichment_targets": 23,
+  "approval_status": "PENDING_OPERATOR_APPROVAL",
+  "approved_by": null,
+  "approved_at": null,
+  "targets": [
+    {
+      "proposition_id": "SP-blueedge-0001",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0002",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0003",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0004",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0005",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0006",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0007",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0008",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0009",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0010",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0011",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0012",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0013",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0014",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0015",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0016",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.85,
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0017",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "current_confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "SDC_DOMAIN_CORRECTION",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0034",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0035",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0037",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0039",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0040",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    },
+    {
+      "proposition_id": "SP-blueedge-0041",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "current_confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "enrichment_type": "EVIDENCE_TIER_UPGRADE",
+      "evidence_source": "SDC HTML evidence",
+      "status": "CANDIDATE"
+    }
+  ],
+  "execution_prerequisites": {
+    "code_graph_present": true,
+    "centrality_present": true,
+    "propositions_present": true,
+    "review_complete": true
+  }
+}

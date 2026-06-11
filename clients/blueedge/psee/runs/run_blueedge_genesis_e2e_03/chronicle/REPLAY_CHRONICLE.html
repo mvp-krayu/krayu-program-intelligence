@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-version" content="2.0">
+  <meta name="generator" content="Governed Cognitive Replay Chronicle Builder">
+  <meta name="governance" content="75.x bounded interpretive authority — evidence-bound narrative synthesis">
+  <meta name="chronicle-id" content="blueedge-governed-cognitive-replay-chronicle">
+  <meta name="client" content="blueedge">
+  <meta name="run-id" content="run_blueedge_genesis_e2e_03">
+  <title>Blueedge — Governed Cognitive Replay Chronicle</title>
+  <style>
+    :root {
+      --bg-base: #0d0f14;
+      --bg-panel: #141720;
+      --bg-card: #1a1e2b;
+      --bg-deep: #12151f;
+      --border: #2a2f40;
+      --border-dim: #1e2330;
+      --accent: #4a9eff;
+      --text-primary: #ccd6f6;
+      --text-dim: #7a8aaa;
+      --text-muted: #4a5570;
+      --green: #64ffda;
+      --yellow: #ffd700;
+      --orange: #ff9e4a;
+      --red: #ff6b6b;
+      --phase-emergence: #64ffda;
+      --phase-formation: #4a9eff;
+      --phase-tension: #ff9e4a;
+      --phase-strengthening: #ffd700;
+      --phase-stabilization: #64ffda;
+      --phase-qualification: #4a9eff;
+      --phase-convergence: #b794f6;
+      --phase-projection: #ff79c6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+
+    .chronicle-header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .chronicle-title {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .chronicle-headline {
+      font-family: 'Courier New', monospace;
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .chronicle-subtitle {
+      font-size: 12px;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .chronicle-principle {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 20px;
+      letter-spacing: 0.06em;
+    }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 32px 0 48px;
+      padding: 16px 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: var(--border-dim);
+      z-index: 0;
+    }
+
+    .timeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      width: 80px;
+    }
+
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+      border: 2px solid var(--bg-base);
+    }
+
+    .timeline-label {
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+
+    /* Chapters */
+    .chapter {
+      margin-bottom: 48px;
+      border: 1px solid var(--border-dim);
+      border-radius: 4px;
+      background: var(--bg-panel);
+      overflow: hidden;
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .chapter-number {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .chapter-title {
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .chapter-phase {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+
+    .chapter-body { padding: 20px; }
+
+    /* Z1 — Executive Understanding (always visible) */
+    .z1-executive {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .z1-finding {
+      background: var(--bg-deep);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .z1-finding-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    /* Zoom levels (Z2-Z5 via details) */
+    .zoom-section {
+      margin-top: 12px;
+    }
+
+    .zoom-section > summary {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px 12px;
+      background: var(--bg-deep);
+      border: 1px solid var(--border-dim);
+      border-radius: 2px;
+      list-style: none;
+      transition: color 0.15s ease;
+    }
+
+    .zoom-section > summary:hover { color: var(--text-dim); }
+    .zoom-section > summary::before {
+      content: '\25B8 ';
+      font-size: 8px;
+    }
+    .zoom-section[open] > summary::before { content: '\25BE '; }
+
+    .zoom-content {
+      padding: 12px 16px;
+      border: 1px solid var(--border-dim);
+      border-top: none;
+      background: var(--bg-card);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .zoom-content p { margin-bottom: 8px; color: var(--text-dim); }
+
+    /* Data cards */
+    .data-card {
+      background: var(--bg-deep);
+      border-left: 3px solid var(--border);
+      padding: 10px 14px;
+      margin: 8px 0;
+    }
+
+    .data-card.green { border-left-color: var(--green); }
+    .data-card.blue { border-left-color: var(--accent); }
+    .data-card.orange { border-left-color: var(--orange); }
+    .data-card.red { border-left-color: var(--red); }
+    .data-card.yellow { border-left-color: var(--yellow); }
+    .data-card.purple { border-left-color: var(--phase-convergence); }
+
+    .data-label {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .data-value {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    .data-explain {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    /* Meta grid */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 6px 12px;
+      font-size: 11px;
+    }
+
+    .meta-key {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .meta-val { color: var(--text-dim); }
+
+    /* Ascent summary */
+    .ascent {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border-dim);
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-size: 12px;
+    }
+
+    .ascent-label {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .ascent-text { color: var(--text-dim); line-height: 1.6; }
+
+    /* Convergence matrix */
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin: 12px 0;
+    }
+
+    .matrix-table th {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .matrix-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-dim);
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+
+    .convergent { color: var(--green); }
+    .divergent { color: var(--orange); }
+
+    /* Confidence bar */
+    .conf-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-dim);
+      margin-top: 4px;
+    }
+
+    .conf-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    /* Footer */
+    .chronicle-footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-dim);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .governance-boundary {
+      background: var(--bg-deep);
+      border: 1px solid var(--border-dim);
+      padding: 14px 18px;
+      margin-top: 16px;
+      font-size: 11px;
+    }
+
+    .governance-boundary p { margin-bottom: 6px; color: var(--text-dim); }
+
+    .snapshot-id {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    @media print {
+      body { background: #fff; color: #1a1a1a; max-width: 100%; }
+      .chapter { border-color: #ddd; background: #fafafa; }
+      .chapter-header { background: #f0f0f0; }
+      .z1-finding, .data-card, .zoom-content, .ascent, .governance-boundary { background: #f5f5f5; }
+      .chapter-title, .data-value { color: #1a1a1a; }
+      details { break-inside: avoid; }
+    }
+    </style>
+</head>
+<body>
+  
+    <div class="chronicle-header">
+      <div class="chronicle-title">Governed Cognitive Replay Chronicle</div>
+      <div class="chronicle-headline">BlueEdge — Program Intelligence</div>
+      <div class="chronicle-subtitle">
+        A cognitive traversal instrument through which governed cognition unfolds.
+        This chronicle traces how Program Intelligence ingests, structures, governs,
+        strengthens, validates, and qualifies semantic understanding — within a
+        post-genesis governed replay corridor.
+      </div>
+      <div class="chronicle-principle">
+        THE CHRONICLE IS THE LENS · THE LINEAGE IS THE PROOF · THE OUTPUTS ARE THE CONCLUSIONS
+      </div>
+    </div>
+    
+  <div class="timeline">
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-emergence);"></div>
+          <div class="timeline-label" style="color: var(--phase-emergence);">EMERGENCE</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-00</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-formation);"></div>
+          <div class="timeline-label" style="color: var(--phase-formation);">FORMATION</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-01</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-tension);"></div>
+          <div class="timeline-label" style="color: var(--phase-tension);">TENSION</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-02/03</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-strengthening);"></div>
+          <div class="timeline-label" style="color: var(--phase-strengthening);">STRENGTHENING</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-04/05</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-stabilization);"></div>
+          <div class="timeline-label" style="color: var(--phase-stabilization);">STABILIZATION</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-06</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-qualification);"></div>
+          <div class="timeline-label" style="color: var(--phase-qualification);">QUALIFICATION</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-07</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-convergence);"></div>
+          <div class="timeline-label" style="color: var(--phase-convergence);">CONVERGENCE</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-08</div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-dot" style="background: var(--phase-projection);"></div>
+          <div class="timeline-label" style="color: var(--phase-projection);">PROJECTION</div>
+          <div class="timeline-label" style="color: var(--text-muted); margin-top: 2px;">CP-09</div>
+        </div>
+        </div>
+  
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 1</div>
+          <div class="chapter-title" style="color: var(--phase-emergence);">The Specimen</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-emergence); border-color: var(--phase-emergence);">EMERGENCE</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          The system encounters BlueEdge for the first time within the governed replay corridor.
+          Not as raw intake — the semantic substrates already exist: an SDC-derived candidate CSR with
+          17 domains, 42 capabilities, and 89 components; 3 HTML evidence documents totaling 505KB;
+          28 vault claims; 18 prior PSEE runs. BlueEdge holds S0 after pipeline genesis —
+          structural substrate materialized, but governance lifecycle not yet exercised.
+          <br><br>
+          The chronicle begins here: at the gap between structural onboarding and governed qualification.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          BlueEdge at S0 — structural substrate complete, governance lifecycle NOT_STARTED. 0 propositions. 0 operator reviews. 15 qualification blockers classified.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>The baseline captures what the system knows before governed cognition begins:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">CSR Domains</div>
+      <div class="data-value">17 (canonical semantic registry)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Capabilities</div>
+      <div class="data-value">42 across 17 domains</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Components</div>
+      <div class="data-value">89 structural components</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Evidence Files</div>
+      <div class="data-value">3 HTML documents (505KB total)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Vault Claims</div>
+      <div class="data-value">28 CLM-* entries with structural backing</div>
+      
+    </div>
+    
+          
+    <div class="data-card orange">
+      <div class="data-label">Qualification Blockers</div>
+      <div class="data-value">15 (4 irreducible, 8 enrichable, 1 evidence-reducible, 2 continuity)</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Governance state at baseline:</p>
+          
+    <div class="data-card yellow">
+      <div class="data-label">S-Level</div>
+      <div class="data-value">S0 — PIPELINE_GENESIS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Qualification Provenance</div>
+      <div class="data-value">PIPELINE_GENESIS — structural substrate materialized</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Operator Reviews</div>
+      <div class="data-value">0 — no human governance exercised</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Propositions</div>
+      <div class="data-value">0 — no semantic claims derived</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Governance Lifecycle</div>
+      <div class="data-value">NOT_STARTED</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Pre-governance structural artifacts:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">Pipeline Run</div>
+      <div class="data-value">run_blueedge_genesis_e2e_03 — 19-phase pipeline complete</div>
+      
+    </div>
+    
+          
+    <div class="data-card blue">
+      <div class="data-label">SDC Validation</div>
+      <div class="data-value">run_blueedge_sdc_validation_01 — 3 HTML files processed</div>
+      
+    </div>
+    
+          <p>Checkpoint: checkpoint_00 (genesis pipeline completion)</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Raw evidence sources:</p>
+          <div class="data-card">
+            <div class="data-label">Evidence Files</div>
+            <div class="data-value">BlueEdge_Unified_Architecture_v3_23_0.html (89KB)</div>
+            <div class="data-value">Blue_Edge_PMO_Dashboard.html (365KB)</div>
+            <div class="data-value">BlueEdge_Competitive_Dashboard_Feb2026.html (51KB)</div>
+          </div>
+          <p>SDC validation run: run_blueedge_sdc_validation_01</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">The system has a structural substrate but no governed cognition. Propositions, review, enrichment, revalidation — all ahead. The governance lifecycle begins from S0.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 2</div>
+          <div class="chapter-title" style="color: var(--phase-formation);">The Claims</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-formation); border-color: var(--phase-formation);">FORMATION</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          Semantic propositions crystallize from PATH B evidence. The proposition bridge transforms
+          SDC output (candidate CSR) and vault claims into 85 CANDIDATE propositions across
+          4 classes.
+          This is not code-graph derivation — it is document-evidence derivation. The propositions
+          carry what HTML documents and semantic registry entries can prove, bounded by L3 authority ceiling.
+          <br><br>
+          Mean confidence: 0.717. All at CANDIDATE status, awaiting operator review.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          85 CANDIDATE propositions derived across 4 classes. All at L3 authority ceiling. Mean confidence 0.717.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Proposition classes derived from PATH B evidence:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">CAPABILITY_EVIDENCE</div>
+      <div class="data-value">24 propositions</div>
+      
+    </div>
+    
+    <div class="data-card blue">
+      <div class="data-label">CROSS_DOMAIN_EVIDENCE</div>
+      <div class="data-value">19 propositions</div>
+      
+    </div>
+    
+    <div class="data-card blue">
+      <div class="data-label">DOMAIN_EVIDENCE_GROUNDING</div>
+      <div class="data-value">17 propositions</div>
+      
+    </div>
+    
+    <div class="data-card blue">
+      <div class="data-label">VAULT_CLAIM_STRUCTURAL</div>
+      <div class="data-value">25 propositions</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Derivation Tiers</div>
+      <div class="data-value">53 DIRECT_EVIDENCE, 32 DERIVED</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Mean Confidence</div>
+      <div class="data-value">0.717</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Authority Ceiling</div>
+      <div class="data-value">L3 — AI-derived, requires operator review</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Derivation mechanism:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">Stage 1</div>
+      <div class="data-value">SDC execution on 3 HTML evidence files (already proven)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Stage 2</div>
+      <div class="data-value">proposition_bridge.py transforms candidate_csr + vault claims + CSR into propositions</div>
+      
+    </div>
+    
+          <p>All propositions at status: CANDIDATE. No operator action yet.</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          
+    <div class="data-card blue">
+      <div class="data-label">Materializer</div>
+      <div class="data-value">scripts/pios/sdc/proposition_bridge.py</div>
+      
+    </div>
+    
+          <p>Output: semantic_propositions.json (85 CANDIDATE propositions)</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Input artifacts:</p>
+          <div class="data-card">
+            <div class="data-label">Bridge Inputs</div>
+            <div class="data-value">client_semantic_registry.json (17 domains)</div>
+            <div class="data-value">candidate_csr.json (SDC output)</div>
+            <div class="data-value">derivation_report.json (SDC derivation)</div>
+            <div class="data-value">claims/*.json (28 vault claims)</div>
+          </div>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">Semantic DNA has formed from document evidence. 85 propositions now exist as governed claims awaiting challenge. The system has moved from raw evidence to structured meaning — but meaning that has not yet been tested by governance friction.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 3</div>
+          <div class="chapter-title" style="color: var(--phase-tension);">The Governance</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-tension); border-color: var(--phase-tension);">TENSION</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          The operator reviews all 85 propositions through the SQO Authority Workflow. This is genuine
+          governance friction — not simulated, not rubber-stamped. 73 propositions are batch-accepted
+          (unflagged by the review queue). 8 flagged propositions are individually reviewed:
+          4 accepted after examination,
+          3 rejected outright, 1 contested and escalated to arbitration.
+          <br><br>
+          The friction surfaces a domain ID mismatch between the canonical CSR and SDC candidate CSR that
+          had silently corrupted cross-references in the proposition bridge. The system could not have
+          found this without operator challenge.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          81 accepted, 3 rejected, 1 contested → arbitrated. 90 governance events. The system has been challenged and some meaning did not survive.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Review outcome:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Batch Accepted</div>
+      <div class="data-value">73 propositions — not flagged in review queue, sufficient evidence</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Individually Accepted</div>
+      <div class="data-value">8 propositions — flagged, examined, accepted after operator review</div>
+      
+    </div>
+    
+          
+    <div class="data-card red">
+      <div class="data-label">Rejected</div>
+      <div class="data-value">3 propositions — insufficient evidence or misclassification</div>
+      
+    </div>
+    
+          
+    <div class="data-card yellow">
+      <div class="data-label">Contested → Arbitrated</div>
+      <div class="data-value">1 proposition — challenged, reviewed at higher authority</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Acceptance Rate</div>
+      <div class="data-value">96.5% (82/85)</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Governance friction detail:</p>
+          
+    <div class="data-card red">
+      <div class="data-label">Domain ID Mismatch</div>
+      <div class="data-value">Canonical CSR and SDC use different domain numbering — governance review surfaced this</div>
+      
+    </div>
+    
+          
+    <div class="data-card orange">
+      <div class="data-label">Rejection Reasons</div>
+      <div class="data-value">3 capabilities in unassigned domains — SDC extraction artifacts, not semantic propositions</div>
+      
+    </div>
+    
+          
+    <div class="data-card yellow">
+      <div class="data-label">Arbitration</div>
+      <div class="data-value">DOMAIN-17 weak grounding (2 DERIVED components) — contested, upheld after examination</div>
+      
+    </div>
+    
+          <p>90 governance events logged. All append-only.</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Governance artifacts:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">Review State</div>
+      <div class="data-value">proposition_review_state.json — COMPLETE, all dispositions terminal</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Event Log</div>
+      <div class="data-value">proposition_review_event_log.jsonl — 90 events</div>
+      
+    </div>
+    
+          <p>Operator: operator:khorrix, Authority: L2 (review), L3 (arbitration)</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Review event log: proposition_review_event_log.jsonl (90 events)</p>
+          <p>Operator: operator:khorrix</p>
+          <p>Non-automatable boundary: proposition review (Gate 3) requires operator action — no system actor could self-authorize.</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">The system has been challenged and some meaning did not survive. 3 propositions were rejected — not because the system failed, but because governance friction surfaced genuine evidence limitations. The domain ID mismatch proves that operator review discovers structural defects invisible to automated derivation.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 4</div>
+          <div class="chapter-title" style="color: var(--phase-strengthening);">The Strengthening</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-strengthening); border-color: var(--phase-strengthening);">STRENGTHENING</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          Evidence enrichment addresses the governance findings. The primary mechanism: semantic name matching
+          between canonical CSR domains and SDC candidate CSR domains, correcting the domain ID mismatch
+          that governance friction surfaced. 12 domain propositions receive corrected
+          component counts. 16 capability propositions receive corrected domain references.
+          <br><br>
+          Debt evolution assessment tells the honest story: 4 items improved, 5
+          unchanged, 6 worsened, 0 resolved. Enrichment produced more accurate
+          evidence — not uniformly better evidence. Post-enrichment mean confidence: 0.727.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          Domain ID correction via semantic name matching. 12 corrected, 1 confirmed, 3 NO_SDC_MATCH. Debt trajectory: HONEST_LIMITATION. 0 blockers resolved — all require L5 authority PATH B cannot provide.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Enrichment impact on accepted propositions:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Domains Corrected</div>
+      <div class="data-value">12 — component counts updated from name-matched SDC domains</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Domains Confirmed</div>
+      <div class="data-value">1 — already correct</div>
+      
+    </div>
+    
+          
+    <div class="data-card orange">
+      <div class="data-label">Domains NO_SDC_MATCH</div>
+      <div class="data-value">3 — no matching SDC domain found</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Capabilities Corrected</div>
+      <div class="data-value">16 — domain refs updated to canonical domains</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Enrichment Events</div>
+      <div class="data-value">32 total</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Debt evolution assessment (15 items):</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Improved</div>
+      <div class="data-value">4</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Unchanged</div>
+      <div class="data-value">5</div>
+      
+    </div>
+    
+          
+    <div class="data-card orange">
+      <div class="data-label">Worsened</div>
+      <div class="data-value">6</div>
+      
+    </div>
+    
+          
+    <div class="data-card red">
+      <div class="data-label">Resolved</div>
+      <div class="data-value">0 — all block S3 requiring L5 authority</div>
+      
+    </div>
+    
+          <p>Trajectory: HONEST_LIMITATION. The system is now more honest about what PATH B can prove.</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Enrichment artifacts:</p>
+          
+    <div class="data-card blue">
+      <div class="data-label">Enrichment Log</div>
+      <div class="data-value">enrichment_log.json — 32 events</div>
+      
+    </div>
+    
+          
+    <div class="data-card blue">
+      <div class="data-label">Enrichment Summary</div>
+      <div class="data-value">enrichment_summary.json</div>
+      
+    </div>
+    
+          
+    <div class="data-card blue">
+      <div class="data-label">Debt Reassessment</div>
+      <div class="data-value">debt_reassessment.json</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Enrichment Activity</div>
+      <div class="data-value">enrichment_activity_event.json — enrichment_exercised: true</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Enrichment script: scripts/pios/sdc/evidence_enrichment_rc04.py</p>
+          <p>PATH B limitation: no code graph. Enrichment bounded by SDC HTML extraction.</p>
+          <p>Cannot provide L5 structural authority from document evidence alone.</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">What was weak is now grounded — or honestly acknowledged as ungroundable. The system self-corrected where evidence permitted and transparently documented where it could not. The 3 NO_SDC_MATCH domains are genuine evidence gaps, not failures. Honest limitation is itself a form of structural integrity.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 5</div>
+          <div class="chapter-title" style="color: var(--phase-stabilization);">The Proof</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-stabilization); border-color: var(--phase-stabilization);">STABILIZATION</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          Deterministic revalidation replays the entire governance-challenged, evidence-enriched corpus
+          through an 8-phase/25-check engine. Every phase passes. The corpus
+          holds under structural examination — what was challenged now stands deterministically.
+          <br><br>
+          The revalidation engine itself is significant: the same engine runs on both NetBox (PATH A)
+          and BlueEdge (PATH B) without PATH-specific adaptation. Same structural rigor, different
+          evidence channels.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          25/25 PASS across 8 phases. The revalidation engine transfers across evidence channels without modification.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Revalidation phases:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Phase 1 · Input Gate</div>
+      <div class="data-value">7/7 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 2 · Proposition Integrity</div>
+      <div class="data-value">4/4 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 3 · Confidence Realism</div>
+      <div class="data-value">3/3 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 4 · Tier Validity</div>
+      <div class="data-value">2/2 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 5 · Disposition Completeness</div>
+      <div class="data-value">3/3 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 6 · Reconciliation Cleanliness</div>
+      <div class="data-value">2/2 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 7 · Spine Consistency</div>
+      <div class="data-value">2/2 — all checks pass</div>
+      
+    </div>
+    
+    <div class="data-card green">
+      <div class="data-label">Phase 8 · SQO State Consistency</div>
+      <div class="data-value">2/2 — all checks pass</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Engine: scripts/pios/revalidation_engine.py (same engine, both specimens)</p>
+          <div class="data-card blue">
+            <div class="data-label">What transferred</div>
+            <div class="data-value">Same 8-phase engine, same checks, same validation contract</div>
+          </div>
+          <div class="data-card orange">
+            <div class="data-label">Key observation</div>
+            <div class="data-value">No PATH-specific adaptation required — the engine validates governance discipline, not evidence type</div>
+          </div>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Revalidation artifacts:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Revalidation Result</div>
+      <div class="data-value">revalidation_result.json — 25/25 PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Engine</div>
+      <div class="data-value">scripts/pios/revalidation_engine.py</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Revalidation result: sqo/revalidation_result.json (25 checks, all PASS)</p>
+          <p>Revalidation event log: sqo/revalidation_event_log.jsonl</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">What was challenged now holds deterministically. The revalidation engine confirmed that governance friction produced a stronger corpus, not a broken one. The engine's transferability across evidence channels is itself structural evidence — the validation contract is evidence-channel-independent.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 6</div>
+          <div class="chapter-title" style="color: var(--phase-qualification);">The Advancement</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-qualification); border-color: var(--phase-qualification);">QUALIFICATION</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          The SQO execution graph governs advancement: S0 → S1 after revalidation PASS and constitutional
+          anchor clearance, then S1 → S2 after enrichment + post-enrichment revalidation + anchor re-check.
+          Both transitions authorized by operator:khorrix. The governance lifecycle is complete:
+          proposition derivation, operator review with genuine friction, evidence enrichment,
+          deterministic revalidation, constitutional anchor verification.
+          <br><br>
+          S2 achieved via GOVERNED_LIFECYCLE. Two operator-authorized transitions.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          S0 → S1 → S2. GOVERNED_LIFECYCLE. 8/8 anchor dimensions PASS. Full governed lifecycle — not bridge, not projection.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Advancement path:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">S0 → S1</div>
+      <div class="data-value">Revalidation 25/25 PASS, anchor ELEVATED (6/8 — enrichment not yet exercised)</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">S1 → S2</div>
+      <div class="data-value">Post-enrichment revalidation PASS, anchor 8/8 PASS (CONSTITUTIONAL_DISTANCE_ACCEPTABLE)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">S1 Actor</div>
+      <div class="data-value">operator:khorrix</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">S2 Actor</div>
+      <div class="data-value">operator:khorrix</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Governed lifecycle proven:</p>
+          
+    <div class="data-card">
+      <div class="data-label">Gate 2</div>
+      <div class="data-value">85 propositions via PATH B proposition bridge</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Gate 3</div>
+      <div class="data-value">81 accepted, 3 rejected, 1 arbitrated</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Enrichment</div>
+      <div class="data-value">32 enrichment events, 12 domains corrected</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Gate 4</div>
+      <div class="data-value">25/25 revalidation PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Gate 5</div>
+      <div class="data-value">S2 via GOVERNED_LIFECYCLE</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Promotion artifacts:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Promotion State</div>
+      <div class="data-value">sqo/promotion_state.json — S2, GOVERNED_LIFECYCLE</div>
+      
+    </div>
+    
+          
+    <div class="data-card green">
+      <div class="data-label">Constitutional Anchor</div>
+      <div class="data-value">sqo/constitutional_replay_anchor.json — 8/8 PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Promotion Log</div>
+      <div class="data-value">sqo/promotion_event_log.jsonl</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Promotion state: sqo/promotion_state.json</p>
+          <p>S1 rationale: Revalidation 25/25 PASS. Constitutional anchor ELEVATED (not blocked). 85 propositions, 4 PATH B classes, 81 accepted, 3...</p>
+          <p>S2 rationale: Full S1→S2 governed lifecycle complete. Revalidation 25/25 PASS. Constitutional anchor 8/8 PASS (CONSTITUTIONAL_DISTANCE...</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">The system has earned its state — not by resolving all blockers, but by completing the governed lifecycle. S2 means governance discipline, not semantic perfection.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 7</div>
+          <div class="chapter-title" style="color: var(--phase-convergence);">The Pattern</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-convergence); border-color: var(--phase-convergence);">CONVERGENCE</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          Two independent specimens — NetBox (full governed semantic evolution, PATH A) and BlueEdge
+          (governed cognitive replay, PATH B) — are compared across 9 observations. The comparison
+          reveals 5 convergences and 3 divergences. The convergence is in governance
+          discipline; the divergence is in evidence depth.
+          <br><br>
+          This is observational, not unification. Two specimens = comparison, not pattern. All observations
+          are DESCRIPTIVE. The specimens are deliberately different — different evidence channels, different
+          proposition engines, different enrichment mechanisms. The diversity within common governance
+          is itself the observation.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          9 observations. 5 convergences, 3 divergences. All DESCRIPTIVE (2 specimens = comparison, not law). Verdict: DESCRIPTIVE CONVERGENCE OBSERVED.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Convergence observations:</p>
+          
+    <div class="data-card purple">
+      <div class="data-label">CONV-01</div>
+      <div class="data-value">Governance Lifecycle Convergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-02</div>
+      <div class="data-value">Proposition Derivation Divergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-03</div>
+      <div class="data-value">Governance Friction Convergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-04</div>
+      <div class="data-value">Enrichment Mechanism Divergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-05</div>
+      <div class="data-value">Revalidation Pattern Convergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-06</div>
+      <div class="data-value">Constitutional Anchor Behavior</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-07</div>
+      <div class="data-value">S2 Advancement Legitimacy</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-08</div>
+      <div class="data-value">Debt Taxonomy Convergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+    <div class="data-card purple">
+      <div class="data-label">CONV-09</div>
+      <div class="data-value">Authority Ceiling Convergence</div>
+      <div class="data-explain">Status: OBSERVED · Maturity: DESCRIPTIVE</div>
+    </div>
+    
+          <p>All observations at interpretation_maturity: DESCRIPTIVE. Promotion to LAW requires 3+ specimens.</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Convergence/divergence classification:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Convergences</div>
+      <div class="data-value">governance_lifecycle, governance_friction_mechanism, revalidation_contract, debt_taxonomy, authority_ceiling</div>
+      
+    </div>
+    
+          
+    <div class="data-card orange">
+      <div class="data-label">Divergences</div>
+      <div class="data-value">proposition_derivation_classes, enrichment_mechanisms, evidence_authority_ceiling</div>
+      
+    </div>
+    
+          
+    <div class="data-card yellow">
+      <div class="data-label">Mixed</div>
+      <div class="data-value">constitutional_anchor_behavior, s2_advancement_legitimacy</div>
+      
+    </div>
+    
+          <p>Verdict: DESCRIPTIVE CONVERGENCE OBSERVED</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Convergence artifacts:</p>
+          
+    <div class="data-card purple">
+      <div class="data-label">Observations</div>
+      <div class="data-value">convergence/convergence_observations.json — 9 observations</div>
+      
+    </div>
+    
+          <p>NetBox reference: READ-ONLY. No mutation.</p>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>NetBox reference: clients/netbox/psee/runs/run_github_netbox_20260520_134600/ (READ-ONLY)</p>
+          <p>No NetBox mutation. No BlueEdge evidence mutation. Observation only.</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">Governed cognition generalizes across specimens. Not because the specimens are the same — they are deliberately different. But because the governance discipline is specimen-independent. Different evidence corridors, same governed spine model. This is not one system — it is a discipline.</div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <div>
+          <div class="chapter-number">Chapter 8</div>
+          <div class="chapter-title" style="color: var(--phase-projection);">The Projection</div>
+        </div>
+        <div class="chapter-phase" style="color: var(--phase-projection); border-color: var(--phase-projection);">PROJECTION</div>
+      </div>
+      <div class="chapter-body">
+        <div class="z1-executive">
+          Cognition has become communicable. This chronicle — 9 convergence observations,
+          90 governance events, 25/25 revalidation, 8/8
+          constitutional anchor — is the projection of how Program Intelligence governs semantic understanding.
+          Not a report. Not documentation. A traversal instrument through which governed cognition unfolds.
+          <br><br>
+          The replay corridor proved that governance patterns operate within a post-genesis corridor.
+          The convergence observations suggest — with DESCRIPTIVE maturity — that governance discipline
+          may be specimen-independent. The audience now understands not just WHAT the system concluded,
+          but HOW it governed the path from intake to qualification.
+        </div>
+        <div class="z1-finding">
+          <div class="z1-finding-label">Key Governed Finding</div>
+          The first governed cognitive replay chronicle is complete. S0 → S2 through full governance lifecycle. 9 convergence observations. Post-genesis replay corridor closed.
+        </div>
+
+        <details class="zoom-section">
+          <summary>Z2 · Semantic Interpretation</summary>
+          <div class="zoom-content">
+          <p>Chronicle statistics:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Propositions</div>
+      <div class="data-value">85 total (81 accepted, 3 rejected, 1 arbitrated)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Governance Events</div>
+      <div class="data-value">90 (review log)</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Enrichment Events</div>
+      <div class="data-value">32</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Revalidation</div>
+      <div class="data-value">25/25 PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Constitutional Anchor</div>
+      <div class="data-value">8/8 PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Convergence Observations</div>
+      <div class="data-value">9 (all DESCRIPTIVE)</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z3 · Governance Detail</summary>
+          <div class="zoom-content">
+          <p>Governed lifecycle summary:</p>
+          <div class="meta-grid">
+            <div class="meta-key">EMERGENCE</div><div class="meta-val">Baseline capture — S0, 0 propositions, governance NOT_STARTED</div>
+            <div class="meta-key">FORMATION</div><div class="meta-val">85 propositions derived from PATH B evidence</div>
+            <div class="meta-key">TENSION</div><div class="meta-val">81 accepted, 3 rejected, 1 arbitrated</div>
+            <div class="meta-key">STRENGTHENING</div><div class="meta-val">Domain ID correction, debt evolution (4↑ 6↓ 0 resolved)</div>
+            <div class="meta-key">STABILIZATION</div><div class="meta-val">25/25 revalidation PASS</div>
+            <div class="meta-key">QUALIFICATION</div><div class="meta-val">S0 → S1 → S2 via GOVERNED_LIFECYCLE</div>
+            <div class="meta-key">CONVERGENCE</div><div class="meta-val">9 observations across 2 specimens</div>
+            <div class="meta-key">PROJECTION</div><div class="meta-val">This chronicle — cognition made communicable</div>
+          </div>
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z4 · Structural Proof</summary>
+          <div class="zoom-content">
+          <p>Key artifacts:</p>
+          
+    <div class="data-card green">
+      <div class="data-label">Promotion State</div>
+      <div class="data-value">sqo/promotion_state.json — S2</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Revalidation</div>
+      <div class="data-value">sqo/revalidation_result.json — 25/25 PASS</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Constitutional Anchor</div>
+      <div class="data-value">sqo/constitutional_replay_anchor.json — 8/8</div>
+      
+    </div>
+    
+          
+    <div class="data-card">
+      <div class="data-label">Convergence</div>
+      <div class="data-value">convergence/convergence_observations.json — 9 observations</div>
+      
+    </div>
+    
+        </div>
+        </details>
+
+        <details class="zoom-section">
+          <summary>Z5 · Raw Evidence</summary>
+          <div class="zoom-content">
+          <p>Run directory: clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/</p>
+          <p>This HTML: REPLAY_CHRONICLE.html</p>
+        </div>
+        </details>
+
+        <div class="ascent">
+          <div class="ascent-label">Ascent — What the Depth Proved</div>
+          <div class="ascent-text">The audience now understands not just what the system concluded, but how it governed the path to those conclusions. The lineage is the proof. The outputs are the conclusions. And this chronicle is the lens through which governed cognition becomes visible.</div>
+        </div>
+      </div>
+    </div>
+    
+  
+    <div class="chronicle-footer">
+      <div class="governance-boundary">
+        <p><strong>Evidence Boundary Statement</strong></p>
+        <p>This chronicle was produced under bounded interpretive authority (75.x). All narrative content
+        traces to structural evidence in the run artifacts. No inference beyond evidence-bound synthesis.
+        No team behavior, organizational intent, or human motive inference. No causal attribution to humans.
+        No remediation prioritization. 13 absolute prohibitions enforced.</p>
+        <p>Structural derivation remains primary. Interpretive authority is additive, not replacement.</p>
+      </div>
+      <div class="snapshot-id">
+        CHRONICLE · blueedge/run_blueedge_genesis_e2e_03 · 2026-05-23 · format v2.0
+      </div>
+    </div>
+    
+</body>
+</html>

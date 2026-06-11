@@ -1,0 +1,76 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "artifact_class": "ceu_evidence_anchors",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:12:44.737871+00:00",
+  "source_repository": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo",
+  "effective_source_root": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo",
+  "project_type": "UNKNOWN",
+  "total_anchors": 2,
+  "candidate_count": 2,
+  "domain_summary": {
+    "CEU-BACKEND": {
+      "domain": "backend",
+      "total_anchors": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      }
+    },
+    "CEU-FRONTEND": {
+      "domain": "frontend",
+      "total_anchors": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      }
+    }
+  },
+  "anchors": [
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo/README.md",
+      "evidence_type": "REPO_README_MAP",
+      "matched_sections": [
+        {
+          "heading": "Backend",
+          "summary": "cd backend && npm install npm run start:dev          # http://localhost:3000"
+        }
+      ],
+      "section_count": 1,
+      "anchor_id": "EA-0001",
+      "ceu_id": "CEU-BACKEND",
+      "domain": "backend"
+    },
+    {
+      "source_path": "/Users/khorrix/Projects/k-pi-core/clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo/README.md",
+      "evidence_type": "REPO_README_MAP",
+      "matched_sections": [
+        {
+          "heading": "Frontend:  http://localhost:5173",
+          "summary": ""
+        },
+        {
+          "heading": "Frontend",
+          "summary": "cd frontend && npm install npm run dev                # http://localhost:5173"
+        },
+        {
+          "heading": "Project Structure",
+          "summary": "``` \u251c\u2500\u2500 frontend/               # React 18 + TypeScript + Vite \u2502   \u251c\u2500\u2500 pages/              # 56 page components (7 categories) \u2502   \u251c\u2500\u2500 components/         # 66 reusable components \u2502   \u251c\u2500\u2500 api/                # 57 typed API clients \u2502   \u251c\u2500\u2500 hooks/              # 7 custom hooks \u2502   \u251c\u2500\u2500 contexts/       "
+        },
+        {
+          "heading": "Updated Metrics",
+          "summary": "- Frontend pages LOC: 15,189 \u2192 16,146 (+957) - Frontend total LOC: 29,595 \u2192 31,397 (+1,802) - Combined platform LOC: ~63,462"
+        }
+      ],
+      "section_count": 4,
+      "anchor_id": "EA-0002",
+      "ceu_id": "CEU-FRONTEND",
+      "domain": "frontend"
+    }
+  ],
+  "governance": {
+    "extraction_method": "DETERMINISTIC_FILE_READING",
+    "no_semantic_authoring": true,
+    "no_ai_llm": true,
+    "replayable": true
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "contract_id": "PI.SQO.PATH-B-PROPOSITION-BRIDGE.01",
+  "specimen_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "total_items": 14,
+  "items": [
+    {
+      "proposition_id": "SP-blueedge-0017",
+      "proposition_class": "DOMAIN_EVIDENCE_GROUNDING",
+      "confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE"
+      ],
+      "description": "Extended Operations and Driver Services (DOMAIN-17) is a grounded functional domain with 2 SDC-derived components (0 DIR"
+    },
+    {
+      "proposition_id": "SP-blueedge-0034",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED"
+      ],
+      "description": "Capability 'Layer: \ud83c\udfe2 Layer 4 \u2014 NestJS Application' (CAP-017) in unassigned domain is backed by 11 components (11 DIRECT_"
+    },
+    {
+      "proposition_id": "SP-blueedge-0035",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED"
+      ],
+      "description": "Capability 'Layer: \ud83d\udda5\ufe0f Layer 6 \u2014 Frontend Applicat' (CAP-018) in unassigned domain is backed by 7 components (7 DIRECT_EV"
+    },
+    {
+      "proposition_id": "SP-blueedge-0037",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED"
+      ],
+      "description": "Capability 'Layer: Unknown Layer' (CAP-020) in unassigned domain is backed by 32 components (32 DIRECT_EVIDENCE). Type: "
+    },
+    {
+      "proposition_id": "SP-blueedge-0039",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE"
+      ],
+      "description": "Capability 'Streaming and Messaging Infrastructure' (CAP-022) in DOMAIN-17 is backed by 2 components (0 DIRECT_EVIDENCE)"
+    },
+    {
+      "proposition_id": "SP-blueedge-0040",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE"
+      ],
+      "description": "Capability 'Data Storage Infrastructure' (CAP-023) in DOMAIN-18 is backed by 4 components (0 DIRECT_EVIDENCE). Type: INF"
+    },
+    {
+      "proposition_id": "SP-blueedge-0041",
+      "proposition_class": "CAPABILITY_EVIDENCE",
+      "confidence": 0.55,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE"
+      ],
+      "description": "Capability 'Platform Technology Services' (CAP-024) in DOMAIN-19 is backed by 4 components (0 DIRECT_EVIDENCE). Type: IN"
+    },
+    {
+      "proposition_id": "SP-blueedge-0079",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Apache Kafka' appears in multiple contexts (2 occurrences), suggesting ambiguous grou"
+    },
+    {
+      "proposition_id": "SP-blueedge-0080",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Apache Flink' appears in multiple contexts (2 occurrences), suggesting ambiguous grou"
+    },
+    {
+      "proposition_id": "SP-blueedge-0081",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'TimescaleDB' appears in multiple contexts (2 occurrences), suggesting ambiguous group"
+    },
+    {
+      "proposition_id": "SP-blueedge-0082",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Predictive Maintenance' appears in multiple contexts (2 occurrences), suggesting ambi"
+    },
+    {
+      "proposition_id": "SP-blueedge-0083",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Driver Scoring' appears in multiple contexts (2 occurrences), suggesting ambiguous gr"
+    },
+    {
+      "proposition_id": "SP-blueedge-0084",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Anomaly Detection' appears in multiple contexts (2 occurrences), suggesting ambiguous"
+    },
+    {
+      "proposition_id": "SP-blueedge-0085",
+      "proposition_class": "CROSS_DOMAIN_EVIDENCE",
+      "confidence": 0.5,
+      "derivation_tier": "DERIVED",
+      "triggers": [
+        "LOW_CONFIDENCE",
+        "WEAK_DERIVED",
+        "AMBIGUOUS_GROUPING"
+      ],
+      "description": "Cross-domain ambiguity: Component 'Digital Twin' appears in multiple contexts (2 occurrences), suggesting ambiguous grou"
+    }
+  ]
+}

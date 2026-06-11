@@ -1,0 +1,64 @@
+{
+  "contract_id": "PI.PATHA.CEU-CANDIDATE-DERIVATION.01",
+  "artifact_class": "ceu_derivation_lineage",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:12:08.300253+00:00",
+  "total_events": 4,
+  "event_types": {
+    "ceu_candidate_proposed": 2,
+    "ceu_classification": 2
+  },
+  "events": [
+    {
+      "event_id": "DRV-0001",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "backend",
+      "ceu_id": "CEU-BACKEND",
+      "evidence": {
+        "file_count": 372,
+        "import_in": 911,
+        "import_out": 911,
+        "inherits_in": 0,
+        "cross_domain_in": 0,
+        "cross_domain_out": 0
+      }
+    },
+    {
+      "event_id": "DRV-0002",
+      "event_type": "ceu_candidate_proposed",
+      "domain": "frontend",
+      "ceu_id": "CEU-FRONTEND",
+      "evidence": {
+        "file_count": 272,
+        "import_in": 1228,
+        "import_out": 1228,
+        "inherits_in": 0,
+        "cross_domain_in": 0,
+        "cross_domain_out": 0
+      }
+    },
+    {
+      "event_id": "DRV-0003",
+      "event_type": "ceu_classification",
+      "domain": "backend",
+      "ceu_id": "CEU-BACKEND",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.00 \u2014 balanced cross-domain flow"
+    },
+    {
+      "event_id": "DRV-0004",
+      "event_type": "ceu_classification",
+      "domain": "frontend",
+      "ceu_id": "CEU-FRONTEND",
+      "tier": "OPERATIONAL_DOMAIN",
+      "rationale": "import_balance_ratio=0.00 \u2014 balanced cross-domain flow"
+    }
+  ],
+  "governance": {
+    "all_decisions_have_evidence": true,
+    "all_classifications_have_rationale": true,
+    "no_human_judgment_embedded": true,
+    "replayable": true
+  }
+}

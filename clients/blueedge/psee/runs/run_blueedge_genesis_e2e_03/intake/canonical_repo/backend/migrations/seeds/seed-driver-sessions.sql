@@ -1,0 +1,150 @@
+-- ══════════════════════════════════════════════════════════════
+-- Seed: Driver Session Blocks — Sample UAE Fleet Data
+-- 20 session blocks across tanker/bus/taxi vehicles
+-- ══════════════════════════════════════════════════════════════
+
+INSERT INTO "driver_session_blocks" (
+  "id", "blockNumber", "vehicleId", "driverId", "driverName", "authMethod", "svgDeviceId",
+  "startTime", "endTime", "durationMinutes", "status",
+  "odometerStart", "odometerEnd", "distanceKm",
+  "fuelLevelStart", "fuelLevelEnd", "fuelConsumedL", "fuelCostAED", "lPer100km",
+  "fuelEvents",
+  "harshBrakes", "harshAccelerations", "harshCorners",
+  "maxSpeedKmh", "avgSpeedKmh", "idleMinutes", "idlePct",
+  "routeHighwayPct", "routeUrbanPct", "elevationGainM", "loadWeightKg", "ambientTempC",
+  "dtcsGenerated",
+  "rpmMean", "rpmVariance", "speedVariance", "fuelRateVariance", "accelVariance",
+  "wearIndex", "healthDelta",
+  "tpmSigned", "blockHash"
+) VALUES
+-- Tanker sessions — Jebel Ali to Deira routes
+('a1b2c3d4-0001-4000-8000-000000000001', 1001, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'd1e2f3a4-1111-4000-8000-111111111111',
+ 'Ahmed Al Mansouri', 'faceid_nfc', 'SVG-TK-0847-A',
+ '2025-02-15 06:00:00+04', '2025-02-15 10:30:00+04', 270, 'closed',
+ 124500, 124782, 282, 92.0, 34.0, 145.6, 472.30, 51.6,
+ '[{"time":"2025-02-15T07:15:00+04:00","gpsLat":25.0657,"gpsLng":55.1713,"station":"ENOC Jebel Ali","liters":0,"costAED":0}]',
+ 2, 1, 0, 95, 62, 35, 13.0,
+ 68, 32, 45, 32000, 38,
+ '[]',
+ 1650, 18500, 145, 2.8, 0.12,
+ 0.28, -0.003,
+ true, 'sha256:a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2'),
+
+('a1b2c3d4-0002-4000-8000-000000000002', 1002, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'd1e2f3a4-2222-4000-8000-222222222222',
+ 'Khalid bin Rashid', 'biometric', 'SVG-TK-0847-A',
+ '2025-02-15 11:00:00+04', '2025-02-15 16:45:00+04', 345, 'closed',
+ 124782, 125114, 332, 95.0, 28.0, 168.3, 546.97, 50.7,
+ '[]',
+ 5, 4, 2, 108, 58, 52, 15.1,
+ 72, 28, 52, 33000, 41,
+ '["P0217"]',
+ 1820, 32400, 285, 5.2, 0.24,
+ 0.62, -0.008,
+ true, 'sha256:b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3'),
+
+('a1b2c3d4-0003-4000-8000-000000000003', 1003, 'f47ac10b-58cc-4372-a567-0e02b2c3d480', 'd1e2f3a4-1111-4000-8000-111111111111',
+ 'Ahmed Al Mansouri', 'faceid_nfc', 'SVG-TK-0923-B',
+ '2025-02-14 05:30:00+04', '2025-02-14 13:00:00+04', 450, 'closed',
+ 98200, 98645, 445, 88.0, 15.0, 232.8, 756.60, 52.3,
+ '[]',
+ 1, 0, 1, 92, 65, 28, 6.2,
+ 75, 25, 38, 31000, 36,
+ '[]',
+ 1580, 14200, 120, 2.1, 0.09,
+ 0.22, -0.002,
+ true, 'sha256:c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4'),
+
+-- Bus sessions — Dubai Metro feeder routes
+('a1b2c3d4-0004-4000-8000-000000000004', 1004, 'f47ac10b-58cc-4372-a567-0e02b2c3d481', 'd1e2f3a4-3333-4000-8000-333333333333',
+ 'Fatima Al Suwaidi', 'pin_rfid', 'SVG-BUS-201-C',
+ '2025-02-15 05:00:00+04', '2025-02-15 13:00:00+04', 480, 'closed',
+ 67800, 67952, 152, 75.0, 32.0, 86.4, 280.80, 56.8,
+ '[]',
+ 8, 3, 4, 72, 28, 95, 19.8,
+ 15, 85, 12, 8500, 35,
+ '[]',
+ 1250, 8800, 320, 3.5, 0.18,
+ 0.45, -0.005,
+ true, 'sha256:d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5'),
+
+('a1b2c3d4-0005-4000-8000-000000000005', 1005, 'f47ac10b-58cc-4372-a567-0e02b2c3d482', 'd1e2f3a4-4444-4000-8000-444444444444',
+ 'Hassan Mirza', 'faceid_nfc', 'SVG-BUS-305-D',
+ '2025-02-15 14:00:00+04', '2025-02-15 22:30:00+04', 510, 'closed',
+ 82100, 82268, 168, 80.0, 25.0, 110.5, 359.13, 65.8,
+ '[]',
+ 12, 6, 5, 68, 24, 120, 23.5,
+ 10, 90, 8, 9200, 39,
+ '["P0401","P0442"]',
+ 1180, 12600, 410, 4.8, 0.32,
+ 0.71, -0.012,
+ true, 'sha256:e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6'),
+
+-- Taxi sessions — Airport to Marina / Downtown loops
+('a1b2c3d4-0006-4000-8000-000000000006', 1006, 'f47ac10b-58cc-4372-a567-0e02b2c3d483', 'd1e2f3a4-5555-4000-8000-555555555555',
+ 'Omar Hussain', 'manual', 'SVG-TX-5501-E',
+ '2025-02-15 07:00:00+04', '2025-02-15 19:00:00+04', 720, 'closed',
+ 45200, 45482, 282, 70.0, 12.0, 46.4, 150.80, 16.5,
+ '[]',
+ 3, 2, 3, 125, 42, 180, 25.0,
+ 45, 55, 22, 0, 37,
+ '[]',
+ 1420, 22100, 520, 1.8, 0.15,
+ 0.38, -0.004,
+ true, 'sha256:f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1'),
+
+-- Active session (currently driving)
+('a1b2c3d4-0007-4000-8000-000000000007', 1007, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'd1e2f3a4-1111-4000-8000-111111111111',
+ 'Ahmed Al Mansouri', 'faceid_nfc', 'SVG-TK-0847-A',
+ '2025-02-15 18:00:00+04', NULL, 0, 'active',
+ 125114, NULL, 0, 90.0, NULL, 0, 0, 0,
+ '[]',
+ 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 32000, 34,
+ '[]',
+ 0, 0, 0, 0, 0,
+ 0, 0,
+ false, NULL);
+
+-- Add more variety with different drivers on same vehicles for DWVS comparison
+INSERT INTO "driver_session_blocks" (
+  "id", "blockNumber", "vehicleId", "driverId", "driverName", "authMethod", "svgDeviceId",
+  "startTime", "endTime", "durationMinutes", "status",
+  "odometerStart", "odometerEnd", "distanceKm",
+  "fuelLevelStart", "fuelLevelEnd", "fuelConsumedL", "fuelCostAED", "lPer100km",
+  "fuelEvents",
+  "harshBrakes", "harshAccelerations", "harshCorners",
+  "maxSpeedKmh", "avgSpeedKmh", "idleMinutes", "idlePct",
+  "routeHighwayPct", "routeUrbanPct", "elevationGainM", "loadWeightKg", "ambientTempC",
+  "dtcsGenerated",
+  "rpmMean", "rpmVariance", "speedVariance", "fuelRateVariance", "accelVariance",
+  "wearIndex", "healthDelta",
+  "tpmSigned", "blockHash"
+) VALUES
+-- Same vehicle (TK-0847), different driver — enables DWVS comparison
+('a1b2c3d4-0008-4000-8000-000000000008', 1008, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'd1e2f3a4-6666-4000-8000-666666666666',
+ 'Saeed Al Ketbi', 'biometric', 'SVG-TK-0847-A',
+ '2025-02-13 06:00:00+04', '2025-02-13 11:00:00+04', 300, 'closed',
+ 124100, 124350, 250, 90.0, 42.0, 120.0, 390.00, 48.0,
+ '[]', 1, 0, 0, 88, 64, 22, 7.3,
+ 70, 30, 40, 31500, 35, '[]',
+ 1520, 12800, 95, 1.9, 0.07, 0.18, -0.001,
+ true, 'sha256:a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9'),
+
+('a1b2c3d4-0009-4000-8000-000000000009', 1009, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'd1e2f3a4-6666-4000-8000-666666666666',
+ 'Saeed Al Ketbi', 'biometric', 'SVG-TK-0847-A',
+ '2025-02-14 14:00:00+04', '2025-02-14 19:30:00+04', 330, 'closed',
+ 124645, 124900, 255, 88.0, 38.0, 125.0, 406.25, 49.0,
+ '[]', 0, 1, 0, 90, 66, 18, 5.5,
+ 72, 28, 35, 32000, 37, '[]',
+ 1540, 13200, 100, 2.0, 0.08, 0.20, -0.001,
+ true, 'sha256:b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0'),
+
+-- Interrupted session example
+('a1b2c3d4-0010-4000-8000-000000000010', 1010, 'f47ac10b-58cc-4372-a567-0e02b2c3d481', 'd1e2f3a4-7777-4000-8000-777777777777',
+ 'Noura Al Hashemi', 'pin_rfid', 'SVG-BUS-201-C',
+ '2025-02-14 16:00:00+04', '2025-02-14 16:45:00+04', 45, 'interrupted',
+ 67600, 67618, 18, 55.0, 52.0, 6.0, 19.50, 33.3,
+ '[]', 0, 0, 0, 55, 30, 12, 26.7,
+ 5, 95, 3, 7800, 40, '["U0100"]',
+ 1100, 5200, 180, 1.5, 0.10, 0.35, -0.002,
+ true, 'sha256:c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1');

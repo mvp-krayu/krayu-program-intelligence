@@ -1,0 +1,41 @@
+# ══════════════════════════════════════════════════════════════
+# systemd service: Sensor Data Collector
+# Install to: /etc/systemd/system/blueedge-sensor-collector.service
+# ══════════════════════════════════════════════════════════════
+[Unit]
+Description=Blue Edge Sensor Data Collector
+Documentation=https://docs.blueedge.network/svg/sensor-collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=blueedge
+Group=blueedge
+WorkingDirectory=/opt/blueedge/sensor-collector
+ExecStart=/usr/bin/python3 /opt/blueedge/sensor-collector/sensor_collector.py \
+    --config /opt/blueedge/config/sensors.yaml
+Restart=always
+RestartSec=5
+WatchdogSec=60
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=blueedge-sensor-collector
+
+# CAN bus + serial access requires these
+SupplementaryGroups=dialout can
+AmbientCapabilities=CAP_NET_RAW
+
+# Security hardening
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/blueedge /dev/shm
+ReadOnlyPaths=/opt/blueedge/config /opt/blueedge/certs
+NoNewPrivileges=yes
+PrivateTmp=yes
+DeviceAllow=/dev/ttyS* rw
+DeviceAllow=/dev/ttyUSB* rw
+
+[Install]
+WantedBy=multi-user.target

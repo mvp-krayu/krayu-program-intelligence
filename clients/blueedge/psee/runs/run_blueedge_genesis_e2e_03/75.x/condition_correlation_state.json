@@ -1,0 +1,345 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "blueedge",
+  "source_contract": "PI.CONDITION-CORRELATION.ANALYSIS.75X.03",
+  "source_files": [
+    "condition_correlation_summary.md",
+    "condition_correlation_map.md"
+  ],
+  "total_entities_analyzed": 33,
+  "entities_with_active_conditions": 7,
+  "activation_count_distribution": {
+    "count_2": {
+      "count": 0,
+      "entity_ids": []
+    },
+    "count_1": {
+      "count": 2,
+      "entity_ids": ["DOM-04", "DOM-05"]
+    },
+    "count_0_psig006_activated": {
+      "count": 5,
+      "entity_ids": ["DOM-07", "DOM-10", "DOM-11", "DOM-12", "DOM-13"]
+    },
+    "count_0_all_normal": {
+      "count": 10,
+      "entity_type": "capability_surface",
+      "note": "30 capability_surface nodes; individual IDs not enumerated in source Markdown"
+    }
+  },
+  "max_activation_count_entity_level": 2,
+  "max_activation_count_domain_attribution_level": 3,
+  "entities_with_count_gte_2": 0,
+  "entities_with_count_gte_3": 0,
+  "domains_with_attributed_count_gte_2": 1,
+  "domains_with_attributed_count_gte_3": 1,
+  "combination_distribution": {
+    "entity_level": [
+      {
+        "signature": "PSIG-001",
+        "count": 3,
+        "entity_ids": ["CE-03", "CE-05", "CE-07"]
+      },
+      {
+        "signature": "PSIG-002",
+        "count": 1,
+        "entity_ids": ["DOM-04"]
+      },
+      {
+        "signature": "PSIG-006_only",
+        "count": 5,
+        "entity_ids": ["DOM-07", "DOM-10", "DOM-11", "DOM-12", "DOM-13"]
+      },
+      {
+        "signature": "NORMAL",
+        "count": 10,
+        "entity_type": "capability_surface",
+        "note": "individual IDs not enumerated"
+      }
+    ],
+    "domain_attribution_level": [
+      {
+        "signature": "PSIG-001|PSIG-002|PSIG-004",
+        "count": 1,
+        "domain_ids": ["DOM-04"]
+      },
+      {
+        "signature": "PSIG-006_only",
+        "count": 5,
+        "domain_ids": ["DOM-07", "DOM-10", "DOM-11", "DOM-12", "DOM-13"]
+      }
+    ]
+  },
+  "dominant_combinations": {
+    "entity_level": [
+      {
+        "signature": "PSIG-001|PSIG-004",
+        "count": 0,
+        "note": "most frequent active combination at entity level"
+      },
+      {
+        "signature": "PSIG-002",
+        "count": 1,
+        "note": "equal frequency at entity level"
+      }
+    ],
+    "domain_attribution_level": [
+      {
+        "signature": "PSIG-001|PSIG-002|PSIG-004",
+        "count": 1,
+        "note": "all three connected domains carry full three-signal combination"
+      }
+    ]
+  },
+  "entity_condition_map": [
+    {
+      "entity_id": "CE-03",
+      "entity_alias": "data_layer",
+      "entity_type": "CEU",
+      "domain_id": "DOM-UNKNOWN",
+      "domain_name": null,
+      "conditions": {
+        "PSIG-001": "HIGH",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "NOT"
+      },
+      "activation_count": 1,
+      "combination_signature": "PSIG-001",
+      "condition_sources": {
+        "PSIG-001": "COND-PSIG-001-01",
+        "PSIG-001_attribution": "primary"
+      }
+    },
+    {
+      "entity_id": "CE-05",
+      "entity_alias": "configuration",
+      "entity_type": "CEU",
+      "domain_id": "DOM-UNKNOWN",
+      "domain_name": null,
+      "conditions": {
+        "PSIG-001": "HIGH",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "NOT"
+      },
+      "activation_count": 1,
+      "combination_signature": "PSIG-001",
+      "condition_sources": {
+        "PSIG-001": "COND-PSIG-001-01",
+        "PSIG-001_attribution": "secondary"
+      }
+    },
+    {
+      "entity_id": "CE-07",
+      "entity_alias": "ci_cd",
+      "entity_type": "CEU",
+      "domain_id": "DOM-02",
+      "domain_name": "ci_cd_workflows",
+      "conditions": {
+        "PSIG-001": "HIGH",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "NOT"
+      },
+      "activation_count": 1,
+      "combination_signature": "PSIG-001",
+      "condition_sources": {
+        "PSIG-001": "COND-PSIG-001-01",
+        "PSIG-001_attribution": "secondary"
+      }
+    },
+    {
+      "entity_id": "DOM-04",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-04",
+      "domain_name": "backend_app_root",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "HIGH",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "NOT"
+      },
+      "activation_count": 1,
+      "combination_signature": "PSIG-002",
+      "condition_sources": {
+        "PSIG-002": "COND-PSIG-002-01",
+        "PSIG-002_attribution": "primary"
+      },
+      "domain_attribution": {}
+    },
+    {
+      "entity_id": "DOM-07",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-07",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "ACTIVATED"
+      },
+      "activation_count": 0,
+      "combination_signature": "PSIG-006_only",
+      "condition_sources": {"PSIG-006": "COND-PSIG-006-01"}
+    },
+    {
+      "entity_id": "DOM-10",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-10",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "ACTIVATED"
+      },
+      "activation_count": 0,
+      "combination_signature": "PSIG-006_only",
+      "condition_sources": {"PSIG-006": "COND-PSIG-006-01"}
+    },
+    {
+      "entity_id": "DOM-11",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-11",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "ACTIVATED"
+      },
+      "activation_count": 0,
+      "combination_signature": "PSIG-006_only",
+      "condition_sources": {"PSIG-006": "COND-PSIG-006-01"}
+    },
+    {
+      "entity_id": "DOM-12",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-12",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "ACTIVATED"
+      },
+      "activation_count": 0,
+      "combination_signature": "PSIG-006_only",
+      "condition_sources": {"PSIG-006": "COND-PSIG-006-01"}
+    },
+    {
+      "entity_id": "DOM-13",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-13",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "ACTIVATED"
+      },
+      "activation_count": 0,
+      "combination_signature": "PSIG-006_only",
+      "condition_sources": {"PSIG-006": "COND-PSIG-006-01"}
+    },
+    {
+      "_group": "capability_surface_baseline",
+      "entity_type": "capability_surface",
+      "count": 10,
+      "note": "Individual IDs not enumerated in source Markdown; all nodes have identical baseline condition states",
+      "conditions": {
+        "PSIG-001": "NORMAL",
+        "PSIG-002": "NORMAL",
+        "PSIG-004": "NORMAL",
+        "PSIG-006": "NOT"
+      },
+      "activation_count": 0
+    }
+  ],
+  "domain_correlation_map": [
+    {
+      "domain_id": "DOM-04",
+      "domain_name": "backend_app_root",
+      "member_entities": [
+        {
+          "entity_id": "DOM-04",
+          "entity_type": "DOMAIN",
+          "activation_count": 1,
+          "combination_signature": "PSIG-002"
+        }
+      ],
+      "domain_attribution_total": 3,
+      "domain_attribution_signature": "PSIG-001|PSIG-002|PSIG-004"
+    },
+    {
+      "domain_id": "DOM-07",
+      "domain_name": null,
+      "member_entities": [
+        {
+          "entity_id": "DOM-07",
+          "entity_type": "DOMAIN",
+          "activation_count": 0,
+          "psig_006": "ACTIVATED"
+        }
+      ],
+      "domain_attribution_total": 0
+    },
+    {
+      "domain_id": "DOM-10",
+      "domain_name": null,
+      "member_entities": [
+        {
+          "entity_id": "DOM-10",
+          "entity_type": "DOMAIN",
+          "activation_count": 0,
+          "psig_006": "ACTIVATED"
+        }
+      ],
+      "domain_attribution_total": 0
+    },
+    {
+      "domain_id": "DOM-11",
+      "domain_name": null,
+      "member_entities": [
+        {
+          "entity_id": "DOM-11",
+          "entity_type": "DOMAIN",
+          "activation_count": 0,
+          "psig_006": "ACTIVATED"
+        }
+      ],
+      "domain_attribution_total": 0
+    },
+    {
+      "domain_id": "DOM-12",
+      "domain_name": null,
+      "member_entities": [
+        {
+          "entity_id": "DOM-12",
+          "entity_type": "DOMAIN",
+          "activation_count": 0,
+          "psig_006": "ACTIVATED"
+        }
+      ],
+      "domain_attribution_total": 0
+    },
+    {
+      "domain_id": "DOM-13",
+      "domain_name": null,
+      "member_entities": [
+        {
+          "entity_id": "DOM-13",
+          "entity_type": "DOMAIN",
+          "activation_count": 0,
+          "psig_006": "ACTIVATED"
+        }
+      ],
+      "domain_attribution_total": 0
+    }
+  ],
+  "validation": {
+    "no_conditions_recomputed": true,
+    "no_signals_recomputed": true,
+    "no_thresholds_changed": true,
+    "no_ranking_applied": true,
+    "no_focus_domain_selected": true,
+    "data_source": "condition_correlation_summary.md + condition_correlation_map.md"
+  }
+}

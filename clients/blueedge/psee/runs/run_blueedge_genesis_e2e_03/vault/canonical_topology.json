@@ -1,0 +1,260 @@
+{
+  "artifact_id": "canonical_topology_orchestrated",
+  "schema_version": "1.0",
+  "emission_date": "2026-05-23",
+  "emission_run_id": "run_blueedge_genesis_e2e_03",
+  "emission_stream": "PSEE-PIPELINE.ORCHESTRATOR",
+  "source_authority": "dom_layer.json (PI.BLUEEDGE.FASTAPI-CONFORMANCE.RECOMPUTE-FROM-EVIDENCE.01)",
+  "schema_adaptation_note": "13 DOM groups from dom_layer.json adapted to domains[] format. Generation method: unknown.",
+  "counts": {
+    "total_nodes": 35,
+    "domains": 13,
+    "capabilities": 0,
+    "components": 35,
+    "total_edges": 0,
+    "coverage_percent": 100.0,
+    "source": "dom_layer.json (unknown, 13 DOM groups)"
+  },
+  "domains": [
+    {
+      "domain_id": "DOM-01",
+      "domain_name": "root_configuration",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0001",
+        "NODE-0003",
+        "NODE-0004"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        ".env.example",
+        "docker-compose.monitoring.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "domain_id": "DOM-02",
+      "domain_name": "ci_cd_workflows",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0007",
+        "NODE-0008"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "domain_id": "DOM-03",
+      "domain_name": "backend_migrations",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0015",
+        "NODE-0016",
+        "NODE-0018"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/migrations",
+        "backend/migrations/init.sql",
+        "backend/migrations/seeds/seed-driver-sessions.sql"
+      ]
+    },
+    {
+      "domain_id": "DOM-04",
+      "domain_name": "backend_app_root",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0021",
+        "NODE-0022"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/app.module.ts",
+        "backend/src/main.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-05",
+      "domain_name": "backend_common",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0027",
+        "NODE-0030",
+        "NODE-0039",
+        "NODE-0040",
+        "NODE-0053"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/common/cache/cache.module.ts",
+        "backend/src/common/cache/index.ts",
+        "backend/src/common/guards/jwt-auth.guard.ts",
+        "backend/src/common/guards/roles.guard.spec.ts",
+        "backend/src/common/versioning/api-versioning.spec.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-06",
+      "domain_name": "backend_config",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0060",
+        "NODE-0061"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/config/data-source.ts",
+        "backend/src/config/database.config.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-07",
+      "domain_name": "backend_events",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0071"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/events/fleet-events.spec.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-08",
+      "domain_name": "backend_health",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0084",
+        "NODE-0088"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/health/health.controller.ts",
+        "backend/src/health/prometheus.service.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-09",
+      "domain_name": "backend_modules",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0098",
+        "NODE-0105",
+        "NODE-0136",
+        "NODE-0137",
+        "NODE-0138",
+        "NODE-0139"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "backend/src/modules/aftersales/aftersales.controller.ts",
+        "backend/src/modules/agentic-ai/agentic-ai.controller.ts",
+        "backend/src/modules/auth/auth.controller.ts",
+        "backend/src/modules/auth/auth.module.ts",
+        "backend/src/modules/auth/auth.service.ts",
+        "backend/src/modules/auth/auth.spec.ts"
+      ]
+    },
+    {
+      "domain_id": "DOM-10",
+      "domain_name": "frontend",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0562",
+        "NODE-0565",
+        "NODE-0566"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "frontend/App.tsx",
+        "frontend/index.html",
+        "frontend/main.tsx"
+      ]
+    },
+    {
+      "domain_id": "DOM-11",
+      "domain_name": "load_tests",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0929",
+        "NODE-0930"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "load-tests/api-load.js",
+        "load-tests/run.sh"
+      ]
+    },
+    {
+      "domain_id": "DOM-12",
+      "domain_name": "monitoring",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0935",
+        "NODE-0938"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "monitoring/grafana/dashboards/fleet-operations.json",
+        "monitoring/grafana/provisioning/dashboards/default.yml"
+      ]
+    },
+    {
+      "domain_id": "DOM-13",
+      "domain_name": "svg_agents",
+      "domain_type": "STRUCTURAL",
+      "capability_ids": [],
+      "component_ids": [
+        "NODE-0950",
+        "NODE-0952"
+      ],
+      "grounding": "GROUNDED",
+      "confidence": null,
+      "cross_domain": false,
+      "evidence_refs": [
+        "svg-agents/hasi-bridge/hasi_bridge.py",
+        "svg-agents/sensor-collector/sensor_collector.py"
+      ]
+    }
+  ],
+  "determinism_hash": "4421d06b2805dde6fe60412713255cd9"
+}

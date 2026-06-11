@@ -1,0 +1,2980 @@
+{
+  "resolution_mode": "CLIENT_RUN",
+  "candidate_paths": [
+    "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo",
+    "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/intake/canonical_repo"
+  ],
+  "source_root": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo",
+  "source_root_exists": true,
+  "file_count": 741,
+  "registered_file_count": null,
+  "file_count_match": true,
+  "files": [
+    {
+      "path": ".env.example",
+      "size_bytes": 681
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "size_bytes": 5781
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "size_bytes": 4199
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 9542
+    },
+    {
+      "path": "backend/.dockerignore",
+      "size_bytes": 71
+    },
+    {
+      "path": "backend/.env.example",
+      "size_bytes": 2164
+    },
+    {
+      "path": "backend/Dockerfile",
+      "size_bytes": 785
+    },
+    {
+      "path": "backend/migrations/init.sql",
+      "size_bytes": 54982
+    },
+    {
+      "path": "backend/migrations/seeds/seed-driver-sessions.sql",
+      "size_bytes": 7188
+    },
+    {
+      "path": "backend/migrations/seeds/seed.sql",
+      "size_bytes": 25117
+    },
+    {
+      "path": "backend/package.json",
+      "size_bytes": 2859
+    },
+    {
+      "path": "backend/src/app.module.ts",
+      "size_bytes": 10455
+    },
+    {
+      "path": "backend/src/common/cache/cache.decorators.ts",
+      "size_bytes": 1644
+    },
+    {
+      "path": "backend/src/common/cache/cache.module.ts",
+      "size_bytes": 1830
+    },
+    {
+      "path": "backend/src/common/cache/cache.service.ts",
+      "size_bytes": 5261
+    },
+    {
+      "path": "backend/src/common/cache/http-cache.interceptor.ts",
+      "size_bytes": 3353
+    },
+    {
+      "path": "backend/src/common/cache/index.ts",
+      "size_bytes": 286
+    },
+    {
+      "path": "backend/src/common/dto/base-crud.service.ts",
+      "size_bytes": 660
+    },
+    {
+      "path": "backend/src/common/dto/index.ts",
+      "size_bytes": 1906
+    },
+    {
+      "path": "backend/src/common/dto/request.dto.ts",
+      "size_bytes": 20614
+    },
+    {
+      "path": "backend/src/common/dto/response.dto.ts",
+      "size_bytes": 18919
+    },
+    {
+      "path": "backend/src/common/guards/jwt-auth.guard.ts",
+      "size_bytes": 1027
+    },
+    {
+      "path": "backend/src/common/guards/roles.guard.spec.ts",
+      "size_bytes": 5229
+    },
+    {
+      "path": "backend/src/common/guards/roles.guard.ts",
+      "size_bytes": 8341
+    },
+    {
+      "path": "backend/src/common/logging/global-exception.filter.ts",
+      "size_bytes": 2517
+    },
+    {
+      "path": "backend/src/common/logging/index.ts",
+      "size_bytes": 331
+    },
+    {
+      "path": "backend/src/common/logging/performance.middleware.ts",
+      "size_bytes": 3291
+    },
+    {
+      "path": "backend/src/common/logging/request-logging.interceptor.ts",
+      "size_bytes": 3019
+    },
+    {
+      "path": "backend/src/common/logging/winston.config.ts",
+      "size_bytes": 1652
+    },
+    {
+      "path": "backend/src/common/sanitization.pipe.ts",
+      "size_bytes": 1824
+    },
+    {
+      "path": "backend/src/common/throttle/throttle.config.ts",
+      "size_bytes": 3940
+    },
+    {
+      "path": "backend/src/common/versioning/api-versioning.spec.ts",
+      "size_bytes": 5919
+    },
+    {
+      "path": "backend/src/common/versioning/api-versioning.ts",
+      "size_bytes": 4328
+    },
+    {
+      "path": "backend/src/common/versioning/deprecation.middleware.ts",
+      "size_bytes": 1875
+    },
+    {
+      "path": "backend/src/common/versioning/index.ts",
+      "size_bytes": 260
+    },
+    {
+      "path": "backend/src/common/versioning/v2-controllers.ts",
+      "size_bytes": 18286
+    },
+    {
+      "path": "backend/src/common/versioning/versioning.config.ts",
+      "size_bytes": 1978
+    },
+    {
+      "path": "backend/src/config/data-source.ts",
+      "size_bytes": 755
+    },
+    {
+      "path": "backend/src/config/database.config.ts",
+      "size_bytes": 862
+    },
+    {
+      "path": "backend/src/config/index.ts",
+      "size_bytes": 1403
+    },
+    {
+      "path": "backend/src/config/redis.config.ts",
+      "size_bytes": 479
+    },
+    {
+      "path": "backend/src/database/seed.ts",
+      "size_bytes": 37175
+    },
+    {
+      "path": "backend/src/events/events.module.ts",
+      "size_bytes": 1178
+    },
+    {
+      "path": "backend/src/events/fleet-event-emitter.service.ts",
+      "size_bytes": 6246
+    },
+    {
+      "path": "backend/src/events/fleet-events.spec.ts",
+      "size_bytes": 11233
+    },
+    {
+      "path": "backend/src/events/handlers/audit-log.handler.ts",
+      "size_bytes": 6675
+    },
+    {
+      "path": "backend/src/events/handlers/cache-invalidation.handler.ts",
+      "size_bytes": 3066
+    },
+    {
+      "path": "backend/src/events/handlers/notification.handler.ts",
+      "size_bytes": 5288
+    },
+    {
+      "path": "backend/src/events/handlers/websocket-broadcast.handler.ts",
+      "size_bytes": 11370
+    },
+    {
+      "path": "backend/src/events/index.ts",
+      "size_bytes": 556
+    },
+    {
+      "path": "backend/src/events/types/fleet-events.ts",
+      "size_bytes": 8917
+    },
+    {
+      "path": "backend/src/gateways/fleet.gateway.ts",
+      "size_bytes": 12991
+    },
+    {
+      "path": "backend/src/gateways/gateways.module.ts",
+      "size_bytes": 190
+    },
+    {
+      "path": "backend/src/health/health.controller.ts",
+      "size_bytes": 3667
+    },
+    {
+      "path": "backend/src/health/health.module.ts",
+      "size_bytes": 605
+    },
+    {
+      "path": "backend/src/health/health.spec.ts",
+      "size_bytes": 4172
+    },
+    {
+      "path": "backend/src/health/monitoring.middleware.ts",
+      "size_bytes": 2340
+    },
+    {
+      "path": "backend/src/health/prometheus.service.ts",
+      "size_bytes": 5952
+    },
+    {
+      "path": "backend/src/health/prometheus.spec.ts",
+      "size_bytes": 4624
+    },
+    {
+      "path": "backend/src/main.ts",
+      "size_bytes": 6440
+    },
+    {
+      "path": "backend/src/migrations/1707800000000-InitialSchema.ts",
+      "size_bytes": 30627
+    },
+    {
+      "path": "backend/src/migrations/1707800100000-SeedInitialData.ts",
+      "size_bytes": 2811
+    },
+    {
+      "path": "backend/src/migrations/1707800200000-CreateDriverSessionBlocks.ts",
+      "size_bytes": 12824
+    },
+    {
+      "path": "backend/src/migrations/1709000000000-SVGDeviceProvisioningExpansion.ts",
+      "size_bytes": 12405
+    },
+    {
+      "path": "backend/src/migrations/1709100000000-SensorsAndHasiIntegration.ts",
+      "size_bytes": 15715
+    },
+    {
+      "path": "backend/src/modules/aftersales/aftersales.controller.ts",
+      "size_bytes": 2793
+    },
+    {
+      "path": "backend/src/modules/aftersales/aftersales.module.ts",
+      "size_bytes": 505
+    },
+    {
+      "path": "backend/src/modules/aftersales/aftersales.service.ts",
+      "size_bytes": 11011
+    },
+    {
+      "path": "backend/src/modules/aftersales/aftersales.spec.ts",
+      "size_bytes": 2181
+    },
+    {
+      "path": "backend/src/modules/aftersales/entities/aftersales-work-order.entity.ts",
+      "size_bytes": 961
+    },
+    {
+      "path": "backend/src/modules/agentic-ai/agentic-ai.controller.ts",
+      "size_bytes": 2265
+    },
+    {
+      "path": "backend/src/modules/agentic-ai/agentic-ai.module.ts",
+      "size_bytes": 468
+    },
+    {
+      "path": "backend/src/modules/agentic-ai/agentic-ai.service.ts",
+      "size_bytes": 9257
+    },
+    {
+      "path": "backend/src/modules/agentic-ai/agentic-ai.spec.ts",
+      "size_bytes": 1717
+    },
+    {
+      "path": "backend/src/modules/agentic-ai/entities/agent-task.entity.ts",
+      "size_bytes": 824
+    },
+    {
+      "path": "backend/src/modules/alerts/alerts.controller.ts",
+      "size_bytes": 3048
+    },
+    {
+      "path": "backend/src/modules/alerts/alerts.module.ts",
+      "size_bytes": 429
+    },
+    {
+      "path": "backend/src/modules/alerts/alerts.service.ts",
+      "size_bytes": 1284
+    },
+    {
+      "path": "backend/src/modules/alerts/alerts.spec.ts",
+      "size_bytes": 1791
+    },
+    {
+      "path": "backend/src/modules/alerts/entities/alert.entity.ts",
+      "size_bytes": 1403
+    },
+    {
+      "path": "backend/src/modules/analytics/analytics.controller.ts",
+      "size_bytes": 2662
+    },
+    {
+      "path": "backend/src/modules/analytics/analytics.module.ts",
+      "size_bytes": 307
+    },
+    {
+      "path": "backend/src/modules/analytics/analytics.service.ts",
+      "size_bytes": 1795
+    },
+    {
+      "path": "backend/src/modules/analytics/analytics.spec.ts",
+      "size_bytes": 4115
+    },
+    {
+      "path": "backend/src/modules/anomaly-detection/anomaly-detection.controller.ts",
+      "size_bytes": 2341
+    },
+    {
+      "path": "backend/src/modules/anomaly-detection/anomaly-detection.module.ts",
+      "size_bytes": 517
+    },
+    {
+      "path": "backend/src/modules/anomaly-detection/anomaly-detection.service.ts",
+      "size_bytes": 6729
+    },
+    {
+      "path": "backend/src/modules/anomaly-detection/anomaly-detection.spec.ts",
+      "size_bytes": 763
+    },
+    {
+      "path": "backend/src/modules/anomaly-detection/entities/anomaly.entity.ts",
+      "size_bytes": 815
+    },
+    {
+      "path": "backend/src/modules/api-marketplace/api-marketplace.controller.ts",
+      "size_bytes": 3249
+    },
+    {
+      "path": "backend/src/modules/api-marketplace/api-marketplace.module.ts",
+      "size_bytes": 488
+    },
+    {
+      "path": "backend/src/modules/api-marketplace/api-marketplace.service.ts",
+      "size_bytes": 14399
+    },
+    {
+      "path": "backend/src/modules/api-marketplace/api-marketplace.spec.ts",
+      "size_bytes": 7063
+    },
+    {
+      "path": "backend/src/modules/auth/auth.controller.ts",
+      "size_bytes": 2577
+    },
+    {
+      "path": "backend/src/modules/auth/auth.module.ts",
+      "size_bytes": 267
+    },
+    {
+      "path": "backend/src/modules/auth/auth.service.ts",
+      "size_bytes": 1613
+    },
+    {
+      "path": "backend/src/modules/auth/auth.spec.ts",
+      "size_bytes": 5836
+    },
+    {
+      "path": "backend/src/modules/billing/billing.controller.ts",
+      "size_bytes": 2854
+    },
+    {
+      "path": "backend/src/modules/billing/billing.module.ts",
+      "size_bytes": 404
+    },
+    {
+      "path": "backend/src/modules/billing/billing.service.ts",
+      "size_bytes": 12064
+    },
+    {
+      "path": "backend/src/modules/billing/billing.spec.ts",
+      "size_bytes": 3249
+    },
+    {
+      "path": "backend/src/modules/billing/entities/billing.entity.ts",
+      "size_bytes": 2854
+    },
+    {
+      "path": "backend/src/modules/blockchain/blockchain.controller.ts",
+      "size_bytes": 2886
+    },
+    {
+      "path": "backend/src/modules/blockchain/blockchain.module.ts",
+      "size_bytes": 495
+    },
+    {
+      "path": "backend/src/modules/blockchain/blockchain.service.ts",
+      "size_bytes": 8545
+    },
+    {
+      "path": "backend/src/modules/blockchain/blockchain.spec.ts",
+      "size_bytes": 2119
+    },
+    {
+      "path": "backend/src/modules/blockchain/entities/blockchain-record.entity.ts",
+      "size_bytes": 788
+    },
+    {
+      "path": "backend/src/modules/bus/bus.controller.ts",
+      "size_bytes": 8123
+    },
+    {
+      "path": "backend/src/modules/bus/bus.module.ts",
+      "size_bytes": 983
+    },
+    {
+      "path": "backend/src/modules/bus/bus.service.ts",
+      "size_bytes": 12587
+    },
+    {
+      "path": "backend/src/modules/bus/bus.spec.ts",
+      "size_bytes": 1480
+    },
+    {
+      "path": "backend/src/modules/bus/entities/bus-dispatch.entity.ts",
+      "size_bytes": 1143
+    },
+    {
+      "path": "backend/src/modules/bus/entities/bus-passenger-count.entity.ts",
+      "size_bytes": 904
+    },
+    {
+      "path": "backend/src/modules/bus/entities/bus-route.entity.ts",
+      "size_bytes": 1233
+    },
+    {
+      "path": "backend/src/modules/bus/entities/bus-schedule.entity.ts",
+      "size_bytes": 1170
+    },
+    {
+      "path": "backend/src/modules/bus/entities/bus-stop.entity.ts",
+      "size_bytes": 1058
+    },
+    {
+      "path": "backend/src/modules/charging-stations/charging-stations.controller.ts",
+      "size_bytes": 1798
+    },
+    {
+      "path": "backend/src/modules/charging-stations/charging-stations.module.ts",
+      "size_bytes": 542
+    },
+    {
+      "path": "backend/src/modules/charging-stations/charging-stations.service.ts",
+      "size_bytes": 2693
+    },
+    {
+      "path": "backend/src/modules/charging-stations/charging-stations.spec.ts",
+      "size_bytes": 763
+    },
+    {
+      "path": "backend/src/modules/charging-stations/entities/charging-station.entity.ts",
+      "size_bytes": 1184
+    },
+    {
+      "path": "backend/src/modules/coldchain/coldchain.controller.ts",
+      "size_bytes": 3355
+    },
+    {
+      "path": "backend/src/modules/coldchain/coldchain.module.ts",
+      "size_bytes": 416
+    },
+    {
+      "path": "backend/src/modules/coldchain/coldchain.service.ts",
+      "size_bytes": 3137
+    },
+    {
+      "path": "backend/src/modules/coldchain/coldchain.spec.ts",
+      "size_bytes": 1472
+    },
+    {
+      "path": "backend/src/modules/coldchain/entities/coldchain-shipment.entity.ts",
+      "size_bytes": 1786
+    },
+    {
+      "path": "backend/src/modules/compliance/compliance.controller.ts",
+      "size_bytes": 2532
+    },
+    {
+      "path": "backend/src/modules/compliance/compliance.module.ts",
+      "size_bytes": 315
+    },
+    {
+      "path": "backend/src/modules/compliance/compliance.service.ts",
+      "size_bytes": 1149
+    },
+    {
+      "path": "backend/src/modules/compliance/compliance.spec.ts",
+      "size_bytes": 2447
+    },
+    {
+      "path": "backend/src/modules/compliance/entities/compliance-record.entity.ts",
+      "size_bytes": 1893
+    },
+    {
+      "path": "backend/src/modules/cross-border/cross-border.controller.ts",
+      "size_bytes": 1846
+    },
+    {
+      "path": "backend/src/modules/cross-border/cross-border.module.ts",
+      "size_bytes": 505
+    },
+    {
+      "path": "backend/src/modules/cross-border/cross-border.service.ts",
+      "size_bytes": 2606
+    },
+    {
+      "path": "backend/src/modules/cross-border/cross-border.spec.ts",
+      "size_bytes": 758
+    },
+    {
+      "path": "backend/src/modules/cross-border/entities/border-regulation.entity.ts",
+      "size_bytes": 730
+    },
+    {
+      "path": "backend/src/modules/customer-portal/customer-portal.controller.ts",
+      "size_bytes": 1965
+    },
+    {
+      "path": "backend/src/modules/customer-portal/customer-portal.module.ts",
+      "size_bytes": 529
+    },
+    {
+      "path": "backend/src/modules/customer-portal/customer-portal.service.ts",
+      "size_bytes": 2872
+    },
+    {
+      "path": "backend/src/modules/customer-portal/customer-portal.spec.ts",
+      "size_bytes": 761
+    },
+    {
+      "path": "backend/src/modules/customer-portal/entities/shipment-tracking.entity.ts",
+      "size_bytes": 957
+    },
+    {
+      "path": "backend/src/modules/data-monetization/data-monetization.controller.ts",
+      "size_bytes": 2376
+    },
+    {
+      "path": "backend/src/modules/data-monetization/data-monetization.module.ts",
+      "size_bytes": 530
+    },
+    {
+      "path": "backend/src/modules/data-monetization/data-monetization.service.ts",
+      "size_bytes": 7581
+    },
+    {
+      "path": "backend/src/modules/data-monetization/data-monetization.spec.ts",
+      "size_bytes": 1948
+    },
+    {
+      "path": "backend/src/modules/data-monetization/entities/data-product.entity.ts",
+      "size_bytes": 929
+    },
+    {
+      "path": "backend/src/modules/depot-charging/depot-charging.controller.ts",
+      "size_bytes": 1992
+    },
+    {
+      "path": "backend/src/modules/depot-charging/depot-charging.module.ts",
+      "size_bytes": 512
+    },
+    {
+      "path": "backend/src/modules/depot-charging/depot-charging.service.ts",
+      "size_bytes": 2409
+    },
+    {
+      "path": "backend/src/modules/depot-charging/depot-charging.spec.ts",
+      "size_bytes": 760
+    },
+    {
+      "path": "backend/src/modules/depot-charging/entities/charging-depot.entity.ts",
+      "size_bytes": 1054
+    },
+    {
+      "path": "backend/src/modules/devices/devices.controller.ts",
+      "size_bytes": 10833
+    },
+    {
+      "path": "backend/src/modules/devices/devices.module.ts",
+      "size_bytes": 932
+    },
+    {
+      "path": "backend/src/modules/devices/devices.service.ts",
+      "size_bytes": 25066
+    },
+    {
+      "path": "backend/src/modules/devices/devices.spec.ts",
+      "size_bytes": 12797
+    },
+    {
+      "path": "backend/src/modules/devices/dto/index.ts",
+      "size_bytes": 10697
+    },
+    {
+      "path": "backend/src/modules/devices/entities/config-deployment.entity.ts",
+      "size_bytes": 3977
+    },
+    {
+      "path": "backend/src/modules/devices/entities/device-certificate.entity.ts",
+      "size_bytes": 3111
+    },
+    {
+      "path": "backend/src/modules/devices/entities/device-transfer.entity.ts",
+      "size_bytes": 3821
+    },
+    {
+      "path": "backend/src/modules/devices/entities/device.entity.ts",
+      "size_bytes": 5443
+    },
+    {
+      "path": "backend/src/modules/devices/entities/provisioning-workflow.entity.ts",
+      "size_bytes": 4227
+    },
+    {
+      "path": "backend/src/modules/diagnostics/diagnostics.controller.ts",
+      "size_bytes": 1687
+    },
+    {
+      "path": "backend/src/modules/diagnostics/diagnostics.module.ts",
+      "size_bytes": 323
+    },
+    {
+      "path": "backend/src/modules/diagnostics/diagnostics.service.ts",
+      "size_bytes": 1184
+    },
+    {
+      "path": "backend/src/modules/diagnostics/diagnostics.spec.ts",
+      "size_bytes": 2333
+    },
+    {
+      "path": "backend/src/modules/diagnostics/entities/diagnostic-record.entity.ts",
+      "size_bytes": 1899
+    },
+    {
+      "path": "backend/src/modules/digital-twin/digital-twin.controller.ts",
+      "size_bytes": 2415
+    },
+    {
+      "path": "backend/src/modules/digital-twin/digital-twin.module.ts",
+      "size_bytes": 458
+    },
+    {
+      "path": "backend/src/modules/digital-twin/digital-twin.service.ts",
+      "size_bytes": 8255
+    },
+    {
+      "path": "backend/src/modules/digital-twin/digital-twin.spec.ts",
+      "size_bytes": 1084
+    },
+    {
+      "path": "backend/src/modules/digital-twin/entities/twin.entity.ts",
+      "size_bytes": 2071
+    },
+    {
+      "path": "backend/src/modules/driver-incentives/driver-incentives.controller.ts",
+      "size_bytes": 2070
+    },
+    {
+      "path": "backend/src/modules/driver-incentives/driver-incentives.module.ts",
+      "size_bytes": 545
+    },
+    {
+      "path": "backend/src/modules/driver-incentives/driver-incentives.service.ts",
+      "size_bytes": 2718
+    },
+    {
+      "path": "backend/src/modules/driver-incentives/driver-incentives.spec.ts",
+      "size_bytes": 763
+    },
+    {
+      "path": "backend/src/modules/driver-incentives/entities/incentive-program.entity.ts",
+      "size_bytes": 826
+    },
+    {
+      "path": "backend/src/modules/driver-mobile/driver-mobile.controller.ts",
+      "size_bytes": 2235
+    },
+    {
+      "path": "backend/src/modules/driver-mobile/driver-mobile.module.ts",
+      "size_bytes": 504
+    },
+    {
+      "path": "backend/src/modules/driver-mobile/driver-mobile.service.ts",
+      "size_bytes": 2252
+    },
+    {
+      "path": "backend/src/modules/driver-mobile/driver-mobile.spec.ts",
+      "size_bytes": 759
+    },
+    {
+      "path": "backend/src/modules/driver-mobile/entities/driver-session.entity.ts",
+      "size_bytes": 679
+    },
+    {
+      "path": "backend/src/modules/driver-scoring/driver-scoring.controller.ts",
+      "size_bytes": 3362
+    },
+    {
+      "path": "backend/src/modules/driver-scoring/driver-scoring.module.ts",
+      "size_bytes": 482
+    },
+    {
+      "path": "backend/src/modules/driver-scoring/driver-scoring.service.ts",
+      "size_bytes": 16449
+    },
+    {
+      "path": "backend/src/modules/driver-scoring/driver-scoring.spec.ts",
+      "size_bytes": 7141
+    },
+    {
+      "path": "backend/src/modules/driver-scoring/entities/scoring.entity.ts",
+      "size_bytes": 3126
+    },
+    {
+      "path": "backend/src/modules/driver-sessions/driver-sessions.controller.ts",
+      "size_bytes": 9675
+    },
+    {
+      "path": "backend/src/modules/driver-sessions/driver-sessions.module.ts",
+      "size_bytes": 536
+    },
+    {
+      "path": "backend/src/modules/driver-sessions/driver-sessions.service.ts",
+      "size_bytes": 16749
+    },
+    {
+      "path": "backend/src/modules/driver-sessions/driver-sessions.spec.ts",
+      "size_bytes": 10275
+    },
+    {
+      "path": "backend/src/modules/driver-sessions/entities/driver-session-block.entity.ts",
+      "size_bytes": 7867
+    },
+    {
+      "path": "backend/src/modules/drivers/drivers.controller.ts",
+      "size_bytes": 3646
+    },
+    {
+      "path": "backend/src/modules/drivers/drivers.module.ts",
+      "size_bytes": 440
+    },
+    {
+      "path": "backend/src/modules/drivers/drivers.service.ts",
+      "size_bytes": 1812
+    },
+    {
+      "path": "backend/src/modules/drivers/drivers.spec.ts",
+      "size_bytes": 2824
+    },
+    {
+      "path": "backend/src/modules/drivers/entities/driver.entity.ts",
+      "size_bytes": 1941
+    },
+    {
+      "path": "backend/src/modules/electrification/electrification.controller.ts",
+      "size_bytes": 1994
+    },
+    {
+      "path": "backend/src/modules/electrification/electrification.module.ts",
+      "size_bytes": 544
+    },
+    {
+      "path": "backend/src/modules/electrification/electrification.service.ts",
+      "size_bytes": 2701
+    },
+    {
+      "path": "backend/src/modules/electrification/electrification.spec.ts",
+      "size_bytes": 762
+    },
+    {
+      "path": "backend/src/modules/electrification/entities/electrification-plan.entity.ts",
+      "size_bytes": 1037
+    },
+    {
+      "path": "backend/src/modules/erp-connectors/erp-connectors.controller.ts",
+      "size_bytes": 3109
+    },
+    {
+      "path": "backend/src/modules/erp-connectors/erp-connectors.module.ts",
+      "size_bytes": 474
+    },
+    {
+      "path": "backend/src/modules/erp-connectors/erp-connectors.service.ts",
+      "size_bytes": 11488
+    },
+    {
+      "path": "backend/src/modules/erp-connectors/erp-connectors.spec.ts",
+      "size_bytes": 5931
+    },
+    {
+      "path": "backend/src/modules/errors/errors.controller.ts",
+      "size_bytes": 2522
+    },
+    {
+      "path": "backend/src/modules/errors/errors.module.ts",
+      "size_bytes": 172
+    },
+    {
+      "path": "backend/src/modules/ev/entities/electric-vehicle.entity.ts",
+      "size_bytes": 1886
+    },
+    {
+      "path": "backend/src/modules/ev/ev.controller.ts",
+      "size_bytes": 3735
+    },
+    {
+      "path": "backend/src/modules/ev/ev.module.ts",
+      "size_bytes": 371
+    },
+    {
+      "path": "backend/src/modules/ev/ev.service.ts",
+      "size_bytes": 4096
+    },
+    {
+      "path": "backend/src/modules/ev/ev.spec.ts",
+      "size_bytes": 1616
+    },
+    {
+      "path": "backend/src/modules/executive/entities/executive-report.entity.ts",
+      "size_bytes": 586
+    },
+    {
+      "path": "backend/src/modules/executive/executive.controller.ts",
+      "size_bytes": 1926
+    },
+    {
+      "path": "backend/src/modules/executive/executive.module.ts",
+      "size_bytes": 484
+    },
+    {
+      "path": "backend/src/modules/executive/executive.service.ts",
+      "size_bytes": 2334
+    },
+    {
+      "path": "backend/src/modules/executive/executive.spec.ts",
+      "size_bytes": 756
+    },
+    {
+      "path": "backend/src/modules/fatigue-risk/entities/fatigue-assessment.entity.ts",
+      "size_bytes": 1005
+    },
+    {
+      "path": "backend/src/modules/fatigue-risk/fatigue-risk.controller.ts",
+      "size_bytes": 1786
+    },
+    {
+      "path": "backend/src/modules/fatigue-risk/fatigue-risk.module.ts",
+      "size_bytes": 508
+    },
+    {
+      "path": "backend/src/modules/fatigue-risk/fatigue-risk.service.ts",
+      "size_bytes": 2168
+    },
+    {
+      "path": "backend/src/modules/fatigue-risk/fatigue-risk.spec.ts",
+      "size_bytes": 758
+    },
+    {
+      "path": "backend/src/modules/finance/entities/finance-transaction.entity.ts",
+      "size_bytes": 1983
+    },
+    {
+      "path": "backend/src/modules/finance/finance.controller.ts",
+      "size_bytes": 1729
+    },
+    {
+      "path": "backend/src/modules/finance/finance.module.ts",
+      "size_bytes": 291
+    },
+    {
+      "path": "backend/src/modules/finance/finance.service.ts",
+      "size_bytes": 1089
+    },
+    {
+      "path": "backend/src/modules/finance/finance.spec.ts",
+      "size_bytes": 2125
+    },
+    {
+      "path": "backend/src/modules/fleet-lifecycle/entities/lifecycle-plan.entity.ts",
+      "size_bytes": 1111
+    },
+    {
+      "path": "backend/src/modules/fleet-lifecycle/fleet-lifecycle.controller.ts",
+      "size_bytes": 1856
+    },
+    {
+      "path": "backend/src/modules/fleet-lifecycle/fleet-lifecycle.module.ts",
+      "size_bytes": 520
+    },
+    {
+      "path": "backend/src/modules/fleet-lifecycle/fleet-lifecycle.service.ts",
+      "size_bytes": 2218
+    },
+    {
+      "path": "backend/src/modules/fleet-lifecycle/fleet-lifecycle.spec.ts",
+      "size_bytes": 761
+    },
+    {
+      "path": "backend/src/modules/fleets/entities/fleet.entity.ts",
+      "size_bytes": 817
+    },
+    {
+      "path": "backend/src/modules/fleets/fleets.controller.ts",
+      "size_bytes": 2746
+    },
+    {
+      "path": "backend/src/modules/fleets/fleets.module.ts",
+      "size_bytes": 429
+    },
+    {
+      "path": "backend/src/modules/fleets/fleets.service.ts",
+      "size_bytes": 825
+    },
+    {
+      "path": "backend/src/modules/fleets/fleets.spec.ts",
+      "size_bytes": 1821
+    },
+    {
+      "path": "backend/src/modules/fuel/entities/fuel-transaction.entity.ts",
+      "size_bytes": 1189
+    },
+    {
+      "path": "backend/src/modules/fuel/fuel.controller.ts",
+      "size_bytes": 2498
+    },
+    {
+      "path": "backend/src/modules/fuel/fuel.module.ts",
+      "size_bytes": 444
+    },
+    {
+      "path": "backend/src/modules/fuel/fuel.service.ts",
+      "size_bytes": 1318
+    },
+    {
+      "path": "backend/src/modules/fuel/fuel.spec.ts",
+      "size_bytes": 1753
+    },
+    {
+      "path": "backend/src/modules/geofence-automation/entities/geofence.entity.ts",
+      "size_bytes": 3266
+    },
+    {
+      "path": "backend/src/modules/geofence-automation/geofence-automation.controller.ts",
+      "size_bytes": 2424
+    },
+    {
+      "path": "backend/src/modules/geofence-automation/geofence-automation.module.ts",
+      "size_bytes": 516
+    },
+    {
+      "path": "backend/src/modules/geofence-automation/geofence-automation.service.ts",
+      "size_bytes": 8435
+    },
+    {
+      "path": "backend/src/modules/geofence-automation/geofence-automation.spec.ts",
+      "size_bytes": 7396
+    },
+    {
+      "path": "backend/src/modules/hasi/dto/index.ts",
+      "size_bytes": 8670
+    },
+    {
+      "path": "backend/src/modules/hasi/entities/hasi-capture.entity.ts",
+      "size_bytes": 4449
+    },
+    {
+      "path": "backend/src/modules/hasi/entities/hasi-firewall-rule.entity.ts",
+      "size_bytes": 3311
+    },
+    {
+      "path": "backend/src/modules/hasi/entities/hasi-threat.entity.ts",
+      "size_bytes": 5269
+    },
+    {
+      "path": "backend/src/modules/hasi/entities/index.ts",
+      "size_bytes": 168
+    },
+    {
+      "path": "backend/src/modules/hasi/hasi.controller.ts",
+      "size_bytes": 4152
+    },
+    {
+      "path": "backend/src/modules/hasi/hasi.module.ts",
+      "size_bytes": 681
+    },
+    {
+      "path": "backend/src/modules/hasi/hasi.service.ts",
+      "size_bytes": 14447
+    },
+    {
+      "path": "backend/src/modules/hasi/hasi.spec.ts",
+      "size_bytes": 6348
+    },
+    {
+      "path": "backend/src/modules/hasi/index.ts",
+      "size_bytes": 162
+    },
+    {
+      "path": "backend/src/modules/insurance/entities/insurance-policy.entity.ts",
+      "size_bytes": 2934
+    },
+    {
+      "path": "backend/src/modules/insurance/insurance.controller.ts",
+      "size_bytes": 6040
+    },
+    {
+      "path": "backend/src/modules/insurance/insurance.module.ts",
+      "size_bytes": 484
+    },
+    {
+      "path": "backend/src/modules/insurance/insurance.service.ts",
+      "size_bytes": 15795
+    },
+    {
+      "path": "backend/src/modules/insurance/insurance.spec.ts",
+      "size_bytes": 8802
+    },
+    {
+      "path": "backend/src/modules/integration-hub/integration-hub.controller.ts",
+      "size_bytes": 1822
+    },
+    {
+      "path": "backend/src/modules/integration-hub/integration-hub.module.ts",
+      "size_bytes": 349
+    },
+    {
+      "path": "backend/src/modules/integration-hub/integration-hub.service.ts",
+      "size_bytes": 10256
+    },
+    {
+      "path": "backend/src/modules/integration-hub/integration-hub.spec.ts",
+      "size_bytes": 5097
+    },
+    {
+      "path": "backend/src/modules/integration-notifications/integration-notifications.controller.ts",
+      "size_bytes": 3434
+    },
+    {
+      "path": "backend/src/modules/integration-notifications/integration-notifications.module.ts",
+      "size_bytes": 564
+    },
+    {
+      "path": "backend/src/modules/integration-notifications/integration-notifications.service.ts",
+      "size_bytes": 12938
+    },
+    {
+      "path": "backend/src/modules/integration-notifications/integration-notifications.spec.ts",
+      "size_bytes": 6211
+    },
+    {
+      "path": "backend/src/modules/maintenance/entities/work-order.entity.ts",
+      "size_bytes": 1594
+    },
+    {
+      "path": "backend/src/modules/maintenance/maintenance.controller.ts",
+      "size_bytes": 3316
+    },
+    {
+      "path": "backend/src/modules/maintenance/maintenance.module.ts",
+      "size_bytes": 482
+    },
+    {
+      "path": "backend/src/modules/maintenance/maintenance.service.ts",
+      "size_bytes": 1222
+    },
+    {
+      "path": "backend/src/modules/maintenance/maintenance.spec.ts",
+      "size_bytes": 2140
+    },
+    {
+      "path": "backend/src/modules/messaging/entities/messaging.entity.ts",
+      "size_bytes": 2934
+    },
+    {
+      "path": "backend/src/modules/messaging/messaging.controller.ts",
+      "size_bytes": 2404
+    },
+    {
+      "path": "backend/src/modules/messaging/messaging.module.ts",
+      "size_bytes": 440
+    },
+    {
+      "path": "backend/src/modules/messaging/messaging.service.ts",
+      "size_bytes": 9839
+    },
+    {
+      "path": "backend/src/modules/messaging/messaging.spec.ts",
+      "size_bytes": 1097
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/decorators/tenant.decorator.ts",
+      "size_bytes": 1582
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/entities/tenant.entity.ts",
+      "size_bytes": 6638
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/guards/tenant.guard.ts",
+      "size_bytes": 3482
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/interceptors/tenant.interceptor.ts",
+      "size_bytes": 1892
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/multi-tenant.controller.ts",
+      "size_bytes": 3131
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/multi-tenant.module.ts",
+      "size_bytes": 423
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/multi-tenant.service.ts",
+      "size_bytes": 16881
+    },
+    {
+      "path": "backend/src/modules/multi-tenant/multi-tenant.spec.ts",
+      "size_bytes": 4786
+    },
+    {
+      "path": "backend/src/modules/notifications/entities/notification.entity.ts",
+      "size_bytes": 865
+    },
+    {
+      "path": "backend/src/modules/notifications/notifications.controller.ts",
+      "size_bytes": 2533
+    },
+    {
+      "path": "backend/src/modules/notifications/notifications.module.ts",
+      "size_bytes": 506
+    },
+    {
+      "path": "backend/src/modules/notifications/notifications.service.ts",
+      "size_bytes": 1072
+    },
+    {
+      "path": "backend/src/modules/notifications/notifications.spec.ts",
+      "size_bytes": 1774
+    },
+    {
+      "path": "backend/src/modules/onboarding/entities/onboarding.entity.ts",
+      "size_bytes": 1251
+    },
+    {
+      "path": "backend/src/modules/onboarding/onboarding.controller.ts",
+      "size_bytes": 3149
+    },
+    {
+      "path": "backend/src/modules/onboarding/onboarding.module.ts",
+      "size_bytes": 424
+    },
+    {
+      "path": "backend/src/modules/onboarding/onboarding.service.ts",
+      "size_bytes": 19353
+    },
+    {
+      "path": "backend/src/modules/onboarding/onboarding.spec.ts",
+      "size_bytes": 4141
+    },
+    {
+      "path": "backend/src/modules/operations/entities/geofence.entity.ts",
+      "size_bytes": 1226
+    },
+    {
+      "path": "backend/src/modules/operations/operations.controller.ts",
+      "size_bytes": 3892
+    },
+    {
+      "path": "backend/src/modules/operations/operations.module.ts",
+      "size_bytes": 464
+    },
+    {
+      "path": "backend/src/modules/operations/operations.service.ts",
+      "size_bytes": 635
+    },
+    {
+      "path": "backend/src/modules/operations/operations.spec.ts",
+      "size_bytes": 1788
+    },
+    {
+      "path": "backend/src/modules/ota/entities/ota-update.entity.ts",
+      "size_bytes": 2003
+    },
+    {
+      "path": "backend/src/modules/ota/ota.controller.ts",
+      "size_bytes": 2865
+    },
+    {
+      "path": "backend/src/modules/ota/ota.module.ts",
+      "size_bytes": 390
+    },
+    {
+      "path": "backend/src/modules/ota/ota.service.ts",
+      "size_bytes": 4291
+    },
+    {
+      "path": "backend/src/modules/ota/ota.spec.ts",
+      "size_bytes": 1838
+    },
+    {
+      "path": "backend/src/modules/parts-marketplace/entities/parts-listing.entity.ts",
+      "size_bytes": 926
+    },
+    {
+      "path": "backend/src/modules/parts-marketplace/parts-marketplace.controller.ts",
+      "size_bytes": 2053
+    },
+    {
+      "path": "backend/src/modules/parts-marketplace/parts-marketplace.module.ts",
+      "size_bytes": 533
+    },
+    {
+      "path": "backend/src/modules/parts-marketplace/parts-marketplace.service.ts",
+      "size_bytes": 2163
+    },
+    {
+      "path": "backend/src/modules/parts-marketplace/parts-marketplace.spec.ts",
+      "size_bytes": 763
+    },
+    {
+      "path": "backend/src/modules/permits/entities/permit.entity.ts",
+      "size_bytes": 889
+    },
+    {
+      "path": "backend/src/modules/permits/permits.controller.ts",
+      "size_bytes": 1741
+    },
+    {
+      "path": "backend/src/modules/permits/permits.module.ts",
+      "size_bytes": 440
+    },
+    {
+      "path": "backend/src/modules/permits/permits.service.ts",
+      "size_bytes": 1565
+    },
+    {
+      "path": "backend/src/modules/permits/permits.spec.ts",
+      "size_bytes": 754
+    },
+    {
+      "path": "backend/src/modules/predictive-maintenance/entities/prediction.entity.ts",
+      "size_bytes": 4005
+    },
+    {
+      "path": "backend/src/modules/predictive-maintenance/predictive-maintenance.controller.ts",
+      "size_bytes": 3348
+    },
+    {
+      "path": "backend/src/modules/predictive-maintenance/predictive-maintenance.module.ts",
+      "size_bytes": 545
+    },
+    {
+      "path": "backend/src/modules/predictive-maintenance/predictive-maintenance.service.ts",
+      "size_bytes": 19945
+    },
+    {
+      "path": "backend/src/modules/predictive-maintenance/predictive-maintenance.spec.ts",
+      "size_bytes": 5826
+    },
+    {
+      "path": "backend/src/modules/reports/reports.controller.ts",
+      "size_bytes": 2229
+    },
+    {
+      "path": "backend/src/modules/reports/reports.module.ts",
+      "size_bytes": 291
+    },
+    {
+      "path": "backend/src/modules/reports/reports.service.ts",
+      "size_bytes": 1192
+    },
+    {
+      "path": "backend/src/modules/reports/reports.spec.ts",
+      "size_bytes": 1992
+    },
+    {
+      "path": "backend/src/modules/road-intelligence/entities/road-segment.entity.ts",
+      "size_bytes": 1090
+    },
+    {
+      "path": "backend/src/modules/road-intelligence/road-intelligence.controller.ts",
+      "size_bytes": 2190
+    },
+    {
+      "path": "backend/src/modules/road-intelligence/road-intelligence.module.ts",
+      "size_bytes": 530
+    },
+    {
+      "path": "backend/src/modules/road-intelligence/road-intelligence.service.ts",
+      "size_bytes": 8350
+    },
+    {
+      "path": "backend/src/modules/road-intelligence/road-intelligence.spec.ts",
+      "size_bytes": 1771
+    },
+    {
+      "path": "backend/src/modules/safety/entities/safety-event.entity.ts",
+      "size_bytes": 2100
+    },
+    {
+      "path": "backend/src/modules/safety/safety.controller.ts",
+      "size_bytes": 2036
+    },
+    {
+      "path": "backend/src/modules/safety/safety.module.ts",
+      "size_bytes": 283
+    },
+    {
+      "path": "backend/src/modules/safety/safety.service.ts",
+      "size_bytes": 1074
+    },
+    {
+      "path": "backend/src/modules/safety/safety.spec.ts",
+      "size_bytes": 2254
+    },
+    {
+      "path": "backend/src/modules/sensors/dto/index.ts",
+      "size_bytes": 8888
+    },
+    {
+      "path": "backend/src/modules/sensors/entities/index.ts",
+      "size_bytes": 165
+    },
+    {
+      "path": "backend/src/modules/sensors/entities/sensor-alert.entity.ts",
+      "size_bytes": 4467
+    },
+    {
+      "path": "backend/src/modules/sensors/entities/sensor-device.entity.ts",
+      "size_bytes": 7483
+    },
+    {
+      "path": "backend/src/modules/sensors/entities/sensor-reading.entity.ts",
+      "size_bytes": 2665
+    },
+    {
+      "path": "backend/src/modules/sensors/index.ts",
+      "size_bytes": 173
+    },
+    {
+      "path": "backend/src/modules/sensors/sensors.controller.ts",
+      "size_bytes": 5449
+    },
+    {
+      "path": "backend/src/modules/sensors/sensors.module.ts",
+      "size_bytes": 701
+    },
+    {
+      "path": "backend/src/modules/sensors/sensors.service.ts",
+      "size_bytes": 14277
+    },
+    {
+      "path": "backend/src/modules/sensors/sensors.spec.ts",
+      "size_bytes": 6076
+    },
+    {
+      "path": "backend/src/modules/surge-pricing/entities/surge-zone.entity.ts",
+      "size_bytes": 1054
+    },
+    {
+      "path": "backend/src/modules/surge-pricing/surge-pricing.controller.ts",
+      "size_bytes": 2140
+    },
+    {
+      "path": "backend/src/modules/surge-pricing/surge-pricing.module.ts",
+      "size_bytes": 492
+    },
+    {
+      "path": "backend/src/modules/surge-pricing/surge-pricing.service.ts",
+      "size_bytes": 4319
+    },
+    {
+      "path": "backend/src/modules/surge-pricing/surge-pricing.spec.ts",
+      "size_bytes": 759
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/cargo-manifest.entity.ts",
+      "size_bytes": 1442
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/custody-transfer.entity.ts",
+      "size_bytes": 1380
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/hazmat-permit.entity.ts",
+      "size_bytes": 824
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/hazmat-route.entity.ts",
+      "size_bytes": 914
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/tanker-product.entity.ts",
+      "size_bytes": 960
+    },
+    {
+      "path": "backend/src/modules/tanker/entities/tanker-safety-event.entity.ts",
+      "size_bytes": 759
+    },
+    {
+      "path": "backend/src/modules/tanker/tanker.controller.ts",
+      "size_bytes": 10315
+    },
+    {
+      "path": "backend/src/modules/tanker/tanker.module.ts",
+      "size_bytes": 1193
+    },
+    {
+      "path": "backend/src/modules/tanker/tanker.service.ts",
+      "size_bytes": 13981
+    },
+    {
+      "path": "backend/src/modules/tanker/tanker.spec.ts",
+      "size_bytes": 4835
+    },
+    {
+      "path": "backend/src/modules/taxi/entities/taxi-driver.entity.ts",
+      "size_bytes": 1501
+    },
+    {
+      "path": "backend/src/modules/taxi/entities/taxi-payment.entity.ts",
+      "size_bytes": 1065
+    },
+    {
+      "path": "backend/src/modules/taxi/entities/taxi-trip.entity.ts",
+      "size_bytes": 2167
+    },
+    {
+      "path": "backend/src/modules/taxi/entities/taxi-zone.entity.ts",
+      "size_bytes": 1277
+    },
+    {
+      "path": "backend/src/modules/taxi/taxi.controller.ts",
+      "size_bytes": 9853
+    },
+    {
+      "path": "backend/src/modules/taxi/taxi.module.ts",
+      "size_bytes": 891
+    },
+    {
+      "path": "backend/src/modules/taxi/taxi.service.ts",
+      "size_bytes": 13137
+    },
+    {
+      "path": "backend/src/modules/taxi/taxi.spec.ts",
+      "size_bytes": 1489
+    },
+    {
+      "path": "backend/src/modules/trips/entities/trip.entity.ts",
+      "size_bytes": 2076
+    },
+    {
+      "path": "backend/src/modules/trips/trips.controller.ts",
+      "size_bytes": 3703
+    },
+    {
+      "path": "backend/src/modules/trips/trips.module.ts",
+      "size_bytes": 418
+    },
+    {
+      "path": "backend/src/modules/trips/trips.service.ts",
+      "size_bytes": 1127
+    },
+    {
+      "path": "backend/src/modules/trips/trips.spec.ts",
+      "size_bytes": 1919
+    },
+    {
+      "path": "backend/src/modules/users/entities/user.entity.ts",
+      "size_bytes": 1058
+    },
+    {
+      "path": "backend/src/modules/users/users.controller.ts",
+      "size_bytes": 2115
+    },
+    {
+      "path": "backend/src/modules/users/users.module.ts",
+      "size_bytes": 418
+    },
+    {
+      "path": "backend/src/modules/users/users.service.ts",
+      "size_bytes": 537
+    },
+    {
+      "path": "backend/src/modules/users/users.spec.ts",
+      "size_bytes": 1784
+    },
+    {
+      "path": "backend/src/modules/v2g/entities/v2g-session.entity.ts",
+      "size_bytes": 1973
+    },
+    {
+      "path": "backend/src/modules/v2g/v2g.controller.ts",
+      "size_bytes": 3012
+    },
+    {
+      "path": "backend/src/modules/v2g/v2g.module.ts",
+      "size_bytes": 374
+    },
+    {
+      "path": "backend/src/modules/v2g/v2g.service.ts",
+      "size_bytes": 5307
+    },
+    {
+      "path": "backend/src/modules/v2g/v2g.spec.ts",
+      "size_bytes": 1598
+    },
+    {
+      "path": "backend/src/modules/vehicle-lifecycle/vehicle-lifecycle.controller.ts",
+      "size_bytes": 9305
+    },
+    {
+      "path": "backend/src/modules/vehicle-lifecycle/vehicle-lifecycle.module.ts",
+      "size_bytes": 482
+    },
+    {
+      "path": "backend/src/modules/vehicle-lifecycle/vehicle-lifecycle.service.ts",
+      "size_bytes": 18778
+    },
+    {
+      "path": "backend/src/modules/vehicle-lifecycle/vehicle-lifecycle.spec.ts",
+      "size_bytes": 11655
+    },
+    {
+      "path": "backend/src/modules/vehicles/entities/vehicle.entity.ts",
+      "size_bytes": 2598
+    },
+    {
+      "path": "backend/src/modules/vehicles/vehicles.controller.ts",
+      "size_bytes": 4391
+    },
+    {
+      "path": "backend/src/modules/vehicles/vehicles.module.ts",
+      "size_bytes": 451
+    },
+    {
+      "path": "backend/src/modules/vehicles/vehicles.service.ts",
+      "size_bytes": 2861
+    },
+    {
+      "path": "backend/src/modules/vehicles/vehicles.spec.ts",
+      "size_bytes": 11497
+    },
+    {
+      "path": "backend/src/modules/white-label/entities/tenant-theme.entity.ts",
+      "size_bytes": 887
+    },
+    {
+      "path": "backend/src/modules/white-label/white-label.controller.ts",
+      "size_bytes": 1791
+    },
+    {
+      "path": "backend/src/modules/white-label/white-label.module.ts",
+      "size_bytes": 482
+    },
+    {
+      "path": "backend/src/modules/white-label/white-label.service.ts",
+      "size_bytes": 2266
+    },
+    {
+      "path": "backend/src/modules/white-label/white-label.spec.ts",
+      "size_bytes": 757
+    },
+    {
+      "path": "backend/src/test/test-utils.ts",
+      "size_bytes": 14458
+    },
+    {
+      "path": "backend/tsconfig.json",
+      "size_bytes": 663
+    },
+    {
+      "path": "docker-compose.monitoring.yml",
+      "size_bytes": 2212
+    },
+    {
+      "path": "docker-compose.yml",
+      "size_bytes": 2905
+    },
+    {
+      "path": "frontend/.dockerignore",
+      "size_bytes": 71
+    },
+    {
+      "path": "frontend/.env.example",
+      "size_bytes": 988
+    },
+    {
+      "path": "frontend/.eslintrc.cjs",
+      "size_bytes": 1373
+    },
+    {
+      "path": "frontend/.storybook/main.ts",
+      "size_bytes": 1106
+    },
+    {
+      "path": "frontend/.storybook/preview.ts",
+      "size_bytes": 1785
+    },
+    {
+      "path": "frontend/App.tsx",
+      "size_bytes": 11925
+    },
+    {
+      "path": "frontend/Dockerfile",
+      "size_bytes": 734
+    },
+    {
+      "path": "frontend/api/aftersales.ts",
+      "size_bytes": 1007
+    },
+    {
+      "path": "frontend/api/agentic-ai.ts",
+      "size_bytes": 1006
+    },
+    {
+      "path": "frontend/api/alerts.ts",
+      "size_bytes": 1892
+    },
+    {
+      "path": "frontend/api/analytics.ts",
+      "size_bytes": 981
+    },
+    {
+      "path": "frontend/api/anomaly-detection.ts",
+      "size_bytes": 1046
+    },
+    {
+      "path": "frontend/api/api-marketplace.ts",
+      "size_bytes": 1041
+    },
+    {
+      "path": "frontend/api/auth.ts",
+      "size_bytes": 1461
+    },
+    {
+      "path": "frontend/api/billing.ts",
+      "size_bytes": 986
+    },
+    {
+      "path": "frontend/api/blockchain.ts",
+      "size_bytes": 1007
+    },
+    {
+      "path": "frontend/api/bus.ts",
+      "size_bytes": 2381
+    },
+    {
+      "path": "frontend/api/charging-stations.ts",
+      "size_bytes": 940
+    },
+    {
+      "path": "frontend/api/client.ts",
+      "size_bytes": 9074
+    },
+    {
+      "path": "frontend/api/coldchain.ts",
+      "size_bytes": 1410
+    },
+    {
+      "path": "frontend/api/compliance.ts",
+      "size_bytes": 1549
+    },
+    {
+      "path": "frontend/api/cross-border.ts",
+      "size_bytes": 822
+    },
+    {
+      "path": "frontend/api/customer-portal.ts",
+      "size_bytes": 849
+    },
+    {
+      "path": "frontend/api/data-monetization.ts",
+      "size_bytes": 1055
+    },
+    {
+      "path": "frontend/api/depot-charging.ts",
+      "size_bytes": 1034
+    },
+    {
+      "path": "frontend/api/devices.ts",
+      "size_bytes": 12994
+    },
+    {
+      "path": "frontend/api/diagnostics.ts",
+      "size_bytes": 1319
+    },
+    {
+      "path": "frontend/api/digital-twin.ts",
+      "size_bytes": 1020
+    },
+    {
+      "path": "frontend/api/driver-incentives.ts",
+      "size_bytes": 607
+    },
+    {
+      "path": "frontend/api/driver-mobile.ts",
+      "size_bytes": 662
+    },
+    {
+      "path": "frontend/api/driver-scoring.ts",
+      "size_bytes": 1034
+    },
+    {
+      "path": "frontend/api/driver-sessions.ts",
+      "size_bytes": 4621
+    },
+    {
+      "path": "frontend/api/drivers.ts",
+      "size_bytes": 2840
+    },
+    {
+      "path": "frontend/api/electrification.ts",
+      "size_bytes": 821
+    },
+    {
+      "path": "frontend/api/erp-connectors.ts",
+      "size_bytes": 1034
+    },
+    {
+      "path": "frontend/api/ev.ts",
+      "size_bytes": 1526
+    },
+    {
+      "path": "frontend/api/executive.ts",
+      "size_bytes": 1000
+    },
+    {
+      "path": "frontend/api/fatigue-risk.ts",
+      "size_bytes": 1020
+    },
+    {
+      "path": "frontend/api/finance.ts",
+      "size_bytes": 573
+    },
+    {
+      "path": "frontend/api/fleet-lifecycle.ts",
+      "size_bytes": 1041
+    },
+    {
+      "path": "frontend/api/fleets.ts",
+      "size_bytes": 1418
+    },
+    {
+      "path": "frontend/api/fuel.ts",
+      "size_bytes": 1540
+    },
+    {
+      "path": "frontend/api/geofence-automation.ts",
+      "size_bytes": 1069
+    },
+    {
+      "path": "frontend/api/hasi.ts",
+      "size_bytes": 7426
+    },
+    {
+      "path": "frontend/api/index.ts",
+      "size_bytes": 4836
+    },
+    {
+      "path": "frontend/api/insurance.ts",
+      "size_bytes": 4100
+    },
+    {
+      "path": "frontend/api/integration-hub.ts",
+      "size_bytes": 1041
+    },
+    {
+      "path": "frontend/api/integration-notifications.ts",
+      "size_bytes": 1111
+    },
+    {
+      "path": "frontend/api/maintenance.ts",
+      "size_bytes": 1820
+    },
+    {
+      "path": "frontend/api/messaging.ts",
+      "size_bytes": 1000
+    },
+    {
+      "path": "frontend/api/multi-tenant.ts",
+      "size_bytes": 1020
+    },
+    {
+      "path": "frontend/api/notifications.ts",
+      "size_bytes": 681
+    },
+    {
+      "path": "frontend/api/onboarding.ts",
+      "size_bytes": 1007
+    },
+    {
+      "path": "frontend/api/operations.ts",
+      "size_bytes": 1827
+    },
+    {
+      "path": "frontend/api/ota.ts",
+      "size_bytes": 706
+    },
+    {
+      "path": "frontend/api/parts-marketplace.ts",
+      "size_bytes": 924
+    },
+    {
+      "path": "frontend/api/permits.ts",
+      "size_bytes": 748
+    },
+    {
+      "path": "frontend/api/predictive-maintenance.ts",
+      "size_bytes": 1090
+    },
+    {
+      "path": "frontend/api/reports.ts",
+      "size_bytes": 546
+    },
+    {
+      "path": "frontend/api/road-intelligence.ts",
+      "size_bytes": 1055
+    },
+    {
+      "path": "frontend/api/safety.ts",
+      "size_bytes": 1368
+    },
+    {
+      "path": "frontend/api/sensors.ts",
+      "size_bytes": 6803
+    },
+    {
+      "path": "frontend/api/surge-pricing.ts",
+      "size_bytes": 634
+    },
+    {
+      "path": "frontend/api/tanker.ts",
+      "size_bytes": 3439
+    },
+    {
+      "path": "frontend/api/taxi.ts",
+      "size_bytes": 2251
+    },
+    {
+      "path": "frontend/api/trips.ts",
+      "size_bytes": 2326
+    },
+    {
+      "path": "frontend/api/users.ts",
+      "size_bytes": 972
+    },
+    {
+      "path": "frontend/api/v2g.ts",
+      "size_bytes": 906
+    },
+    {
+      "path": "frontend/api/vehicle-lifecycle.ts",
+      "size_bytes": 3969
+    },
+    {
+      "path": "frontend/api/vehicles.ts",
+      "size_bytes": 2882
+    },
+    {
+      "path": "frontend/api/white-label.ts",
+      "size_bytes": 768
+    },
+    {
+      "path": "frontend/components/charts/ChartCard.tsx",
+      "size_bytes": 6953
+    },
+    {
+      "path": "frontend/components/charts/GaugeChart.tsx",
+      "size_bytes": 3839
+    },
+    {
+      "path": "frontend/components/charts/MapPanel.tsx",
+      "size_bytes": 4185
+    },
+    {
+      "path": "frontend/components/charts/MiniSparkline.tsx",
+      "size_bytes": 3524
+    },
+    {
+      "path": "frontend/components/charts/TimeRangeSelector.tsx",
+      "size_bytes": 1661
+    },
+    {
+      "path": "frontend/components/charts/TrendCard.tsx",
+      "size_bytes": 3496
+    },
+    {
+      "path": "frontend/components/charts/index.ts",
+      "size_bytes": 413
+    },
+    {
+      "path": "frontend/components/data/CrudDataTable.tsx",
+      "size_bytes": 10751
+    },
+    {
+      "path": "frontend/components/data/DataTable.tsx",
+      "size_bytes": 2238
+    },
+    {
+      "path": "frontend/components/data/DetailView.tsx",
+      "size_bytes": 4049
+    },
+    {
+      "path": "frontend/components/data/InfoCard.tsx",
+      "size_bytes": 483
+    },
+    {
+      "path": "frontend/components/data/Pagination.tsx",
+      "size_bytes": 1662
+    },
+    {
+      "path": "frontend/components/data/TableCard.tsx",
+      "size_bytes": 448
+    },
+    {
+      "path": "frontend/components/layout/Breadcrumbs.tsx",
+      "size_bytes": 768
+    },
+    {
+      "path": "frontend/components/layout/FleetFilter.tsx",
+      "size_bytes": 501
+    },
+    {
+      "path": "frontend/components/layout/Header.tsx",
+      "size_bytes": 139
+    },
+    {
+      "path": "frontend/components/layout/LangToggle.tsx",
+      "size_bytes": 86
+    },
+    {
+      "path": "frontend/components/layout/MobileBottomNav.tsx",
+      "size_bytes": 3527
+    },
+    {
+      "path": "frontend/components/layout/PageHeader.tsx",
+      "size_bytes": 2717
+    },
+    {
+      "path": "frontend/components/layout/ResponsiveGrid.tsx",
+      "size_bytes": 1668
+    },
+    {
+      "path": "frontend/components/layout/ResponsivePageWrapper.tsx",
+      "size_bytes": 1169
+    },
+    {
+      "path": "frontend/components/layout/Sidebar.tsx",
+      "size_bytes": 6337
+    },
+    {
+      "path": "frontend/components/layout/ThemeToggle.tsx",
+      "size_bytes": 88
+    },
+    {
+      "path": "frontend/components/layout/Topbar.tsx",
+      "size_bytes": 3607
+    },
+    {
+      "path": "frontend/components/map/LiveActivityFeed.tsx",
+      "size_bytes": 2355
+    },
+    {
+      "path": "frontend/components/map/LiveFleetMap.tsx",
+      "size_bytes": 11872
+    },
+    {
+      "path": "frontend/components/realtime/ActivityFeed.tsx",
+      "size_bytes": 6165
+    },
+    {
+      "path": "frontend/components/realtime/ConnectionStatus.tsx",
+      "size_bytes": 1905
+    },
+    {
+      "path": "frontend/components/realtime/LiveAlertBanner.tsx",
+      "size_bytes": 2886
+    },
+    {
+      "path": "frontend/components/realtime/index.ts",
+      "size_bytes": 188
+    },
+    {
+      "path": "frontend/components/ui/Badge.tsx",
+      "size_bytes": 137
+    },
+    {
+      "path": "frontend/components/ui/BottomSheet.tsx",
+      "size_bytes": 3542
+    },
+    {
+      "path": "frontend/components/ui/CollapsibleSection.tsx",
+      "size_bytes": 2336
+    },
+    {
+      "path": "frontend/components/ui/CommandPalette.tsx",
+      "size_bytes": 3033
+    },
+    {
+      "path": "frontend/components/ui/ConfirmDialog.tsx",
+      "size_bytes": 751
+    },
+    {
+      "path": "frontend/components/ui/EmptyState.tsx",
+      "size_bytes": 1145
+    },
+    {
+      "path": "frontend/components/ui/ErrorBoundary.tsx",
+      "size_bytes": 9767
+    },
+    {
+      "path": "frontend/components/ui/ErrorMsg.tsx",
+      "size_bytes": 243
+    },
+    {
+      "path": "frontend/components/ui/ExportToolbar.tsx",
+      "size_bytes": 1228
+    },
+    {
+      "path": "frontend/components/ui/FileAttachments.tsx",
+      "size_bytes": 2338
+    },
+    {
+      "path": "frontend/components/ui/FormField.tsx",
+      "size_bytes": 1223
+    },
+    {
+      "path": "frontend/components/ui/GlobalSearch.tsx",
+      "size_bytes": 3115
+    },
+    {
+      "path": "frontend/components/ui/InlineEditCell.tsx",
+      "size_bytes": 1056
+    },
+    {
+      "path": "frontend/components/ui/KeyboardShortcutsPanel.tsx",
+      "size_bytes": 1125
+    },
+    {
+      "path": "frontend/components/ui/LangToggle.tsx",
+      "size_bytes": 1453
+    },
+    {
+      "path": "frontend/components/ui/LazyImage.tsx",
+      "size_bytes": 2393
+    },
+    {
+      "path": "frontend/components/ui/Loading.tsx",
+      "size_bytes": 2357
+    },
+    {
+      "path": "frontend/components/ui/MobileCardList.tsx",
+      "size_bytes": 2678
+    },
+    {
+      "path": "frontend/components/ui/MobileTableWrapper.tsx",
+      "size_bytes": 2545
+    },
+    {
+      "path": "frontend/components/ui/Modal.tsx",
+      "size_bytes": 713
+    },
+    {
+      "path": "frontend/components/ui/NetworkStatusBar.tsx",
+      "size_bytes": 5919
+    },
+    {
+      "path": "frontend/components/ui/NotificationCenter.tsx",
+      "size_bytes": 4492
+    },
+    {
+      "path": "frontend/components/ui/OfflineIndicator.tsx",
+      "size_bytes": 1294
+    },
+    {
+      "path": "frontend/components/ui/OnboardingTour.tsx",
+      "size_bytes": 1566
+    },
+    {
+      "path": "frontend/components/ui/ProgressBar.tsx",
+      "size_bytes": 354
+    },
+    {
+      "path": "frontend/components/ui/PullToRefresh.tsx",
+      "size_bytes": 2668
+    },
+    {
+      "path": "frontend/components/ui/ResponsiveGrid.tsx",
+      "size_bytes": 1018
+    },
+    {
+      "path": "frontend/components/ui/ResponsiveTable.tsx",
+      "size_bytes": 2536
+    },
+    {
+      "path": "frontend/components/ui/RestrictedScreen.tsx",
+      "size_bytes": 570
+    },
+    {
+      "path": "frontend/components/ui/ScrollToTop.tsx",
+      "size_bytes": 830
+    },
+    {
+      "path": "frontend/components/ui/SessionTimeoutWarning.tsx",
+      "size_bytes": 1085
+    },
+    {
+      "path": "frontend/components/ui/SkeletonCard.tsx",
+      "size_bytes": 2931
+    },
+    {
+      "path": "frontend/components/ui/StatCard.tsx",
+      "size_bytes": 1229
+    },
+    {
+      "path": "frontend/components/ui/StatusBadge.tsx",
+      "size_bytes": 1378
+    },
+    {
+      "path": "frontend/components/ui/SwipeableDrawer.tsx",
+      "size_bytes": 2674
+    },
+    {
+      "path": "frontend/components/ui/TabBar.tsx",
+      "size_bytes": 309
+    },
+    {
+      "path": "frontend/components/ui/ThemeToggle.tsx",
+      "size_bytes": 3468
+    },
+    {
+      "path": "frontend/components/ui/ToastContainer.tsx",
+      "size_bytes": 900
+    },
+    {
+      "path": "frontend/components/ui/Toggle.tsx",
+      "size_bytes": 139
+    },
+    {
+      "path": "frontend/components/ui/index.ts",
+      "size_bytes": 830
+    },
+    {
+      "path": "frontend/constants/breadcrumbs.ts",
+      "size_bytes": 1934
+    },
+    {
+      "path": "frontend/constants/extracted.ts",
+      "size_bytes": 1665
+    },
+    {
+      "path": "frontend/constants/index.ts",
+      "size_bytes": 23271
+    },
+    {
+      "path": "frontend/constants/translations.ts",
+      "size_bytes": 11526
+    },
+    {
+      "path": "frontend/contexts/AuthContext.tsx",
+      "size_bytes": 4306
+    },
+    {
+      "path": "frontend/contexts/AuthProvider.tsx",
+      "size_bytes": 108
+    },
+    {
+      "path": "frontend/contexts/I18nContext.tsx",
+      "size_bytes": 1254
+    },
+    {
+      "path": "frontend/contexts/I18nProvider.tsx",
+      "size_bytes": 108
+    },
+    {
+      "path": "frontend/contexts/PrefsContext.tsx",
+      "size_bytes": 1335
+    },
+    {
+      "path": "frontend/contexts/PrefsProvider.tsx",
+      "size_bytes": 112
+    },
+    {
+      "path": "frontend/contexts/ThemeContext.tsx",
+      "size_bytes": 3027
+    },
+    {
+      "path": "frontend/cypress/e2e/auth.cy.ts",
+      "size_bytes": 1763
+    },
+    {
+      "path": "frontend/cypress/e2e/crud.cy.ts",
+      "size_bytes": 2504
+    },
+    {
+      "path": "frontend/cypress/e2e/fleet-operations.cy.ts",
+      "size_bytes": 3336
+    },
+    {
+      "path": "frontend/cypress/e2e/navigation.cy.ts",
+      "size_bytes": 3130
+    },
+    {
+      "path": "frontend/cypress/e2e/responsive-pwa.cy.ts",
+      "size_bytes": 3188
+    },
+    {
+      "path": "frontend/cypress/e2e/svg-provisioning.cy.ts",
+      "size_bytes": 15399
+    },
+    {
+      "path": "frontend/cypress/e2e/theme-i18n.cy.ts",
+      "size_bytes": 2925
+    },
+    {
+      "path": "frontend/cypress/e2e/vehicle-lifecycle.cy.ts",
+      "size_bytes": 11805
+    },
+    {
+      "path": "frontend/cypress/support/e2e.ts",
+      "size_bytes": 3387
+    },
+    {
+      "path": "frontend/cypress.config.ts",
+      "size_bytes": 536
+    },
+    {
+      "path": "frontend/hooks/index.tsx",
+      "size_bytes": 18852
+    },
+    {
+      "path": "frontend/hooks/useApiQuery.ts",
+      "size_bytes": 4529
+    },
+    {
+      "path": "frontend/hooks/useDebounce.ts",
+      "size_bytes": 839
+    },
+    {
+      "path": "frontend/hooks/useIntersectionObserver.ts",
+      "size_bytes": 999
+    },
+    {
+      "path": "frontend/hooks/usePWA.ts",
+      "size_bytes": 9161
+    },
+    {
+      "path": "frontend/hooks/usePerformance.ts",
+      "size_bytes": 3360
+    },
+    {
+      "path": "frontend/hooks/useVirtualScroll.ts",
+      "size_bytes": 2182
+    },
+    {
+      "path": "frontend/index.html",
+      "size_bytes": 1919
+    },
+    {
+      "path": "frontend/main.tsx",
+      "size_bytes": 1698
+    },
+    {
+      "path": "frontend/nginx.conf",
+      "size_bytes": 3826
+    },
+    {
+      "path": "frontend/package.json",
+      "size_bytes": 1914
+    },
+    {
+      "path": "frontend/pages/assets/DevicesPage.tsx",
+      "size_bytes": 47481
+    },
+    {
+      "path": "frontend/pages/assets/DiagnosticsPage.tsx",
+      "size_bytes": 46087
+    },
+    {
+      "path": "frontend/pages/assets/FleetLifecyclePage.tsx",
+      "size_bytes": 13047
+    },
+    {
+      "path": "frontend/pages/assets/FuelPage.tsx",
+      "size_bytes": 11263
+    },
+    {
+      "path": "frontend/pages/assets/MaintenancePage.tsx",
+      "size_bytes": 14671
+    },
+    {
+      "path": "frontend/pages/assets/OtaPage.tsx",
+      "size_bytes": 44932
+    },
+    {
+      "path": "frontend/pages/assets/PartsMarketplacePage.tsx",
+      "size_bytes": 12989
+    },
+    {
+      "path": "frontend/pages/energy/ChargingStationsPage.tsx",
+      "size_bytes": 12964
+    },
+    {
+      "path": "frontend/pages/energy/ColdchainPage.tsx",
+      "size_bytes": 13003
+    },
+    {
+      "path": "frontend/pages/energy/DepotChargingPage.tsx",
+      "size_bytes": 12960
+    },
+    {
+      "path": "frontend/pages/energy/ElectrificationPage.tsx",
+      "size_bytes": 13025
+    },
+    {
+      "path": "frontend/pages/energy/EvPage.tsx",
+      "size_bytes": 12972
+    },
+    {
+      "path": "frontend/pages/energy/LStopTransitPage.tsx",
+      "size_bytes": 13026
+    },
+    {
+      "path": "frontend/pages/energy/V2gPage.tsx",
+      "size_bytes": 13838
+    },
+    {
+      "path": "frontend/pages/fleet/BusPage.tsx",
+      "size_bytes": 37666
+    },
+    {
+      "path": "frontend/pages/fleet/DriversPage.tsx",
+      "size_bytes": 13966
+    },
+    {
+      "path": "frontend/pages/fleet/FleetsPage.tsx",
+      "size_bytes": 12365
+    },
+    {
+      "path": "frontend/pages/fleet/OperationsPage.tsx",
+      "size_bytes": 16154
+    },
+    {
+      "path": "frontend/pages/fleet/OverviewPage.tsx",
+      "size_bytes": 11959
+    },
+    {
+      "path": "frontend/pages/fleet/SurgePricingPage.tsx",
+      "size_bytes": 15284
+    },
+    {
+      "path": "frontend/pages/fleet/TankerPage.tsx",
+      "size_bytes": 43188
+    },
+    {
+      "path": "frontend/pages/fleet/TaxiPage.tsx",
+      "size_bytes": 31669
+    },
+    {
+      "path": "frontend/pages/fleet/TripsPage.tsx",
+      "size_bytes": 13983
+    },
+    {
+      "path": "frontend/pages/fleet/VehicleLifecyclePage.tsx",
+      "size_bytes": 72097
+    },
+    {
+      "path": "frontend/pages/fleet/VehiclesPage.tsx",
+      "size_bytes": 16473
+    },
+    {
+      "path": "frontend/pages/intelligence/AftersalesOEMPage.tsx",
+      "size_bytes": 14612
+    },
+    {
+      "path": "frontend/pages/intelligence/AgenticAIPage.tsx",
+      "size_bytes": 13022
+    },
+    {
+      "path": "frontend/pages/intelligence/AnalyticsPage.tsx",
+      "size_bytes": 16758
+    },
+    {
+      "path": "frontend/pages/intelligence/AnomalyDetectionPage.tsx",
+      "size_bytes": 12981
+    },
+    {
+      "path": "frontend/pages/intelligence/BlockchainPage.tsx",
+      "size_bytes": 13802
+    },
+    {
+      "path": "frontend/pages/intelligence/DataMonetizationPage.tsx",
+      "size_bytes": 14659
+    },
+    {
+      "path": "frontend/pages/intelligence/DriverScoringPage.tsx",
+      "size_bytes": 29457
+    },
+    {
+      "path": "frontend/pages/intelligence/ExecutivePage.tsx",
+      "size_bytes": 13009
+    },
+    {
+      "path": "frontend/pages/intelligence/FleetDwvsDashboardPage.tsx",
+      "size_bytes": 44220
+    },
+    {
+      "path": "frontend/pages/intelligence/GeofenceAutomationPage.tsx",
+      "size_bytes": 33360
+    },
+    {
+      "path": "frontend/pages/intelligence/PredictiveMaintenancePage.tsx",
+      "size_bytes": 26157
+    },
+    {
+      "path": "frontend/pages/intelligence/ReportsPage.tsx",
+      "size_bytes": 12984
+    },
+    {
+      "path": "frontend/pages/intelligence/RoadIntelligencePage.tsx",
+      "size_bytes": 13015
+    },
+    {
+      "path": "frontend/pages/people/AuditLogPage.tsx",
+      "size_bytes": 12933
+    },
+    {
+      "path": "frontend/pages/people/CustomerPortalPage.tsx",
+      "size_bytes": 13007
+    },
+    {
+      "path": "frontend/pages/people/DriverIncentivesPage.tsx",
+      "size_bytes": 13030
+    },
+    {
+      "path": "frontend/pages/people/DriverMobilePage.tsx",
+      "size_bytes": 13512
+    },
+    {
+      "path": "frontend/pages/people/FinancePage.tsx",
+      "size_bytes": 13042
+    },
+    {
+      "path": "frontend/pages/people/LoginScreen.tsx",
+      "size_bytes": 13799
+    },
+    {
+      "path": "frontend/pages/people/NotificationsPage.tsx",
+      "size_bytes": 12972
+    },
+    {
+      "path": "frontend/pages/people/PreferencesPage.tsx",
+      "size_bytes": 13003
+    },
+    {
+      "path": "frontend/pages/people/UsersPage.tsx",
+      "size_bytes": 12891
+    },
+    {
+      "path": "frontend/pages/people/WhiteLabelPage.tsx",
+      "size_bytes": 12966
+    },
+    {
+      "path": "frontend/pages/platform/BillingPage.tsx",
+      "size_bytes": 18045
+    },
+    {
+      "path": "frontend/pages/platform/IntegrationHubPage.tsx",
+      "size_bytes": 54128
+    },
+    {
+      "path": "frontend/pages/platform/MultiTenantPage.tsx",
+      "size_bytes": 24640
+    },
+    {
+      "path": "frontend/pages/platform/OnboardingWizardPage.tsx",
+      "size_bytes": 22293
+    },
+    {
+      "path": "frontend/pages/safety/AlertsPage.tsx",
+      "size_bytes": 14091
+    },
+    {
+      "path": "frontend/pages/safety/CompliancePage.tsx",
+      "size_bytes": 13877
+    },
+    {
+      "path": "frontend/pages/safety/CrossBorderPage.tsx",
+      "size_bytes": 13053
+    },
+    {
+      "path": "frontend/pages/safety/FatigueRiskPage.tsx",
+      "size_bytes": 13030
+    },
+    {
+      "path": "frontend/pages/safety/InsurancePage.tsx",
+      "size_bytes": 24902
+    },
+    {
+      "path": "frontend/pages/safety/PermitsPage.tsx",
+      "size_bytes": 13970
+    },
+    {
+      "path": "frontend/pages/safety/SafetyPage.tsx",
+      "size_bytes": 12817
+    },
+    {
+      "path": "frontend/postcss.config.js",
+      "size_bytes": 533
+    },
+    {
+      "path": "frontend/public/icons/apple-touch-icon.png",
+      "size_bytes": 8032
+    },
+    {
+      "path": "frontend/public/icons/favicon-16.png",
+      "size_bytes": 534
+    },
+    {
+      "path": "frontend/public/icons/favicon-32.png",
+      "size_bytes": 1132
+    },
+    {
+      "path": "frontend/public/icons/favicon.svg",
+      "size_bytes": 1020
+    },
+    {
+      "path": "frontend/public/icons/icon-128.png",
+      "size_bytes": 5435
+    },
+    {
+      "path": "frontend/public/icons/icon-144.png",
+      "size_bytes": 6261
+    },
+    {
+      "path": "frontend/public/icons/icon-152.png",
+      "size_bytes": 6667
+    },
+    {
+      "path": "frontend/public/icons/icon-192-maskable.png",
+      "size_bytes": 5899
+    },
+    {
+      "path": "frontend/public/icons/icon-192.png",
+      "size_bytes": 8445
+    },
+    {
+      "path": "frontend/public/icons/icon-384.png",
+      "size_bytes": 19421
+    },
+    {
+      "path": "frontend/public/icons/icon-512-maskable.png",
+      "size_bytes": 19000
+    },
+    {
+      "path": "frontend/public/icons/icon-512.png",
+      "size_bytes": 27738
+    },
+    {
+      "path": "frontend/public/icons/icon-72.png",
+      "size_bytes": 2934
+    },
+    {
+      "path": "frontend/public/icons/icon-96.png",
+      "size_bytes": 3976
+    },
+    {
+      "path": "frontend/public/manifest.json",
+      "size_bytes": 2419
+    },
+    {
+      "path": "frontend/public/offline.html",
+      "size_bytes": 2818
+    },
+    {
+      "path": "frontend/public/sw.js",
+      "size_bytes": 13134
+    },
+    {
+      "path": "frontend/pwa/register.ts",
+      "size_bytes": 4339
+    },
+    {
+      "path": "frontend/router/LazyRoutes.tsx",
+      "size_bytes": 15037
+    },
+    {
+      "path": "frontend/scripts/analyze-bundle.sh",
+      "size_bytes": 4216
+    },
+    {
+      "path": "frontend/socket/FleetSocket.ts",
+      "size_bytes": 18386
+    },
+    {
+      "path": "frontend/socket/index.tsx",
+      "size_bytes": 9902
+    },
+    {
+      "path": "frontend/src/pages/NetworkSecurityPage.tsx",
+      "size_bytes": 15932
+    },
+    {
+      "path": "frontend/src/pages/SensorsPage.tsx",
+      "size_bytes": 16982
+    },
+    {
+      "path": "frontend/stories/ActivityFeed.stories.tsx",
+      "size_bytes": 2216
+    },
+    {
+      "path": "frontend/stories/AlertRow.stories.tsx",
+      "size_bytes": 4694
+    },
+    {
+      "path": "frontend/stories/Badge.stories.tsx",
+      "size_bytes": 1459
+    },
+    {
+      "path": "frontend/stories/Breadcrumbs.stories.tsx",
+      "size_bytes": 1257
+    },
+    {
+      "path": "frontend/stories/Button.stories.tsx",
+      "size_bytes": 2142
+    },
+    {
+      "path": "frontend/stories/ChartCard.stories.tsx",
+      "size_bytes": 1445
+    },
+    {
+      "path": "frontend/stories/ConnectionStatus.stories.tsx",
+      "size_bytes": 1186
+    },
+    {
+      "path": "frontend/stories/DataTable.stories.tsx",
+      "size_bytes": 4334
+    },
+    {
+      "path": "frontend/stories/DesignTokens.stories.tsx",
+      "size_bytes": 6160
+    },
+    {
+      "path": "frontend/stories/EmptyState.stories.tsx",
+      "size_bytes": 2165
+    },
+    {
+      "path": "frontend/stories/ExportToolbar.stories.tsx",
+      "size_bytes": 978
+    },
+    {
+      "path": "frontend/stories/FormField.stories.tsx",
+      "size_bytes": 4885
+    },
+    {
+      "path": "frontend/stories/GaugeChart.stories.tsx",
+      "size_bytes": 1809
+    },
+    {
+      "path": "frontend/stories/InfoCard.stories.tsx",
+      "size_bytes": 1693
+    },
+    {
+      "path": "frontend/stories/Loading.stories.tsx",
+      "size_bytes": 1188
+    },
+    {
+      "path": "frontend/stories/Modal.stories.tsx",
+      "size_bytes": 1839
+    },
+    {
+      "path": "frontend/stories/PageHeader.stories.tsx",
+      "size_bytes": 1450
+    },
+    {
+      "path": "frontend/stories/Pagination.stories.tsx",
+      "size_bytes": 2180
+    },
+    {
+      "path": "frontend/stories/ProgressBar.stories.tsx",
+      "size_bytes": 1705
+    },
+    {
+      "path": "frontend/stories/SkeletonCard.stories.tsx",
+      "size_bytes": 3289
+    },
+    {
+      "path": "frontend/stories/StatCard.stories.tsx",
+      "size_bytes": 2645
+    },
+    {
+      "path": "frontend/stories/StatusBadge.stories.tsx",
+      "size_bytes": 2111
+    },
+    {
+      "path": "frontend/stories/TabBar.stories.tsx",
+      "size_bytes": 1406
+    },
+    {
+      "path": "frontend/stories/Toggle.stories.tsx",
+      "size_bytes": 1325
+    },
+    {
+      "path": "frontend/stories/TrendCard.stories.tsx",
+      "size_bytes": 1837
+    },
+    {
+      "path": "frontend/styles/dashboard.css",
+      "size_bytes": 49432
+    },
+    {
+      "path": "frontend/styles/index.css",
+      "size_bytes": 10385
+    },
+    {
+      "path": "frontend/styles/light-theme.css",
+      "size_bytes": 4359
+    },
+    {
+      "path": "frontend/styles/mobile-ux.css",
+      "size_bytes": 12562
+    },
+    {
+      "path": "frontend/styles/performance.css",
+      "size_bytes": 9313
+    },
+    {
+      "path": "frontend/styles/rtl.css",
+      "size_bytes": 9685
+    },
+    {
+      "path": "frontend/tailwind.config.ts",
+      "size_bytes": 6623
+    },
+    {
+      "path": "frontend/test/api/clients.test.ts",
+      "size_bytes": 4658
+    },
+    {
+      "path": "frontend/test/components/charts.test.tsx",
+      "size_bytes": 2688
+    },
+    {
+      "path": "frontend/test/components/data.test.tsx",
+      "size_bytes": 2258
+    },
+    {
+      "path": "frontend/test/components/forms.test.tsx",
+      "size_bytes": 5721
+    },
+    {
+      "path": "frontend/test/components/layout.test.tsx",
+      "size_bytes": 1661
+    },
+    {
+      "path": "frontend/test/components/themeToggle.test.tsx",
+      "size_bytes": 1589
+    },
+    {
+      "path": "frontend/test/components/ui.test.tsx",
+      "size_bytes": 2420
+    },
+    {
+      "path": "frontend/test/contexts/auth.test.tsx",
+      "size_bytes": 5264
+    },
+    {
+      "path": "frontend/test/contexts/i18n.test.tsx",
+      "size_bytes": 3940
+    },
+    {
+      "path": "frontend/test/contexts/prefs.test.tsx",
+      "size_bytes": 3610
+    },
+    {
+      "path": "frontend/test/contexts/theme.test.tsx",
+      "size_bytes": 4519
+    },
+    {
+      "path": "frontend/test/hooks/useApi.test.ts",
+      "size_bytes": 6527
+    },
+    {
+      "path": "frontend/test/hooks/useDebounce.test.ts",
+      "size_bytes": 3214
+    },
+    {
+      "path": "frontend/test/hooks/usePWA.test.ts",
+      "size_bytes": 2869
+    },
+    {
+      "path": "frontend/test/hooks/useVirtualScroll.test.ts",
+      "size_bytes": 2370
+    },
+    {
+      "path": "frontend/test/integration/app.test.tsx",
+      "size_bytes": 1659
+    },
+    {
+      "path": "frontend/test/integration/platform.test.tsx",
+      "size_bytes": 6090
+    },
+    {
+      "path": "frontend/test/pages/assets-provisioning.test.tsx",
+      "size_bytes": 19923
+    },
+    {
+      "path": "frontend/test/pages/assets.test.tsx",
+      "size_bytes": 6618
+    },
+    {
+      "path": "frontend/test/pages/energy.test.tsx",
+      "size_bytes": 6646
+    },
+    {
+      "path": "frontend/test/pages/fleet.test.tsx",
+      "size_bytes": 9199
+    },
+    {
+      "path": "frontend/test/pages/intelligence.test.tsx",
+      "size_bytes": 11618
+    },
+    {
+      "path": "frontend/test/pages/people.test.tsx",
+      "size_bytes": 9448
+    },
+    {
+      "path": "frontend/test/pages/platform.test.tsx",
+      "size_bytes": 3931
+    },
+    {
+      "path": "frontend/test/pages/safety.test.tsx",
+      "size_bytes": 5656
+    },
+    {
+      "path": "frontend/test/pages/vehicle-lifecycle.test.tsx",
+      "size_bytes": 18109
+    },
+    {
+      "path": "frontend/test/setup.ts",
+      "size_bytes": 4810
+    },
+    {
+      "path": "frontend/test/utils/utils.test.ts",
+      "size_bytes": 1896
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "size_bytes": 1297
+    },
+    {
+      "path": "frontend/types/globals.d.ts",
+      "size_bytes": 1018
+    },
+    {
+      "path": "frontend/types/index.ts",
+      "size_bytes": 6737
+    },
+    {
+      "path": "frontend/utils/errorTracker.ts",
+      "size_bytes": 6507
+    },
+    {
+      "path": "frontend/utils/index.ts",
+      "size_bytes": 5959
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "size_bytes": 5507
+    },
+    {
+      "path": "frontend/vitest.config.ts",
+      "size_bytes": 612
+    },
+    {
+      "path": "load-tests/api-load.js",
+      "size_bytes": 11976
+    },
+    {
+      "path": "load-tests/run.sh",
+      "size_bytes": 3668
+    },
+    {
+      "path": "load-tests/ws-load.js",
+      "size_bytes": 2992
+    },
+    {
+      "path": "monitoring/grafana/dashboards/fleet-operations.json",
+      "size_bytes": 3880
+    },
+    {
+      "path": "monitoring/grafana/provisioning/dashboards/default.yml",
+      "size_bytes": 232
+    },
+    {
+      "path": "monitoring/grafana/provisioning/datasources/prometheus.yml",
+      "size_bytes": 159
+    },
+    {
+      "path": "monitoring/prometheus/prometheus.yml",
+      "size_bytes": 779
+    },
+    {
+      "path": "svg-agents/config/blueedge.yaml",
+      "size_bytes": 2929
+    },
+    {
+      "path": "svg-agents/config/sensors.yaml",
+      "size_bytes": 4122
+    },
+    {
+      "path": "svg-agents/hasi-bridge/hasi_bridge.py",
+      "size_bytes": 18804
+    },
+    {
+      "path": "svg-agents/install.sh",
+      "size_bytes": 6167
+    },
+    {
+      "path": "svg-agents/sensor-collector/sensor_collector.py",
+      "size_bytes": 18571
+    },
+    {
+      "path": "svg-agents/systemd/blueedge-hasi-bridge.service",
+      "size_bytes": 1327
+    },
+    {
+      "path": "svg-agents/systemd/blueedge-sensor-collector.service",
+      "size_bytes": 1437
+    }
+  ],
+  "inventory_result": "PASS",
+  "notes": []
+}

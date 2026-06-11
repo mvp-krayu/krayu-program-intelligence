@@ -1,0 +1,11 @@
+import { registerAs } from '@nestjs/config';
+
+export const redisConfig = registerAs('redis', () => ({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
+  password: process.env.REDIS_PASSWORD || undefined,
+  db: parseInt(process.env.REDIS_DB ?? '0', 10),
+  keyPrefix: process.env.REDIS_KEY_PREFIX || 'blueedge:',
+  ttl: parseInt(process.env.REDIS_DEFAULT_TTL ?? '300', 10), // 5 minutes default
+  maxRetriesPerRequest: 3,
+}));

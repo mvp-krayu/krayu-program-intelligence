@@ -1,0 +1,867 @@
+{
+  "contract_id": "PI.SQO.PROPOSITION-REVIEW-WORKFLOW.01",
+  "status": "COMPLETE",
+  "total_propositions": 85,
+  "flagged_count": 14,
+  "dispositions": {
+    "SP-blueedge-0001": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999294+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0002": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999502+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0003": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999557+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0004": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999605+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0005": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999652+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0006": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999696+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0007": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999740+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0008": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999781+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0009": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999823+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0010": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999865+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0011": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999907+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0012": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999948+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0013": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:33.999991+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0014": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:34.000149+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0015": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:34.000192+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0016": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.85,
+      "reviewed_at": "2026-05-23T11:11:34.000235+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0017": {
+      "disposition": "ARBITRATED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "reviewed_at": "2026-05-23T11:12:28.441234+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Arbitration: DOMAIN-17 contestation upheld \u2014 2 DERIVED components with zero direct evidence is insufficient for domain-level grounding. Claim does not meet structural threshold."
+    },
+    "SP-blueedge-0018": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000277+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0019": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000318+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0020": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000359+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0021": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000401+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0022": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000441+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0023": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000487+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0024": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000539+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0025": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000581+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0026": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000624+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0027": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000667+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0028": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000709+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0029": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000753+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0030": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.000796+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0031": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.001009+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0032": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.001059+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0033": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.001105+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0034": {
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:11:40.898625+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor \u2014 SDC layer extraction artifact, not a semantic proposition"
+    },
+    "SP-blueedge-0035": {
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:11:40.936269+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor \u2014 SDC layer extraction artifact, not a semantic proposition"
+    },
+    "SP-blueedge-0036": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.001150+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0037": {
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:11:40.973201+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor \u2014 SDC layer extraction artifact, not a semantic proposition"
+    },
+    "SP-blueedge-0038": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.82,
+      "reviewed_at": "2026-05-23T11:11:34.001203+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0039": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "reviewed_at": "2026-05-23T11:11:53.468010+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability \u2014 DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    "SP-blueedge-0040": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "reviewed_at": "2026-05-23T11:11:53.507439+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability \u2014 DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    "SP-blueedge-0041": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.55,
+      "reviewed_at": "2026-05-23T11:11:53.544233+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability \u2014 DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    "SP-blueedge-0042": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001250+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0043": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001294+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0044": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001339+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0045": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001389+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0046": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001433+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0047": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001484+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0048": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001528+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0049": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001572+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0050": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001620+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0051": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001664+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0052": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001731+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0053": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001784+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0054": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001830+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0055": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001876+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0056": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.001922+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0057": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.65,
+      "reviewed_at": "2026-05-23T11:11:34.001967+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0058": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002017+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0059": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002065+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0060": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002110+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0061": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002156+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0062": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002201+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0063": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002251+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0064": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002295+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0065": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002344+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0066": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DIRECT_EVIDENCE",
+      "confidence": 0.8,
+      "reviewed_at": "2026-05-23T11:11:34.002396+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0067": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002479+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0068": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002524+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0069": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002565+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0070": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002605+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0071": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002645+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0072": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002686+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0073": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002729+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0074": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002769+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0075": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002809+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0076": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002850+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0077": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002890+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0078": {
+      "disposition": "ACCEPTED",
+      "flagged": false,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.6,
+      "reviewed_at": "2026-05-23T11:11:34.002930+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Batch accepted \u2014 not flagged in review queue"
+    },
+    "SP-blueedge-0079": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.725943+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0080": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.763494+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0081": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.801362+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0082": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.838418+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0083": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.875161+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0084": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.912616+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    },
+    "SP-blueedge-0085": {
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "derivation_tier": "DERIVED",
+      "confidence": 0.5,
+      "reviewed_at": "2026-05-23T11:12:06.949693+00:00",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation \u2014 multi-context components are genuine findings"
+    }
+  },
+  "generated_at": "2026-05-23T11:11:33.999003+00:00",
+  "completed_at": "2026-05-23T11:12:34.204334+00:00",
+  "completed_by": "operator:khorrix",
+  "summary": {
+    "accepted": 71,
+    "rejected": 0,
+    "contested": 0,
+    "arbitrated": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_12_activation_projection",
+  "checkpoint_index": 12,
+  "semantic_phase": "STABILIZATION",
+  "pipeline_phase": "Phase 6+7 \u2014 75.x Activation + 41.x Projection",
+  "timestamp": "2026-05-23T10:01:56.201Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_13_vault_construction",
+  "events_since_predecessor": 49,
+  "state_snapshot": {}
+}

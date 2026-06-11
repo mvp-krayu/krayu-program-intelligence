@@ -1,0 +1,243 @@
+/* ══════════════════════════════════════════════════════════════
+   Blue Edge Fleet Management — RTL Support (rtl.css)
+   v3.21.0 · Arabic (ar) & Hebrew (he) right-to-left layout
+   Applied when html[dir="rtl"] or html[lang="ar"]
+   ══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   1. GLOBAL RTL OVERRIDES
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] body {
+  font-family: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', var(--be-font-sans);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. LAYOUT — Sidebar flips to right
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .be-sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--be-border);
+}
+
+[dir="rtl"] .be-main {
+  margin-left: 0;
+  margin-right: var(--be-sidebar-w);
+}
+
+[dir="rtl"] .be-sidebar.collapsed + .be-main,
+[dir="rtl"] .be-main.sidebar-collapsed {
+  margin-left: 0;
+  margin-right: var(--be-sidebar-collapsed);
+}
+
+/* ── Sidebar items — active indicator flips ───────────────── */
+[dir="rtl"] .sidebar-item {
+  padding: 8px 20px;
+}
+
+[dir="rtl"] .sidebar-item.active::before {
+  left: auto;
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+[dir="rtl"] .sidebar-item .item-badge {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. FLEXBOX & GRID DIRECTION
+   ══════════════════════════════════════════════════════════════ */
+/* Auto-flip flex rows */
+[dir="rtl"] .be-topbar,
+[dir="rtl"] .chart-header,
+[dir="rtl"] .pagination,
+[dir="rtl"] .alert-banner,
+[dir="rtl"] .connection-status,
+[dir="rtl"] .activity-item,
+[dir="rtl"] .sidebar-logo {
+  flex-direction: row-reverse;
+}
+
+/* Tables — align text */
+[dir="rtl"] .data-table thead th,
+[dir="rtl"] .be-table thead th {
+  text-align: right;
+}
+
+[dir="rtl"] .data-table tbody td,
+[dir="rtl"] .be-table tbody td {
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. MARGINS & PADDINGS FLIP
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .be-card-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stat-card .stat-sparkline {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .stat-card::before {
+  /* Gradient stays the same — visual accent */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. MAP OVERLAYS
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .map-overlay-panel {
+  right: auto;
+  left: 12px;
+}
+
+[dir="rtl"] .map-vehicle-count {
+  left: auto;
+  right: 12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. FORM ELEMENTS
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .be-input,
+[dir="rtl"] .be-select {
+  text-align: right;
+}
+
+[dir="rtl"] .be-select {
+  background-position: left 10px center;
+  padding-right: 12px;
+  padding-left: 28px;
+}
+
+[dir="rtl"] .be-label {
+  text-align: right;
+}
+
+/* Search input */
+[dir="rtl"] .command-palette-input {
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7. ICONS — Flip directional icons
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .icon-arrow-right,
+[dir="rtl"] .icon-chevron-right,
+[dir="rtl"] .icon-arrow-left,
+[dir="rtl"] .icon-chevron-left {
+  transform: scaleX(-1);
+}
+
+/* Breadcrumb separator flips */
+[dir="rtl"] .breadcrumb-separator {
+  transform: scaleX(-1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. ANIMATIONS — Flip slide directions
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .animate-slide-left {
+  animation: slideInRight 0.25s var(--be-ease);
+}
+
+[dir="rtl"] .animate-slide-right {
+  animation: slideInLeft 0.25s var(--be-ease);
+}
+
+/* Toast appears from left in RTL */
+[dir="rtl"] .toast-container {
+  right: auto;
+  left: 16px;
+}
+
+[dir="rtl"] .toast {
+  animation: slideInLeft 0.3s var(--be-ease);
+}
+
+[dir="rtl"] .toast.success { border-left: none; border-right: 3px solid var(--be-success); }
+[dir="rtl"] .toast.warning { border-left: none; border-right: 3px solid var(--be-warning); }
+[dir="rtl"] .toast.error   { border-left: none; border-right: 3px solid var(--be-danger); }
+[dir="rtl"] .toast.info    { border-left: none; border-right: 3px solid var(--be-info); }
+
+/* ══════════════════════════════════════════════════════════════
+   9. MOBILE — Swipe drawer from right
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  [dir="rtl"] .be-sidebar.mobile-open {
+    transform: translateX(0);
+    right: 0;
+    left: auto;
+  }
+
+  [dir="rtl"] .be-sidebar:not(.mobile-open) {
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] .swipeable-drawer .drawer-content {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] .swipeable-drawer.open .drawer-content {
+    transform: translateX(0);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   10. NUMBERS & MONOSPACE — Always LTR
+   ══════════════════════════════════════════════════════════════ */
+[dir="rtl"] .stat-card .stat-value,
+[dir="rtl"] .be-badge,
+[dir="rtl"] [class*="font-mono"],
+[dir="rtl"] .activity-time,
+[dir="rtl"] .command-result-item .shortcut,
+[dir="rtl"] code,
+[dir="rtl"] pre,
+[dir="rtl"] kbd {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+/* Phone numbers, dates, IPs — always LTR */
+[dir="rtl"] .ltr-content,
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="url"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11. ARABIC FONT LOADING
+   ══════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/ibmplexsansarabic/v12/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6Ys4.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/ibmplexsansarabic/v12/Qw3NZRtWPQCuHme67tEYUIx3Kh0PHR9N6YPy_eCiXQ.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFF;
+}

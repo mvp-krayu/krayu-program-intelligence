@@ -1,0 +1,25 @@
+// Extracted from dashboard.html
+export const PAGE_BREADCRUMBS = {
+  overview:['Home'],vehicles:['Fleet Operations','Vehicles'],drivers:['Fleet Operations','Drivers'],
+  trips:['Fleet Operations','Trips'],fleets:['Fleet Operations','Fleets'],operations:['Fleet Operations','Operations'],
+  tanker:['Industry Verticals','Tanker Ops'],bus:['Industry Verticals','Bus Transit'],
+  taxi:['Industry Verticals','Taxi / Ride-hail'],surge:['Industry Verticals','Surge Pricing'],
+  alerts:['Safety & Compliance','Alerts'],safety:['Safety & Compliance','Safety'],
+  compliance:['Safety & Compliance','Compliance'],permits:['Safety & Compliance','Permits'],
+  crossborder:['Safety & Compliance','Cross-Border'],fatigue:['Safety & Compliance','Fatigue Risk'],
+  maintenance:['Asset Management','Maintenance'],fuel:['Asset Management','Fuel'],
+  devices:['Asset Management','IoT Devices'],diagnostics:['Asset Management','Diagnostics'],
+  ota:['Asset Management','OTA Updates'],lifecycle:['Asset Management','Fleet Lifecycle'],
+  parts:['Asset Management','Parts Market'],ev:['EV & Energy','EV Management'],
+  v2g:['EV & Energy','V2G Energy'],electrification:['EV & Energy','Electrification'],
+  depot:['EV & Energy','Depot Charging'],charging:['EV & Energy','Charging Stations'],
+  coldchain:['EV & Energy','Cold Chain'],executive:['Intelligence','Executive'],
+  analytics:['Intelligence','Analytics'],anomaly:['Intelligence','Anomaly Detection'],
+  blockchain:['Intelligence','Blockchain'],reports:['Intelligence','Reports'],
+  users:['People & Access','Users'],incentives:['People & Access','Driver Incentives'],
+  drivermobile:['People & Access','Driver Mobile'],notifications:['People & Access','Notifications'],
+  customer:['People & Access','Customer Portal'],whitelabel:['People & Access','White Label'],
+  finance:['People & Access','Finance'],auditlog:['People & Access','Audit Log'],
+  preferences:['People & Access','Preferences'],
+};
+

@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+  "timestamp": "2026-05-25T07:56:59.330541+00:00",
+  "specimen_path": "PATH_A",
+  "enrichment_source": "DOMAIN_ID_CORRECTION_AND_EVIDENCE_REALIGNMENT",
+  "total_debt_items": 15,
+  "improved": 0,
+  "unchanged": 15,
+  "worsened": 0,
+  "blockers_resolved": 0,
+  "reducibility_distribution": {
+    "IRREDUCIBLE_STRUCTURAL_ABSENCE": 4,
+    "REDUCED_BY_ENRICHMENT": 8,
+    "REDUCIBLE_BY_EVIDENCE": 1,
+    "CONTINUITY_GAP": 2
+  },
+  "items": [
+    {
+      "blocker_id": "BLK-BE-001",
+      "domain_id": "DOMAIN-02",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-002",
+      "domain_id": "DOMAIN-03",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-003",
+      "domain_id": "DOMAIN-04",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-004",
+      "domain_id": "DOMAIN-05",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-005",
+      "domain_id": "DOMAIN-06",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-006",
+      "domain_id": "DOMAIN-07",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-007",
+      "domain_id": "DOMAIN-08",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-008",
+      "domain_id": "DOMAIN-09",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-009",
+      "domain_id": "DOMAIN-12",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-010",
+      "domain_id": "DOMAIN-13",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-011",
+      "domain_id": "DOMAIN-15",
+      "original_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "IRREDUCIBLE_STRUCTURAL_ABSENCE",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-012",
+      "domain_id": "DOMAIN-17",
+      "original_reducibility": "REDUCED_BY_ENRICHMENT",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCED_BY_ENRICHMENT",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-013",
+      "domain_id": "DOMAIN-11",
+      "original_reducibility": "REDUCIBLE_BY_EVIDENCE",
+      "severity": "HIGH",
+      "blocks_s_state": "S3",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "REDUCIBLE_BY_EVIDENCE",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-014",
+      "domain_id": "",
+      "original_reducibility": "CONTINUITY_GAP",
+      "severity": "MEDIUM",
+      "blocks_s_state": "none",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "CONTINUITY_GAP",
+      "evidence_change": "No enrichment evidence applicable"
+    },
+    {
+      "blocker_id": "BLK-BE-015",
+      "domain_id": "",
+      "original_reducibility": "CONTINUITY_GAP",
+      "severity": "MEDIUM",
+      "blocks_s_state": "none",
+      "enrichment_impact": "NOT_AFFECTED",
+      "post_enrichment_reducibility": "CONTINUITY_GAP",
+      "evidence_change": "No enrichment evidence applicable"
+    }
+  ]
+}

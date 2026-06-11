@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#06b6d4">
+  <title>Blue Edge Fleet — Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f172a; color: #e2e8f0; font-family: Inter, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+    .container { text-align: center; max-width: 480px; }
+    .icon { font-size: 64px; margin-bottom: 24px; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: #f1f5f9; }
+    p { font-size: 15px; color: #94a3b8; line-height: 1.6; margin-bottom: 24px; }
+    .status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; background: #f59e0b22; color: #f59e0b; font-weight: 600; font-size: 13px; margin-bottom: 24px; border: 1px solid #f59e0b44; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .features { text-align: left; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #334155; }
+    .features h3 { font-size: 14px; color: #06b6d4; margin-bottom: 12px; }
+    .features li { list-style: none; padding: 6px 0; font-size: 13px; color: #94a3b8; }
+    .features li::before { content: '✓'; color: #10b981; margin-right: 8px; font-weight: 700; }
+    button { padding: 12px 32px; border-radius: 8px; border: none; background: #06b6d4; color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #0891b2; }
+    .version { font-size: 11px; color: #475569; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🚛</div>
+    <h1>You're Offline</h1>
+    <div class="status"><div class="dot"></div> Waiting for connection</div>
+    <p>Blue Edge Fleet Management is currently unavailable. Your pending changes are safely queued and will automatically sync when you're back online.</p>
+    <div class="features">
+      <h3>Offline Capabilities Active:</h3>
+      <ul>
+        <li>Session blocks queued in IndexedDB</li>
+        <li>Insurance submissions saved locally</li>
+        <li>Cached fleet data available</li>
+        <li>Background sync registered</li>
+        <li>Push notifications still active</li>
+      </ul>
+    </div>
+    <button onclick="location.reload()">Try Again</button>
+    <div class="version">Blue Edge Fleet v3.20.0 • Service Worker Active</div>
+  </div>
+  <script>
+    window.addEventListener('online', () => { location.reload(); });
+  </script>
+</body>
+</html>

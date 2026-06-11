@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*":          ["./*"],
+      "@/pages/*":    ["./pages/*"],
+      "@/components/*": ["./components/*"],
+      "@/hooks/*":    ["./hooks/*"],
+      "@/api/*":      ["./api/*"],
+      "@/contexts/*": ["./contexts/*"],
+      "@/constants/*": ["./constants/*"],
+      "@/types/*":    ["./types/*"],
+      "@/utils/*":    ["./utils/*"],
+      "@/socket/*":   ["./socket/*"],
+      "@/router/*":   ["./router/*"],
+      "@/styles/*":   ["./styles/*"],
+      "@/pwa/*":      ["./pwa/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "storybook-static",
+    "coverage"
+  ]
+}

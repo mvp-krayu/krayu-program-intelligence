@@ -1,0 +1,151 @@
+{
+  "schema_version": "2.0",
+  "chronicle_id": "blueedge-run_blueedge_genesis_e2e_03-genesis",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "corridor_type": "FULL_COGNITIVE_GENESIS",
+  "status": "COMPLETE",
+  "created_at": "2026-05-23T10:01:54.404Z",
+  "semantic_rhythm": [
+    "DISCOVERY",
+    "EMERGENCE",
+    "FORMATION",
+    "TENSION",
+    "STRENGTHENING",
+    "STABILIZATION",
+    "QUALIFICATION",
+    "CONVERGENCE",
+    "PROJECTION"
+  ],
+  "events_emitted": 63,
+  "checkpoints_frozen": 19,
+  "hero_moments_discovered": 0,
+  "learning_events_captured": 0,
+  "ai_interventions_logged": 0,
+  "operator_decisions_recorded": 0,
+  "semantic_phases_reached": [
+    "DISCOVERY",
+    "EMERGENCE",
+    "PROJECTION",
+    "FORMATION",
+    "STABILIZATION"
+  ],
+  "pipeline_phases": {
+    "Phase 0L \u2014 Learning Registry Load": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-23T10:01:54.408Z",
+      "duration_ms": 1
+    },
+    "Phase 1  \u2014 Source Boundary": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-23T10:01:54.413Z",
+      "duration_ms": 4
+    },
+    "Phase 2  \u2014 Intake Verification": {
+      "status": "PASS",
+      "semantic_phase": "DISCOVERY",
+      "completed_at": "2026-05-23T10:01:54.695Z",
+      "duration_ms": 17
+    },
+    "Phase 3  \u2014 40.x Structural Verification": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-23T10:01:54.752Z",
+      "duration_ms": 1
+    },
+    "Phase 3.5 \u2014 Structural Relevance Classification": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-23T10:01:54.903Z",
+      "duration_ms": 149
+    },
+    "Phase 3.6 \u2014 Code-Graph Structural Enrichment": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-23T10:01:55.728Z",
+      "duration_ms": 824
+    },
+    "Phase 3.7 \u2014 Structural Centrality Derivation": {
+      "status": "PASS",
+      "semantic_phase": "EMERGENCE",
+      "completed_at": "2026-05-23T10:01:55.802Z",
+      "duration_ms": 72
+    },
+    "Phase 3.8 \u2014 ISIG Import Structure Intelligence": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:55.843Z",
+      "duration_ms": 39
+    },
+    "Phase 3.9 \u2014 DPSIG Topology Intelligence": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:55.877Z",
+      "duration_ms": 32
+    },
+    "Phase 3b \u2014 Semantic Derivation": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-23T10:01:55.878Z",
+      "duration_ms": 0
+    },
+    "Phase 3c \u2014 Semantic Proposition Derivation": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-23T10:01:55.879Z",
+      "duration_ms": 0
+    },
+    "Phase 4  \u2014 CEU Grounding Verification": {
+      "status": "PASS",
+      "semantic_phase": "FORMATION",
+      "completed_at": "2026-05-23T10:01:55.993Z",
+      "duration_ms": 0
+    },
+    "Phase 5  \u2014 Build Binding Envelope": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-23T10:01:56.007Z",
+      "duration_ms": 12
+    },
+    "Phase 5b \u2014 CSR Semantic Topology": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-23T10:01:56.051Z",
+      "duration_ms": 42
+    },
+    "Phase 6+7 \u2014 75.x Activation + 41.x Projection": {
+      "status": "PASS",
+      "semantic_phase": "STABILIZATION",
+      "completed_at": "2026-05-23T10:01:56.200Z",
+      "duration_ms": 147
+    },
+    "Phase 8a \u2014 Vault Construction": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:56.205Z",
+      "duration_ms": 3
+    },
+    "Phase 8b \u2014 Vault Readiness": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:56.209Z",
+      "duration_ms": 2
+    },
+    "Phase 9  \u2014 Selector Update": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:56.210Z",
+      "duration_ms": 0
+    },
+    "Phase 10L \u2014 Learning Activation Manifest": {
+      "status": "PASS",
+      "semantic_phase": "PROJECTION",
+      "completed_at": "2026-05-23T10:01:56.212Z",
+      "duration_ms": 0
+    }
+  },
+  "completed_at": "2026-05-23T10:01:56.213Z",
+  "elapsed_ms": 1808
+}

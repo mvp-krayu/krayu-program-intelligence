@@ -1,0 +1,17 @@
+{
+  "manifest_type": "LEARNING_ACTIVATION_MANIFEST",
+  "contract": "PI.GOVERNANCE.LEARNING-CONSUMPTION-ARCHITECTURE.01",
+  "schema_version": "1.0.0",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:01:56Z",
+  "activation_summary": {
+    "total_activated": 0,
+    "consumers_with_learnings": 0,
+    "governance_model": "ADVISORY_NON_MUTATING"
+  },
+  "explainability": {
+    "question": "Which historical learnings influenced this run?",
+    "answer": "None \u2014 no CONSUMABLE learnings in registry at run time"
+  }
+}

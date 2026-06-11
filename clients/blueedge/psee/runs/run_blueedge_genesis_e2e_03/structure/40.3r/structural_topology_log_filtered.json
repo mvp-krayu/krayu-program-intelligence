@@ -1,0 +1,14 @@
+{
+  "contract_id": "PI.PATHA.STRUCTURAL-SUBSTRATE-MATURATION.01",
+  "derived_from": "40.3/structural_topology_log.json",
+  "filter": "PRIMARY_ONLY (both source and target CORE_SOURCE)",
+  "client_id": "blueedge",
+  "source_id": "source_01",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "stage": "40.3r",
+  "generated_at": "2026-05-23T10:01:54Z",
+  "total_edges": 0,
+  "edge_type_counts": {},
+  "source_total_edges": 934,
+  "edges": []
+}

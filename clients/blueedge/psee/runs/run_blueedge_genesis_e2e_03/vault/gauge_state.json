@@ -1,0 +1,56 @@
+{
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "schema_version": "1.0",
+  "stream": "PSEE-GAUGE.0",
+  "computed_by": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+  "computed_at": "2026-05-23T10:01:56.201969+00:00",
+  "source_artifact": "grounding_state_v3.json (clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json)",
+  "state": {
+    "execution_status": "NOT_EVALUATED",
+    "execution_layer_evaluated": false,
+    "psee_engine_invoked": false,
+    "execution_mode": "STRUCTURAL_ONLY",
+    "terminal_state_basis": "S-13 \u2014 derived per GAUGE.STATE.COMPUTATION.CONTRACT.01 \u00a73.2: coverage_percent=100.0 >= 90 AND reconstruction_state=PASS. execution_layer_evaluated=False \u2192 execution_status=NOT_EVALUATED."
+  },
+  "score": {
+    "canonical": 60,
+    "projected": 100,
+    "band_label": "CONDITIONAL",
+    "derivation": "0 + 35 + 25 = 60",
+    "components": {
+      "completion_points": 0,
+      "completion_status": "NOT_EVALUATED",
+      "coverage_points": 35,
+      "coverage_basis": "round(100.0 \u00d7 0.35) = 35",
+      "reconstruction_points": 25,
+      "reconstruction_basis": "state=PASS, 10/10 units \u2192 round(1.0 \u00d7 25) = 25"
+    }
+  },
+  "confidence": {
+    "lower": 60,
+    "upper": 100,
+    "status": "SPLIT_EXECUTION_NOT_EVALUATED",
+    "variance_basis": "Execution layer NOT evaluated: lower=60 (structural proof only), upper=100 (achievable if execution engine run)."
+  },
+  "dimensions": {
+    "DIM-01": {
+      "label": "Coverage",
+      "coverage_percent": 100.0,
+      "state": "COMPUTED",
+      "state_label": "FULL",
+      "required_units": 10,
+      "admissible_units": 10,
+      "source_artifact": "coverage_state.json",
+      "source_run_id": "run_blueedge_genesis_e2e_03"
+    },
+    "DIM-02": {
+      "label": "Reconstruction",
+      "state": "PASS",
+      "state_label": "PASS",
+      "validated_units": 10,
+      "total_units": 10
+    }
+  }
+}

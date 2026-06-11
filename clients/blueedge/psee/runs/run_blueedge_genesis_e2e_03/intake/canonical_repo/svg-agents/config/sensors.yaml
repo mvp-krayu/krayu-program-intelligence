@@ -1,0 +1,125 @@
+# ══════════════════════════════════════════════════════════════
+# Blue Edge SVG 2.0 — Sensor Configuration
+# Path: /opt/blueedge/config/sensors.yaml
+# Defines external sensors paired to this SVG gateway
+# ══════════════════════════════════════════════════════════════
+
+sensors:
+  # ── H2S Gas Leak Sensor ─────────────────────────────────
+  - id: "sensor-gas-h2s-001"
+    sensor_type: "gas_h2s"
+    protocol: "can_fd"
+    can_interface: "can0"
+    can_id: "0x1A0"
+    parse_format: "uint16_be"
+    parse_offset: 0
+    parse_scale: 0.1              # Raw * 0.1 = ppm
+    parse_bias: 0.0
+    unit: "ppm"
+    min_range: 0
+    max_range: 100
+    sampling_interval_ms: 500
+    calibration:
+      offset: -0.3
+      factor: 1.02
+    thresholds:
+      alert_high: 10              # ppm — OSHA TWA limit
+      critical_high: 20           # ppm — IDLH level, HAZMAT protocol
+      alert_low: null
+      critical_low: null
+    install_location: "Tank #1 Top Hatch"
+    hazmat_certified: true
+    atex_certified: true
+
+  # ── Oil Pressure Sensor ─────────────────────────────────
+  - id: "sensor-oil-pressure-001"
+    sensor_type: "oil_pressure"
+    protocol: "j1939"
+    can_interface: "can0"
+    can_id: "0x18FEF100"          # J1939 PGN 65265 (Engine Oil Pressure)
+    parse_format: "j1939_spn"
+    parse_offset: 3               # SPN 100, byte 4
+    parse_scale: 0.004            # Resolution: 4 kPa/bit → bar
+    parse_bias: 0.0
+    unit: "bar"
+    min_range: 0
+    max_range: 10
+    sampling_interval_ms: 1000
+    calibration:
+      offset: 0.0
+      factor: 1.0
+    thresholds:
+      alert_high: 5.5
+      critical_high: 7.0
+      alert_low: 0.5
+      critical_low: 0.2
+    install_location: "Engine Bay"
+    hazmat_certified: false
+    atex_certified: false
+
+  # ── Compressor Temperature (Modbus RTU) ─────────────────
+  - id: "sensor-compressor-temp-001"
+    sensor_type: "compressor_temperature"
+    protocol: "modbus_rtu"
+    serial_port: "/dev/ttyS1"
+    baudrate: 9600
+    modbus_address: 1
+    modbus_register: 100
+    register_count: 1             # 16-bit value
+    parse_scale: 0.1              # Register value / 10 = °C
+    unit: "°C"
+    min_range: -20
+    max_range: 150
+    sampling_interval_ms: 2000
+    calibration:
+      offset: -1.2
+      factor: 1.005
+    thresholds:
+      alert_high: 85
+      critical_high: 100
+      alert_low: -10
+      critical_low: -15
+    install_location: "Compressor Unit A"
+    hazmat_certified: false
+    atex_certified: true
+
+  # ── Tank Level (4-20mA Analog) ──────────────────────────
+  - id: "sensor-tank-level-001"
+    sensor_type: "tank_level"
+    protocol: "analog_4_20ma"
+    adc_channel: 0
+    adc_device: 0
+    unit: "%"
+    min_range: 0                  # 4mA = 0%
+    max_range: 100                # 20mA = 100%
+    sampling_interval_ms: 5000
+    calibration:
+      offset: 0.0
+      factor: 1.0
+    thresholds:
+      alert_high: 95
+      critical_high: 98
+      alert_low: 10
+      critical_low: 5
+    install_location: "Main Tank"
+    hazmat_certified: true
+    atex_certified: true
+
+  # ── Cargo Door Sensor (GPIO) ────────────────────────────
+  - id: "sensor-cargo-door-001"
+    sensor_type: "cargo_door"
+    protocol: "gpio"
+    gpio_pin: 17
+    unit: "state"                 # 0=closed, 1=open
+    min_range: 0
+    max_range: 1
+    sampling_interval_ms: 1000
+    calibration:
+      offset: 0
+      factor: 1
+    thresholds:
+      alert_high: null            # Alert handled by geofence logic
+      critical_high: null
+    install_location: "Rear Door"
+    hazmat_certified: false
+    atex_certified: false

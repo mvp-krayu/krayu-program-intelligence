@@ -1,0 +1,112 @@
+{
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "schema_version": "1.0",
+  "generated_date": "2026-05-23",
+  "source_artifact": "grounding_state_v3.json (clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json)",
+  "evidence_basis": "CEU grounding state v3 (run_blueedge_genesis_e2e_03 \u2014 grounding authority)",
+  "grounding_ratio": 1.0,
+  "grounding_summary": {
+    "total_ceu": 10,
+    "SOURCE_TRUTH": 10,
+    "DERIVED": 0,
+    "NON_AUTH": 0,
+    "OMITTED": 0,
+    "INVALID": 0,
+    "grounding_ratio": 1.0
+  },
+  "ceu_grounding": [
+    {
+      "ceu_id": "CEU-01",
+      "name": "BACKEND_SERVICE",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 3,
+      "zone_id": "PZ-001",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-02",
+      "name": "FRONTEND_APPLICATION",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 3,
+      "zone_id": "PZ-002",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-03",
+      "name": "DATA_LAYER",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 5,
+      "zone_id": "PZ-003",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-04",
+      "name": "API_LAYER",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 5,
+      "zone_id": "PZ-001",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-05",
+      "name": "AUTHENTICATION_SECURITY",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 5,
+      "zone_id": "PZ-001",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-06",
+      "name": "CONFIGURATION_INFRA",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 3,
+      "zone_id": "PZ-004",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-07",
+      "name": "MONITORING_OBSERVABILITY",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 3,
+      "zone_id": "PZ-001",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-08",
+      "name": "TESTING_VALIDATION",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 5,
+      "zone_id": "PZ-005",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-09",
+      "name": "EDGE_AGENTS",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 2,
+      "zone_id": "PZ-006",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    },
+    {
+      "ceu_id": "CEU-10",
+      "name": "CI_CD_PIPELINE",
+      "grounding_status": "SOURCE_TRUTH",
+      "activation_weight": 1.0,
+      "evidence_count": 2,
+      "zone_id": "PZ-007",
+      "grounding_source": "psee/ceu_grounding/registry/ceu_grounding_registry.json"
+    }
+  ],
+  "authority": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
+}

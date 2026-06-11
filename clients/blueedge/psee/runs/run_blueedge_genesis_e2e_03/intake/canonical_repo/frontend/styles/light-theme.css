@@ -1,0 +1,133 @@
+/* ══════════════════════════════════════════════════════════════
+   Blue Edge Fleet Management — Light Theme (light-theme.css)
+   v3.21.0 · Applied when [data-theme="light"] or .light class
+   ══════════════════════════════════════════════════════════════ */
+
+[data-theme="light"],
+.light {
+  color-scheme: light;
+
+  /* ── Background Layers ──────────────────────────────────── */
+  --be-bg-0:          #f3f6fb;
+  --be-bg-1:          #ffffff;
+  --be-bg-2:          #ffffff;
+  --be-bg-3:          #f8fafc;
+  --be-bg-4:          #f1f5f9;
+  --be-bg-overlay:    rgba(15, 23, 42, 0.4);
+
+  /* ── Border ─────────────────────────────────────────────── */
+  --be-border:        #e2e8f0;
+  --be-border-light:  #cbd5e1;
+  --be-border-focus:  rgba(6, 182, 212, 0.4);
+
+  /* ── Text ───────────────────────────────────────────────── */
+  --be-text-primary:   #0f172a;
+  --be-text-secondary: #475569;
+  --be-text-muted:     #94a3b8;
+  --be-text-disabled:  #cbd5e1;
+  --be-text-inverse:   #f8fafc;
+
+  /* ── Shadows (lighter, more spread) ─────────────────────── */
+  --be-shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --be-shadow-md:   0 4px 12px rgba(0, 0, 0, 0.08);
+  --be-shadow-lg:   0 10px 30px rgba(0, 0, 0, 0.1);
+  --be-shadow-glow: 0 0 20px rgba(6, 182, 212, 0.1);
+
+  /* ── Semantic (slightly adjusted for contrast) ──────────── */
+  --be-primary:       #0891b2;
+  --be-primary-hover: #06b6d4;
+  --be-primary-dim:   #0e7490;
+  --be-primary-glow:  rgba(6, 182, 212, 0.12);
+
+  --be-success-dim:   rgba(16, 185, 129, 0.10);
+  --be-warning-dim:   rgba(245, 158, 11, 0.10);
+  --be-danger-dim:    rgba(239, 68, 68, 0.10);
+  --be-info-dim:      rgba(59, 130, 246, 0.10);
+  --be-tanker-dim:    rgba(249, 115, 22, 0.08);
+  --be-bus-dim:       rgba(34, 197, 94, 0.08);
+  --be-taxi-dim:      rgba(234, 179, 8, 0.08);
+}
+
+/* ── Light-specific component overrides ───────────────────── */
+[data-theme="light"] body {
+  background: var(--be-bg-0);
+}
+
+/* Topbar glass effect — lighter */
+[data-theme="light"] .be-topbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(1.8);
+}
+
+/* Card subtle shadow in light */
+[data-theme="light"] .be-card,
+[data-theme="light"] .stat-card {
+  box-shadow: var(--be-shadow-sm);
+}
+
+[data-theme="light"] .be-card:hover,
+[data-theme="light"] .stat-card:hover {
+  box-shadow: var(--be-shadow-md);
+}
+
+/* Sidebar lighter */
+[data-theme="light"] .be-sidebar {
+  background: var(--be-bg-1);
+  box-shadow: 1px 0 3px rgba(0,0,0,0.04);
+}
+
+/* Map tiles — normal brightness in light mode */
+[data-theme="light"] .leaflet-container .leaflet-tile-pane {
+  filter: none;
+}
+
+/* Scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Code blocks */
+[data-theme="light"] pre {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+/* Table header */
+[data-theme="light"] .data-table thead th,
+[data-theme="light"] .be-table thead th {
+  background: #f8fafc;
+}
+
+/* Selection */
+[data-theme="light"] ::selection {
+  background: rgba(6, 182, 212, 0.2);
+  color: #0f172a;
+}
+
+/* Toast */
+[data-theme="light"] .toast {
+  background: white;
+  box-shadow: var(--be-shadow-md);
+}
+
+/* Command palette */
+[data-theme="light"] .command-palette {
+  background: white;
+  box-shadow: var(--be-shadow-lg);
+}
+
+/* Skeleton lighter */
+[data-theme="light"] .skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+}
+
+/* Chart.js tooltip override */
+[data-theme="light"] .chartjs-tooltip {
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}

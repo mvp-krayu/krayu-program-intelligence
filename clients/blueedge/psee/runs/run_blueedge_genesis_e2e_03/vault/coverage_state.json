@@ -1,0 +1,14 @@
+{
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "schema_version": "1.0",
+  "generated_date": "2026-05-23",
+  "source_artifact": "grounding_state_v3.json (clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/grounding_state_v3.json)",
+  "coverage_percent": 100.0,
+  "state": "COMPUTED",
+  "required_units": 10,
+  "admissible_units": 10,
+  "coverage_basis": "10/10 CEUs at SOURCE_TRUTH grounding. grounding_ratio=1.0 confirmed in grounding_state_v3.json.",
+  "authority": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
+}

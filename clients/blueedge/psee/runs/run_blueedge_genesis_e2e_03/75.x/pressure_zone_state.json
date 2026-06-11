@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "blueedge",
+  "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+  "source_files": [
+    "pressure_zone_set.md",
+    "pressure_zone_summary.md",
+    "pressure_zone_mapping.md"
+  ],
+  "total_zones": 1,
+  "zone_grouping_rule": "domain_id anchor; DOMAIN_ZONE type; alphabetical ordering by anchor_id (deterministic)",
+  "zone_class_rules": {
+    "COUPLING_ZONE": "PSIG-001 + PSIG-002",
+    "PROPAGATION_ZONE": "PSIG-002 + PSIG-004",
+    "RESPONSIBILITY_ZONE": "PSIG-001 + PSIG-004",
+    "FRAGMENTATION_ZONE": "PSIG-006 present",
+    "COMPOUND_ZONE": "condition_count >= 3"
+  },
+  "zones_by_type": {
+    "DOMAIN_ZONE": 1,
+    "CEU_ZONE": 0,
+    "NODE_ZONE": 0
+  },
+  "zones_by_class": {
+    "COMPOUND_ZONE": 1,
+    "COUPLING_ZONE": 0,
+    "PROPAGATION_ZONE": 0,
+    "RESPONSIBILITY_ZONE": 0,
+    "FRAGMENTATION_ZONE": 0
+  },
+  "zones": [
+    {
+      "zone_id": "PZ-001",
+      "zone_type": "DOMAIN_ZONE",
+      "zone_class": "COMPOUND_ZONE",
+      "class_rule_applied": "condition_count >= 3",
+      "anchor_id": "DOM-04",
+      "anchor_name": "backend_app_root",
+      "member_entities": [
+        {
+          "entity_id": "DOM-04",
+          "entity_type": "DOMAIN",
+          "candidate_id": "PC-001"
+        }
+      ],
+      "member_count": 1,
+      "aggregated_conditions": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "condition_count": 3,
+      "max_activation_count": 3,
+      "embedded_pair_rules": [
+        "COUPLING_ZONE",
+        "PROPAGATION_ZONE",
+        "RESPONSIBILITY_ZONE"
+      ],
+      "psig_006_flag": "NOT",
+      "condition_sources": [
+        {
+          "condition_id": "COND-PSIG-002-01",
+          "signal_id": "PSIG-002",
+          "attribution_role": "primary",
+          "entity_in_zone": "DOM-04"
+        }
+      ],
+      "evidence_trace": {"PSIG-002": "ST-031 (DOM-04 fan_out=2, ratio=2.87x) → PSIG-002=2.87 → COND-PSIG-002-01 HIGH primary → DOM-04 PC-001 → zone DOM-04"},
+      "validation_status": "VALID"
+    }
+  ],
+  "entity_zone_mapping": [
+    {
+      "entity_id": "DOM-04",
+      "entity_type": "DOMAIN",
+      "domain_id": "DOM-04",
+      "candidate_id": "PC-001",
+      "zone_id": "PZ-001",
+      "zone_class": "COMPOUND_ZONE"
+    }
+  ],
+  "domain_zone_mapping": [
+    {
+      "domain_id": "DOM-04",
+      "domain_name": "backend_app_root",
+      "zone_id": "PZ-001",
+      "zone_class": "COMPOUND_ZONE",
+      "condition_attribution_summary": "PSIG-002 direct primary"
+    },
+    {
+      "domain_id": "DOM-01",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-02",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-03",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-05",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-06",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-07",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-08",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-09",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-10",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-11",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-12",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    },
+    {
+      "domain_id": "DOM-13",
+      "domain_name": null,
+      "zone_id": null,
+      "note": "PSIG-006 ACTIVATED; activation_count=0; not a candidate; no zone assigned"
+    }
+  ],
+  "structural_blind_spot_entities": [
+    {"entity_id": "DOM-07", "entity_type": "DOMAIN", "psig_006": "ACTIVATED"},
+    {"entity_id": "DOM-10", "entity_type": "DOMAIN", "psig_006": "ACTIVATED"},
+    {"entity_id": "DOM-11", "entity_type": "DOMAIN", "psig_006": "ACTIVATED"},
+    {"entity_id": "DOM-12", "entity_type": "DOMAIN", "psig_006": "ACTIVATED"},
+    {"entity_id": "DOM-13", "entity_type": "DOMAIN", "psig_006": "ACTIVATED"}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "contract_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "specimen_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:27:31.534398+00:00",
+  "input_hash": "f5a96ce8ca26ad24b3c171e06124dfe3ac5825f17e4d6b1b1a001126b5dc3516",
+  "derivation_hash": "cc7a83148e03662041083bb460d73182da9ca6273feed6874476bbdb6d6344df",
+  "total_events": 2,
+  "events": [
+    {
+      "event_id": "SLE-0001",
+      "proposition_id": "SP-blueedge-0001",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-BACKEND",
+        "tier": "OPERATIONAL_DOMAIN",
+        "file_count": 372,
+        "evidence_count": 1,
+        "finding": null
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-23T10:27:31.530870+00:00"
+    },
+    {
+      "event_id": "SLE-0002",
+      "proposition_id": "SP-blueedge-0002",
+      "event_type": "tier_grounding_derivation",
+      "semantic_type": "GROUNDING",
+      "derivation_class": "TIER_GROUNDING",
+      "evidence": {
+        "ceu_id": "CEU-FRONTEND",
+        "tier": "OPERATIONAL_DOMAIN",
+        "file_count": 272,
+        "evidence_count": 1,
+        "finding": null
+      },
+      "learning_context": [],
+      "timestamp": "2026-05-23T10:27:31.530870+00:00"
+    }
+  ]
+}

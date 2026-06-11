@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_14_vault_readiness",
+  "checkpoint_index": 14,
+  "semantic_phase": "PROJECTION",
+  "pipeline_phase": "Phase 8b \u2014 Vault Readiness",
+  "timestamp": "2026-05-23T10:01:56.209Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_15_selector_update",
+  "events_since_predecessor": 55,
+  "state_snapshot": {}
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_09_ceu_grounding",
+  "checkpoint_index": 9,
+  "semantic_phase": "FORMATION",
+  "pipeline_phase": "Phase 4  \u2014 CEU Grounding Verification",
+  "timestamp": "2026-05-23T10:01:55.993Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_10_binding_envelope",
+  "events_since_predecessor": 40,
+  "state_snapshot": {}
+}

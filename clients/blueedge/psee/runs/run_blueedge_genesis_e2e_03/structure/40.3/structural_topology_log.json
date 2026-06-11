@@ -1,0 +1,4688 @@
+{
+  "contract_id": "PI.LENS.STRUCTURAL-SCANNER.GENERIC.01",
+  "client_id": "blueedge",
+  "source_id": "source_01",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "stage": "40.3",
+  "generated_at": "2026-05-23T10:01:54Z",
+  "total_relations": 934,
+  "contains_count": 934,
+  "imports_count": 0,
+  "relation_types": [
+    "CONTAINS",
+    "IMPORTS"
+  ],
+  "parsing_method": "static_filesystem_and_regex_import_analysis",
+  "edges": [
+    {
+      "source_id": "NODE-0001",
+      "target_id": "NODE-0002",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0004",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0004",
+      "target_id": "NODE-0005",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0006",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0007",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0008",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0009",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0010",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0011",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0012",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0013",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0014",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0015",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0016",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0017",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0018",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0019",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0020",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0021",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0022",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0023",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0023",
+      "target_id": "NODE-0024",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0025",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0025",
+      "target_id": "NODE-0026",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0027",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0027",
+      "target_id": "NODE-0028",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0029",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0030",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0030",
+      "target_id": "NODE-0031",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0032",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0033",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0034",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0034",
+      "target_id": "NODE-0035",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0036",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0036",
+      "target_id": "NODE-0037",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0038",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0038",
+      "target_id": "NODE-0039",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0040",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0040",
+      "target_id": "NODE-0041",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0042",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0042",
+      "target_id": "NODE-0043",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0044",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0044",
+      "target_id": "NODE-0045",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0046",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0046",
+      "target_id": "NODE-0047",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0048",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0048",
+      "target_id": "NODE-0049",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0050",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0050",
+      "target_id": "NODE-0051",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0052",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0052",
+      "target_id": "NODE-0053",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0054",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0055",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0056",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0057",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0057",
+      "target_id": "NODE-0058",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0059",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0059",
+      "target_id": "NODE-0060",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0061",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0061",
+      "target_id": "NODE-0062",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0063",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0063",
+      "target_id": "NODE-0064",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0065",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0065",
+      "target_id": "NODE-0066",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0067",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0067",
+      "target_id": "NODE-0068",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0069",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0069",
+      "target_id": "NODE-0070",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0071",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0071",
+      "target_id": "NODE-0072",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0073",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0074",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0075",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0075",
+      "target_id": "NODE-0076",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0077",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0077",
+      "target_id": "NODE-0078",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0079",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0079",
+      "target_id": "NODE-0080",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0081",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0081",
+      "target_id": "NODE-0082",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0083",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0083",
+      "target_id": "NODE-0084",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0085",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0085",
+      "target_id": "NODE-0086",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0087",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0087",
+      "target_id": "NODE-0088",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0089",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0089",
+      "target_id": "NODE-0090",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0091",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0092",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0093",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0094",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0094",
+      "target_id": "NODE-0095",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0096",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0097",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0098",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0098",
+      "target_id": "NODE-0099",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0100",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0100",
+      "target_id": "NODE-0101",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0102",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0103",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0104",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0105",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0106",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0107",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0107",
+      "target_id": "NODE-0108",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0109",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0109",
+      "target_id": "NODE-0110",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0111",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0111",
+      "target_id": "NODE-0112",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0113",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0113",
+      "target_id": "NODE-0114",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0115",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0115",
+      "target_id": "NODE-0116",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0117",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0117",
+      "target_id": "NODE-0118",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0119",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0119",
+      "target_id": "NODE-0120",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0121",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0122",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0122",
+      "target_id": "NODE-0123",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0124",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0124",
+      "target_id": "NODE-0125",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0126",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0127",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0128",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0129",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0129",
+      "target_id": "NODE-0130",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0131",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0131",
+      "target_id": "NODE-0132",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0133",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0133",
+      "target_id": "NODE-0134",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0135",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0135",
+      "target_id": "NODE-0136",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0137",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0137",
+      "target_id": "NODE-0138",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0139",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0139",
+      "target_id": "NODE-0140",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0141",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0142",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0142",
+      "target_id": "NODE-0143",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0022",
+      "target_id": "NODE-0144",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0144",
+      "target_id": "NODE-0145",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0146",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0148",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0149",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0150",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0151",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0152",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0153",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0154",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0155",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0150",
+      "target_id": "NODE-0156",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0157",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0158",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0159",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0159",
+      "target_id": "NODE-0160",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0159",
+      "target_id": "NODE-0161",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0162",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0163",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0164",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0165",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0166",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0167",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0168",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0169",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0163",
+      "target_id": "NODE-0170",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0171",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0171",
+      "target_id": "NODE-0172",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0173",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0174",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0175",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0176",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0177",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0177",
+      "target_id": "NODE-0178",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0179",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0180",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0181",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0182",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0183",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0184",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0185",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0186",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0187",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0188",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0189",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0190",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0192",
+      "target_id": "NODE-0193",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0193",
+      "target_id": "NODE-0194",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0193",
+      "target_id": "NODE-0195",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0195",
+      "target_id": "NODE-0196",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0195",
+      "target_id": "NODE-0197",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0192",
+      "target_id": "NODE-0198",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0199",
+      "target_id": "NODE-0200",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0199",
+      "target_id": "NODE-0201",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0199",
+      "target_id": "NODE-0202",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0199",
+      "target_id": "NODE-0203",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0002",
+      "target_id": "NODE-0205",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0002",
+      "target_id": "NODE-0206",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0208",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0209",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0210",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0004",
+      "target_id": "NODE-0211",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0005",
+      "target_id": "NODE-0212",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0005",
+      "target_id": "NODE-0213",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0214",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0215",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0008",
+      "target_id": "NODE-0216",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0008",
+      "target_id": "NODE-0217",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0008",
+      "target_id": "NODE-0218",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0008",
+      "target_id": "NODE-0219",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0008",
+      "target_id": "NODE-0220",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0009",
+      "target_id": "NODE-0221",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0009",
+      "target_id": "NODE-0222",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0009",
+      "target_id": "NODE-0223",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0009",
+      "target_id": "NODE-0224",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0010",
+      "target_id": "NODE-0225",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0010",
+      "target_id": "NODE-0226",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0010",
+      "target_id": "NODE-0227",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0011",
+      "target_id": "NODE-0228",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0011",
+      "target_id": "NODE-0229",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0011",
+      "target_id": "NODE-0230",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0011",
+      "target_id": "NODE-0231",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0011",
+      "target_id": "NODE-0232",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0007",
+      "target_id": "NODE-0233",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0012",
+      "target_id": "NODE-0234",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0235",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0236",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0237",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0238",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0239",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0013",
+      "target_id": "NODE-0240",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0014",
+      "target_id": "NODE-0241",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0014",
+      "target_id": "NODE-0242",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0014",
+      "target_id": "NODE-0243",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0014",
+      "target_id": "NODE-0244",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0015",
+      "target_id": "NODE-0245",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0246",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0247",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0248",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0017",
+      "target_id": "NODE-0249",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0017",
+      "target_id": "NODE-0250",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0017",
+      "target_id": "NODE-0251",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0017",
+      "target_id": "NODE-0252",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0016",
+      "target_id": "NODE-0253",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0018",
+      "target_id": "NODE-0254",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0019",
+      "target_id": "NODE-0255",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0019",
+      "target_id": "NODE-0256",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0257",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0258",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0259",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0260",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0261",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0020",
+      "target_id": "NODE-0262",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0006",
+      "target_id": "NODE-0263",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0021",
+      "target_id": "NODE-0264",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0021",
+      "target_id": "NODE-0265",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0021",
+      "target_id": "NODE-0266",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0021",
+      "target_id": "NODE-0267",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0021",
+      "target_id": "NODE-0268",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0023",
+      "target_id": "NODE-0269",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0023",
+      "target_id": "NODE-0270",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0023",
+      "target_id": "NODE-0271",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0023",
+      "target_id": "NODE-0272",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0024",
+      "target_id": "NODE-0273",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0025",
+      "target_id": "NODE-0274",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0025",
+      "target_id": "NODE-0275",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0025",
+      "target_id": "NODE-0276",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0025",
+      "target_id": "NODE-0277",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0026",
+      "target_id": "NODE-0278",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0027",
+      "target_id": "NODE-0279",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0027",
+      "target_id": "NODE-0280",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0027",
+      "target_id": "NODE-0281",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0027",
+      "target_id": "NODE-0282",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0028",
+      "target_id": "NODE-0283",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0029",
+      "target_id": "NODE-0284",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0029",
+      "target_id": "NODE-0285",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0029",
+      "target_id": "NODE-0286",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0029",
+      "target_id": "NODE-0287",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0030",
+      "target_id": "NODE-0288",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0030",
+      "target_id": "NODE-0289",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0030",
+      "target_id": "NODE-0290",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0030",
+      "target_id": "NODE-0291",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0031",
+      "target_id": "NODE-0292",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0032",
+      "target_id": "NODE-0293",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0032",
+      "target_id": "NODE-0294",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0032",
+      "target_id": "NODE-0295",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0032",
+      "target_id": "NODE-0296",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0033",
+      "target_id": "NODE-0297",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0033",
+      "target_id": "NODE-0298",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0033",
+      "target_id": "NODE-0299",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0033",
+      "target_id": "NODE-0300",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0034",
+      "target_id": "NODE-0301",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0034",
+      "target_id": "NODE-0302",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0034",
+      "target_id": "NODE-0303",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0034",
+      "target_id": "NODE-0304",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0035",
+      "target_id": "NODE-0305",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0036",
+      "target_id": "NODE-0306",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0036",
+      "target_id": "NODE-0307",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0036",
+      "target_id": "NODE-0308",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0036",
+      "target_id": "NODE-0309",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0037",
+      "target_id": "NODE-0310",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0038",
+      "target_id": "NODE-0311",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0038",
+      "target_id": "NODE-0312",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0038",
+      "target_id": "NODE-0313",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0038",
+      "target_id": "NODE-0314",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0039",
+      "target_id": "NODE-0315",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0039",
+      "target_id": "NODE-0316",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0039",
+      "target_id": "NODE-0317",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0039",
+      "target_id": "NODE-0318",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0039",
+      "target_id": "NODE-0319",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0040",
+      "target_id": "NODE-0320",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0040",
+      "target_id": "NODE-0321",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0040",
+      "target_id": "NODE-0322",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0040",
+      "target_id": "NODE-0323",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0041",
+      "target_id": "NODE-0324",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0042",
+      "target_id": "NODE-0325",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0042",
+      "target_id": "NODE-0326",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0042",
+      "target_id": "NODE-0327",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0042",
+      "target_id": "NODE-0328",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0043",
+      "target_id": "NODE-0329",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0044",
+      "target_id": "NODE-0330",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0044",
+      "target_id": "NODE-0331",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0044",
+      "target_id": "NODE-0332",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0044",
+      "target_id": "NODE-0333",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0045",
+      "target_id": "NODE-0334",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0046",
+      "target_id": "NODE-0335",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0046",
+      "target_id": "NODE-0336",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0046",
+      "target_id": "NODE-0337",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0046",
+      "target_id": "NODE-0338",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0047",
+      "target_id": "NODE-0339",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0048",
+      "target_id": "NODE-0340",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0048",
+      "target_id": "NODE-0341",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0048",
+      "target_id": "NODE-0342",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0048",
+      "target_id": "NODE-0343",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0049",
+      "target_id": "NODE-0344",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0050",
+      "target_id": "NODE-0345",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0050",
+      "target_id": "NODE-0346",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0050",
+      "target_id": "NODE-0347",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0050",
+      "target_id": "NODE-0348",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0051",
+      "target_id": "NODE-0349",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0052",
+      "target_id": "NODE-0350",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0052",
+      "target_id": "NODE-0351",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0052",
+      "target_id": "NODE-0352",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0052",
+      "target_id": "NODE-0353",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0053",
+      "target_id": "NODE-0354",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0355",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0356",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0357",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0054",
+      "target_id": "NODE-0358",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0055",
+      "target_id": "NODE-0359",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0056",
+      "target_id": "NODE-0360",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0056",
+      "target_id": "NODE-0361",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0056",
+      "target_id": "NODE-0362",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0056",
+      "target_id": "NODE-0363",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0056",
+      "target_id": "NODE-0364",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0057",
+      "target_id": "NODE-0365",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0057",
+      "target_id": "NODE-0366",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0057",
+      "target_id": "NODE-0367",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0057",
+      "target_id": "NODE-0368",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0058",
+      "target_id": "NODE-0369",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0059",
+      "target_id": "NODE-0370",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0059",
+      "target_id": "NODE-0371",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0059",
+      "target_id": "NODE-0372",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0059",
+      "target_id": "NODE-0373",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0060",
+      "target_id": "NODE-0374",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0061",
+      "target_id": "NODE-0375",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0061",
+      "target_id": "NODE-0376",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0061",
+      "target_id": "NODE-0377",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0061",
+      "target_id": "NODE-0378",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0062",
+      "target_id": "NODE-0379",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0063",
+      "target_id": "NODE-0380",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0063",
+      "target_id": "NODE-0381",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0063",
+      "target_id": "NODE-0382",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0063",
+      "target_id": "NODE-0383",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0064",
+      "target_id": "NODE-0384",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0065",
+      "target_id": "NODE-0385",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0065",
+      "target_id": "NODE-0386",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0065",
+      "target_id": "NODE-0387",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0065",
+      "target_id": "NODE-0388",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0066",
+      "target_id": "NODE-0389",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0067",
+      "target_id": "NODE-0390",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0067",
+      "target_id": "NODE-0391",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0067",
+      "target_id": "NODE-0392",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0067",
+      "target_id": "NODE-0393",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0068",
+      "target_id": "NODE-0394",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0069",
+      "target_id": "NODE-0395",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0069",
+      "target_id": "NODE-0396",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0069",
+      "target_id": "NODE-0397",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0069",
+      "target_id": "NODE-0398",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0070",
+      "target_id": "NODE-0399",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0071",
+      "target_id": "NODE-0400",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0071",
+      "target_id": "NODE-0401",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0071",
+      "target_id": "NODE-0402",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0071",
+      "target_id": "NODE-0403",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0072",
+      "target_id": "NODE-0404",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0073",
+      "target_id": "NODE-0405",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0073",
+      "target_id": "NODE-0406",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0073",
+      "target_id": "NODE-0407",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0073",
+      "target_id": "NODE-0408",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0074",
+      "target_id": "NODE-0409",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0074",
+      "target_id": "NODE-0410",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0076",
+      "target_id": "NODE-0411",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0075",
+      "target_id": "NODE-0412",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0075",
+      "target_id": "NODE-0413",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0075",
+      "target_id": "NODE-0414",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0075",
+      "target_id": "NODE-0415",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0078",
+      "target_id": "NODE-0416",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0077",
+      "target_id": "NODE-0417",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0077",
+      "target_id": "NODE-0418",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0077",
+      "target_id": "NODE-0419",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0077",
+      "target_id": "NODE-0420",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0080",
+      "target_id": "NODE-0421",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0079",
+      "target_id": "NODE-0422",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0079",
+      "target_id": "NODE-0423",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0079",
+      "target_id": "NODE-0424",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0079",
+      "target_id": "NODE-0425",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0082",
+      "target_id": "NODE-0426",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0081",
+      "target_id": "NODE-0427",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0081",
+      "target_id": "NODE-0428",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0081",
+      "target_id": "NODE-0429",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0081",
+      "target_id": "NODE-0430",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0084",
+      "target_id": "NODE-0431",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0083",
+      "target_id": "NODE-0432",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0083",
+      "target_id": "NODE-0433",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0083",
+      "target_id": "NODE-0434",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0083",
+      "target_id": "NODE-0435",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0086",
+      "target_id": "NODE-0436",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0085",
+      "target_id": "NODE-0437",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0085",
+      "target_id": "NODE-0438",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0085",
+      "target_id": "NODE-0439",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0085",
+      "target_id": "NODE-0440",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0088",
+      "target_id": "NODE-0441",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0087",
+      "target_id": "NODE-0442",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0087",
+      "target_id": "NODE-0443",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0087",
+      "target_id": "NODE-0444",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0087",
+      "target_id": "NODE-0445",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0090",
+      "target_id": "NODE-0446",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0089",
+      "target_id": "NODE-0447",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0089",
+      "target_id": "NODE-0448",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0089",
+      "target_id": "NODE-0449",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0089",
+      "target_id": "NODE-0450",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0092",
+      "target_id": "NODE-0451",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0093",
+      "target_id": "NODE-0452",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0093",
+      "target_id": "NODE-0453",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0093",
+      "target_id": "NODE-0454",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0093",
+      "target_id": "NODE-0455",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0456",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0457",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0458",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0459",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0091",
+      "target_id": "NODE-0460",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0095",
+      "target_id": "NODE-0461",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0094",
+      "target_id": "NODE-0462",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0094",
+      "target_id": "NODE-0463",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0094",
+      "target_id": "NODE-0464",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0094",
+      "target_id": "NODE-0465",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0096",
+      "target_id": "NODE-0466",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0096",
+      "target_id": "NODE-0467",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0096",
+      "target_id": "NODE-0468",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0096",
+      "target_id": "NODE-0469",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0097",
+      "target_id": "NODE-0470",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0097",
+      "target_id": "NODE-0471",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0097",
+      "target_id": "NODE-0472",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0097",
+      "target_id": "NODE-0473",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0099",
+      "target_id": "NODE-0474",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0098",
+      "target_id": "NODE-0475",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0098",
+      "target_id": "NODE-0476",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0098",
+      "target_id": "NODE-0477",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0098",
+      "target_id": "NODE-0478",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0101",
+      "target_id": "NODE-0479",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0100",
+      "target_id": "NODE-0480",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0100",
+      "target_id": "NODE-0481",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0100",
+      "target_id": "NODE-0482",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0100",
+      "target_id": "NODE-0483",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0103",
+      "target_id": "NODE-0484",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0104",
+      "target_id": "NODE-0485",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0105",
+      "target_id": "NODE-0486",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0106",
+      "target_id": "NODE-0487",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0488",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0489",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0490",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0102",
+      "target_id": "NODE-0491",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0108",
+      "target_id": "NODE-0492",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0107",
+      "target_id": "NODE-0493",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0107",
+      "target_id": "NODE-0494",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0107",
+      "target_id": "NODE-0495",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0107",
+      "target_id": "NODE-0496",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0110",
+      "target_id": "NODE-0497",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0109",
+      "target_id": "NODE-0498",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0109",
+      "target_id": "NODE-0499",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0109",
+      "target_id": "NODE-0500",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0109",
+      "target_id": "NODE-0501",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0112",
+      "target_id": "NODE-0502",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0111",
+      "target_id": "NODE-0503",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0111",
+      "target_id": "NODE-0504",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0111",
+      "target_id": "NODE-0505",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0111",
+      "target_id": "NODE-0506",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0114",
+      "target_id": "NODE-0507",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0113",
+      "target_id": "NODE-0508",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0113",
+      "target_id": "NODE-0509",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0113",
+      "target_id": "NODE-0510",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0113",
+      "target_id": "NODE-0511",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0116",
+      "target_id": "NODE-0512",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0115",
+      "target_id": "NODE-0513",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0115",
+      "target_id": "NODE-0514",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0115",
+      "target_id": "NODE-0515",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0115",
+      "target_id": "NODE-0516",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0118",
+      "target_id": "NODE-0517",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0117",
+      "target_id": "NODE-0518",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0117",
+      "target_id": "NODE-0519",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0117",
+      "target_id": "NODE-0520",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0117",
+      "target_id": "NODE-0521",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0120",
+      "target_id": "NODE-0522",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0119",
+      "target_id": "NODE-0523",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0119",
+      "target_id": "NODE-0524",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0119",
+      "target_id": "NODE-0525",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0119",
+      "target_id": "NODE-0526",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0121",
+      "target_id": "NODE-0527",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0121",
+      "target_id": "NODE-0528",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0121",
+      "target_id": "NODE-0529",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0121",
+      "target_id": "NODE-0530",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0123",
+      "target_id": "NODE-0531",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0122",
+      "target_id": "NODE-0532",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0122",
+      "target_id": "NODE-0533",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0122",
+      "target_id": "NODE-0534",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0122",
+      "target_id": "NODE-0535",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0125",
+      "target_id": "NODE-0536",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0124",
+      "target_id": "NODE-0537",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0124",
+      "target_id": "NODE-0538",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0124",
+      "target_id": "NODE-0539",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0124",
+      "target_id": "NODE-0540",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0127",
+      "target_id": "NODE-0541",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0128",
+      "target_id": "NODE-0542",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0128",
+      "target_id": "NODE-0543",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0128",
+      "target_id": "NODE-0544",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0128",
+      "target_id": "NODE-0545",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0546",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0547",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0548",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0549",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0126",
+      "target_id": "NODE-0550",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0130",
+      "target_id": "NODE-0551",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0129",
+      "target_id": "NODE-0552",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0129",
+      "target_id": "NODE-0553",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0129",
+      "target_id": "NODE-0554",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0129",
+      "target_id": "NODE-0555",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0556",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0557",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0558",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0559",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0560",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0132",
+      "target_id": "NODE-0561",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0131",
+      "target_id": "NODE-0562",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0131",
+      "target_id": "NODE-0563",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0131",
+      "target_id": "NODE-0564",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0131",
+      "target_id": "NODE-0565",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0134",
+      "target_id": "NODE-0566",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0134",
+      "target_id": "NODE-0567",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0134",
+      "target_id": "NODE-0568",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0134",
+      "target_id": "NODE-0569",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0133",
+      "target_id": "NODE-0570",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0133",
+      "target_id": "NODE-0571",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0133",
+      "target_id": "NODE-0572",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0133",
+      "target_id": "NODE-0573",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0136",
+      "target_id": "NODE-0574",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0135",
+      "target_id": "NODE-0575",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0135",
+      "target_id": "NODE-0576",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0135",
+      "target_id": "NODE-0577",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0135",
+      "target_id": "NODE-0578",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0138",
+      "target_id": "NODE-0579",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0137",
+      "target_id": "NODE-0580",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0137",
+      "target_id": "NODE-0581",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0137",
+      "target_id": "NODE-0582",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0137",
+      "target_id": "NODE-0583",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0140",
+      "target_id": "NODE-0584",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0139",
+      "target_id": "NODE-0585",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0139",
+      "target_id": "NODE-0586",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0139",
+      "target_id": "NODE-0587",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0139",
+      "target_id": "NODE-0588",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0141",
+      "target_id": "NODE-0589",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0141",
+      "target_id": "NODE-0590",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0141",
+      "target_id": "NODE-0591",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0141",
+      "target_id": "NODE-0592",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0143",
+      "target_id": "NODE-0593",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0142",
+      "target_id": "NODE-0594",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0142",
+      "target_id": "NODE-0595",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0142",
+      "target_id": "NODE-0596",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0142",
+      "target_id": "NODE-0597",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0145",
+      "target_id": "NODE-0598",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0144",
+      "target_id": "NODE-0599",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0144",
+      "target_id": "NODE-0600",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0144",
+      "target_id": "NODE-0601",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0144",
+      "target_id": "NODE-0602",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0146",
+      "target_id": "NODE-0603",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0003",
+      "target_id": "NODE-0604",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0607",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0608",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0609",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0148",
+      "target_id": "NODE-0610",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0148",
+      "target_id": "NODE-0611",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0612",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0613",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0614",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0615",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0616",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0617",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0618",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0619",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0620",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0621",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0622",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0623",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0624",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0625",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0626",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0627",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0628",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0629",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0630",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0631",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0632",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0633",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0634",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0635",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0636",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0637",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0638",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0639",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0640",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0641",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0642",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0643",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0644",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0645",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0646",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0647",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0648",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0649",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0650",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0651",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0652",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0653",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0654",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0655",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0656",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0657",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0658",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0659",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0660",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0661",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0662",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0663",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0664",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0665",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0666",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0667",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0668",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0669",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0670",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0671",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0672",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0673",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0674",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0675",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0676",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0149",
+      "target_id": "NODE-0677",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0678",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0679",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0680",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0681",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0682",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0683",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0151",
+      "target_id": "NODE-0684",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0685",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0686",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0687",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0688",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0689",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0152",
+      "target_id": "NODE-0690",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0691",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0692",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0693",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0694",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0695",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0696",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0697",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0698",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0699",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0700",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0153",
+      "target_id": "NODE-0701",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0154",
+      "target_id": "NODE-0702",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0154",
+      "target_id": "NODE-0703",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0155",
+      "target_id": "NODE-0704",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0155",
+      "target_id": "NODE-0705",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0155",
+      "target_id": "NODE-0706",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0155",
+      "target_id": "NODE-0707",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0708",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0709",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0710",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0711",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0712",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0713",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0714",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0715",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0716",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0717",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0718",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0719",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0720",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0721",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0722",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0723",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0724",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0725",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0726",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0727",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0728",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0729",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0730",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0731",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0732",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0733",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0734",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0735",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0736",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0737",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0738",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0739",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0740",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0741",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0742",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0743",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0744",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0745",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0746",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0156",
+      "target_id": "NODE-0747",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0157",
+      "target_id": "NODE-0748",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0157",
+      "target_id": "NODE-0749",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0157",
+      "target_id": "NODE-0750",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0157",
+      "target_id": "NODE-0751",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0752",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0753",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0754",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0755",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0756",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0757",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0158",
+      "target_id": "NODE-0758",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0759",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0760",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0761",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0762",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0763",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0764",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0765",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0766",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0160",
+      "target_id": "NODE-0767",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0161",
+      "target_id": "NODE-0768",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0769",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0770",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0771",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0772",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0773",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0774",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0162",
+      "target_id": "NODE-0775",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0776",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0777",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0778",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0779",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0780",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0781",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0782",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0783",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0784",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0785",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0164",
+      "target_id": "NODE-0786",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0787",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0788",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0789",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0790",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0791",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0792",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0165",
+      "target_id": "NODE-0793",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0794",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0795",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0796",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0797",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0798",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0799",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0800",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0801",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0802",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0803",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0166",
+      "target_id": "NODE-0804",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0805",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0806",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0807",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0808",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0809",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0810",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0811",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0812",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0813",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0814",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0815",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0816",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0167",
+      "target_id": "NODE-0817",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0818",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0819",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0820",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0821",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0822",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0823",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0824",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0825",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0826",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0168",
+      "target_id": "NODE-0827",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0169",
+      "target_id": "NODE-0828",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0169",
+      "target_id": "NODE-0829",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0169",
+      "target_id": "NODE-0830",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0169",
+      "target_id": "NODE-0831",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0832",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0833",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0834",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0835",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0836",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0837",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0170",
+      "target_id": "NODE-0838",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0839",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0840",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0841",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0842",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0843",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0844",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0845",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0846",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0847",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0848",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0849",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0850",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0851",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0852",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0172",
+      "target_id": "NODE-0853",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0171",
+      "target_id": "NODE-0854",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0171",
+      "target_id": "NODE-0855",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0171",
+      "target_id": "NODE-0856",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0173",
+      "target_id": "NODE-0857",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0174",
+      "target_id": "NODE-0858",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0175",
+      "target_id": "NODE-0859",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0176",
+      "target_id": "NODE-0860",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0176",
+      "target_id": "NODE-0861",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0178",
+      "target_id": "NODE-0862",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0178",
+      "target_id": "NODE-0863",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0864",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0865",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0866",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0867",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0868",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0869",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0870",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0871",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0872",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0873",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0874",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0875",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0876",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0877",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0878",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0879",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0880",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0881",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0882",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0883",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0884",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0885",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0886",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0887",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0179",
+      "target_id": "NODE-0888",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0889",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0890",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0891",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0892",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0893",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0180",
+      "target_id": "NODE-0894",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0895",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0182",
+      "target_id": "NODE-0896",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0897",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0898",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0899",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0900",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0901",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0183",
+      "target_id": "NODE-0902",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0184",
+      "target_id": "NODE-0903",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0184",
+      "target_id": "NODE-0904",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0184",
+      "target_id": "NODE-0905",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0184",
+      "target_id": "NODE-0906",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0185",
+      "target_id": "NODE-0907",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0185",
+      "target_id": "NODE-0908",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0185",
+      "target_id": "NODE-0909",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0185",
+      "target_id": "NODE-0910",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0186",
+      "target_id": "NODE-0911",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0186",
+      "target_id": "NODE-0912",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0913",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0914",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0915",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0916",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0917",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0918",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0919",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0920",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0187",
+      "target_id": "NODE-0921",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0181",
+      "target_id": "NODE-0922",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0188",
+      "target_id": "NODE-0923",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0924",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0189",
+      "target_id": "NODE-0925",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0189",
+      "target_id": "NODE-0926",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0190",
+      "target_id": "NODE-0927",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0190",
+      "target_id": "NODE-0928",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0929",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0147",
+      "target_id": "NODE-0930",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0191",
+      "target_id": "NODE-0931",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0191",
+      "target_id": "NODE-0932",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0191",
+      "target_id": "NODE-0933",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0194",
+      "target_id": "NODE-0934",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0196",
+      "target_id": "NODE-0935",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0197",
+      "target_id": "NODE-0936",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0198",
+      "target_id": "NODE-0937",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0200",
+      "target_id": "NODE-0938",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0200",
+      "target_id": "NODE-0939",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0201",
+      "target_id": "NODE-0940",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0199",
+      "target_id": "NODE-0941",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0202",
+      "target_id": "NODE-0942",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0203",
+      "target_id": "NODE-0943",
+      "relation_type": "CONTAINS"
+    },
+    {
+      "source_id": "NODE-0203",
+      "target_id": "NODE-0944",
+      "relation_type": "CONTAINS"
+    }
+  ]
+}

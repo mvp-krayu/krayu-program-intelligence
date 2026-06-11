@@ -1,0 +1,142 @@
+{
+  "schema_version": "2.0",
+  "contract_id": "PI.SQO.PROPOSITION-REVIEW-WORKFLOW.01",
+  "total_obligations": 14,
+  "obligations_met": 14,
+  "total_propositions": 85,
+  "flagged_count": 14,
+  "review_status": "COMPLETE",
+  "class_summary": {
+    "UNKNOWN": {
+      "total": 85,
+      "accepted": 81,
+      "rejected": 3,
+      "arbitrated": 1
+    }
+  },
+  "obligations": [
+    {
+      "proposition_id": "SP-blueedge-0017",
+      "disposition": "ARBITRATED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Arbitration: DOMAIN-17 contestation upheld — 2 DERIVED components with zero direct evidence is insufficient for domain-level grounding. Claim does not meet structural threshold.",
+      "status": "RESOLVED",
+      "semantic_disposition": "OPERATIONAL_ACCEPTANCE",
+      "resolved_by": "operator:lens_operator",
+      "resolved_at": "2026-05-26T09:50:21.481Z"
+    },
+    {
+      "proposition_id": "SP-blueedge-0034",
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor — SDC layer extraction artifact, not a semantic proposition",
+      "status": "RESOLVED",
+      "semantic_disposition": "OPERATIONAL_ACCEPTANCE",
+      "resolved_by": "operator:lens_operator",
+      "resolved_at": "2026-05-26T10:09:48.641Z"
+    },
+    {
+      "proposition_id": "SP-blueedge-0035",
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor — SDC layer extraction artifact, not a semantic proposition"
+    },
+    {
+      "proposition_id": "SP-blueedge-0037",
+      "disposition": "REJECTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "No domain anchor — SDC layer extraction artifact, not a semantic proposition"
+    },
+    {
+      "proposition_id": "SP-blueedge-0039",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability — DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    {
+      "proposition_id": "SP-blueedge-0040",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability — DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    {
+      "proposition_id": "SP-blueedge-0041",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Infrastructure capability — DERIVED tier legitimate for infrastructure claims without direct code evidence"
+    },
+    {
+      "proposition_id": "SP-blueedge-0079",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0080",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0081",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0082",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0083",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0084",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    },
+    {
+      "proposition_id": "SP-blueedge-0085",
+      "disposition": "ACCEPTED",
+      "flagged": true,
+      "derivation_class": "UNKNOWN",
+      "reviewed_by": "operator:khorrix",
+      "rationale": "Cross-domain ambiguity is a valid structural observation — multi-context components are genuine findings"
+    }
+  ],
+  "generated_at": "2026-05-23T12:19:02.859182+00:00",
+  "resolved": 2,
+  "unresolved": 12
+}

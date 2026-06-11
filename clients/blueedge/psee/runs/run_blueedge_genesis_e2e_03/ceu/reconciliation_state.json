@@ -1,0 +1,72 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "seeded_at": "2026-05-23T10:12:57.538692+00:00",
+  "review_mode": "UNCLASSIFIED",
+  "reconciliation_status": "COMPLETE",
+  "summary": {
+    "total": 2,
+    "proposed": 0,
+    "evidence_attached": 2,
+    "reconciled": 0,
+    "confirmed": 2,
+    "rejected": 0,
+    "merged": 0,
+    "split": 0,
+    "reclassified": 0,
+    "pending": 2
+  },
+  "candidates": {
+    "CEU-BACKEND": {
+      "domain": "backend",
+      "state": "CONFIRMED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 372,
+      "evidence_count": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null,
+      "reviewed_at": "2026-05-23T10:27:14.275260+00:00",
+      "reviewed_by": "operator:khorrix",
+      "review_rationale": "Backend domain structurally grounded \u2014 372 files, import-dominant authority, zero cross-domain coupling"
+    },
+    "CEU-FRONTEND": {
+      "domain": "frontend",
+      "state": "CONFIRMED",
+      "tier": "OPERATIONAL_DOMAIN",
+      "file_count": 272,
+      "evidence_count": 1,
+      "evidence_types": {
+        "REPO_README_MAP": 1
+      },
+      "merge_candidate": false,
+      "authority_pattern": "IMPORT_DOMINANT",
+      "reconciliation_finding": null,
+      "last_action": null,
+      "last_actor": null,
+      "last_action_at": null,
+      "reviewed_at": "2026-05-23T10:27:18.424042+00:00",
+      "reviewed_by": "operator:khorrix",
+      "review_rationale": "Frontend domain structurally grounded \u2014 272 files, 1228 import edges, README-anchored project structure"
+    }
+  },
+  "promotion_gate": {
+    "all_candidates_resolved": true,
+    "unresolved_obligations": 0,
+    "review_mode": "UNCLASSIFIED",
+    "review_sufficient": false,
+    "semantic_derivation_permitted": false,
+    "gate_reason": "Reconciliation not started \u2014 candidates require review",
+    "semantic_derivation_eligible": true,
+    "reason": "Reconciliation COMPLETE: 2 confirmed, 0 rejected, 0 merged"
+  },
+  "completed_at": "2026-05-23T10:27:22.606780+00:00",
+  "completed_by": "operator:khorrix"
+}

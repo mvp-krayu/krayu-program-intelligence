@@ -1,0 +1,11 @@
+{
+  "materialization_result": "PASS",
+  "materialization_provenance": "LIVE_MATERIALIZED_FROM_RAW_ARCHIVE",
+  "adapter": "TAR_ARCHIVE",
+  "archive_path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+  "extracted_to": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/canonical_repo",
+  "tar_prefix_stripped": "blueedge-platform",
+  "entries_extracted": 956,
+  "entries_skipped_unsafe": 0,
+  "files_on_disk": 741
+}

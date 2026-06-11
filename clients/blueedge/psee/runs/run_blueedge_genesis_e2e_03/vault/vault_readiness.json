@@ -1,0 +1,55 @@
+{
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "status": "READY",
+  "checks": [
+    {
+      "check_id": "VR-01",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/intake/intake_manifest.json"
+    },
+    {
+      "check_id": "VR-02",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.2/structural_node_inventory.json"
+    },
+    {
+      "check_id": "VR-03",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.3/structural_topology_log.json"
+    },
+    {
+      "check_id": "VR-04",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/structure/40.4/canonical_topology.json"
+    },
+    {
+      "check_id": "VR-05",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/ceu/grounding_state_v3.json"
+    },
+    {
+      "check_id": "VR-06",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/dom/dom_layer.json"
+    },
+    {
+      "check_id": "VR-07",
+      "status": "PASS",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/binding/binding_envelope.json"
+    },
+    {
+      "check_id": "VR-08",
+      "status": "PASS",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+      "resolution": "SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "check_id": "VR-09",
+      "path": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+      "status": "PASS",
+      "resolution": "SOURCE_MANIFEST_EXTERNAL_DEPENDENCY"
+    }
+  ],
+  "validation_timestamp": "2026-05-23T10:01:56.208698+00:00"
+}

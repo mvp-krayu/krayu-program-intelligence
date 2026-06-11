@@ -1,0 +1,420 @@
+/* ══════════════════════════════════════════════════════════════
+   Blue Edge Fleet Management — Mobile UX (mobile-ux.css)
+   v3.21.0 · Responsive design, touch targets, PWA safe areas
+   
+   Breakpoints:
+     sm:  640px   — Large phones
+     md:  768px   — Tablets portrait
+     lg:  1024px  — Tablets landscape / small laptops
+     xl:  1280px  — Desktops
+     2xl: 1536px  — Large screens
+   ══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   1. SAFE AREAS (Notched devices / PWA)
+   ══════════════════════════════════════════════════════════════ */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .be-topbar {
+    padding-top: env(safe-area-inset-top);
+    height: calc(var(--be-topbar-h) + env(safe-area-inset-top));
+  }
+
+  .be-mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .be-content {
+    padding-bottom: calc(var(--be-page-py) + env(safe-area-inset-bottom));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. TABLET (≤1024px)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  :root {
+    --be-sidebar-w: 240px;
+    --be-page-px: 16px;
+    --be-page-py: 16px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .be-content {
+    max-width: 100%;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. PHONE (≤768px) — Major layout shift
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root {
+    --be-page-px: 12px;
+    --be-page-py: 12px;
+    --be-card-padding: 14px;
+    --be-card-radius: 10px;
+  }
+
+  /* ── Hide desktop sidebar, show mobile nav ──────────────── */
+  .be-sidebar:not(.mobile-open) {
+    transform: translateX(-100%);
+    visibility: hidden;
+  }
+
+  .be-sidebar.mobile-open {
+    transform: translateX(0);
+    visibility: visible;
+    width: 280px;
+    box-shadow: var(--be-shadow-lg);
+  }
+
+  .be-main {
+    margin-left: 0 !important;
+  }
+
+  /* ── Mobile Bottom Navigation ───────────────────────────── */
+  .be-mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--be-bg-1);
+    border-top: 1px solid var(--be-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: var(--z-sidebar);
+    padding: 0 4px;
+  }
+
+  .be-mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    padding: 6px 0;
+    color: var(--be-text-disabled);
+    font-size: 10px;
+    font-weight: 500;
+    transition: color var(--be-duration-fast) var(--be-ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .be-mobile-nav-item.active {
+    color: var(--be-primary);
+  }
+
+  .be-mobile-nav-item .nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Account for bottom nav */
+  .be-content {
+    padding-bottom: calc(56px + var(--be-page-py) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ── Topbar mobile ──────────────────────────────────────── */
+  .be-topbar {
+    padding: 0 12px;
+  }
+
+  .be-topbar .desktop-only {
+    display: none;
+  }
+
+  /* ── KPIs stack to 2 columns ────────────────────────────── */
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 12px 14px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.375rem;
+  }
+
+  /* ── Tables → Card List ─────────────────────────────────── */
+  .data-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobile-card-item {
+    background: var(--be-bg-2);
+    border: 1px solid var(--be-border);
+    border-radius: var(--be-card-radius);
+    padding: 14px;
+  }
+
+  /* ── Fleet Map ──────────────────────────────────────────── */
+  .fleet-map-container {
+    height: 300px;
+    border-radius: 10px;
+  }
+
+  /* ── Modals → Bottom Sheet ──────────────────────────────── */
+  .be-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+    animation: slideUp 0.3s var(--be-ease);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* ── Charts smaller ─────────────────────────────────────── */
+  .chart-container {
+    height: 220px;
+  }
+
+  /* ── Time range - horizontal scroll ─────────────────────── */
+  .time-range-selector {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+  }
+
+  /* ── Command palette ────────────────────────────────────── */
+  .command-palette-overlay {
+    padding-top: 0;
+    align-items: flex-start;
+  }
+
+  .command-palette {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0 0 14px 14px;
+    max-height: 60vh;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. SMALL PHONE (≤480px)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  :root {
+    --be-page-px: 10px;
+    --be-page-py: 10px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.125rem;
+  }
+
+  .stat-card .stat-label {
+    font-size: 9px;
+  }
+
+  .fleet-map-container {
+    height: 240px;
+  }
+
+  .be-card-header {
+    padding: 10px 12px;
+  }
+
+  .be-card-body {
+    padding: 12px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. TOUCH TARGETS (WCAG 2.5.5 — minimum 44×44 CSS px)
+   ══════════════════════════════════════════════════════════════ */
+@media (pointer: coarse) {
+  /* Ensure all interactive elements are at least 44px */
+  button,
+  a,
+  .sidebar-item,
+  .be-btn,
+  .pagination-btn,
+  .time-range-selector button,
+  .command-result-item,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Larger table rows for touch */
+  .data-table tbody td {
+    padding: 14px 16px;
+  }
+
+  /* Row actions always visible on touch devices */
+  .data-table .row-actions {
+    opacity: 1;
+  }
+
+  /* Disable hover states that don't work on touch */
+  .stat-card:hover,
+  .be-card:hover {
+    border-color: var(--be-border);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. SWIPE GESTURE SUPPORT
+   ══════════════════════════════════════════════════════════════ */
+.swipeable-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-modal);
+  pointer-events: none;
+}
+
+.swipeable-drawer.open {
+  pointer-events: all;
+}
+
+.swipeable-drawer .drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--be-bg-overlay);
+  opacity: 0;
+  transition: opacity 0.3s var(--be-ease);
+}
+
+.swipeable-drawer.open .drawer-backdrop {
+  opacity: 1;
+}
+
+.swipeable-drawer .drawer-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 280px;
+  background: var(--be-bg-1);
+  transform: translateX(-100%);
+  transition: transform 0.3s var(--be-ease);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swipeable-drawer.open .drawer-content {
+  transform: translateX(0);
+  box-shadow: var(--be-shadow-lg);
+}
+
+/* ── Pull to Refresh ──────────────────────────────────────── */
+.pull-to-refresh {
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.pull-to-refresh .ptr-indicator {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--be-bg-3);
+  border: 1px solid var(--be-border);
+  transition: top 0.2s var(--be-ease);
+}
+
+.pull-to-refresh.pulling .ptr-indicator {
+  top: 12px;
+}
+
+.pull-to-refresh.refreshing .ptr-indicator {
+  top: 12px;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7. LANDSCAPE MODE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .be-topbar {
+    height: 40px;
+  }
+
+  .be-mobile-nav {
+    height: 44px;
+  }
+
+  .fleet-map-container {
+    height: 250px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. PWA STANDALONE MODE
+   ══════════════════════════════════════════════════════════════ */
+@media (display-mode: standalone) {
+  /* Remove any browser-like chrome when installed */
+  .be-topbar {
+    -webkit-app-region: drag;
+  }
+
+  .be-topbar button,
+  .be-topbar a,
+  .be-topbar input {
+    -webkit-app-region: no-drag;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   9. DESKTOP ONLY — Hide mobile elements
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .be-mobile-nav {
+    display: none;
+  }
+
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "contract_id": "PI.LENS.CEU-GROUNDING.GENERIC.01",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:01:55Z",
+  "registry_id": "GENERIC-CEU-REGISTRY-V1",
+  "total_ceu": 10,
+  "grounded_count": 5,
+  "ungrounded_count": 5,
+  "grounding_ratio": 0.5,
+  "coverage_classification": "MEDIUM",
+  "ceus": [
+    {
+      "ceu_id": "CEU-01",
+      "present": false,
+      "grounded": false,
+      "activation_class": "NONE",
+      "evidence_paths": [],
+      "node_count": 0
+    },
+    {
+      "ceu_id": "CEU-02",
+      "present": false,
+      "grounded": false,
+      "activation_class": "NONE",
+      "evidence_paths": [],
+      "node_count": 0
+    },
+    {
+      "ceu_id": "CEU-03",
+      "present": true,
+      "grounded": true,
+      "activation_class": "FULL",
+      "evidence_paths": [
+        "backend/migrations/init.sql",
+        "backend/migrations/seeds/seed-driver-sessions.sql",
+        "backend/migrations/seeds/seed.sql",
+        "backend/src/config/database.config.ts",
+        "backend/src/database/seed.ts",
+        "backend/src/migrations/1707800000000-InitialSchema.ts",
+        "backend/src/migrations/1707800100000-SeedInitialData.ts",
+        "backend/src/migrations/1707800200000-CreateDriverSessionBlocks.ts",
+        "backend/src/migrations/1709000000000-SVGDeviceProvisioningExpansion.ts",
+        "backend/src/migrations/1709100000000-SensorsAndHasiIntegration.ts"
+      ],
+      "node_count": 10
+    },
+    {
+      "ceu_id": "CEU-04",
+      "present": false,
+      "grounded": false,
+      "activation_class": "NONE",
+      "evidence_paths": [],
+      "node_count": 0
+    },
+    {
+      "ceu_id": "CEU-05",
+      "present": true,
+      "grounded": true,
+      "activation_class": "FULL",
+      "evidence_paths": [
+        "backend/Dockerfile",
+        "backend/package.json",
+        "docker-compose.yml",
+        "frontend/Dockerfile",
+        "frontend/package.json"
+      ],
+      "node_count": 5
+    },
+    {
+      "ceu_id": "CEU-06",
+      "present": true,
+      "grounded": true,
+      "activation_class": "FULL",
+      "evidence_paths": [
+        "backend/src/test/test-utils.ts",
+        "frontend/test/api/clients.test.ts",
+        "frontend/test/components/charts.test.tsx",
+        "frontend/test/components/data.test.tsx",
+        "frontend/test/components/forms.test.tsx",
+        "frontend/test/components/layout.test.tsx",
+        "frontend/test/components/themeToggle.test.tsx",
+        "frontend/test/components/ui.test.tsx",
+        "frontend/test/contexts/auth.test.tsx",
+        "frontend/test/contexts/i18n.test.tsx"
+      ],
+      "node_count": 29
+    },
+    {
+      "ceu_id": "CEU-07",
+      "present": true,
+      "grounded": true,
+      "activation_class": "FULL",
+      "evidence_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy.yml",
+        "backend/src/modules/devices/entities/provisioning-workflow.entity.ts"
+      ],
+      "node_count": 3
+    },
+    {
+      "ceu_id": "CEU-08",
+      "present": false,
+      "grounded": false,
+      "activation_class": "NONE",
+      "evidence_paths": [],
+      "node_count": 0
+    },
+    {
+      "ceu_id": "CEU-09",
+      "present": true,
+      "grounded": true,
+      "activation_class": "FULL",
+      "evidence_paths": [
+        "backend/src/common/logging/global-exception.filter.ts",
+        "backend/src/common/logging/index.ts",
+        "backend/src/common/logging/performance.middleware.ts",
+        "backend/src/common/logging/request-logging.interceptor.ts",
+        "backend/src/common/logging/winston.config.ts"
+      ],
+      "node_count": 5
+    },
+    {
+      "ceu_id": "CEU-10",
+      "present": false,
+      "grounded": false,
+      "activation_class": "NONE",
+      "evidence_paths": [],
+      "node_count": 0
+    }
+  ],
+  "validation_status": "PASS"
+}

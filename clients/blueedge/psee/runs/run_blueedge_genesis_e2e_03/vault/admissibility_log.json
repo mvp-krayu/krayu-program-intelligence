@@ -1,0 +1,14 @@
+{
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "schema_version": "1.0",
+  "generated_date": "2026-05-23",
+  "proxy_note": "admissibility_log.json is a proxy derived from integration_validation.json. The source asserts CEU grounding readiness (grounding_ratio=1.0), not structural D2 admissibility. Full D2 gate requires re-intake from external archive.",
+  "gate_type": "CEU_GROUNDING_PROXY",
+  "gate_result": "PASS",
+  "grounding_ratio": 1.0,
+  "readiness_gate_status": "PASS",
+  "source_artifact": "clients/6a6fcdbc-41b6-4e0e-99b9-37394f6c870d/psee/runs/run_blueedge_integrated_01/integration_validation.json",
+  "authority": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01"
+}

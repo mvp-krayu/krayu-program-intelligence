@@ -1,0 +1,70 @@
+{
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "schema_version": "1.0",
+  "generated_date": "2026-05-23",
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+  "guardrail_GR_01": {
+    "guardrail_id": "GR-01",
+    "text": "blueedge z-scores are run-relative, not cross-client comparable.",
+    "scope": "vault artifacts",
+    "enforcement": "Documented."
+  },
+  "vault_artifacts": [
+    {
+      "artifact": "canonical_topology.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible (domains[] format)",
+      "source": "dom_path_domain_layer.json adapted"
+    },
+    {
+      "artifact": "gauge_state.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible (score/confidence/state/dimensions)",
+      "source": "grounding_state_v3.json"
+    },
+    {
+      "artifact": "signal_registry.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible (signals[] format)",
+      "source": "FastAPI conformance recomputed artifacts (canonical path)"
+    },
+    {
+      "artifact": "coverage_state.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible",
+      "source": "grounding_state_v3.json"
+    },
+    {
+      "artifact": "reconstruction_state.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible",
+      "source": "grounding_state_v3.json"
+    },
+    {
+      "artifact": "binding_envelope.json",
+      "status": "READY",
+      "schema": "PIOS binding format (nodes/edges/capability_surfaces)",
+      "source": "Phase 5 orchestrator build"
+    },
+    {
+      "artifact": "admissibility_log.json",
+      "status": "READY",
+      "schema": "FastAPI-compatible (proxy)",
+      "source": "integration_validation.json"
+    },
+    {
+      "artifact": "evidence_trace.json",
+      "status": "READY",
+      "schema": "Evidence trace",
+      "source": "grounding_state_v3.json"
+    },
+    {
+      "artifact": "vault_manifest.json",
+      "status": "READY",
+      "schema": "Metadata",
+      "source": "orchestrator"
+    }
+  ]
+}

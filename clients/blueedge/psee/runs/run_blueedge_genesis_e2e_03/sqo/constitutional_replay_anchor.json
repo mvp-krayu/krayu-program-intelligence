@@ -1,0 +1,167 @@
+{
+  "contract_id": "PI.SQO.CONSTITUTIONAL-REPLAY-ANCHOR.01",
+  "candidate": {
+    "specimen_id": "blueedge",
+    "run_id": "run_blueedge_genesis_e2e_03"
+  },
+  "reference": {
+    "specimen_id": "netbox",
+    "run_id": "run_github_netbox_20260520_134600"
+  },
+  "target_level": "S2",
+  "reference_dimensions": {
+    "specimen_id": "netbox",
+    "run_id": "run_github_netbox_20260520_134600",
+    "proposition_count": 75,
+    "class_count": 6,
+    "class_distribution": {
+      "STRUCTURAL_DOMINANCE": 12,
+      "COUPLING_PATTERN": 34,
+      "AUTHORITY_TOPOLOGY": 10,
+      "TIER_GROUNDING": 12,
+      "HERO_MOMENT_GROUNDING": 6,
+      "CLUSTER_ARCHITECTURE": 1
+    },
+    "tier_count": 2,
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 57,
+      "DERIVED": 18
+    },
+    "mean_confidence": 0.872,
+    "min_confidence": 0.595,
+    "max_confidence": 0.972,
+    "confidence_variance": 0.377,
+    "review_obligations": 6,
+    "governance_friction": {
+      "rejected_classes": 1,
+      "arbitrated": 2,
+      "total_governance_events": 11
+    },
+    "rejected_classes": [
+      "CLUSTER_ARCHITECTURE"
+    ],
+    "governance_streams": 10
+  },
+  "candidate_dimensions": {
+    "specimen_id": "blueedge",
+    "run_id": "run_blueedge_genesis_e2e_03",
+    "proposition_count": 85,
+    "class_count": 4,
+    "class_distribution": {
+      "DOMAIN_EVIDENCE_GROUNDING": 17,
+      "CAPABILITY_EVIDENCE": 24,
+      "VAULT_CLAIM_STRUCTURAL": 25,
+      "CROSS_DOMAIN_EVIDENCE": 19
+    },
+    "tier_count": 2,
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 53,
+      "DERIVED": 32
+    },
+    "mean_confidence": 0.7166,
+    "min_confidence": 0.5,
+    "max_confidence": 0.9,
+    "confidence_variance": 0.4,
+    "review_obligations": 14,
+    "governance_friction": {
+      "rejected_count": 3,
+      "contested_count": 0,
+      "arbitrated_count": 1,
+      "total_governance_events": 101
+    },
+    "enrichment_present": true,
+    "qualification_blockers_present": false,
+    "revalidation_checks": 25
+  },
+  "assessment": {
+    "overall_verdict": "CONSTITUTIONAL_DISTANCE_ACCEPTABLE",
+    "advancement_blocked": false,
+    "reason": "8/8 dimensions pass",
+    "target_level": "S2",
+    "dimensions": [
+      {
+        "dimension": "proposition_count",
+        "reference": 75,
+        "candidate": 85,
+        "ratio": 1.133,
+        "threshold": 0.2,
+        "verdict": "PASS",
+        "severity": "CRITICAL"
+      },
+      {
+        "dimension": "class_diversity",
+        "reference": 6,
+        "candidate": 4,
+        "ratio": 0.667,
+        "threshold": 0.33,
+        "verdict": "PASS",
+        "severity": "CRITICAL"
+      },
+      {
+        "dimension": "review_obligations",
+        "reference": 6,
+        "candidate": 14,
+        "ratio": 2.3333333333333335,
+        "threshold": ">=1",
+        "verdict": "PASS",
+        "severity": "CRITICAL"
+      },
+      {
+        "dimension": "governance_friction",
+        "reference": 3,
+        "candidate": 4,
+        "ratio": null,
+        "threshold": ">=1 friction event",
+        "verdict": "PASS",
+        "severity": "CRITICAL"
+      },
+      {
+        "dimension": "confidence_distribution",
+        "reference": 0.377,
+        "candidate": 0.4,
+        "ratio": null,
+        "threshold": ">0.05 variance",
+        "verdict": "PASS",
+        "severity": "HIGH"
+      },
+      {
+        "dimension": "tier_diversity",
+        "reference": 2,
+        "candidate": 2,
+        "ratio": 1.0,
+        "threshold": 0.5,
+        "verdict": "PASS",
+        "severity": "HIGH"
+      },
+      {
+        "dimension": "governance_event_density",
+        "reference": 11,
+        "candidate": 101,
+        "ratio": 9.182,
+        "threshold": 0.2,
+        "verdict": "PASS",
+        "severity": "MEDIUM"
+      },
+      {
+        "dimension": "enrichment_activity",
+        "reference": true,
+        "candidate": true,
+        "ratio": null,
+        "threshold": "present",
+        "verdict": "PASS",
+        "severity": "CRITICAL"
+      }
+    ],
+    "summary": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "critical_fails": 0,
+      "high_fails": 0,
+      "medium_fails": 0
+    }
+  },
+  "status": "CONSTITUTIONAL_DISTANCE_ACCEPTABLE",
+  "advancement_blocked": false,
+  "generated_at": "2026-05-23T11:35:41.087610+00:00"
+}

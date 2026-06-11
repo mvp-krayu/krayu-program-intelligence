@@ -1,0 +1,114 @@
+{
+  "contract_id": "PI.PATHA.CEU-CANDIDATE-DERIVATION.01",
+  "artifact_class": "ceu_candidates",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:12:08.300084+00:00",
+  "source_artifacts": {
+    "code_graph": "40.3s/code_graph.json",
+    "structural_centrality": "40.3c/structural_centrality.json",
+    "canonical_topology": "40.4/canonical_topology.json"
+  },
+  "derivation_method": "STRUCTURAL_SUBSTRATE_PROPOSAL",
+  "candidate_count": 2,
+  "tier_summary": {
+    "OPERATIONAL_DOMAIN": 2
+  },
+  "merge_decisions_count": 0,
+  "candidates": [
+    {
+      "ceu_id": "CEU-BACKEND",
+      "domain": "backend",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.00 \u2014 balanced cross-domain flow",
+      "file_count": 372,
+      "structural_metrics": {
+        "import_in_degree": 911,
+        "import_out_degree": 911,
+        "inherits_in_degree": 0,
+        "cross_domain_import_in": 0,
+        "cross_domain_import_out": 0,
+        "import_balance_ratio": 0.0
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "backend/src/common/dto/index.ts"
+      },
+      "top_spine": {
+        "path": "backend/src/common/dto/index.ts",
+        "in_degree": 111,
+        "import_in_degree": 111,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "VALIDATION_SUPPORT": 245,
+        "INTERFACE_BOUNDARY": 127
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "ceu_id": "CEU-FRONTEND",
+      "domain": "frontend",
+      "tier": "OPERATIONAL_DOMAIN",
+      "tier_rationale": "import_balance_ratio=0.00 \u2014 balanced cross-domain flow",
+      "file_count": 272,
+      "structural_metrics": {
+        "import_in_degree": 1228,
+        "import_out_degree": 1228,
+        "inherits_in_degree": 0,
+        "cross_domain_import_in": 0,
+        "cross_domain_import_out": 0,
+        "import_balance_ratio": 0.0
+      },
+      "authority_pattern": {
+        "pattern": "IMPORT_DOMINANT",
+        "import_ratio": 1.0,
+        "spine": "frontend/hooks/index.tsx"
+      },
+      "top_spine": {
+        "path": "frontend/hooks/index.tsx",
+        "in_degree": 74,
+        "import_in_degree": 74,
+        "inherits_in_degree": 0,
+        "structural_role": "VALIDATION_SUPPORT"
+      },
+      "role_distribution": {
+        "VALIDATION_SUPPORT": 142,
+        "INTERFACE_BOUNDARY": 130
+      },
+      "merge_candidate": false,
+      "status": "PROPOSED",
+      "review_status": "PENDING_HUMAN_REVIEW"
+    }
+  ],
+  "merge_decisions": [],
+  "coupling_matrix": [],
+  "governance": {
+    "candidates_are_proposals": true,
+    "requires_human_validation": true,
+    "no_semantic_authority_claimed": true,
+    "no_ai_inference": true,
+    "deterministic": true,
+    "derivation_sequence": [
+      "1. Structural substrate derives candidate operational partitions",
+      "2. Structural derivation proposes candidate CEUs",
+      "3. Human validates / adjusts candidates",
+      "4. Documentation evidence anchors boundaries",
+      "5. Semantic derivation compiler runs",
+      "6. Operator reviews via SQO"
+    ]
+  },
+  "validation": {
+    "source_artifacts_present": true,
+    "all_domains_classified": true,
+    "all_tiers_assigned": true,
+    "merge_candidates_identified": true,
+    "coupling_matrix_computed": true,
+    "checks_passed": 5,
+    "checks_total": 5
+  }
+}

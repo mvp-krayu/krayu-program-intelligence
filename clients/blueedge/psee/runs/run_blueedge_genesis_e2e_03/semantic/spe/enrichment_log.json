@@ -1,0 +1,314 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+  "sqo_stage": "evidence_enrichment_execution",
+  "s1_to_s2_stage": 2,
+  "stream": "PI.SQO.PATH-B-EVIDENCE-ENRICHMENT.01",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "sdc_run": "run_blueedge_sdc_validation_01",
+  "timestamp": "2026-05-23T11:33:29.056809+00:00",
+  "enrichment_type": "DOMAIN_ID_CORRECTION_AND_EVIDENCE_REALIGNMENT",
+  "primary_mechanism": "Semantic name matching between canonical CSR and SDC candidate CSR domains",
+  "secondary_mechanism": "Confidence recalculation based on corrected component evidence",
+  "path_b_enrichment_limitation": "No code graph available. Enrichment limited to SDC-extracted HTML evidence realignment. Cannot provide L5 structural authority from document evidence alone.",
+  "domain_corrections": [
+    {
+      "proposition_id": "SP-blueedge-0001",
+      "domain_id": "DOMAIN-01",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-14 (was ID-matched to SDC DOMAIN-01)",
+      "old_components": 7,
+      "new_components": 14,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0002",
+      "domain_id": "DOMAIN-02",
+      "action": "CONFIRMED",
+      "reason": "Name-matched SDC domain DOMAIN-15 confirms component count (3)",
+      "old_components": 3,
+      "new_components": 3,
+      "old_confidence": 0.85,
+      "new_confidence": 0.85
+    },
+    {
+      "proposition_id": "SP-blueedge-0003",
+      "domain_id": "DOMAIN-03",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-01 (was ID-matched to SDC DOMAIN-03)",
+      "old_components": 3,
+      "new_components": 7,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0004",
+      "domain_id": "DOMAIN-04",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-02 (was ID-matched to SDC DOMAIN-04)",
+      "old_components": 6,
+      "new_components": 3,
+      "old_confidence": 0.85,
+      "new_confidence": 0.7999999999999999
+    },
+    {
+      "proposition_id": "SP-blueedge-0005",
+      "domain_id": "DOMAIN-05",
+      "action": "CONFIDENCE_REDUCED",
+      "reason": "No SDC domain matches 'Analytics and Intelligence' by name",
+      "old_components": 2,
+      "new_components": 0,
+      "old_confidence": 0.85,
+      "new_confidence": 0.5
+    },
+    {
+      "proposition_id": "SP-blueedge-0006",
+      "domain_id": "DOMAIN-06",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-04 (was ID-matched to SDC DOMAIN-06)",
+      "old_components": 10,
+      "new_components": 6,
+      "old_confidence": 0.85,
+      "new_confidence": 0.7999999999999999
+    },
+    {
+      "proposition_id": "SP-blueedge-0007",
+      "domain_id": "DOMAIN-07",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-03 (was ID-matched to SDC DOMAIN-07)",
+      "old_components": 4,
+      "new_components": 3,
+      "old_confidence": 0.85,
+      "new_confidence": 0.7999999999999999
+    },
+    {
+      "proposition_id": "SP-blueedge-0008",
+      "domain_id": "DOMAIN-08",
+      "action": "CONFIDENCE_REDUCED",
+      "reason": "No SDC domain matches 'Real-Time Streaming and Gateway' by name",
+      "old_components": 4,
+      "new_components": 0,
+      "old_confidence": 0.85,
+      "new_confidence": 0.5
+    },
+    {
+      "proposition_id": "SP-blueedge-0009",
+      "domain_id": "DOMAIN-09",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-10 (was ID-matched to SDC DOMAIN-09)",
+      "old_components": 4,
+      "new_components": 8,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0010",
+      "domain_id": "DOMAIN-10",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-12 (was ID-matched to SDC DOMAIN-10)",
+      "old_components": 8,
+      "new_components": 10,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0011",
+      "domain_id": "DOMAIN-11",
+      "action": "CONFIDENCE_REDUCED",
+      "reason": "No SDC domain matches 'Event-Driven Architecture' by name",
+      "old_components": 6,
+      "new_components": 0,
+      "old_confidence": 0.85,
+      "new_confidence": 0.5
+    },
+    {
+      "proposition_id": "SP-blueedge-0012",
+      "domain_id": "DOMAIN-12",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-08 (was ID-matched to SDC DOMAIN-12)",
+      "old_components": 10,
+      "new_components": 4,
+      "old_confidence": 0.85,
+      "new_confidence": 0.7999999999999999
+    },
+    {
+      "proposition_id": "SP-blueedge-0013",
+      "domain_id": "DOMAIN-13",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-09 (was ID-matched to SDC DOMAIN-13)",
+      "old_components": 2,
+      "new_components": 4,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0014",
+      "domain_id": "DOMAIN-14",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-16 (was ID-matched to SDC DOMAIN-14)",
+      "old_components": 14,
+      "new_components": 61,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0015",
+      "domain_id": "DOMAIN-15",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-07 (was ID-matched to SDC DOMAIN-15)",
+      "old_components": 3,
+      "new_components": 4,
+      "old_confidence": 0.85,
+      "new_confidence": 0.9
+    },
+    {
+      "proposition_id": "SP-blueedge-0016",
+      "domain_id": "DOMAIN-16",
+      "action": "CORRECTED",
+      "reason": "Name-matched to SDC DOMAIN-06 (was ID-matched to SDC DOMAIN-16)",
+      "old_components": 61,
+      "new_components": 10,
+      "old_confidence": 0.85,
+      "new_confidence": 0.7999999999999999
+    }
+  ],
+  "capability_corrections": [
+    {
+      "proposition_id": "SP-blueedge-0018",
+      "capability_id": "CAP-001",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-01 to canonical DOMAIN-03 (Fleet Core Operations)",
+      "old_domain": "DOMAIN-01",
+      "new_domain": "DOMAIN-03"
+    },
+    {
+      "proposition_id": "SP-blueedge-0019",
+      "capability_id": "CAP-002",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-02 to canonical DOMAIN-04 (Fleet Vertical Extensions)",
+      "old_domain": "DOMAIN-02",
+      "new_domain": "DOMAIN-04"
+    },
+    {
+      "proposition_id": "SP-blueedge-0020",
+      "capability_id": "CAP-003",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-03 to canonical DOMAIN-07 (Sensor and Security Ingestion)",
+      "old_domain": "DOMAIN-03",
+      "new_domain": "DOMAIN-07"
+    },
+    {
+      "proposition_id": "SP-blueedge-0021",
+      "capability_id": "CAP-004",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-04 to canonical DOMAIN-06 (AI/ML Intelligence Layer)",
+      "old_domain": "DOMAIN-04",
+      "new_domain": "DOMAIN-06"
+    },
+    {
+      "proposition_id": "SP-blueedge-0023",
+      "capability_id": "CAP-006",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-06 to canonical DOMAIN-16 (Operational Engineering)",
+      "old_domain": "DOMAIN-06",
+      "new_domain": "DOMAIN-16"
+    },
+    {
+      "proposition_id": "SP-blueedge-0024",
+      "capability_id": "CAP-007",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-07 to canonical DOMAIN-15 (EV and Electrification)",
+      "old_domain": "DOMAIN-07",
+      "new_domain": "DOMAIN-15"
+    },
+    {
+      "proposition_id": "SP-blueedge-0025",
+      "capability_id": "CAP-008",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-08 to canonical DOMAIN-12 (SaaS Platform Layer)",
+      "old_domain": "DOMAIN-08",
+      "new_domain": "DOMAIN-12"
+    },
+    {
+      "proposition_id": "SP-blueedge-0026",
+      "capability_id": "CAP-009",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-09 to canonical DOMAIN-13 (External Integration)",
+      "old_domain": "DOMAIN-09",
+      "new_domain": "DOMAIN-13"
+    },
+    {
+      "proposition_id": "SP-blueedge-0027",
+      "capability_id": "CAP-010",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-10 to canonical DOMAIN-09 (Access Control and Identity)",
+      "old_domain": "DOMAIN-10",
+      "new_domain": "DOMAIN-09"
+    },
+    {
+      "proposition_id": "SP-blueedge-0028",
+      "capability_id": "CAP-011",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-11 to canonical DOMAIN-17 (Extended Operations and Driver Services)",
+      "old_domain": "DOMAIN-11",
+      "new_domain": "DOMAIN-17"
+    },
+    {
+      "proposition_id": "SP-blueedge-0029",
+      "capability_id": "CAP-012",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-12 to canonical DOMAIN-10 (Platform Infrastructure and Data)",
+      "old_domain": "DOMAIN-12",
+      "new_domain": "DOMAIN-10"
+    },
+    {
+      "proposition_id": "SP-blueedge-0031",
+      "capability_id": "CAP-014",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-14 to canonical DOMAIN-01 (Edge Data Acquisition)",
+      "old_domain": "DOMAIN-14",
+      "new_domain": "DOMAIN-01"
+    },
+    {
+      "proposition_id": "SP-blueedge-0032",
+      "capability_id": "CAP-015",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-14 to canonical DOMAIN-01 (Edge Data Acquisition)",
+      "old_domain": "DOMAIN-14",
+      "new_domain": "DOMAIN-01"
+    },
+    {
+      "proposition_id": "SP-blueedge-0033",
+      "capability_id": "CAP-016",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-15 to canonical DOMAIN-02 (Telemetry Transport and Messaging)",
+      "old_domain": "DOMAIN-15",
+      "new_domain": "DOMAIN-02"
+    },
+    {
+      "proposition_id": "SP-blueedge-0036",
+      "capability_id": "CAP-019",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-12 to canonical DOMAIN-10 (Platform Infrastructure and Data)",
+      "old_domain": "DOMAIN-12",
+      "new_domain": "DOMAIN-10"
+    },
+    {
+      "proposition_id": "SP-blueedge-0038",
+      "capability_id": "CAP-021",
+      "action": "DOMAIN_REF_CORRECTED",
+      "reason": "Capability domain corrected from SDC DOMAIN-16 to canonical DOMAIN-14 (Frontend Application)",
+      "old_domain": "DOMAIN-16",
+      "new_domain": "DOMAIN-14"
+    }
+  ],
+  "summary": {
+    "domains_corrected": 12,
+    "domains_confirmed": 1,
+    "domains_no_sdc_match": 3,
+    "capabilities_domain_corrected": 16,
+    "total_enrichment_events": 32
+  }
+}

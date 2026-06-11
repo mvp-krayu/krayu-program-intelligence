@@ -1,0 +1,46 @@
+{
+  "contract_id": "PI.PATHB.SEMANTIC-PROPOSITION-ENGINE.01",
+  "specimen_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_at": "2026-05-23T10:27:31.534398+00:00",
+  "input_hash": "f5a96ce8ca26ad24b3c171e06124dfe3ac5825f17e4d6b1b1a001126b5dc3516",
+  "derivation_hash": "cc7a83148e03662041083bb460d73182da9ca6273feed6874476bbdb6d6344df",
+  "proposition_count": 2,
+  "confidence_report": {
+    "total": 2,
+    "confidence_distribution": {
+      "medium": 2
+    },
+    "tier_distribution": {
+      "DIRECT_EVIDENCE": 2
+    },
+    "class_distribution": {
+      "TIER_GROUNDING": 2
+    },
+    "mean_confidence": 0.7,
+    "min_confidence": 0.7,
+    "max_confidence": 0.7
+  },
+  "review_queue_count": 0,
+  "learning_events_emitted": 0,
+  "learning_influence_summary": {
+    "active_events": 0,
+    "influenced_derivations": 0
+  },
+  "class_summary": {
+    "TIER_GROUNDING": {
+      "count": 2,
+      "mean_confidence": 0.7,
+      "propositions": [
+        {
+          "id": "SP-blueedge-0001",
+          "confidence": 0.7
+        },
+        {
+          "id": "SP-blueedge-0002",
+          "confidence": 0.7
+        }
+      ]
+    }
+  }
+}

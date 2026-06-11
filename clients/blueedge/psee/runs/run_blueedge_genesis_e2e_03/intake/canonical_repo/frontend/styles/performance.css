@@ -1,0 +1,246 @@
+/* ══════════════════════════════════════════════════════════════
+   Blue Edge Fleet Management — Performance (performance.css)
+   v3.21.0 · GPU hints, contain, content-visibility, reduced motion
+   ══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   1. GPU ACCELERATION — Promote expensive-to-paint elements
+   ══════════════════════════════════════════════════════════════ */
+.be-sidebar,
+.be-topbar,
+.be-mobile-nav,
+.be-modal,
+.swipeable-drawer .drawer-content,
+.toast-container,
+.command-palette {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Map tile rendering — GPU compositing */
+.leaflet-container .leaflet-tile-pane,
+.leaflet-container .leaflet-overlay-pane {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. CSS CONTAINMENT — Isolate reflow/repaint costs
+   ══════════════════════════════════════════════════════════════ */
+/* Sidebar: layout+style isolation, own stacking context */
+.be-sidebar {
+  contain: layout style;
+}
+
+/* Cards: contained layout, don't affect siblings */
+.be-card,
+.stat-card {
+  contain: layout style;
+}
+
+/* Table rows: paint containment for large lists */
+.data-table tbody tr,
+.be-table tbody tr {
+  contain: layout style paint;
+}
+
+/* Activity feed items */
+.activity-item {
+  contain: layout style;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. CONTENT-VISIBILITY — Skip rendering off-screen sections
+   ══════════════════════════════════════════════════════════════ */
+/* Below-the-fold cards */
+.be-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}
+
+/* Long table bodies */
+.data-table-wrapper {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* Off-screen page sections */
+.page-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* Chart containers (heavy to render) */
+.chart-container {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. REDUCED MOTION — Accessibility preference
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-shimmer {
+    animation: none !important;
+    background: var(--be-bg-3) !important;
+  }
+
+  .animate-pulse-glow {
+    animation: none !important;
+  }
+
+  .animate-spin {
+    animation: none !important;
+  }
+
+  /* Keep focus indicators visible */
+  :focus-visible {
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. IMAGE RENDERING — Optimize for different contexts
+   ══════════════════════════════════════════════════════════════ */
+/* Map tiles — crisp edges for cartography */
+.leaflet-container .leaflet-tile {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Charts and data visualizations */
+canvas {
+  image-rendering: auto;
+}
+
+/* Icons and UI elements */
+.be-sidebar img,
+.vehicle-marker img,
+.sidebar-logo img {
+  image-rendering: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. FONT RENDERING — Subpixel antialiasing hints
+   ══════════════════════════════════════════════════════════════ */
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Numeric displays — tabular figures for alignment */
+.stat-card .stat-value,
+.data-table td,
+.be-table td,
+.gauge-wrapper .gauge-value,
+.chart-legend-item,
+.activity-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7. SCROLL PERFORMANCE
+   ══════════════════════════════════════════════════════════════ */
+/* Smooth momentum scrolling on iOS */
+.be-sidebar,
+.data-table-wrapper,
+.be-modal,
+.command-palette-results,
+.be-content {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Passive scroll hint for the browser */
+.be-content {
+  scroll-padding-top: calc(var(--be-topbar-h) + 16px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. PAINT OPTIMIZATION — Prevent unnecessary repaints
+   ══════════════════════════════════════════════════════════════ */
+/* Fixed position elements — own compositor layer */
+.be-topbar,
+.be-mobile-nav,
+.toast-container {
+  isolation: isolate;
+}
+
+/* Backdrop-filter optimization — limit blur cost */
+.be-topbar {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   9. VIRTUAL SCROLL — Large list optimization
+   ══════════════════════════════════════════════════════════════ */
+.virtual-scroll-container {
+  overflow-y: auto;
+  position: relative;
+}
+
+.virtual-scroll-sentinel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.virtual-scroll-item {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   10. LAZY LOADING — Placeholder for lazy-loaded components
+   ══════════════════════════════════════════════════════════════ */
+.lazy-placeholder {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lazy-placeholder .spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--be-border);
+  border-top-color: var(--be-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11. HIGH CONTRAST — forced-colors support
+   ══════════════════════════════════════════════════════════════ */
+@media (forced-colors: active) {
+  .be-card,
+  .stat-card,
+  .alert-banner,
+  .be-btn {
+    border: 1px solid ButtonText;
+  }
+
+  .be-btn-primary {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .sidebar-item.active {
+    background: Highlight;
+    color: HighlightText;
+  }
+}

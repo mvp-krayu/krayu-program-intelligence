@@ -1,0 +1,9 @@
+{
+  "contract_id": "PI.SQO.CEU-RECONCILIATION-WORKFLOW.01",
+  "client_id": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "total_obligations": 0,
+  "resolved": 0,
+  "unresolved": 0,
+  "obligations": []
+}

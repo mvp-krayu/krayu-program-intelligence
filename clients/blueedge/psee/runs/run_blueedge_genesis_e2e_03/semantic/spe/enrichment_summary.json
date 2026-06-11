@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "stream": "PI.NEXTGEN.AGENTIC-RUNTIME-IMPLEMENTATION.01",
+  "sqo_stage": "enriched_proposition_update",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "timestamp": "2026-05-25T07:57:04.153349+00:00",
+  "specimen_path": "DOMAIN_ID_CORRECTION_AND_EVIDENCE_REALIGNMENT",
+  "total_propositions": 85,
+  "enrichment_events": 1,
+  "enriched": 0,
+  "confirmed": 1,
+  "skipped": 0,
+  "confidence_deltas": {
+    "propositions_with_change": 0,
+    "mean_pre_enrichment": null,
+    "mean_post_enrichment": null,
+    "mean_confidence_all": 0.728
+  },
+  "debt_reassessment": {
+    "performed": true,
+    "improved": 0,
+    "unchanged": 15,
+    "worsened": 0,
+    "resolved": 0
+  },
+  "by_proposition_class": {
+    "UNKNOWN": {
+      "enriched": 0,
+      "confirmed": 1,
+      "skipped": 15
+    }
+  }
+}

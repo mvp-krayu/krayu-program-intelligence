@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "projection_stage": "41.x",
+  "source_stage": "75.x",
+  "source_contract": "PI.PRESSURE-ZONE.DESIGNATION.75X.04",
+  "projection_contract": "PI.41X.PRESSURE-ZONE.PROJECTION.01",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "client_id": "blueedge",
+  "generated_at": "2026-04-25",
+  "total_zones": 1,
+  "zone_projection": [
+    {
+      "zone_id": "PZ-001",
+      "zone_type": "DOMAIN_ZONE",
+      "zone_class": "COMPOUND_ZONE",
+      "anchor_id": "DOM-04",
+      "anchor_name": "backend_app_root",
+      "condition_count": 3,
+      "max_activation_count": 3,
+      "conditions": ["COND-PSIG-001-01", "COND-PSIG-002-01", "COND-PSIG-004-01"],
+      "signals": ["PSIG-001", "PSIG-002", "PSIG-004"],
+      "attribution_profile": "primary",
+      "member_entity_ids": ["DOM-04"],
+      "candidate_ids": ["PC-001"],
+      "embedded_pair_rules": ["COUPLING_ZONE", "PROPAGATION_ZONE", "RESPONSIBILITY_ZONE"]
+    }
+  ],
+  "structural_blind_spot_entity_count": 5,
+  "structural_blind_spot_signal": "PSIG-006",
+  "focus_domain_selected": false,
+  "ranking_applied": false,
+  "interpretation_applied": false,
+  "projection_prohibited_assumptions": [
+    "this projection does not select a focus domain",
+    "this projection does not rank zones",
+    "this projection does not introduce new signals or IDs",
+    "this projection does not recompute conditions",
+    "this projection does not override 75.x authority"
+  ]
+}

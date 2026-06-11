@@ -1,0 +1,88 @@
+{
+  "available": true,
+  "client": "blueedge",
+  "run": "run_blueedge_genesis_e2e_03",
+  "learning_version": "v1",
+  "derived_at": "2026-05-26T10:09:48.643Z",
+  "derived_from_events": 7,
+  "event_schema_types": [
+    "promotion_hold",
+    "promotion_transition",
+    "authority_action"
+  ],
+  "action_patterns": {
+    "total_authority_actions": 3,
+    "by_action": {
+      "review_accept": {
+        "count": 3,
+        "dispositions": {
+          "OPERATIONAL_ACCEPTANCE": 3
+        }
+      }
+    },
+    "by_target": {
+      "SP-blueedge-0017": {
+        "actions": [
+          "review_accept",
+          "review_accept"
+        ],
+        "resulting_states": [
+          "RESOLVED",
+          "RESOLVED"
+        ]
+      },
+      "SP-blueedge-0034": {
+        "actions": [
+          "review_accept"
+        ],
+        "resulting_states": [
+          "RESOLVED"
+        ]
+      }
+    }
+  },
+  "progression_history": {
+    "total_transitions": 2,
+    "total_holds": 2,
+    "hold_to_advance_ratio": 1,
+    "progression_path": [
+      {
+        "from": "S0",
+        "to": "S1",
+        "timestamp": "2026-05-23T11:16:31.186950+00:00",
+        "rationale_length": 292
+      },
+      {
+        "from": "S1",
+        "to": "S2",
+        "timestamp": "2026-05-23T11:35:41.088389+00:00",
+        "rationale_length": 475
+      }
+    ],
+    "hold_reasons": [
+      {
+        "state": "S0",
+        "timestamp": "2026-05-23T10:32:55.917381+00:00",
+        "rationale_summary": "Minimal structural governance traversed but semantic qualification workflow not exercised — 2 CEUs/2 propositions is not"
+      },
+      {
+        "state": "S0",
+        "timestamp": "2026-05-23T10:45:05.318743+00:00",
+        "rationale_summary": "Constitutional replay anchor blocks — CONSTITUTIONAL_DISTANCE_TOO_HIGH: 2 CRITICAL fails (proposition_count 2/75, class_"
+      }
+    ]
+  },
+  "temporal_signals": {
+    "event_span_hours": 71.6,
+    "avg_gap_hours": 11.9,
+    "first_event": "2026-05-23T10:32:55.917Z",
+    "last_event": "2026-05-26T10:09:48.642Z"
+  },
+  "guidance_signals": [
+    {
+      "signal": "multi_action_targets",
+      "severity": "INFORMATIONAL",
+      "detail": "1 obligation(s) have been acted on multiple times — review/contest/re-review activity"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "artifact_id": "SEMANTIC-BUNDLE-MANIFEST",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "generated_date": "2026-05-23",
+  "generator": "generate_semantic_topology.py",
+  "generator_version": "1.0.0",
+  "contract": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+  "artifacts": [
+    {
+      "id": "semantic_topology_model",
+      "path": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03/semantic/topology/semantic_topology_model.json",
+      "ok": true
+    }
+  ],
+  "provenance": {
+    "csr_hash": "784792441efce9dc",
+    "lineage_hash": null,
+    "crosswalk_hash": null,
+    "generator_version": "1.0.0",
+    "generation_contract": "PI.SUBSTRATE.CSR-IMPLEMENTATION.01",
+    "cluster_assignment_source": "CSR_EXPLICIT"
+  }
+}

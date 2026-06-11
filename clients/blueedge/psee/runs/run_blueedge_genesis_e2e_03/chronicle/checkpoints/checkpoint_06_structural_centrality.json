@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_06_structural_centrality",
+  "checkpoint_index": 6,
+  "semantic_phase": "EMERGENCE",
+  "pipeline_phase": "Phase 3.7 \u2014 Structural Centrality Derivation",
+  "timestamp": "2026-05-23T10:01:55.802Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_05_code_graph_enrichment",
+  "events_since_predecessor": 25,
+  "state_snapshot": {}
+}

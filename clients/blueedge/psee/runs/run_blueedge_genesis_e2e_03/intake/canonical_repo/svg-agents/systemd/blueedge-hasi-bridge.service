@@ -1,0 +1,36 @@
+# ══════════════════════════════════════════════════════════════
+# systemd service: HASI Bridge Agent
+# Install to: /etc/systemd/system/blueedge-hasi-bridge.service
+# ══════════════════════════════════════════════════════════════
+[Unit]
+Description=Blue Edge HASI Bridge Agent
+Documentation=https://docs.blueedge.network/svg/hasi-bridge
+After=network-online.target blueedge-hasi.service
+Wants=network-online.target
+Requires=blueedge-hasi.service
+
+[Service]
+Type=simple
+User=blueedge
+Group=blueedge
+WorkingDirectory=/opt/blueedge/hasi-bridge
+ExecStart=/usr/bin/python3 /opt/blueedge/hasi-bridge/hasi_bridge.py \
+    --config /opt/blueedge/config/blueedge.yaml
+Restart=always
+RestartSec=10
+WatchdogSec=120
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=blueedge-hasi-bridge
+
+# Security hardening
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/blueedge/hasi-bridge /var/log/blueedge
+ReadOnlyPaths=/opt/hasi/data /opt/blueedge/config /opt/blueedge/certs
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

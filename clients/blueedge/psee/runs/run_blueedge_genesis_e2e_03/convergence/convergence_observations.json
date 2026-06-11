@@ -1,0 +1,296 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "PI.SQO.CROSS-SPECIMEN-CONVERGENCE.01",
+  "stream": "PI.BLUEEDGE.GOVERNED-COGNITIVE-REPLAY-CHRONICLE.RC-07",
+  "timestamp": "2026-05-23T11:43:08.790388+00:00",
+  "specimens": {
+    "reference": {
+      "specimen_id": "netbox",
+      "run_id": "run_github_netbox_20260520_134600",
+      "derivation_path": "PATH_A",
+      "s_level": "S2",
+      "provenance": "GOVERNED_LIFECYCLE (system:governance_projection S0\u2192S1, operator:khorrix S1\u2192S2)"
+    },
+    "candidate": {
+      "specimen_id": "blueedge",
+      "run_id": "run_blueedge_genesis_e2e_03",
+      "derivation_path": "PATH_B",
+      "s_level": "S2",
+      "provenance": "GOVERNED_LIFECYCLE (operator:khorrix S0\u2192S1, operator:khorrix S1\u2192S2)"
+    }
+  },
+  "observation_maturity": "DESCRIPTIVE",
+  "observation_basis": "Two specimens. Comparison, not pattern. All observations are DESCRIPTIVE \u2014 no law-claims.",
+  "observations": [
+    {
+      "observation_id": "CONV-01",
+      "title": "Governance Lifecycle Convergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens traverse S0\u2192S1\u2192S2 through the same 5-gate governance lifecycle: CEU reconciliation \u2192 proposition derivation \u2192 proposition review \u2192 revalidation \u2192 promotion. The gate sequence, artifact contracts, and operator decision points are identical across specimens. The governance lifecycle is specimen-independent.",
+      "evidence": {
+        "netbox": {
+          "transitions": "S0\u2192S1 (system:governance_projection), S1\u2192S2 (operator:khorrix)",
+          "governance_events": 12,
+          "gates_traversed": "1-5"
+        },
+        "blueedge": {
+          "transitions": "S0\u2192S1 (operator:khorrix), S1\u2192S2 (operator:khorrix)",
+          "governance_events": 8,
+          "gates_traversed": "1-5 + 7-stage S1\u2192S2 enrichment path"
+        }
+      },
+      "divergence": "NetBox S0\u2192S1 was by system:governance_projection (structural onboarding). BlueEdge S0\u2192S1 was by operator:khorrix after full gate traversal. BlueEdge's S1\u2192S2 path is explicitly encoded in the SQO execution graph (7 stages); NetBox's was not (pre-dates execution graph). The lifecycle converges; the S1 entry mechanism diverged."
+    },
+    {
+      "observation_id": "CONV-02",
+      "title": "Proposition Derivation Divergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "PATH A and PATH B produce dimensionally comparable proposition corpora through fundamentally different evidence channels. PATH A derives from code graph structure (imports, inheritance, centrality). PATH B derives from document evidence structure (CSR domains, SDC capabilities, vault claims, topology edges). Different evidence, comparable yield.",
+      "evidence": {
+        "netbox": {
+          "proposition_count": 77,
+          "derivation_path": "PATH_A",
+          "classes": {
+            "STRUCTURAL_DOMINANCE": 12,
+            "COUPLING_PATTERN": 34,
+            "AUTHORITY_TOPOLOGY": 12,
+            "TIER_GROUNDING": 12,
+            "HERO_MOMENT_GROUNDING": 6,
+            "CLUSTER_ARCHITECTURE": 1
+          },
+          "class_count": 6,
+          "tiers": {
+            "DIRECT_EVIDENCE": 69,
+            "DERIVED": 8
+          },
+          "materializer": "scripts/pios/spe/derivation_engine.py"
+        },
+        "blueedge": {
+          "proposition_count": 85,
+          "derivation_path": "PATH_B",
+          "classes": {
+            "DOMAIN_EVIDENCE_GROUNDING": 17,
+            "CAPABILITY_EVIDENCE": 24,
+            "VAULT_CLAIM_STRUCTURAL": 25,
+            "CROSS_DOMAIN_EVIDENCE": 19
+          },
+          "class_count": 4,
+          "tiers": {
+            "DIRECT_EVIDENCE": 53,
+            "DERIVED": 32
+          },
+          "materializer": "scripts/pios/sdc/proposition_bridge.py"
+        }
+      },
+      "divergence": "No class overlap between PATH A and PATH B. This is structurally correct \u2014 the proposition classes describe different evidence channels, not different observations of the same evidence. PATH A has higher DIRECT_EVIDENCE ratio (90% vs 62%) because code graph relationships are directly observable. PATH B has more DERIVED because document evidence requires inference across sources."
+    },
+    {
+      "observation_id": "CONV-03",
+      "title": "Governance Friction Convergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens exhibit genuine governance friction during proposition review. Rejections and arbitrations occur in both \u2014 the review process is not rubber-stamping. The friction types differ (code-graph structural disputes vs document-evidence grounding disputes) but the governance mechanism (reject, contest, arbitrate) operates identically.",
+      "evidence": {
+        "netbox": {
+          "review_actions": "3 accepts, 1 reject, 2 contests, 2 arbitrations",
+          "rejection_reason": "Structural coupling claim disputed",
+          "arbitration_count": 2,
+          "total_governance_events": 12
+        },
+        "blueedge": {
+          "review_actions": "81 accepted (71 batch + 10 individual), 3 rejected, 1 arbitrated",
+          "rejection_reason": "3 capabilities in unassigned domains \u2014 SDC extraction artifacts, not semantic propositions",
+          "arbitration_count": 1,
+          "total_governance_events": 8,
+          "friction_note": "1 contestation on DOMAIN-17 (weak grounding, 2 DERIVED components) \u2192 arbitrated upheld"
+        }
+      },
+      "divergence": "NetBox friction was proportionally higher (5 non-accept out of ~77 reviewed = ~6.5%) vs BlueEdge (4 non-accept out of 85 = ~4.7%). NetBox's friction arose from structural coupling disputes; BlueEdge's from evidence grounding gaps. The friction mechanism converges; the friction content diverges with evidence type."
+    },
+    {
+      "observation_id": "CONV-04",
+      "title": "Enrichment Mechanism Divergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens require enrichment for S2 advancement, but the enrichment mechanisms are fundamentally different. PATH A enriches through code graph authority edges (AST analysis, import/inheritance topology). PATH B enriches through HTML document structure re-extraction (domain ID correction via semantic name matching, component count recalculation). Both strengthen weak propositions but through different evidence sources.",
+      "evidence": {
+        "netbox": {
+          "enrichment_type": "Code graph authority edges",
+          "enrichment_source": "AST analysis of Python codebase (3,614 edges)",
+          "enrichment_present": true,
+          "mechanism": "Import/inheritance topology enriches structural dominance and coupling claims"
+        },
+        "blueedge": {
+          "enrichment_type": "HTML document structure re-extraction",
+          "enrichment_events": 32,
+          "domains_corrected": 12,
+          "domains_no_sdc_match": 3,
+          "capabilities_domain_corrected": 16,
+          "mechanism": "Semantic name matching corrects domain ID mismatch between canonical CSR and SDC candidate CSR",
+          "limitation": "No code graph available. Cannot provide L5 structural authority from document evidence alone."
+        }
+      },
+      "divergence": "PATH A enrichment adds structural depth (authority edges). PATH B enrichment corrects structural alignment (domain ID mapping). PATH A can reach L5 authority through code-level proof. PATH B is ceiling-limited at L3 because document evidence cannot provide code-level structural authority. The enrichment contract converges; the evidence ceiling diverges."
+    },
+    {
+      "observation_id": "CONV-05",
+      "title": "Revalidation Pattern Convergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "The same 25-check deterministic revalidation engine runs on both specimens without modification. Both achieve PASS (25/25). The revalidation contract (8 phases: input gate, proposition integrity, confidence realism, tier validity, disposition completeness, reconciliation cleanliness, spine consistency, SQO state consistency) transfers across specimen types.",
+      "evidence": {
+        "netbox": {
+          "revalidation_engine": "scripts/pios/revalidation_engine.py",
+          "result": "PASS",
+          "checks": "25/25 (pre-enrichment: 48/48 in earlier framework)"
+        },
+        "blueedge": {
+          "revalidation_engine": "scripts/pios/revalidation_engine.py",
+          "result": "PASS",
+          "checks": "25/25",
+          "note": "Same engine, no PATH-specific adaptation required"
+        }
+      },
+      "divergence": "NetBox's earlier revalidation used a 48-check/9-phase framework. The current 25-check/8-phase engine was written during BlueEdge lifecycle exercise and retroactively applies to both. No divergence in the current engine's behavior across specimens."
+    },
+    {
+      "observation_id": "CONV-06",
+      "title": "Constitutional Anchor Behavior",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "The constitutional replay anchor compares candidate corpus against reference (NetBox) across 8 dimensions. BlueEdge achieved 8/8 PASS at S2 (CONSTITUTIONAL_DISTANCE_ACCEPTABLE). The anchor correctly detected dimensional gaps at S1 (enrichment_activity: FAIL, review_obligations: FAIL) and cleared them after enrichment. The anchor operates as a specimen-independent semantic adequacy check.",
+      "evidence": {
+        "netbox": {
+          "role": "Reference specimen",
+          "anchor_dimensions": {
+            "proposition_count": 75,
+            "class_diversity": 6,
+            "review_obligations": 6,
+            "governance_friction": 3,
+            "confidence_distribution": 0.377,
+            "tier_diversity": 2,
+            "governance_event_density": 11,
+            "enrichment_activity": true
+          }
+        },
+        "blueedge": {
+          "role": "Candidate specimen",
+          "s1_anchor": {
+            "verdict": "CONSTITUTIONAL_DISTANCE_ELEVATED",
+            "pass": 6,
+            "fail": 2,
+            "failed_dimensions": [
+              "review_obligations (HIGH)",
+              "enrichment_activity (MEDIUM)"
+            ],
+            "advancement_blocked": false
+          },
+          "s2_anchor": {
+            "verdict": "CONSTITUTIONAL_DISTANCE_ACCEPTABLE",
+            "pass": 8,
+            "fail": 0,
+            "advancement_blocked": false
+          }
+        }
+      },
+      "divergence": "The anchor uses NetBox as the fixed reference point. This means the anchor measures conformity to PATH A dimensional norms, not universal governance norms. A future third specimen might expose dimensions where NetBox is atypical. The anchor is currently a single-reference comparator, not a multi-specimen norm."
+    },
+    {
+      "observation_id": "CONV-07",
+      "title": "S2 Advancement Legitimacy",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens hold S2 through GOVERNED_LIFECYCLE provenance, but arrived there through different mechanisms. NetBox's S2 was the first governed advancement; BlueEdge's S2 was earned through the SQO execution graph's explicit S1\u2192S2 path (7 stages). Both S2 states represent operator-authorized advancement after revalidation PASS, but BlueEdge's is structurally more rigorous because it was governed by an encoded execution graph rather than ad-hoc process.",
+      "evidence": {
+        "netbox": {
+          "s2_provenance": "GOVERNED_LIFECYCLE",
+          "s1_actor": "system:governance_projection",
+          "s2_actor": "operator:khorrix",
+          "execution_graph": "Pre-dates SQO execution graph. Process was correct but not graph-encoded.",
+          "constitutional_anchor": "Not integrated at time of S2 advancement"
+        },
+        "blueedge": {
+          "s2_provenance": "GOVERNED_LIFECYCLE",
+          "s1_actor": "operator:khorrix",
+          "s2_actor": "operator:khorrix",
+          "execution_graph": "SQO execution graph v2.0.0 \u2014 7-stage S1\u2192S2 path",
+          "constitutional_anchor": "Integrated \u2014 8/8 PASS required and verified before advancement"
+        }
+      },
+      "divergence": "NetBox achieved S2 before the constitutional anchor and SQO execution graph existed. BlueEdge achieved S2 with both in place. BlueEdge's S2 is therefore more structurally constrained \u2014 it passed through explicit gates that NetBox did not face. This is not a deficiency in NetBox \u2014 it reflects governance infrastructure maturation between specimens."
+    },
+    {
+      "observation_id": "CONV-08",
+      "title": "Debt Taxonomy Convergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens use the same debt classification taxonomy: IRREDUCIBLE_STRUCTURAL_ABSENCE, REDUCED_BY_ENRICHMENT, REDUCIBLE_BY_EVIDENCE. The taxonomy transfers across specimen types. Debt items in both specimens are classified against the same structural authority requirements.",
+      "evidence": {
+        "netbox": {
+          "debt_source": "sqo/qualification_blockers.json",
+          "taxonomy": "IRREDUCIBLE_STRUCTURAL_ABSENCE / REDUCED_BY_ENRICHMENT / REDUCIBLE_BY_EVIDENCE"
+        },
+        "blueedge": {
+          "debt_source": "run_blueedge_productized_01_fixed/sqo/qualification_blockers.json",
+          "total_items": 15,
+          "irreducible": 4,
+          "reduced_by_enrichment": 8,
+          "reducible_by_evidence": 1,
+          "unclassified": 2,
+          "post_enrichment": "improved=4, unchanged=5, worsened=6"
+        }
+      },
+      "divergence": "BlueEdge has more debt items (15 vs NetBox's smaller set) because PATH B evidence cannot provide L5 structural authority \u2014 document evidence reaches a ceiling that code graph evidence does not. The taxonomy is the same; the distribution reflects evidence channel limitations."
+    },
+    {
+      "observation_id": "CONV-09",
+      "title": "Authority Ceiling Convergence",
+      "pattern_status": "OBSERVED",
+      "interpretation_maturity": "DESCRIPTIVE",
+      "observation": "Both specimens operate at L3 authority ceiling for AI-derived propositions. The non-automatable boundary holds across specimen types. No proposition in either specimen was auto-promoted \u2014 all governance transitions required operator action.",
+      "evidence": {
+        "netbox": {
+          "authority_ceiling": "L3",
+          "non_automatable_gates": [
+            "proposition_review (Gate 3)",
+            "promotion (Gate 5)"
+          ],
+          "operator_actions": "review_accept, review_reject, review_contest, escalate_arbitration, resolve_arbitration, s2_advancement_granted"
+        },
+        "blueedge": {
+          "authority_ceiling": "L3",
+          "non_automatable_gates": [
+            "CEU_reconciliation (Gate 1)",
+            "proposition_review (Gate 3)",
+            "promotion (Gate 5)"
+          ],
+          "operator_actions": "confirm, accept, reject, contest, arbitrate, accept-unflagged, complete, advance"
+        }
+      },
+      "divergence": "BlueEdge exercised more operator action types (8 vs 6) because it traversed Gate 1 (CEU reconciliation) as an explicit operator gate. The L3 ceiling is identical. The non-automatable boundary is structural \u2014 it is enforced by the SQO execution graph, not by specimen type."
+    }
+  ],
+  "summary": {
+    "total_observations": 9,
+    "convergences": [
+      "governance_lifecycle",
+      "governance_friction_mechanism",
+      "revalidation_contract",
+      "debt_taxonomy",
+      "authority_ceiling"
+    ],
+    "divergences": [
+      "proposition_derivation_classes",
+      "enrichment_mechanisms",
+      "evidence_authority_ceiling"
+    ],
+    "convergence_with_divergence": [
+      "constitutional_anchor_behavior",
+      "s2_advancement_legitimacy"
+    ],
+    "verdict": "DESCRIPTIVE CONVERGENCE OBSERVED",
+    "interpretation": "Two specimens completing the same governance lifecycle through different evidence channels is a comparison, not a pattern. The governance infrastructure (gates, revalidation, anchor, promotion) converges. The evidence substrate (code graph vs document evidence) diverges. Diversity within common governance is itself an observation \u2014 not a law."
+  }
+}

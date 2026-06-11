@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "PI.SQO.EXECUTION-GRAPH.01",
+  "sqo_stage": "evidence_enrichment_execution",
+  "s1_to_s2_stage": 2,
+  "event_type": "ENRICHMENT_ACTIVITY",
+  "client": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "timestamp": "2026-05-23T11:33:29.056809+00:00",
+  "enrichment_exercised": true,
+  "enrichment_events": 32,
+  "enrichment_type": "DOMAIN_ID_CORRECTION_AND_EVIDENCE_REALIGNMENT",
+  "path_b_limitation": "No code graph available. Enrichment limited to SDC-extracted HTML evidence realignment. Cannot provide L5 structural authority from document evidence alone."
+}

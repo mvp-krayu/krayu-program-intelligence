@@ -1,0 +1,9 @@
+{
+  "archive_path": "/Users/khorrix/Projects/blueedge-clean-run/source-raw/raw/blueedge-platform-v3_23_0-COMPLETE.tar",
+  "sha256_expected": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+  "sha256_actual": "672a841277541921bf8ade69a467d35d9f105a1525c754fa4b750f0aa50e9c80",
+  "sha256_match": true,
+  "checksum_result": "PASS",
+  "algorithm": "sha256",
+  "file_size_bytes": 4505600
+}

@@ -1,0 +1,931 @@
+{
+  "artifact_id": "binding_envelope_blueedge_orchestrated",
+  "contract_id": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+  "schema_version": "1.0",
+  "generated_at": "2026-05-23T10:01:55.997609+00:00",
+  "client_id": "6a6fcdbc-41b6-4e0e-99b9-37394f6c870d",
+  "client_alias": "blueedge",
+  "run_id": "run_blueedge_genesis_e2e_03",
+  "stream": "PSEE-PIPELINE.ORCHESTRATOR",
+  "nodes": [
+    {
+      "node_id": "DOM-01",
+      "label": "root_configuration",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "Root-level configuration and orchestration files. No subdirectory prefix \u2014 identified by file extension patterns at repo root.",
+        "path_patterns": [
+          "*.env.example",
+          "docker-compose*.yml"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-02",
+      "label": "ci_cd_workflows",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under .github/workflows/ path prefix.",
+        "path_patterns": [
+          ".github/workflows/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-03",
+      "label": "backend_migrations",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/migrations/ path prefix.",
+        "path_patterns": [
+          "backend/migrations/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-04",
+      "label": "backend_app_root",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "Files at backend/src/ root level (not in subdirectory). These are the application entry points.",
+        "path_patterns": [
+          "backend/src/app.module.ts",
+          "backend/src/main.ts"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-05",
+      "label": "backend_common",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/src/common/ path prefix (cache, guards, versioning subdirectories).",
+        "path_patterns": [
+          "backend/src/common/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-06",
+      "label": "backend_config",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/src/config/ path prefix.",
+        "path_patterns": [
+          "backend/src/config/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-07",
+      "label": "backend_events",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/src/events/ path prefix.",
+        "path_patterns": [
+          "backend/src/events/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-08",
+      "label": "backend_health",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/src/health/ path prefix.",
+        "path_patterns": [
+          "backend/src/health/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-09",
+      "label": "backend_modules",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under backend/src/modules/ path prefix (all subdirectories: aftersales, agentic-ai, auth).",
+        "path_patterns": [
+          "backend/src/modules/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-10",
+      "label": "frontend",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under frontend/ path prefix.",
+        "path_patterns": [
+          "frontend/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-11",
+      "label": "load_tests",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under load-tests/ path prefix.",
+        "path_patterns": [
+          "load-tests/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-12",
+      "label": "monitoring",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under monitoring/ path prefix.",
+        "path_patterns": [
+          "monitoring/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "DOM-13",
+      "label": "svg_agents",
+      "type": "binding_context",
+      "provenance": {
+        "source_artifact": "dom_path_domain_layer.json",
+        "derivation_rule": "All files under svg-agents/ path prefix.",
+        "path_patterns": [
+          "svg-agents/"
+        ]
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-01",
+      "label": "application_core",
+      "type": "component_entity",
+      "ceu_id": "CEU-01",
+      "grounding_status": "UNGROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-01",
+        "evidence_count": 0
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-02",
+      "label": "service_layer",
+      "type": "component_entity",
+      "ceu_id": "CEU-02",
+      "grounding_status": "UNGROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-02",
+        "evidence_count": 0
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-03",
+      "label": "data_layer",
+      "type": "component_entity",
+      "ceu_id": "CEU-03",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-03",
+        "evidence_count": 10
+      },
+      "temporal_classification": "STATIC",
+      "centrality_evidence": {
+        "files_with_centrality": 7,
+        "hub_file": "backend/src/config/database.config.ts",
+        "hub_import_in_degree": 0,
+        "hub_structural_role": "INTERFACE_BOUNDARY",
+        "hub_centrality_rank": 590,
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "node_id": "CE-04",
+      "label": "api_routing",
+      "type": "component_entity",
+      "ceu_id": "CEU-04",
+      "grounding_status": "UNGROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-04",
+        "evidence_count": 0
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-05",
+      "label": "configuration",
+      "type": "component_entity",
+      "ceu_id": "CEU-05",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-05",
+        "evidence_count": 5
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-06",
+      "label": "testing",
+      "type": "component_entity",
+      "ceu_id": "CEU-06",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-06",
+        "evidence_count": 10
+      },
+      "temporal_classification": "STATIC",
+      "centrality_evidence": {
+        "files_with_centrality": 10,
+        "hub_file": "backend/src/test/test-utils.ts",
+        "hub_import_in_degree": 22,
+        "hub_structural_role": "VALIDATION_SUPPORT",
+        "hub_centrality_rank": 22,
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "node_id": "CE-07",
+      "label": "ci_cd",
+      "type": "component_entity",
+      "ceu_id": "CEU-07",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-07",
+        "evidence_count": 3
+      },
+      "temporal_classification": "STATIC",
+      "centrality_evidence": {
+        "files_with_centrality": 1,
+        "hub_file": "backend/src/modules/devices/entities/provisioning-workflow.entity.ts",
+        "hub_import_in_degree": 3,
+        "hub_structural_role": "VALIDATION_SUPPORT",
+        "hub_centrality_rank": 124,
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "node_id": "CE-08",
+      "label": "generated_artifacts",
+      "type": "component_entity",
+      "ceu_id": "CEU-08",
+      "grounding_status": "UNGROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-08",
+        "evidence_count": 0
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CE-09",
+      "label": "logging_observability",
+      "type": "component_entity",
+      "ceu_id": "CEU-09",
+      "grounding_status": "GROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-09",
+        "evidence_count": 5
+      },
+      "temporal_classification": "STATIC",
+      "centrality_evidence": {
+        "files_with_centrality": 5,
+        "hub_file": "backend/src/common/logging/index.ts",
+        "hub_import_in_degree": 4,
+        "hub_structural_role": "VALIDATION_SUPPORT",
+        "hub_centrality_rank": 45,
+        "source_artifact": "structure/40.3c/structural_centrality.json"
+      }
+    },
+    {
+      "node_id": "CE-10",
+      "label": "dependency_management",
+      "type": "component_entity",
+      "ceu_id": "CEU-10",
+      "grounding_status": "UNGROUNDED",
+      "provenance": {
+        "source_artifact": "ceu_grounding_registry.json",
+        "ceu_id": "CEU-10",
+        "evidence_count": 0
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-01",
+      "label": "application_core_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-01",
+      "provenance": {
+        "parent_node": "CE-01",
+        "parent_ceu": "CEU-01",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-02",
+      "label": "service_layer_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-02",
+      "provenance": {
+        "parent_node": "CE-02",
+        "parent_ceu": "CEU-02",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-03",
+      "label": "data_layer_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-03",
+      "provenance": {
+        "parent_node": "CE-03",
+        "parent_ceu": "CEU-03",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-04",
+      "label": "api_routing_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-04",
+      "provenance": {
+        "parent_node": "CE-04",
+        "parent_ceu": "CEU-04",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-05",
+      "label": "configuration_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-05",
+      "provenance": {
+        "parent_node": "CE-05",
+        "parent_ceu": "CEU-05",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-06",
+      "label": "testing_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-06",
+      "provenance": {
+        "parent_node": "CE-06",
+        "parent_ceu": "CEU-06",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-07",
+      "label": "ci_cd_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-07",
+      "provenance": {
+        "parent_node": "CE-07",
+        "parent_ceu": "CEU-07",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-08",
+      "label": "generated_artifacts_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-08",
+      "provenance": {
+        "parent_node": "CE-08",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-09",
+      "label": "logging_observability_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-09",
+      "provenance": {
+        "parent_node": "CE-09",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "node_id": "CS-10",
+      "label": "dependency_management_surface",
+      "type": "capability_surface",
+      "ceu_id": "CEU-10",
+      "provenance": {
+        "parent_node": "CE-10",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "ceu_grounding_registry.json"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "EDGE-DOM-03-CE-03",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-03",
+      "to_node": "CE-03",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-03"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-06-CE-03",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-06",
+      "to_node": "CE-03",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-03"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-03",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-03",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-03"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-01-CE-05",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-01",
+      "to_node": "CE-05",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-05"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-05",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-05",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-05"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-06",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-06",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-06"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-02-CE-07",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-02",
+      "to_node": "CE-07",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-07"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-07",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-07",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-07"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-DOM-UNKNOWN-CE-09",
+      "edge_type": "GROUNDS",
+      "from_node": "DOM-UNKNOWN",
+      "to_node": "CE-09",
+      "containment_level": "domain_to_component",
+      "provenance": {
+        "derivation_rule": "CEU evidence_refs \u2192 structural node \u2192 DOM group membership",
+        "ceu_id": "CEU-09"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-01-CS-01",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-01",
+      "to_node": "CS-01",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-01"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-02-CS-02",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-02",
+      "to_node": "CS-02",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-02"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-03-CS-03",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-03",
+      "to_node": "CS-03",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-03"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-04-CS-04",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-04",
+      "to_node": "CS-04",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-04"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-05-CS-05",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-05",
+      "to_node": "CS-05",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-05"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-06-CS-06",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-06",
+      "to_node": "CS-06",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-06"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-07-CS-07",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-07",
+      "to_node": "CS-07",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-07"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-08-CS-08",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-08",
+      "to_node": "CS-08",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-08"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-09-CS-09",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-09",
+      "to_node": "CS-09",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-09"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-CE-10-CS-10",
+      "edge_type": "EXPOSES",
+      "from_node": "CE-10",
+      "to_node": "CS-10",
+      "containment_level": "component_to_surface",
+      "provenance": {
+        "derivation_rule": "CEU grounding \u2192 capability surface",
+        "ceu_id": "CEU-10"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-IMPORT-DOM-09-DOM-05",
+      "edge_type": "IMPORTS_ACROSS",
+      "from_node": "DOM-09",
+      "to_node": "DOM-05",
+      "import_count": 5,
+      "provenance": {
+        "derivation_rule": "40.3s cross-DOM import aggregation",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-IMPORT-DOM-04-DOM-05",
+      "edge_type": "IMPORTS_ACROSS",
+      "from_node": "DOM-04",
+      "to_node": "DOM-05",
+      "import_count": 1,
+      "provenance": {
+        "derivation_rule": "40.3s cross-DOM import aggregation",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-IMPORT-DOM-04-DOM-09",
+      "edge_type": "IMPORTS_ACROSS",
+      "from_node": "DOM-04",
+      "to_node": "DOM-09",
+      "import_count": 1,
+      "provenance": {
+        "derivation_rule": "40.3s cross-DOM import aggregation",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "edge_id": "EDGE-IMPORT-DOM-08-DOM-05",
+      "edge_type": "IMPORTS_ACROSS",
+      "from_node": "DOM-08",
+      "to_node": "DOM-05",
+      "import_count": 1,
+      "provenance": {
+        "derivation_rule": "40.3s cross-DOM import aggregation",
+        "source_artifact": "structure/40.3s/code_graph.json"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "capability_surfaces": [
+    {
+      "surface_id": "CS-01",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "",
+      "provenance": {
+        "parent_node": "CE-01",
+        "parent_ceu": "CEU-01",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-02",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "",
+      "provenance": {
+        "parent_node": "CE-02",
+        "parent_ceu": "CEU-02",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-03",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "backend/migrations/init.sql",
+      "provenance": {
+        "parent_node": "CE-03",
+        "parent_ceu": "CEU-03",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-04",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "",
+      "provenance": {
+        "parent_node": "CE-04",
+        "parent_ceu": "CEU-04",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-05",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "backend/Dockerfile",
+      "provenance": {
+        "parent_node": "CE-05",
+        "parent_ceu": "CEU-05",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-06",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "backend/src/test/test-utils.ts",
+      "provenance": {
+        "parent_node": "CE-06",
+        "parent_ceu": "CEU-06",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-07",
+      "label": "ci_cd_workflows_capability",
+      "parent_context": "DOM-02",
+      "path_pattern": ".github/workflows/ci.yml",
+      "provenance": {
+        "parent_node": "CE-07",
+        "parent_ceu": "CEU-07",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-08",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "",
+      "provenance": {
+        "parent_node": "CE-08",
+        "parent_ceu": "CEU-08",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-09",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "backend/src/common/logging/global-exception.filter.ts",
+      "provenance": {
+        "parent_node": "CE-09",
+        "parent_ceu": "CEU-09",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    },
+    {
+      "surface_id": "CS-10",
+      "label": "unknown_capability",
+      "parent_context": "DOM-UNKNOWN",
+      "path_pattern": "",
+      "provenance": {
+        "parent_node": "CE-10",
+        "parent_ceu": "CEU-10",
+        "source_artifact": "ceu_grounding_registry.json",
+        "source_type": "CAPABILITY_SURFACE",
+        "authority_level": "GROUNDED",
+        "validation_status": "PASS",
+        "generated_from": "PI.LENS.MULTI-CLIENT.PIPELINE-ORCHESTRATOR.E2E.01",
+        "generated_at_stage": "PHASE_05_BINDING_ENVELOPE"
+      },
+      "temporal_classification": "STATIC"
+    }
+  ],
+  "summary": {
+    "total_nodes": 33,
+    "binding_context_count": 13,
+    "component_entity_count": 10,
+    "capability_surface_node_count": 10,
+    "total_edges": 23,
+    "capability_surfaces_count": 10,
+    "derivation_basis": "CEU grounding registry + DOM path domain layer (PATH_EVIDENCE_ONLY) + 40.3s import topology + 40.3c centrality",
+    "structural_enrichment": {
+      "source": "PI.FUSION.ENRICHED-STRUCTURAL-PROPAGATION.01",
+      "cross_dom_import_edges": 4,
+      "total_cross_dom_imports": 8,
+      "grounds_edges_with_import_evidence": 0,
+      "component_entities_with_centrality": 4
+    }
+  }
+}

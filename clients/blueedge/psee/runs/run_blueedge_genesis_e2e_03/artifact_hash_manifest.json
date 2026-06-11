@@ -1,0 +1,376 @@
+{
+  "manifest_version": "1.0",
+  "run_directory": "clients/blueedge/psee/runs/run_blueedge_genesis_e2e_03",
+  "created_at": "2026-05-25T07:41:15.128052+00:00",
+  "artifact_count": 46,
+  "artifacts": [
+    {
+      "relative_path": "structure/40.4/canonical_topology.json",
+      "artifact_class": "structural",
+      "immutable": true,
+      "sha256": "4ca4d0212ffeeb1e092fc7dcfa1940a4508ba95d20d45f0f9fa6fad211c2fd78",
+      "size_bytes": 21439,
+      "hashed_at": "2026-05-25T07:41:15.118073+00:00"
+    },
+    {
+      "relative_path": "structure/40.3s/code_graph.json",
+      "artifact_class": "structural",
+      "immutable": true,
+      "sha256": "51bfb612bbbb2477869512eb8e4540cc8f0bfca149df70631a9ca5ce6ccbe25d",
+      "size_bytes": 1214004,
+      "hashed_at": "2026-05-25T07:41:15.119157+00:00"
+    },
+    {
+      "relative_path": "structure/40.3c/structural_centrality.json",
+      "artifact_class": "structural",
+      "immutable": true,
+      "sha256": "b8a374dc2e9e9fd6a948554196f670862c340773baefdf18c136884acaf8560d",
+      "size_bytes": 464158,
+      "hashed_at": "2026-05-25T07:41:15.119722+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/semantic_propositions.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "2331247c0bc368b1bb87ddb4c292b2ad939d2698df7c4ec8dc33a6e80cc9bd79",
+      "size_bytes": 111255,
+      "hashed_at": "2026-05-25T07:41:15.120016+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/spe_derivation_report.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "1429b55130aba6ca67f65c3960dc4a60d89f87bd9401f99a6d06c8010a4e8409",
+      "size_bytes": 1153,
+      "hashed_at": "2026-05-25T07:41:15.120184+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/proposition_review_state.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "1d59f433f5b137a7308795ec2c4f798604f5cec9d42a919bd215722a9be43eb0",
+      "size_bytes": 32040,
+      "hashed_at": "2026-05-25T07:41:15.120494+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/proposition_review_event_log.jsonl",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "46e0774b9e0bab303a93a5e10e4699a18427b1be541198c3ca7bace57ff35fe9",
+      "size_bytes": 24411,
+      "hashed_at": "2026-05-25T07:41:15.120753+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/enrichment_log.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "223d7c24d699c0f78ac245d92581699e8a2709c90e269682c12b33840afab77b",
+      "size_bytes": 11189,
+      "hashed_at": "2026-05-25T07:41:15.120927+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/enrichment_activity_event.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "c63604bfa06c838413300df461ea24cf2ebafb913f3f64e021d51553c4e5ed46",
+      "size_bytes": 615,
+      "hashed_at": "2026-05-25T07:41:15.121078+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/enrichment_summary.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "2fcc3d8baaa757a58b854a86351f5215b94305f92f8ccf34afb093127dfa45a9",
+      "size_bytes": 604,
+      "hashed_at": "2026-05-25T07:41:15.121208+00:00"
+    },
+    {
+      "relative_path": "semantic/spe/debt_reassessment.json",
+      "artifact_class": "semantic",
+      "immutable": false,
+      "sha256": "f638663d38848e7eae6ec588e9b625f06c823d23fe0e7bbe345642ec541d715c",
+      "size_bytes": 6987,
+      "hashed_at": "2026-05-25T07:41:15.121880+00:00"
+    },
+    {
+      "relative_path": "sqo/promotion_state.json",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "ea9bdaf3feb0a1c7ad32a6888454e299d941fb9fc1bd838fb964c9ac06812f08",
+      "size_bytes": 2467,
+      "hashed_at": "2026-05-25T07:41:15.122050+00:00"
+    },
+    {
+      "relative_path": "sqo/promotion_event_log.jsonl",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "258344c0d3a0da604de1393e4196b9d869b9efcfb76fdf739ee56d71ec35cac4",
+      "size_bytes": 1688,
+      "hashed_at": "2026-05-25T07:41:15.122171+00:00"
+    },
+    {
+      "relative_path": "sqo/revalidation_result.json",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "01b0e48d5e08764c642fecf321a8c21f488c1bc559508b5134f71522f6982112",
+      "size_bytes": 4359,
+      "hashed_at": "2026-05-25T07:41:15.122282+00:00"
+    },
+    {
+      "relative_path": "sqo/revalidation_event_log.jsonl",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "48d6d9f7f19f5422b7555bcbdf164e9586b733aec4aa70d0d52e52c93b2576d6",
+      "size_bytes": 778,
+      "hashed_at": "2026-05-25T07:41:15.122450+00:00"
+    },
+    {
+      "relative_path": "sqo/constitutional_replay_anchor.json",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "1a3991129fcef012db7a52ceaf69e1b066df0bcd70a4ff84faa2160dcb4c4aef",
+      "size_bytes": 4278,
+      "hashed_at": "2026-05-25T07:41:15.122592+00:00"
+    },
+    {
+      "relative_path": "sqo/review_obligations.json",
+      "artifact_class": "sqo",
+      "immutable": false,
+      "sha256": "64a66574689d34beb6851aa0010a0db45b4295f2cd75951c18433f5067de0a1f",
+      "size_bytes": 4936,
+      "hashed_at": "2026-05-25T07:41:15.122735+00:00"
+    },
+    {
+      "relative_path": "ceu/reconciliation_state.json",
+      "artifact_class": "ceu",
+      "immutable": false,
+      "sha256": "cc95f698d3fe991c94e0c53b22b8ffa1ce9c109d91304c1d92ff4e05d4aaa713",
+      "size_bytes": 2330,
+      "hashed_at": "2026-05-25T07:41:15.122875+00:00"
+    },
+    {
+      "relative_path": "ceu/reconciliation_event_log.jsonl",
+      "artifact_class": "ceu",
+      "immutable": false,
+      "sha256": "f0e07693141c61da42b675151d0e6090931fdefd0e0b58d8738d8dd4130ad51f",
+      "size_bytes": 970,
+      "hashed_at": "2026-05-25T07:41:15.123008+00:00"
+    },
+    {
+      "relative_path": "ceu/reconciliation_obligations.json",
+      "artifact_class": "ceu",
+      "immutable": false,
+      "sha256": "7d18fd7d9312aab849cd0306fda2c64e3aa09c8eb2f5cfea87242f61b8ddfef8",
+      "size_bytes": 213,
+      "hashed_at": "2026-05-25T07:41:15.123145+00:00"
+    },
+    {
+      "relative_path": "ceu/candidate_registry.json",
+      "artifact_class": "ceu",
+      "immutable": false,
+      "sha256": "daae8559b3cd2694f72fd84aa76257dcc9530d1db9913b85ed3b354a3e2458e8",
+      "size_bytes": 3562,
+      "hashed_at": "2026-05-25T07:41:15.123270+00:00"
+    },
+    {
+      "relative_path": "ceu/evidence_anchors.json",
+      "artifact_class": "ceu",
+      "immutable": false,
+      "sha256": "0a7588bba456bc0510bc2bf687f3394719bc534aca05452930022fa1b9fef0b3",
+      "size_bytes": 2906,
+      "hashed_at": "2026-05-25T07:41:15.123395+00:00"
+    },
+    {
+      "relative_path": "spine/spine_objects.json",
+      "artifact_class": "spine",
+      "immutable": false,
+      "sha256": "b61e8694c5a6336b46c4d2058c0536c68b058f580be996d1c27f987ca04104f7",
+      "size_bytes": 108971,
+      "hashed_at": "2026-05-25T07:41:15.123835+00:00"
+    },
+    {
+      "relative_path": "convergence/convergence_observations.json",
+      "artifact_class": "convergence",
+      "immutable": false,
+      "sha256": "5afe735196d1634a17446ee96554f1ce08e438470472319f2e6773db558134c4",
+      "size_bytes": 16646,
+      "hashed_at": "2026-05-25T07:41:15.124085+00:00"
+    },
+    {
+      "relative_path": "chronicle/CHRONICLE_MANIFEST.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "577f8d3bd0cd11aa28487cf1b32b16f54a08fff94ac558a0f94327a9d41c685c",
+      "size_bytes": 4555,
+      "hashed_at": "2026-05-25T07:41:15.124365+00:00"
+    },
+    {
+      "relative_path": "chronicle/chronicle_events.jsonl",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "68133c488d87f2b48f0729738487c546cbe656d16cfcde5a9f3e6f21cf03cf14",
+      "size_bytes": 25668,
+      "hashed_at": "2026-05-25T07:41:15.124803+00:00"
+    },
+    {
+      "relative_path": "chronicle/chronicle_certification.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "0e35ce0318610d51daceecaeb20949e84d7eff8ba90efea2ecf13ff8eb449685",
+      "size_bytes": 12376,
+      "hashed_at": "2026-05-25T07:41:15.124931+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_00_learning_load.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "a5fb47a3b4b5eb4d8aa327d8c0c2db3c00a55d5a3f2f611622dfcc24e8d33462",
+      "size_bytes": 317,
+      "hashed_at": "2026-05-25T07:41:15.125079+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_01_source_boundary.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "17255878b6d86d9b91bcd9e4329d2eabc954421ecfd9d1e598f5d12b9a28a843",
+      "size_bytes": 337,
+      "hashed_at": "2026-05-25T07:41:15.125199+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_02_intake_verification.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "aeeb40dd15c008c2136deaf8febea435ac6fa84c304904282e598e00371af45f",
+      "size_bytes": 348,
+      "hashed_at": "2026-05-25T07:41:15.125857+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_03_structural_verification.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "d6bcf43ed0cc87b93a4fc75284616be7d512dadef0489c4ea131e8127acff538",
+      "size_bytes": 365,
+      "hashed_at": "2026-05-25T07:41:15.126015+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_04_relevance_classification.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "e393b25f607f4d89fcc0542bac229bacd8301100f613d43109a18f52be605edd",
+      "size_bytes": 378,
+      "hashed_at": "2026-05-25T07:41:15.126168+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_05_code_graph_enrichment.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "8b35911f7279bff54c3e31d1084d1e4a81c8ced9fbd6c107f0f3e3d6790738f7",
+      "size_bytes": 373,
+      "hashed_at": "2026-05-25T07:41:15.126303+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_06_structural_centrality.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "1b09dd57afbca41aeacd408d80bf0887d77bc1627ddec73b422a90b6be38d086",
+      "size_bytes": 370,
+      "hashed_at": "2026-05-25T07:41:15.126402+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_07_phase_7.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "f706a7e3c806bc4ce01f02280b5de83babe779b1ceef171f85e7c9ed5c405893",
+      "size_bytes": 359,
+      "hashed_at": "2026-05-25T07:41:15.126527+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_07_semantic_derivation.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "b2b5f88fa4654258b8c851483a85507c438ac16619f6d9b8891a6dc95358ee7f",
+      "size_bytes": 353,
+      "hashed_at": "2026-05-25T07:41:15.126623+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_08_phase_8.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "a69837253cd5dce7c2a2737a8af7270377f63b4e401e827de782014d920ba0c1",
+      "size_bytes": 350,
+      "hashed_at": "2026-05-25T07:41:15.126721+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_08_semantic_proposition.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "43bae9c819d8476c732801484d4b034b7f289547a3e686f7312486315de5f47c",
+      "size_bytes": 359,
+      "hashed_at": "2026-05-25T07:41:15.126791+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_09_ceu_grounding.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "6ab20b564ef7838faf1bf5ff2bbba894d121d491c25c0eda686a3fccac2d154d",
+      "size_bytes": 350,
+      "hashed_at": "2026-05-25T07:41:15.126924+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_10_binding_envelope.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "df1b3a98d0ed1ff7ee3f9d7eb06b0f75a20a5c3f8e79fceee517843ef62ff3a5",
+      "size_bytes": 350,
+      "hashed_at": "2026-05-25T07:41:15.127017+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_11_csr_topology.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "969f652ce8a1699ca6e59299ac86a4c44f7b7de7ec7855e996c4f3c98e06d697",
+      "size_bytes": 354,
+      "hashed_at": "2026-05-25T07:41:15.127149+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_12_activation_projection.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "f7f67f10b703652770bbac084306d8b68c2fcc79d73273fc79e09b81da65e983",
+      "size_bytes": 373,
+      "hashed_at": "2026-05-25T07:41:15.127675+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_13_vault_construction.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "4d2b290f4d36b0a1c72acf72a259879a622f6dae3aac605e6f5947d8d2386c69",
+      "size_bytes": 348,
+      "hashed_at": "2026-05-25T07:41:15.127735+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_14_vault_readiness.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "4a22f40b0080f8ac81446530012da2b3ddbef9ef229a3154c07c74487d905f34",
+      "size_bytes": 342,
+      "hashed_at": "2026-05-25T07:41:15.127786+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_15_selector_update.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "c49fc7593a9e3a20e5311dba1a78d33ec840c0143b8dd1b4dc1a1b22e31d90a9",
+      "size_bytes": 344,
+      "hashed_at": "2026-05-25T07:41:15.127931+00:00"
+    },
+    {
+      "relative_path": "chronicle/checkpoints/checkpoint_16_learning_manifest.json",
+      "artifact_class": "chronicle",
+      "immutable": true,
+      "sha256": "e606dc879786fc81fa7d22c0641534db3713ce6f2b4b73b5f66b5ba8abc34953",
+      "size_bytes": 331,
+      "hashed_at": "2026-05-25T07:41:15.128050+00:00"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint_10_binding_envelope",
+  "checkpoint_index": 10,
+  "semantic_phase": "STABILIZATION",
+  "pipeline_phase": "Phase 5  \u2014 Build Binding Envelope",
+  "timestamp": "2026-05-23T10:01:56.007Z",
+  "status": "FROZEN",
+  "predecessor": "checkpoint_11_csr_topology",
+  "events_since_predecessor": 43,
+  "state_snapshot": {}
+}
