@@ -314,6 +314,61 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
     setInvestigationContext(null)
   }, [])
 
+  const handleInlineSynthesis = useCallback((intent, chipLabel) => {
+    const { synthesizeByIntent } = require('../lib/lens-v2/pios/IntentSynthesizer')
+    const { deriveSteeringContract } = require('../lib/lens-v2/pios/AnswerObjectSteeringContract')
+
+    const cdc = crossDomainCognitionRef.current
+    const domConc = (cdc && cdc.domain_concentration) || []
+    const structCenter = domConc.length > 0 ? domConc[0].domain : null
+    const execCenter = cdc && cdc.execution_center
+
+    let ao = null
+    if (structCenter && execCenter && structCenter.toLowerCase() !== execCenter.toLowerCase()) {
+      ao = { ao_type: 'DIVERGENCE_PAIR', ao_id: 'AO-011', instance: { domain_a: { domain: structCenter }, domain_b: { domain: execCenter } } }
+    }
+
+    const invocation = {
+      intent,
+      finding: { surface: 'GRAVITY_DIVERGENCE', posture_label: cdc && cdc.posture_label },
+      answer_object: ao,
+      persona: densityClass,
+      investigation: investigationContext ? { id: investigationContext.id, state: investigationContext.state } : null,
+      evidence: {
+        projection_level: projectionAuthorityRef.current ? projectionAuthorityRef.current.projectionLevel : 0,
+        qualification_state: projectionAuthorityRef.current ? projectionAuthorityRef.current.qualificationState : 'S0',
+        evidence_layers: [],
+        rsig_count: (fullReportRef.current && fullReportRef.current.signal_interpretations || []).filter(s => s.signal_family === 'RSIG').length,
+        condition_count: 0,
+        domain_count: 0,
+      },
+    }
+
+    const synthesis = synthesizeByIntent(invocation)
+    setInvestigationContext(prev => ({
+      ...(prev || {}),
+      activeSynthesis: synthesis,
+      activeStepId: null,
+      inlineSynthesisLabel: chipLabel,
+      finding: prev ? prev.finding : (cdc && cdc.posture_label) || 'structural_assessment',
+      surface: prev ? prev.surface : 'GRAVITY_DIVERGENCE',
+      postureLabel: prev ? prev.postureLabel : (cdc && cdc.posture_label),
+      primaryDomain: prev ? prev.primaryDomain : structCenter,
+      executionCenter: prev ? prev.executionCenter : execCenter,
+      proofSteps: prev ? prev.proofSteps : [],
+      state: prev ? prev.state : 'OPENED',
+    }))
+  }, [densityClass, investigationContext])
+
+  const handleProjectionShift = useCallback((targetMode) => {
+    if (targetMode === 'BOARDROOM') {
+      setBoardroomMode(true)
+    } else {
+      setBoardroomMode(false)
+      setDensityClass(targetMode)
+    }
+  }, [])
+
   const reportObject = livePayload || null
 
   const result = useMemo(() => {
@@ -591,6 +646,8 @@ export default function LensV2FlagshipPage({ livePayload, livePropagationChains,
             onInvestigationClear={handleInvestigationDismiss}
             onInvestigationStep={handleInvestigationStep}
             onInvestigationResolve={handleInvestigationResolve}
+            onInlineSynthesis={handleInlineSynthesis}
+            onProjectionShift={handleProjectionShift}
             swIntelActive={swIntelActive}
             swIntelProjection={swIntelProjection}
             onSwIntelDeactivate={handleSwIntelDeactivate}

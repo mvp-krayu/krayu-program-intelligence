@@ -6780,7 +6780,7 @@ function BalancedVisualInterpretationZone({ fullReport, crossDomainCognition, vi
   )
 }
 
-function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel, onModeTransition, pendingIntent, onIntentConsumed }) {
+function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullReport, qualifierClass, onAuthorityChange, onEmergenceState, swIntelActive, balancedBriefing, balancedInterpretations, crossDomainCognition, visibilityLayerCompleteness, projectionLevel, onModeTransition, pendingIntent, onIntentConsumed, onInlineSynthesis, onProjectionShift }) {
   const [activeIntent, setActiveIntent] = useState(null)
 
   useEffect(() => {
@@ -7036,7 +7036,7 @@ function BalancedConsequenceField({ adapted, blocks, scope, renderState, fullRep
         )
       })()}
 
-      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionLevel || 0} altitude="operational" onModeTransition={onModeTransition} />
+      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionLevel || 0} altitude="operational" onModeTransition={onModeTransition} onInlineSynthesis={onInlineSynthesis} onProjectionShift={onProjectionShift} />
 
       <BalancedVisualInterpretationZone fullReport={fullReport} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionLevel} />
 
@@ -10465,7 +10465,7 @@ function BoardroomStructuralPosture({ fullReport }) {
   )
 }
 
-function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges, domainCognition, cognitionSubstrate, crossDomainCognition }) {
+function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boardroomProjection, narrative, evidenceBlocks, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, selectedNarrativeArc, onNarrativeSelect, swIntelActive, consequencePosture, projectionAuthority, suppressedConditions, runtimeConnectivityEdges, domainCognition, cognitionSubstrate, crossDomainCognition, onInlineSynthesis, onProjectionShift }) {
   const [topoModalOpen, setTopoModalOpen] = useState(false)
   const [signalTraceId, setSignalTraceId] = useState(null)
   const [convergenceWebOpen, setConvergenceWebOpen] = useState(false)
@@ -10655,7 +10655,7 @@ function BoardroomDecisionSurface({ adapted, renderState, scope, fullReport, boa
           <VisualSpecRenderer specId="executive_risk_card" fullReport={fullReport} crossDomainCognition={crossDomainCognition} />
         )}
 
-        <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={pLevel} altitude="executive" evidenceLayers={fullReport && fullReport._visibilityLayers} onModeTransition={onModeTransition} compact />
+        <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={pLevel} altitude="executive" evidenceLayers={fullReport && fullReport._visibilityLayers} onModeTransition={onModeTransition} onInlineSynthesis={onInlineSynthesis} onProjectionShift={onProjectionShift} compact />
 
         {domNarratives.length > 0 && (
           <div className="cockpit-where-section">
@@ -11221,10 +11221,10 @@ function DomainFocusPanel({ domainId, profile, conditions, onClose }) {
   )
 }
 
-function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness, pendingBalancedIntent, onBalancedIntentConsumed, investigationContext }) {
+function RepresentationField({ boardroomMode, densityClass, adapted, renderState, blocks, scope, fullReport, boardroomProjection, qualifierClass, narrative, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, onZoneChange, onAuthorityChange, onEmergenceState, selectedNarrativeArc, onNarrativeSelect, swIntelActive, swIntelProjection, onSwIntelDeactivate, cognitionState, onSurfaceSelect, onDomainFocus, onPressureZoneFocus, topologyCognitionOverlay, activeConditions, activeConditionId, onConditionSelect, onConditionIntervention, swIntelTeaser, consequencePosture, consequenceTeaser, balancedBriefing, balancedInterpretations, verificationState, verificationTargetReady, onVerificationInvoke, onVerificationClose, onVerificationReopen, runtimeConnectivityEdges, domainLabelMap, domainProfileMap, focusedDomainId, onDomainChipClick, activeConditionsForDomain, onOpenDeepDive, suppressedConditions, projectionAuthority, domainCognition, cognitionSubstrate, crossDomainCognition, visibilityLayerCompleteness, pendingBalancedIntent, onBalancedIntentConsumed, investigationContext, onInlineSynthesis, onProjectionShift }) {
   if (boardroomMode) {
     return (
-      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} />
+      <BoardroomDecisionSurface adapted={adapted} renderState={renderState} scope={scope} fullReport={fullReport} boardroomProjection={boardroomProjection} narrative={narrative} evidenceBlocks={blocks} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onModeTransition={onModeTransition} selectedNarrativeArc={selectedNarrativeArc} onNarrativeSelect={onNarrativeSelect} swIntelActive={swIntelActive} consequencePosture={consequencePosture} projectionAuthority={projectionAuthority} suppressedConditions={suppressedConditions} runtimeConnectivityEdges={runtimeConnectivityEdges} domainCognition={domainCognition} cognitionSubstrate={cognitionSubstrate} crossDomainCognition={crossDomainCognition} onInlineSynthesis={onInlineSynthesis} onProjectionShift={onProjectionShift} />
     )
   }
   if (densityClass === 'OPERATOR_DENSE') {
@@ -11244,14 +11244,14 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   }
   if (densityClass === 'EXECUTIVE_BALANCED') {
     return (
-      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} onModeTransition={onModeTransition} pendingIntent={pendingBalancedIntent} onIntentConsumed={onBalancedIntentConsumed} />
+      <BalancedConsequenceField adapted={adapted} blocks={blocks} scope={scope} renderState={renderState} fullReport={fullReport} qualifierClass={qualifierClass} onAuthorityChange={onAuthorityChange} onEmergenceState={onEmergenceState} swIntelActive={swIntelActive} balancedBriefing={balancedBriefing} balancedInterpretations={balancedInterpretations} crossDomainCognition={crossDomainCognition} visibilityLayerCompleteness={visibilityLayerCompleteness} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} onModeTransition={onModeTransition} pendingIntent={pendingBalancedIntent} onIntentConsumed={onBalancedIntentConsumed} onInlineSynthesis={onInlineSynthesis} onProjectionShift={onProjectionShift} />
     )
   }
   return (
     <>
       <DenseTopologyField adapted={adapted} blocks={blocks} scope={scope} fullReport={fullReport} correspondenceData={correspondenceData} evidenceIntakeData={evidenceIntakeData} debtIndexData={debtIndexData} progressionData={progressionData} maturityData={maturityData} temporalAnalyticsData={temporalAnalyticsData} temporalLifecycleData={temporalLifecycleData} onZoneChange={onZoneChange} cognitionOverlay={topologyCognitionOverlay} onPressureZoneClick={onPressureZoneFocus} activePressureZone={cognitionState && cognitionState.activePressureZone} activeConditionId={activeConditionId} onConditionSelect={onConditionSelect} onConditionIntervention={onConditionIntervention} swIntelActive={swIntelActive} swIntelTeaser={swIntelTeaser} consequenceTeaser={consequenceTeaser} balancedBriefing={balancedBriefing} runtimeConnectivityEdges={runtimeConnectivityEdges} />
       <DenseVisualArchitectureZone fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} visibilityLayerCompleteness={visibilityLayerCompleteness} crossDomainCognition={crossDomainCognition} />
-      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} altitude="structural" onModeTransition={onModeTransition} />
+      <NavigationChips crossDomainCognition={crossDomainCognition} fullReport={fullReport} projectionLevel={projectionAuthority && projectionAuthority.projectionLevel} altitude="structural" onModeTransition={onModeTransition} onInlineSynthesis={onInlineSynthesis} onProjectionShift={onProjectionShift} />
       {swIntelActive && swIntelProjection && swIntelProjection.module_state !== 'ABSENT' && (
         <SoftwareIntelligenceDenseView projection={swIntelProjection} onDeactivate={onSwIntelDeactivate} activeSurface={cognitionState && cognitionState.activeSurface} onSurfaceSelect={onSurfaceSelect} activeConditions={activeConditions} domainLabelMap={domainLabelMap} domainProfileMap={domainProfileMap} fullReport={fullReport} onOpenDeepDive={onOpenDeepDive} suppressedCount={(suppressedConditions || []).length} projectionLabel={projectionAuthority && projectionAuthority.projectionLabel} />
       )}
@@ -11259,7 +11259,7 @@ function RepresentationField({ boardroomMode, densityClass, adapted, renderState
   )
 }
 
-export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve }) {
+export default function IntelligenceField({ narrative, adapted, densityClass, boardroomMode, renderState, evidenceBlocks, fullReport, boardroomProjection, reportPackArtifacts, qualifierClass, qualifierLabel, correspondenceData, evidenceIntakeData, debtIndexData, progressionData, maturityData, temporalAnalyticsData, temporalLifecycleData, onModeTransition, pendingTransitionZone, onTransitionZoneConsumed, onAuthorityChange, swIntelActive, swIntelProjection, onSwIntelDeactivate, sqoAuthorityWorkspace, sqoBinding, runtimeConnectivityEdges, visibilityLayerCompleteness, runtimeGraphs, projectionAuthority, domainCognition, cognitionSubstrate, investigationContext, onInvestigationClear, onInvestigationStep, onInvestigationResolve, onInlineSynthesis, onProjectionShift }) {
   const scope = (fullReport && fullReport.topology_scope) || {}
   const [activeZoneKey, setActiveZoneKey] = useState(null)
   const [activeQueryKey, setActiveQueryKey] = useState(null)
@@ -11915,6 +11915,8 @@ export default function IntelligenceField({ narrative, adapted, densityClass, bo
           pendingBalancedIntent={pendingBalancedIntent}
           onBalancedIntentConsumed={() => setPendingBalancedIntent(null)}
           investigationContext={investigationContext}
+          onInlineSynthesis={onInlineSynthesis}
+          onProjectionShift={onProjectionShift}
         />
 
         {!boardroomMode && !isBalanced && (
