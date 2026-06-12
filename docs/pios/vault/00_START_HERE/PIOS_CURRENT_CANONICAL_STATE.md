@@ -220,6 +220,33 @@ Consumer-genericity invariant: PRE core must not change when adding a new consum
 
 See [[../08_EXECUTION_RUNTIME/COGNITION_ANATOMY]] for full anatomy hierarchy, concept classifications, and discovery lineage.
 
+## LENS Runtime Cognition Architecture (Implemented — Reconciled 2026-06-12)
+
+AMOps reconciliation pass (PI.AMOPS-PROPAGATION-DEBT-AUDIT.01). The following runtime cognition primitives were implemented and committed 2026-06-10→06-12 but were not propagated to canonical state at the time. Recorded here with explicit status. No new capability introduced by this pass — reconciliation only.
+
+| Primitive | Module(s) | Status | Notes |
+|---|---|---|---|
+| **Investigation Runtime** | `lib/lens-v2/pios/InvestigationRuntime.js` (385 LOC) | IMPLEMENTED | Lifecycle OPENED→ACTIVE→CONVERGING→RESOLVED/INCONCLUSIVE; durable embedded `cognition` payload (no external refs); inline proof-step synthesis; Guide Runtime override in `IntelligenceField`. Reconciles PCD-009 (DISCOVERED → OPERATIONAL). |
+| **Answer Objects (AO-001..AO-011)** | `lib/lens-v2/pios/AnswerObjectRuntime.js`, `AnswerObjectSynthesizers.js` | IMPLEMENTED | 11 reusable cognition objects with schemas; governed candidate-capture loop (PROPOSED→REVIEWED→PROMOTED, no autonomous mutation); AO-011 Divergence Pair promoted to canonical ontology. |
+| **Answer Object Steering Contract** | `lib/lens-v2/pios/AnswerObjectSteeringContract.js` | IMPLEMENTED | Generic LENS consumption interface; `deriveSteeringContract` + `contractToTopologyOverlay` (DIVERGENCE_CONTRAST overlay). |
+| **Chip State Machine** | `components/lens-v2/zones/NavigationChips.jsx`, `IntentSynthesizer.js` | IMPLEMENTED | 3 chip intent types (Type 1 SYNTHESIS / Type 2 INVESTIGATION / Type 3 PROJECTION_SHIFT), 6 synthesis intents, per-persona chips. Navigation gravity: Type 2 descends, Type 3 ascends, Type 1 stays. |
+| **Investigation Synthesis Panel** | `components/lens-v2/zones/IntelligenceField.jsx` | IMPLEMENTED | THORR-in-the-right-rail (v1); inline synthesis panel; zone-collapse awareness during investigation. |
+| **Cognitive Anchor hierarchy** | `lib/lens-v2/pios/CognitiveAnchor.js` (197 LOC) | IMPLEMENTED | Every chip question resolves against the deepest available anchor: Specimen(0)→Posture(1)→Finding(2)→Investigation(3). `resolveAnchor`, `resolveQuestionForAnchor`. No orphaned chips. |
+| **SynthesisContext** | `lib/lens-v2/pios/SynthesisContext.js` (123 LOC) | IMPLEMENTED | Explicit context contract: same intent + different persona = same synthesis + different projection. `validateForIntent` returns explicit "Cannot synthesize: missing X". |
+| **THORR Invocation Contract** | doctrine: `docs/pios/PI.INVESTIGATION-PROJECTION.01/` | DOCTRINE | 6 intents, persona-agnostic synthesis. THORR is a GATED PREMIUM capability; deterministic synthesis (IntentSynthesizer) is the base product. Not API-integrated. |
+| **Artifact Qualification (AQ-001)** | consumed in Investigation completion criteria | VALIDATED (partial) | Taxonomy validated; consumed as proof-sufficiency criteria; NOT a standalone artifact-stamping governance layer. See PCD-008. |
+| **Temporal Cognition** | doctrine: `docs/pios/PI.TEMPORAL-COGNITION.01/` | DISCOVERED / SUBSTRATE-LOCKED / NOT IMPLEMENTED | Third cognition axis (Structural→Investigation→Temporal). Temporal Verdict artifact class + Comparable Observation Series defined. Proof-gate locked; no authoritative substrate exists. Do not compute Temporal Verdicts. See PCD-010. |
+| **Maturation Runtime** | doctrine: `docs/pios/PI.MATURATION-RUNTIME.01/` | DOCTRINE (locked) | Maturation is ordinal (`f(position in ordered space)`), not temporal. SQO and S/E/P ARE the maturation runtime PI already has — not a new runtime to build. |
+| **Carrier Classification** | doctrine: PI.TEMPORAL-ONTOLOGY.01 | DOCTRINE (locked) | Three carrier classes: A Ordinal (maturation), B Snapshot-state (diff), C Native-temporal (commits/PRs/telemetry). |
+
+### Finding Persistence Boundary (constitutional — explicit)
+
+The cognition **finding** classes — Execution Blindness, Gravity Divergence, Runtime Consequences, Domain Cognition — are **runtime projection products**. They are computed in-memory at LENS bind by `SignalSynthesisEngine.js` → `software-intelligence/ConsequenceCompiler.js` → `DomainCognitionCompiler.js` (the last: "Pure assembly — does not infer, discover, or synthesize"). **None of the three persists output.** There is zero persisted finding-level artifact in any run; only the substrate inputs are persisted (`structure/40.3`,`40.4`, `40.3c` centrality, `dom/dom_layer.json`, `artifacts/dpsig/.../dpsig_signal_set.json`, `75.x/condition_correlation_state.json`, `pressure_zone_state.json`).
+
+**Constitutional boundary:** A runtime finding is NOT equivalent to a vault-lineage finding. A finding earns vault-lineage status only when persisted with its evidence lineage (signals → conditions → consequence → evidence_refs) as a durable artifact. Until then it is a recomputed projection — deterministic (re-derivable by re-executing the same compiler, per `InvestigationVerifier`) but **not replayable outside the LENS runtime** and **not a governed persisted object**. "Finding appears in LENS" must never be read as "finding exists in the vault."
+
+This boundary was recovered by code archaeology during the reconciliation audit — evidence that prior G1 cognition-compiler streams skipped §16.4 closure propagation. Recorded here so it need not be rediscovered.
+
 ## Consumption Architecture (Frozen 2026-06-02)
 
 **Authority:** PI.CONSUMPTION-AND-ACCESS-ARCHITECTURE.01, PI.ADVISORY-WORKBENCH-AND-CUSTOMER-ACCESS.ENABLEMENT.01
@@ -698,6 +725,8 @@ The Semantic Derivation Compiler fills SQO Stage 3 (Semantic Construction) — t
 
 **Load order:** CLAUDE.md → git_structure_contract.md → PIOS_CURRENT_CANONICAL_STATE.md → OPERATIONAL_ONTOLOGY.md → TERMINOLOGY_LOCK.md → (concept-specific pages per CLAUDE_RUNTIME_LOAD_PROTOCOL.md Phase 4)
 
+**AMOps reconciliation (2026-06-12):** PI.AMOPS-PROPAGATION-DEBT-AUDIT.01 closed a propagation breach — 286 commits since 2026-06-05 with only one vault touch. Propagated to canonical state + terminology lock + discovery registry: Investigation Runtime, Answer Objects (AO-001..011), Chip State Machine, Investigation Synthesis Panel, Cognitive Anchor, SynthesisContext, THORR invocation contract, AQ-001 partial status, Temporal Cognition (discovered/substrate-locked), Maturation Runtime + Carrier Classification (locked doctrine), and the Finding Persistence Boundary. Reconciliation only — no new capability. Manifest: `docs/pios/PI.AMOPS-PROPAGATION-DEBT-AUDIT.01/PROPAGATION_DEBT_MANIFEST.md`.
+
 ## Ontology Git Lineage Status
 
 | Stream | Classification | Contribution | Status |
@@ -1138,3 +1167,9 @@ See [[../10_CANONICAL_RUNTIME_STATE/CURRENT_CANONICAL_PATHS]] for full path inve
 - Three-layer architecture: PI Core (truth — signal families, topology, governance) / Orchestration-Agentic Runtime (guided actions, SQO workflow) / Domain Cognition (SW-Intel module — condition synthesis, topology cognition projection)
 - Visibility-layer completeness check: pre-verdict integrity gate classifying measured vs required connectivity layers per architecture profile. 7 visibility layers defined (STATIC_IMPORT, EVENT_FLOW, MQTT_TOPIC_FLOW, WEBSOCKET_FLOW, API_BOUNDARY, DI_MODULE_GRAPH, RUNTIME_WIRING). 5 architecture profiles (django-monolith, nestjs-event-driven, nestjs-iot, microservices, spa-api). Verdict scope classification (CODE_CONNECTIVITY / PARTIAL_CONNECTIVITY / SYSTEM_CONNECTIVITY). VISIBILITY_INCOMPLETE qualifier modifier
 - THORR intent-driven context loading: 16,000 token budget enforcement, evidence class routing (POSTURE/GOVERNANCE/STRUCTURAL/DOCTRINE/FULL), persona-aware escalation. 10 THORR personas including Transformation Leader and GOD/Founder-Operator
+- Investigation Runtime (InvestigationRuntime.js): lifecycle OPENED→ACTIVE→CONVERGING→RESOLVED/INCONCLUSIVE, durable embedded cognition payload, inline proof-step synthesis, Guide Runtime override [see §LENS Runtime Cognition Architecture]
+- Answer Objects AO-001..AO-011 (AnswerObjectRuntime.js) with governed candidate-capture loop + generic Answer Object Steering Contract
+- Chip State Machine (NavigationChips.jsx): 3 intent types (SYNTHESIS / INVESTIGATION / PROJECTION_SHIFT), 6 synthesis intents, per-persona; deterministic IntentSynthesizer is base, THORR is gated premium
+- Cognitive Anchor hierarchy (CognitiveAnchor.js): Specimen→Posture→Finding→Investigation; no orphaned chips
+- SynthesisContext (SynthesisContext.js): explicit context contract — same intent + different persona = same synthesis + different projection
+- Finding persistence boundary: cognition findings (execution blindness / gravity divergence / runtime consequences / domain cognition) are runtime projection products, NOT persisted vault-lineage findings [see §Finding Persistence Boundary]

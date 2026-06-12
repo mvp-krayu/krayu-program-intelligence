@@ -1,7 +1,7 @@
 # AMOps Propagation Debt Manifest
 
 **Artifact:** PI.AMOPS-PROPAGATION-DEBT-AUDIT.01 / PROPAGATION_DEBT_MANIFEST
-**Status:** AUDIT — no canonical-state rewrite performed; this is the debt inventory requested before scoping propagation
+**Status:** RESOLVED — Option A (Full propagation) executed 2026-06-12. Reconciliation only; no new doctrine, no new capability. See §Propagation Executed.
 **Date:** 2026-06-12
 **Trigger:** Forensic lineage trace of cognition findings revealed the vault carries no record of the finding persistence boundary — recovered by code archaeology, proving §16.4 closure propagation was skipped across multiple G1 streams.
 
@@ -39,6 +39,35 @@
 - **A. Full propagation** — update canonical state + terminology lock with all propagation-debt rows + fix registry PCD-009 status + add Maturation/Carrier entries. One G1 propagation pass.
 - **B. Correctness-first** — fix only the registry contradiction (PCD-009) and the finding persistence boundary now; defer the rest.
 - **C. Split** — runtime-architecture propagation (Investigation/AO/Chip/Anchor/SynthesisContext) as one pass; temporal/maturation doctrine as a second.
+
+## Propagation Executed (Option A — 2026-06-12)
+
+Reconciliation of code reality, discovery registry, terminology lock, and canonical state. No build work; no new doctrine.
+
+**Discovery registry** (`docs/governance/runtime/PIOS_CONSTITUTIONAL_DISCOVERY_REGISTRY.md`):
+- PCD-009 Investigation: DISCOVERED → **OPERATIONAL/IMPLEMENTED** (cited InvestigationRuntime.js + commits). Contradiction with code removed.
+- PCD-008 AQ-001: clarified to **partial implementation** (consumed as proof-sufficiency criteria; not a standalone qualification layer).
+- PCD-010 Temporal: affirmed **DISCOVERED / SUBSTRATE-LOCKED / NOT IMPLEMENTED**; Maturation Runtime + Carrier Classification recorded as **related locked doctrine**.
+- Maturity Classification table + reconciliation note updated (counts corrected).
+
+**Canonical state** (`docs/pios/vault/00_START_HERE/PIOS_CURRENT_CANONICAL_STATE.md`):
+- New section **§LENS Runtime Cognition Architecture (Implemented — Reconciled 2026-06-12)** — status table for all 12 concepts.
+- New section **§Finding Persistence Boundary (constitutional — explicit)**.
+- Capability-summary bullets added; Vault Status reconciliation note added.
+
+**Terminology lock** (`docs/pios/vault/06_CANONICAL_TERMINOLOGY/TERMINOLOGY_LOCK.md`):
+- 11 canonical terms added with status: Investigation, Answer Object, Temporal Verdict, Comparable Observation Series, Chip State Machine, Cognitive Anchor, SynthesisContext, THORR Invocation Contract, Maturation Runtime, Carrier, Finding (Runtime Projection vs Vault-Lineage).
+
+**Status legend used:** IMPLEMENTED (in production code) · VALIDATED/partial · DOCTRINE (locked, not a build target) · DISCOVERED/SUBSTRATE-LOCKED (defined, blocked, not implemented).
+
+### Acceptance criteria
+1. Registry no longer contradicts code — **MET** (PCD-009).
+2. Canonical state reflects implemented runtime architecture — **MET**.
+3. Terminology lock updated for new canonical terms — **MET** (11 terms).
+4. Each propagated concept states status — **MET**.
+5. Finding persistence boundary explicit (runtime ≠ vault-lineage unless persisted with evidence lineage) — **MET**.
+6. No new build work — **MET** (docs only).
+7. Commit all propagation artifacts — **MET** (this commit).
 
 ## Root-cause note
 

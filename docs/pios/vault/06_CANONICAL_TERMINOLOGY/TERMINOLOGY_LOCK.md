@@ -1147,6 +1147,82 @@ These are first-class obligation states alongside UNRESOLVED, RESOLVED, REJECTED
 
 **Status:** CANONICAL — implemented and enforced (2026-06-05). 265 LOC of legacy cognition generation deleted. 3 independent paths collapsed to 1. Origin: PI.COGNITION-AUTHORITY-CONSOLIDATION.01.
 
+---
+
+> Terms below added by AMOps reconciliation 2026-06-12 (PI.AMOPS-PROPAGATION-DEBT-AUDIT.01). Reconciliation of already-existing primitives — no new doctrine.
+
+### Investigation (Archetype / Instance)
+
+**Definition:** A first-class PiOS runtime object representing what the operator is trying to resolve. Two layers: **Investigation Archetype** — the proof structure implied by a finding's cognition graph (exists whether or not anyone investigates); **Investigation Instance** — archetype + operator parameters (altitude, intent, decisionHorizon, scope). Lifecycle: OPENED → ACTIVE → CONVERGING → RESOLVED / INCONCLUSIVE. Progress tracks proof completion, not persona traversal.
+
+**Status:** CANONICAL — IMPLEMENTED (`lib/lens-v2/pios/InvestigationRuntime.js`). Reconciles PCD-009. Vault constitutional page PIOS_INVESTIGATION_PRIMITIVE.md pending.
+
+**What it is NOT:** Navigation with extra state. Navigation moves; Investigation tracks proof.
+
+### Answer Object (AO-001..AO-011)
+
+**Definition:** A reusable cognition object with a canonical schema, produced when an investigation question resolves. Eleven are defined (AO-011 = Divergence Pair). Captured via a governed candidate loop (PROPOSED → REVIEWED → PROMOTED); no autonomous promotion.
+
+**Status:** CANONICAL — IMPLEMENTED (`AnswerObjectRuntime.js`, `AnswerObjectSynthesizers.js`).
+
+**What it is NOT:** A persona-specific rendering. Persona varies how an Answer Object renders, not whether it exists.
+
+### Temporal Verdict (TV-xxx)
+
+**Definition:** A cognition artifact class distinct from Answer Objects, derived from a measurable Answer Object across a Comparable Observation Series (e.g. AO-011 → TV-001 Gravity Divergence Trend: widening/stable/converging/oscillating/indeterminate). Describes evolution, not current state.
+
+**Status:** DISCOVERED / SUBSTRATE-LOCKED — defined, not implemented. Do not compute until a substrate clears the proof gate. See PCD-010.
+
+### Comparable Observation Series
+
+**Definition:** The temporal-cognition primitive. Two observations are comparable iff same subject under same measurement model. Same-specimen across runs/checkpoints is temporal; cross-specimen is benchmarking, not temporal.
+
+**Status:** DOCTRINE (locked). No authoritative series yet exists.
+
+### Chip State Machine
+
+**Definition:** The LENS chip interaction model. Three chip intent types — Type 1 SYNTHESIS (stay, synthesize inline), Type 2 INVESTIGATION (descend to evidence), Type 3 PROJECTION_SHIFT (change persona). Six synthesis intents (governance_decision, qualification_review, operational_impact, structural_mechanism, compounding_analysis, evidence_verification). Per-persona. Navigation gravity: Type 2 descends, Type 3 ascends, Type 1 stays.
+
+**Status:** CANONICAL — IMPLEMENTED (`components/lens-v2/zones/NavigationChips.jsx`, `IntentSynthesizer.js`).
+
+### Cognitive Anchor
+
+**Definition:** The deepest available context a chip question resolves against, ordered Specimen(0) → Posture(1) → Finding(2) → Investigation(3). Guarantees no orphaned chips — every question inherits the deepest live anchor.
+
+**Status:** CANONICAL — IMPLEMENTED (`lib/lens-v2/pios/CognitiveAnchor.js`).
+
+### SynthesisContext
+
+**Definition:** The explicit context contract consumed by all synthesis. Invariant: same intent + different persona = same synthesis + different projection. `validateForIntent` returns an explicit "Cannot synthesize: missing X" rather than degraded output.
+
+**Status:** CANONICAL — IMPLEMENTED (`lib/lens-v2/pios/SynthesisContext.js`).
+
+### THORR Invocation Contract
+
+**Definition:** The persona-agnostic synthesis contract (6 intents) governing THORR invocation. THORR is a GATED PREMIUM capability; deterministic synthesis (IntentSynthesizer) is the base product. THORR is the internal codename for the PI Co-Pilot (not product-facing).
+
+**Status:** DOCTRINE — contract defined (`docs/pios/PI.INVESTIGATION-PROJECTION.01/`); not API-integrated.
+
+### Maturation Runtime
+
+**Definition:** The recognition that maturation is ordinal — `maturity = f(position in ordered space)`, not `f(time)` — and that SQO and the S/E/P projection-authority ladders ARE the maturation runtime PI already has. Maturation is not a temporal phenomenon and does not require a new runtime.
+
+**Status:** DOCTRINE (locked). `docs/pios/PI.MATURATION-RUNTIME.01/`. Not a new build target.
+
+### Carrier (Ordinal / Snapshot-State / Native-Temporal)
+
+**Definition:** Classification of PI evidence carriers by how time relates to them. Class A Ordinal (maturation — position in ordered space). Class B Snapshot-state (diff between captured states). Class C Native-temporal (commits/PRs/telemetry — time embedded in the evidence).
+
+**Status:** DOCTRINE (locked). PI.TEMPORAL-ONTOLOGY.01.
+
+### Finding (Runtime Projection vs Vault-Lineage)
+
+**Definition:** A cognition finding (Execution Blindness, Gravity Divergence, Runtime Consequence, Domain Cognition) is a **runtime projection product** — computed in-memory at LENS bind by SignalSynthesisEngine → ConsequenceCompiler → DomainCognitionCompiler, never persisted. A **vault-lineage finding** is a finding persisted with its full evidence lineage as a durable governed artifact. The two are NOT equivalent.
+
+**Status:** CANONICAL — constitutional boundary. Runtime findings are deterministic (re-derivable by recomputation) but not replayable outside the LENS runtime and not governed persisted objects until persisted with lineage.
+
+**What it is NOT:** "Finding appears in LENS" is NOT "finding exists in the vault."
+
 ## Term Usage Rules
 
 1. **Use locked definitions exactly.** Do not paraphrase, simplify, or reinterpret.
