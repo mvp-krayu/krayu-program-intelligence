@@ -237,27 +237,96 @@ Existing anchor: `AssessmentPackageBuilder` (structural assessment export, evide
 
 ---
 
-## 12. Data Model
+## 12. Specimen Lineage and Source Snapshot Model
 
-| Entity | Purpose | Key fields | Lifecycle | Relationships | Audit |
-|---|---|---|---|---|---|
-| **Client** | the customer org | id (UUID), name, domain, isolation_namespace | created→active→closed | 1—N Engagement | creation, deletion |
-| **Engagement** | one assessment | id, client_id, type, intended_audience, urgency | REQUESTED→CLOSED | N—1 Client; 1—1 AcceptanceRecord; 1—N SourceInput; 1—1 PipelineRun | full state log |
-| **AcceptanceRecord** | commercial acceptance | id, engagement_id, terms_version, nda, retention, signatures, timestamp | signed (immutable) | 1—1 Engagement | immutable, signed |
-| **SourceInput** | what client provided | id, engagement_id, type(url/token/archive), ref, received_at | received→validated→failed | N—1 Engagement; 1—1 SourceManifest | access events |
-| **SourceManifest** | normalized source descriptor | source_id, archive_type, archive_path, sha256, intake_contract, extracted_path | created (immutable) | 1—1 SourceInput | integrity hash |
-| **EvidencePackage** | optional evidence set | id, engagement_id, classes_present[], boundary_locked | assembled→locked | N—1 Engagement | boundary lock |
-| **PipelineRun** | one orchestrator run | run_id, engagement_id, phase_status[], started, ended | created→running→complete/failed | 1—1 Engagement; 1—1 ArtifactManifest | per-phase log |
-| **OnboardingState** | client-facing state | engagement_id, state, entered_at | transitions per §4 | N—1 Engagement | every transition |
-| **PipelineState** | internal stage state | run_id, stage, status | per stage | N—1 PipelineRun | every stage |
-| **QualificationState** | SQO position | run_id, s_level, e_capability, p_authority, provenance | S0→S3 | 1—1 PipelineRun | promotion lineage |
-| **ArtifactManifest** | produced artifacts + hashes | run_id, artifacts[]{path, sha256} | grows per phase | 1—1 PipelineRun | hashes |
-| **DeliverablePackage** | client package | id, engagement_id, contents[], released_at | assembled→released | 1—1 Engagement | release event |
-| **AdvisorySession** | walkthrough/Q&A | id, engagement_id, investigations[], notes | scheduled→complete | N—1 Engagement | session log |
+The Phase-0 fix proved a PipelineRun owns its materialized source — that is **run integrity**. It does not define how repeated assessments of the same client system relate over time. That is **specimen lineage**, and without it onboarding produces disconnected run folders that can never be related into a trajectory.
+
+### Core distinction
+
+| Entity | Is |
+|---|---|
+| **Client** | the customer organization |
+| **Engagement** | a commercial assessment/advisory engagement |
+| **Specimen** | the system/product/codebase being assessed — e.g. "BlueEdge Fleet Platform" |
+| **SourceSnapshot** | one immutable source state of that specimen — e.g. BlueEdge v3.23, commit `abc123`, archive hash `xyz` |
+| **PipelineRun** | one execution of PI against one SourceSnapshot |
+| **Observation** | the qualified cognition output produced by a PipelineRun |
+| **DeliverablePackage** | the client-facing assessment generated from an Observation |
+
+### Rules
+
+1. **A PipelineRun must own its materialized `source_repo`** — for auditability. (Established by the Phase-0 fix: current-run materialization, no cross-run reuse.)
+2. **A SourceSnapshot is immutable**, identified by source identity:
+   - repo URL + commit SHA, or
+   - archive hash + declared version, or
+   - local_dir hash + timestamp.
+3. **Multiple PipelineRuns may exist for one SourceSnapshot:** failed run · rerun · replay · upgraded-pipeline reprocessing.
+4. **Multiple SourceSnapshots may belong to one Specimen:** v3.23 · v3.30 · future releases.
+5. **Temporal Cognition compares Observations across SourceSnapshots of the same Specimen** — never raw run folders.
+6. **Run folders are audit artifacts, not temporal primitives.** The comparable series is a sequence of Observations over Snapshots, not a `ls` of `runs/`.
+7. **Onboarding must classify the submitted source** as one of:
+   - a **new specimen**,
+   - a **new snapshot** of an existing specimen, or
+   - a **rerun/replay** of an existing snapshot.
+
+### Lineage relationships
+
+```
+Client 1—N Engagement
+Client 1—N Specimen
+Specimen 1—N SourceSnapshot
+SourceSnapshot 1—N PipelineRun
+PipelineRun 1—1 Observation
+Observation 1—N DeliverablePackage
+```
+
+Specimen and SourceSnapshot are **client-level durable entities**, not engagement-scoped. A Specimen persists across engagements; an Engagement points at a Specimen/Snapshot and produces Observations and Deliverables.
+
+### UI implications (onboarding)
+
+During intake (§2), after source type, the client/operator selects the **lineage intent**:
+
+- **Create new specimen** — first assessment of a system not seen before.
+- **Add new snapshot to existing specimen** — a later version/commit of a known system.
+- **Re-run existing snapshot** — same source state (e.g. after a pipeline upgrade, or to replay).
+
+This selection sets `specimen_id` and `snapshot_id` before activation, so the run is born into a lineage rather than orphaned.
+
+### Commercial expectation
+
+- **Point-in-time assessment** uses **one SourceSnapshot.** Available today (the validated cognition path).
+- **Temporal / comparative assessment** requires **at least two comparable SourceSnapshots of the same Specimen under stable measurement conditions.** This is the lineage that the comparability/proof-gate doctrine (PI.TEMPORAL-COMPARABILITY.01, PI.TEMPORAL-PROOF-GATE.01) will consume. The lineage model is built now so the snapshots are relatable later; temporal implementation is NOT reopened here.
+
+This section is the structural prerequisite for any future Class-B (snapshot-diff) cognition: it guarantees onboarding produces snapshots that *can* be compared, instead of disconnected runs that cannot.
 
 ---
 
-## 13. Security / Compliance Baseline
+## 13. Data Model
+
+| Entity | Purpose | Key fields | Lifecycle | Relationships | Audit |
+|---|---|---|---|---|---|
+| **Client** | the customer org | id (UUID), name, domain, isolation_namespace | created→active→closed | 1—N Engagement; **1—N Specimen** | creation, deletion |
+| **Engagement** | a commercial assessment | id, client_id, type, intended_audience, urgency | REQUESTED→CLOSED | N—1 Client; targets 1 Specimen + 1—N SourceSnapshot; 1—1 AcceptanceRecord; 1—N PipelineRun | full state log |
+| **Specimen** | the assessed system | id, client_id, name, description | created→active→archived | N—1 Client; 1—N SourceSnapshot | creation; durable across engagements |
+| **SourceSnapshot** | one immutable source state | id, specimen_id, source_identity{repo_url+commit_sha \| archive_hash+version \| local_dir_hash+timestamp}, created_at | created (immutable) | N—1 Specimen; 1—1 SourceManifest; 1—N PipelineRun | identity hash, immutable |
+| **AcceptanceRecord** | commercial acceptance | id, engagement_id, terms_version, nda, retention, signatures, timestamp | signed (immutable) | 1—1 Engagement | immutable, signed |
+| **SourceInput** | what client provided | id, engagement_id, type(url/token/archive/local_dir), ref, lineage_intent(new_specimen/new_snapshot/rerun), received_at | received→validated→failed | N—1 Engagement; resolves to 1 SourceSnapshot | access events |
+| **SourceManifest** | snapshot descriptor | source_id, snapshot_id, archive_type/source_kind, archive_path, sha256, intake_contract | created (immutable) | 1—1 SourceSnapshot | integrity hash. NOTE: extraction path is run-specific (Phase-0 fix), not stored here |
+| **EvidencePackage** | optional evidence set | id, engagement_id, classes_present[], boundary_locked | assembled→locked | N—1 Engagement | boundary lock |
+| **PipelineRun** | one execution vs one snapshot | run_id, snapshot_id, engagement_id, phase_status[], started, ended | created→running→complete/failed | N—1 SourceSnapshot; 1—1 Observation; 1—1 ArtifactManifest; **owns materialized source_repo** | per-phase log |
+| **Observation** | qualified cognition output | id, run_id, qualification_state, cognition_refs | produced→qualified | 1—1 PipelineRun; 1—N DeliverablePackage | derivation lineage |
+| **OnboardingState** | client-facing state | engagement_id, state, entered_at | transitions per §4 | N—1 Engagement | every transition |
+| **PipelineState** | internal stage state | run_id, stage, status | per stage | N—1 PipelineRun | every stage |
+| **QualificationState** | SQO position | run_id, s_level, e_capability, p_authority, provenance | S0→S3 | 1—1 PipelineRun (carried into Observation) | promotion lineage |
+| **ArtifactManifest** | produced artifacts + hashes | run_id, artifacts[]{path, sha256} | grows per phase | 1—1 PipelineRun | hashes |
+| **DeliverablePackage** | client package | id, observation_id, contents[], released_at | assembled→released | N—1 Observation | release event |
+| **AdvisorySession** | walkthrough/Q&A | id, engagement_id, observation_id, investigations[], notes | scheduled→complete | N—1 Engagement; references 1 Observation | session log |
+
+**Key change:** Specimen and SourceSnapshot are now first-class durable entities between Client and PipelineRun. A run is born into a snapshot's lineage; an Observation (not a run folder) is the unit a DeliverablePackage and any future temporal comparison consume.
+
+---
+
+## 14. Security / Compliance Baseline
 
 Commercial minimum:
 
@@ -274,7 +343,7 @@ Commercial minimum:
 
 ---
 
-## 14. Product Architecture
+## 15. Product Architecture
 
 ```
 PUBLIC SITE                 marketing + assessment offer + sample walkthrough
@@ -298,7 +367,7 @@ Frontend: public site (static/marketing), private portal (authenticated, per-eng
 
 ---
 
-## 15. Implementation Roadmap (scope preserved, sequenced)
+## 16. Implementation Roadmap (scope preserved, sequenced)
 
 | Phase | Goal | Resolves |
 |---|---|---|
@@ -314,7 +383,7 @@ Phase 0 is the gate. Nothing commercial is real until the factory provably inges
 
 ---
 
-## 16. Gap Audit — Full Scope vs Current Repo
+## 17. Gap Audit — Full Scope vs Current Repo
 
 | Scope item | Status |
 |---|---|
@@ -351,7 +420,7 @@ PI has built the engine and the cockpit instrument; it has not built the dealers
 
 ---
 
-## 17. Decision Point
+## 18. Decision Point
 
 This is the full scope. Nothing here is built beyond what §16 marks SUPPORTED/PARTIAL. The recommended first move is **Phase 0** — the single test that converts the UNVERIFIED row into a yes/no and proves the factory ingests from raw for a fresh client. Everything commercial depends on that gate.
 
