@@ -773,6 +773,25 @@ Review:
 
 During execution (not only at closure): if a finding matches discovery candidate triggers, Claude MUST propose capture: "Discovery candidate detected: [description]. Trigger: [doctrine area]." Do not wait for operator declaration.
 
+### 16.4.2 G1 Commit Propagation Checklist (MANDATORY — per commit, not per closure)
+
+Propagation is part of the commit, not a later batch. Closure-only propagation (§16.4) is insufficient: debt accrues commit-by-commit between closures. Therefore **every commit that changes architecture (any G1-classified change) MUST carry a propagation checklist, evaluated before the commit is made.**
+
+For each G1 commit, Claude MUST evaluate and record all six items:
+
+1. **Code changed** — what runtime/code reality changed (files).
+2. **Registry updated if capability/status changed** — `PIOS_CONSTITUTIONAL_DISCOVERY_REGISTRY.md`. If a primitive moved maturity (e.g. DISCOVERED → IMPLEMENTED), the registry MUST be updated in the same commit. The registry MUST NOT contradict code.
+3. **Canonical state updated if runtime architecture changed** — `PIOS_CURRENT_CANONICAL_STATE.md`.
+4. **Terminology lock updated if vocabulary changed** — `TERMINOLOGY_LOCK.md`.
+5. **Vault lineage updated if findings/objects changed** — vault constitutional pages / lineage. Note explicitly when a finding is a runtime projection product with no persisted lineage (the runtime-vs-vault-lineage boundary).
+6. **Commit message references propagation status** — the message MUST state propagation status (e.g. `Propagation: registry+canonical updated` or `Propagation: N/A — no architecture change`).
+
+Each item is one of: **DONE** (with file) · **N/A** (with one-line reason). A G1 commit where any item is neither DONE nor justified N/A is **INCOMPLETE** — do not commit until resolved.
+
+Scope: applies to G1 commits. G2/G3 commits state `Propagation: N/A (G2/G3)` in the message. When unsure whether a change is G1, treat it as G1 and run the checklist.
+
+This rule is itself constitutional self-hosting (§16.7) and binding. Origin: PI.AMOPS-PROPAGATION-DEBT-AUDIT.01 (operator directive, 2026-06-12) — remediation of a propagation breach where 286 commits closed with one vault touch.
+
 ### 16.5 Fail-Closed Enforcement
 
 Architecture memory violations trigger fail-closed:
@@ -784,6 +803,8 @@ Architecture memory violations trigger fail-closed:
 | Term collision with locked terms | CRITICAL — STOP |
 | Branch unauthorized | CRITICAL — STOP |
 | G1 closing without mutation delta | CRITICAL — STOP |
+| G1 commit without §16.4.2 propagation checklist | CRITICAL — STOP (commit is INCOMPLETE) |
+| Registry status contradicts code reality | CRITICAL — STOP |
 | Canonical state >90 days stale | HIGH — STOP |
 | Canonical state >30 days stale | MEDIUM — WARN |
 | G2 stream mutating without reclassification | HIGH — STOP |
