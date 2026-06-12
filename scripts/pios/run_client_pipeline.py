@@ -1892,14 +1892,24 @@ def _aggregate_standalone_signals(vault_dir: Path, run_id: str, alias: str):
 def phase_08a_vault(
     client_cfg: dict, source_manifest: dict, run_dir: Path, run_id: str
 ) -> bool:
-    # S1 structural-only specimens: skip LENS vault construction
-    gs_path_rel = source_manifest.get("grounding_state_path", "")
-    gs_path_full = REPO_ROOT / gs_path_rel if gs_path_rel else None
-    if not gs_path_full or not gs_path_full.exists():
+    # Run owns its outputs: prefer THIS run's grounding/dom; fall back to manifest.
+    # Fixes cross-run leakage where source_manifest hardcodes a prior run's paths
+    # (closure task #1 — PI.FACTORY-COGNITION-DELIVERY-CLOSURE.PLAN.01).
+    run_gs = run_dir / "ceu" / "grounding_state_v3.json"
+    run_dom = run_dir / "dom" / "dom_layer.json"
+    manifest_gs = source_manifest.get("grounding_state_path", "")
+    manifest_dom = source_manifest.get("dom_layer_path", "")
+    gs_path = run_gs if run_gs.exists() else (REPO_ROOT / manifest_gs if manifest_gs else None)
+    dom_path = run_dom if run_dom.exists() else (REPO_ROOT / manifest_dom if manifest_dom else None)
+
+    # Structural-only skip: only when NO grounding is available for THIS run.
+    if not gs_path or not gs_path.exists():
         recon_path = run_dir / "ceu" / "reconciliation_state.json"
         if recon_path.exists():
             print(f"  SKIP: S1 structural-only specimen (reconciliation-based, no LENS vault inputs)")
-            return True
+        else:
+            print(f"  SKIP: no grounding_state_v3.json or reconciliation_state.json for this run — vault inputs absent")
+        return True
 
     vault_dir = run_dir / "vault"
     vault_dir.mkdir(parents=True, exist_ok=True)
@@ -1909,14 +1919,12 @@ def phase_08a_vault(
     uuid = client_cfg.get("uuid", "")
     alias = client_cfg.get("client_id", "")
 
-    gs_path = REPO_ROOT / source_manifest["grounding_state_path"]
-    dom_path = REPO_ROOT / source_manifest["dom_layer_path"]
-    iv_path = REPO_ROOT / source_manifest["integration_validation_path"]
+    iv_path = REPO_ROOT / source_manifest["integration_validation_path"] if source_manifest.get("integration_validation_path") else None
 
     gs = load_json(gs_path)
     dom_layer = load_json(dom_path)
 
-    gs_source_ref = f"grounding_state_v3.json ({source_manifest['grounding_state_path']})"
+    gs_source_ref = f"grounding_state_v3.json ({gs_path})"
 
     # 1. coverage_state.json
     save_json(vault_dir / "coverage_state.json", {
