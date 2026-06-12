@@ -120,3 +120,39 @@ The defect was fixed at the correct abstraction: **SOURCE_REPO MATERIALIZATION**
 Track A (Factory Certification) gate is cleared for the archive transport. Remaining adapters: `git_url`/GIT_CLONE (network) and `local_dir`/`pre_extracted` (LOCAL_REPO implemented, not yet exercised on a real client).
 
 Certification run: `run_netbox_factory_cert_04` (artifacts gitignored; regenerable). Intermediate test runs cert_01 (the original failure), cert_02/03 (fix iterations) retained as evidence.
+
+---
+
+## FULL-PIPELINE CONFIRMATION (clean run `run_netbox_factory_cert_05`)
+
+Re-ran the full orchestrator on a clean fresh run-id to confirm end-to-end depth.
+
+**Result: cognition factory confirmed; pipeline fail-closes at vault construction.**
+
+| Phase | Result |
+|---|---|
+| 0L Learning Registry | PASS |
+| 1 Source Boundary | PASS (tar SHA256) |
+| 2 Intake | PASS — `LIVE_MATERIALIZED_FROM_RAW_ARCHIVE`, current-run owned (2174 files) |
+| 3 Structural | PASS — 2540 nodes, 24 clusters, 2516 edges (CLU-20 `netbox` = 2129 nodes) |
+| 3.5 Relevance | PASS — 1848 PRIMARY / 138 SUPPORT / 554 PERIPHERAL |
+| 3.6 Code-Graph Enrichment | PASS — 16,046 relationships, all validations PASS |
+| 3.7 Centrality | PASS — `structure/40.3c/structural_centrality.json` produced |
+| 4 CEU Grounding | PASS — `ceu/grounding_state_v3.json` |
+| 5 Binding Envelope | PASS — `binding/binding_envelope.json` |
+| 6+7 Activation/Projection | PASS — `75.x/` activation, `41.x/` projection |
+| **8a Vault Construction** | **FAIL — 2ms fast-fail (phase_index 13)** |
+| 9 Selector | not reached |
+
+Chronicle: **15 PASS, 1 FAIL**, finalized INCOMPLETE.
+
+### What this confirms
+The raw-ingestion → cognition factory executes cleanly from a fresh archive: intake (current-run materialized), structural scan, relevance classification, code-graph enrichment, centrality, CEU grounding, binding envelope, 41.x projection, 75.x activation — all on real NetBox-native source. The Phase-0 intake fix is solid end-to-end through cognition.
+
+### Honest residual gates (not masked)
+1. **Phase 8a Vault Construction fail-closes** for a fresh run (2ms — likely a missing input/path in the vault builder). This halts the run before vault + selector.
+2. **No selector update (Phase 9)** → the run is not registered in the LENS binding allowlist → LENS bind returns `CLIENT_RUN_NOT_ALLOWED`. So the fresh run is not yet LENS-bindable.
+3. **SQO qualification is operator-driven** (the genesis run's S0→S1→S2 were manual `operator:khorrix` advancements) — not auto-produced by the pipeline.
+
+### Verdict
+"Full pipeline" is **confirmed through cognition + binding envelope (15 phases)** but **does not complete** — it fail-closes at Phase 8a Vault Construction, leaving the run unbindable to LENS and unqualified. The next factory gate after intake is **Phase 8a Vault Construction for fresh runs**. The cognition is real and NetBox-native; the post-cognition packaging (vault → selector → LENS registration) is the next fix.
