@@ -53,3 +53,15 @@ This is the next gate. It was not on the original critical-path list (it is a su
 
 **Status:** STOPPED for reassessment. Phase 7i committed (legitimate progress: it surfaced the real finding). Did not force-pass.
 **Pipeline reach now:** Phases 0L→8a PASS (17 phases incl. 7i), fail-closed at 8b on a genuine DOM-coverage finding.
+
+### Scope determination (proven before any patch): completing the contract, NOT fixing NetBox
+
+Historical NetBox (`run_github_netbox_20260520_134600`) vs fresh `cert_07`:
+- **Historical had NO `dom/`, NO `vault/`, NO `integration/`** — yet reached S2 and is LENS-bound today.
+- **Historical LENS manifest binds:** `canonical_topology_40_4`, `40.3`, `40.3s`, `40.3c`, `spine_objects` — **no dom_layer, no vault, no integration_validation**. Domain cognition came from **40.4 clusters + spine**, via the older structural binding path.
+- **Historical never traversed vault-readiness** (no vault/ dir) → never faced VR-08/09 or IV-09/IV-11 `dom_node_coverage`.
+- **Timeline:** vault-readiness + integration_validation contract = 2026-05-01; generic DOM-synth fallback = 2026-05-22; historical NetBox run = 2026-05-20. Historical predates the DOM synth and bypassed the vault tier entirely.
+
+**Conclusion:** DOM=0 is **not NetBox breakage**. Two binding contracts exist — the older **40.4/spine** path (historical NetBox) and the newer **vault-readiness** path (canonical fresh-onboarding). The DOM-node-coverage requirement belongs to the vault-readiness tier the fresh orchestrator routes through and the historical run never entered. **The work is completing the current canonical onboarding contract — generic DOM coverage in the fresh path — which applies to all fresh specimens, not a NetBox-specific fix.**
+
+**Next (pending operator go):** implement framework-agnostic DOM node coverage in `_synthesize_dom_layer_from_ceus` (top-level path/package heuristic + `node_to_domain_map`), so any fresh specimen produces non-zero coverage. Compiler/CEU knowledge enriches labels; generic heuristics guarantee coverage. Acceptance: NetBox fresh run → non-zero `node_to_domain_map` → IV-09/IV-11 PASS → vault closes.
