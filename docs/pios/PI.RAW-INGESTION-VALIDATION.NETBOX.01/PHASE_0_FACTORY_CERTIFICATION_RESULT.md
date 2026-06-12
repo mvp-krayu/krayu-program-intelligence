@@ -154,5 +154,26 @@ The raw-ingestion → cognition factory executes cleanly from a fresh archive: i
 2. **No selector update (Phase 9)** → the run is not registered in the LENS binding allowlist → LENS bind returns `CLIENT_RUN_NOT_ALLOWED`. So the fresh run is not yet LENS-bindable.
 3. **SQO qualification is operator-driven** (the genesis run's S0→S1→S2 were manual `operator:khorrix` advancements) — not auto-produced by the pipeline.
 
-### Verdict
-"Full pipeline" is **confirmed through cognition + binding envelope (15 phases)** but **does not complete** — it fail-closes at Phase 8a Vault Construction, leaving the run unbindable to LENS and unqualified. The next factory gate after intake is **Phase 8a Vault Construction for fresh runs**. The cognition is real and NetBox-native; the post-cognition packaging (vault → selector → LENS registration) is the next fix.
+### Verdict — CORRECTED to business objects (phase counts retracted)
+
+Phase counts ("15 PASS / 1 FAIL") are not a product-readiness measure and are retracted as the verdict. The correct measure is business objects produced.
+
+**Highest object produced:** a structural **binding envelope** (`binding/binding_envelope.json` — 30 capability-surface nodes, 17 edges, 10 capability surfaces). A substrate object, not cognition, not an Observation, not a deliverable.
+
+| Business object | cert_05 |
+|---|---|
+| QualificationState | **NO** (no `sqo/`, no `promotion_state.json`) |
+| S-level | **NONE** |
+| Answer Objects | **NO** (runtime-produced; no advisory session ran) |
+| Observation (governed cognitive output) | **NO** (no `semantic/`, no `convergence/`) |
+| Assessment Package | **NO** |
+| LENS-consumable | **NO** (`CLIENT_RUN_NOT_ALLOWED`; no manifest; manifest requires semantic/spine/sqo/vault artifacts absent here) |
+| THORR-synthesizable | **NO** (no binding, no Answer Objects) |
+| Operator advisory session | **NO** (no binding) |
+
+**Three-tier classification:**
+- **FACTORY — COMPLETE from raw.** Structural substrate produced (2540 nodes, 16046 relationships, centrality, CEU grounding, 41.x/75.x projection, binding envelope). Zero artifact reuse. This works.
+- **COGNITION — NOT PRODUCED.** Run never reached semantic emergence; no SPE propositions, no spine, no SQO qualification, no S-level, vault empty. Structural substrate ≠ governed meaning. No Observation.
+- **DELIVERY — ZERO.** No manifest, no LENS binding, no Answer Objects, no THORR surface, no assessment package, no advisory session.
+
+**The honest gate is not "Phase 8a."** It is: a fresh raw run today reaches the FACTORY tier and stops. Everything downstream of structural substrate — semantic emergence, qualification, binding, advisory, packaging — is either un-run or operator-manual. Even the one governed specimen (genesis_e2e_03) reached S2 by *manual operator advancement* and bound to LENS via a *hand-authored manifest*; neither is automatic. The next real work is not a vault-builder patch — it is deciding whether COGNITION (semantic + SQO) and DELIVERY (binding + advisory) are automated for fresh runs, or driven by the operator in the concierge model.
