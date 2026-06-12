@@ -64,4 +64,21 @@ Historical NetBox (`run_github_netbox_20260520_134600`) vs fresh `cert_07`:
 
 **Conclusion:** DOM=0 is **not NetBox breakage**. Two binding contracts exist — the older **40.4/spine** path (historical NetBox) and the newer **vault-readiness** path (canonical fresh-onboarding). The DOM-node-coverage requirement belongs to the vault-readiness tier the fresh orchestrator routes through and the historical run never entered. **The work is completing the current canonical onboarding contract — generic DOM coverage in the fresh path — which applies to all fresh specimens, not a NetBox-specific fix.**
 
-**Next (pending operator go):** implement framework-agnostic DOM node coverage in `_synthesize_dom_layer_from_ceus` (top-level path/package heuristic + `node_to_domain_map`), so any fresh specimen produces non-zero coverage. Compiler/CEU knowledge enriches labels; generic heuristics guarantee coverage. Acceptance: NetBox fresh run → non-zero `node_to_domain_map` → IV-09/IV-11 PASS → vault closes.
+### A.5 / DOM classification (before implementing — proven)
+
+**What A.5 is:** `dom_layer_generator.py` (PI.LENS.DOM-LAYER.GENERATOR.01) uses "A.5 path-prefix semantic participation reconstruction." Proof E: dry-run on cert_07 yields **21 path-prefix domains, 1848 nodes** (real NetBox coverage), 692 non-cluster nodes unassigned → PARTIAL.
+
+1. **Introduced:** dom_layer_generator.py 2026-05-01 (`0d5561c`, with integration_validation + vault_readiness same day — the E2E blocker-07/08 closure). A.5 method canonicalized 2026-05-17 (`bf86409`). A.5a substrate (945→35→13) 2026-04-05.
+2. **Created for:** the E2E DOM-layer path contract (blocker-08) feeding **binding envelope + vault**. A.5 = PATH A structural grounding reconstruction.
+3. **Superseded as primary cognition?** The runtime cognition stack came LATER — GENESIS 05-21/22, SignalSynthesisEngine 05-27, RSIG 05-31. LENS/THORR cognition now flows from `semantic_domain_registry` + structural_enrichment + runtime signals, **not** dom_layer. So A.5's role as the intelligence feeder became **peripheral**; the method itself remains canonical PATH A.
+4. **LENS/THORR consume A.5 DOM coverage?** **NO.** LENS lib has zero references to `dom_layer`/`node_to_domain_map`/`A5`; `DomainCognitionCompiler` reads `fullReport.semantic_domain_registry`. (Confirmed by historical NetBox binding via 40.4/spine with no dom_layer.)
+5. **SQO require it?** **NO.** `promotion_action.py`/`revalidation_engine.py` read no dom coverage. Only `integration_validation_generator.py` (IV-09/IV-11) consumes `dom_node_coverage`.
+6. **Commercial intelligence requirement or validator compatibility?** **Validator / vault-tier-internal compatibility.** DOM coverage is consumed only by (a) binding_envelope's internal `node_to_dom` attribution, (b) vault canonical_topology, (c) the vault-readiness validator IV-09/IV-11. **No commercial cognition consumer (LENS, THORR, observation, SQO) reads it.** Commercial S1 advisory cognition flows through the semantic path, independent of A.5.
+7. **Bridge → adapter or relax?** A.5 is a **canonical structural method whose vault-feeder role is peripheral**; the vault-readiness DOM-coverage gate is a **validator compatibility requirement, not a commercial gate**. Gating S1 commercial delivery on full DOM coverage that no consumer reads is validator-tail-wags-dog.
+
+**Recommendation (operator decision required — NOT implemented):**
+Do **not** force full A.5 coverage as a hard S1 gate. Instead:
+- **Invoke A.5 (`dom_layer_generator.py`) as a generic compatibility adapter** so the run produces an honest, real dom_layer (1848 PRIMARY-covered, framework-agnostic) — replacing the empty CEU-synth fallback. RECONNECT.
+- **Scope IV-11/VR-09 for S1 advisory:** measure DOM coverage against the **relevance-filtered (PRIMARY) inventory** the generator already uses, OR mark full-coverage advisory for S1 — with the partial recorded, not hidden. This is honest tier-scoping (like "code-only = bounded"), NOT weakening, because no commercial consumer depends on full DOM coverage.
+
+This keeps the commercial path (semantic → LENS/THORR) unblocked and the vault honest, without elevating a peripheral validator requirement into an S1 delivery blocker. **Awaiting operator decision: (a) compatibility-adapter + relevance-scoped gate, vs (b) full-coverage A.5 as hard gate.**
