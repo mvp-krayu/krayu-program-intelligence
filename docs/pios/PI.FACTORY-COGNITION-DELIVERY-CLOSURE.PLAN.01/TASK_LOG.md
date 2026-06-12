@@ -24,3 +24,32 @@ This is the next gate. It was not on the original critical-path list (it is a su
 **Reassessment question for the operator:** fold the `integration_validation.json` producer into task #1's vault closure (it is the immediate blocker on the same stage), or treat it as the next discrete item before continuing to original task #2 (`reconciliation_state.json` for SPE)?
 
 **Pipeline reach now:** Phases 0L→8a PASS (16 phases), fail-closed at 8b. Vault + SQO S0 reached; vault readiness blocked on one missing artifact.
+
+---
+
+## Task #1a — Integration validation producer (VR-08/VR-09) — ⚠️ WIRING DONE; vault blocked on a real finding
+
+**Classification of `integration_validation.json` (before patching):**
+1. Contains: deterministic cross-artifact consistency assertion (`validation_status` PASS/PARTIAL/FAIL + 12 internal checks IV-01..IV-12) over the run's own outputs.
+2. Consumed by: VR-08 (existence) + VR-09 (`validation_status==PASS`) in Phase 8b; label-only proxy in 8a admissibility_log.
+3. Created by: `integration_validation_generator.py` (PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01) — existed, **never wired as an orchestrator phase**.
+4. Genuine S1 vault requirement: YES — live cross-artifact integrity gate.
+5. Historical: producer was run as a separate step historically; requirement is current.
+6. Obsolete: NO.
+7. Validates something already present: partially (re-reads VR-01..07 artifacts) but adds real cross-consistency assertions.
+
+**Smallest correction applied:** wired the existing generator as **Phase 7i — Integration Validation** (before 8a). No gate weakened. `_resolve_artifact` prefers the run-owned file (RUN_GENERATED), so it's consumed correctly.
+
+**Result (fresh run `run_netbox_factory_cert_07`):** Phase 7i PASS; Phase 8b improved 2 fails → **1 fail**. VR-08 now PASS. **VR-09 still FAIL — but for an HONEST reason:** the generator returned `validation_status: PARTIAL` because two *internal* checks genuinely fail:
+- **IV-09 node_count_consistency** — `structural_node_inventory`=2540 vs `dom_layer.total_nodes`=0.
+- **IV-11 dom_node_coverage** — 2540 structural nodes have no DOM domain assignment.
+
+**Confirmed root (cert_07 `dom/dom_layer.json`):** 10 domain groups, but `total_nodes: 0`, no `node_to_domain_map`, 0 included nodes. `derivation_basis: RECONCILIATION_CEU_DOMAIN_SYNTHESIS` (empty CEU-synth fallback). **None of the 2540 structural nodes are assigned to a domain.** This is a real domain-cognition gap, correctly surfaced by the integrity gate — not a wiring or check bug.
+
+**Therefore vault closure cannot complete by wiring alone.** Forcing VR-09 to accept PARTIAL would be weakening governance (boundary #6) over a hollow artifact. This is a genuine fork for the operator:
+
+- **Path A — Fix DOM node coverage (upstream).** Make DOM synthesis assign the 2540 structural nodes to the 10 domain groups (populate `node_to_domain_map` / `included_nodes`). Then IV-09/IV-11 genuinely PASS → `validation_status: PASS` → VR-09 PASS → vault closes legitimately. Scope: DOM/domain-cognition layer (likely the same run-owns-outputs class as task #1: the DOM phase reads the manifest's stale `dom_layer_path` and falls back to the empty synth). **Recommended** — an empty DOM layer means hollow domain cognition; declaring vault "complete" over it would ship a deliverable with no domain→node mapping.
+- **Path B — S1 accepts PARTIAL as honest bounded result (governance policy).** S1 vault readiness accepts `validation_status: PARTIAL` *with the DOM-coverage gap recorded* (not hidden), reserving PASS for full coverage. Honest qualification, but a governance-policy decision the operator owns.
+
+**Status:** STOPPED for reassessment. Phase 7i committed (legitimate progress: it surfaced the real finding). Did not force-pass.
+**Pipeline reach now:** Phases 0L→8a PASS (17 phases incl. 7i), fail-closed at 8b on a genuine DOM-coverage finding.

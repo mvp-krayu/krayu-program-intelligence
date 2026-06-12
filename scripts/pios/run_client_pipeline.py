@@ -1887,6 +1887,47 @@ def _aggregate_standalone_signals(vault_dir: Path, run_id: str, alias: str):
           f"({isig_count} ISIG, {dpsig_count} DPSIG appended)")
 
 
+# ── Phase 7i: Integration Validation ─────────────────────────────────────────
+
+def phase_07i_integration_validation(
+    client: str, source: str, run_id: str, run_dir: Path
+) -> bool:
+    """Produce integration/integration_validation.json via the existing generator
+    (PI.LENS.INTEGRATION-VALIDATION.GENERATOR.01). Closure task #1a — wires an
+    existing generator into the orchestrator so vault readiness (VR-08/VR-09) has
+    its run-owned input. Idempotent: skips if the artifact already exists.
+    Reads only run-owned outputs (intake/structure/grounding/dom/binding)."""
+    iv_path = run_dir / "integration" / "integration_validation.json"
+    if iv_path.exists():
+        print(f"  [IDEMPOTENT] integration/integration_validation.json present — skipping")
+        return True
+
+    generator = SCRIPTS_DIR / "integration_validation_generator.py"
+    if not generator.is_file():
+        print(f"  WARNING: generator not found at {generator} — Phase 8b will catch absence")
+        return True
+
+    cmd = [
+        sys.executable, str(generator),
+        "--client", client,
+        "--source", source,
+        "--run-id", run_id,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.stdout:
+        for line in result.stdout.strip().split("\n")[-4:]:
+            print(f"    {line}")
+    if result.returncode != 0:
+        print(f"  WARNING: integration_validation_generator exited {result.returncode}")
+        if result.stderr:
+            print(f"  stderr: {result.stderr.strip()[:200]}")
+        # Do not fail-close here — Phase 8b is the single validation authority.
+        return True
+
+    print("  Integration validation: OK")
+    return True
+
+
 # ── Phase 8a: Vault Construction ──────────────────────────────────────────────
 
 def phase_08a_vault(
@@ -2683,6 +2724,8 @@ def main() -> int:
          lambda: phase_05b_csr_semantic_topology(args.client, run_id, run_dir)),
         ("Phase 6+7 — 75.x Activation + 41.x Projection",
          lambda: phase_06_and_07_e2e(run_dir, source_manifest)),
+        ("Phase 7i — Integration Validation",
+         lambda: phase_07i_integration_validation(args.client, args.source, run_id, run_dir)),
         ("Phase 8a — Vault Construction",
          lambda: phase_08a_vault(client_cfg, source_manifest, run_dir, run_id)),
         ("Phase 8b — Vault Readiness",
