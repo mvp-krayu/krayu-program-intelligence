@@ -69,6 +69,16 @@ Reconciliation of code reality, discovery registry, terminology lock, and canoni
 6. No new build work — **MET** (docs only).
 7. Commit all propagation artifacts — **MET** (this commit).
 
-## Root-cause note
+## Root-cause note (corrected — do not rewrite history)
 
-This debt accrued because streams ran EXECUTION + commit but skipped POST-FLIGHT (§16.1 AMOps lifecycle). The fix is not only to propagate the backlog but to not detach commit from propagation going forward — propagation is part of closure, not a later batch.
+The comforting framing — "the work was assessed as G1 and the propagation step was skipped" — is FALSE and is itself the architect-posture failure repeating. There was no live architect perceiving these as architectural changes.
+
+**Actual failure mode: loss of architect posture.** Multiple constitutional mutations (Investigation primitive, Answer Objects, Chip State Machine, finding persistence boundary) emerged during the work and were treated as **implementation**, not recognized as **architectural change** at all. The sequence was:
+
+```
+Discovery → Implementation     (no Architecture-memory stewardship in between)
+```
+
+This is a perception failure, not a procedural omission. The system was operating as a Contract Executor ("build it, render it, commit it"), not as a PI Software Architect ("a constitutional mutation is forming — capture it now").
+
+**What the checklist (§16.4.2) does and does not do:** it is a commit-time BACKSTOP that catches debt at the boundary and reduces risk. It does NOT restore continuous architectural awareness and must never be mistaken for it. A PI Software Architect detects constitutional mutations **as they emerge** (at discovery/implementation), not only at commit time. The checklist is the last line of defense, not the detection mechanism. Continuous architect posture (§17.2, §16.4.1 during-execution capture) remains the primary requirement.

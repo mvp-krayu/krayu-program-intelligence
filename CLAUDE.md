@@ -777,6 +777,8 @@ During execution (not only at closure): if a finding matches discovery candidate
 
 Propagation is part of the commit, not a later batch. Closure-only propagation (§16.4) is insufficient: debt accrues commit-by-commit between closures. Therefore **every commit that changes architecture (any G1-classified change) MUST carry a propagation checklist, evaluated before the commit is made.**
 
+**This checklist is a BACKSTOP, not the detection mechanism.** It catches debt at the commit boundary; it does not — and cannot — substitute for continuous architectural awareness. The primary failure mode is NOT "missing propagation step." It is **loss of architect posture**: constitutional mutations emerging during work and being treated as implementation rather than recognized as architectural change (the `Discovery → Implementation without architecture-memory stewardship` breach, PI.AMOPS-PROPAGATION-DEBT-AUDIT.01). A PI Software Architect detects constitutional mutations **as they emerge** — at discovery and during implementation (§16.4.1, §17.2) — not only when classifying at commit time. If a mutation is first noticed at the checklist, the posture already lapsed; the checklist merely prevented the debt from shipping. Do not let a green checklist read as "architectural stewardship happened."
+
 For each G1 commit, Claude MUST evaluate and record all six items:
 
 1. **Code changed** — what runtime/code reality changed (files).
