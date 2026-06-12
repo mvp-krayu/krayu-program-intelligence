@@ -154,6 +154,24 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 
 ---
 
+## PCD-010: Temporal Cognition as Third Cognition Axis
+
+| | |
+|---|---|
+| **Origin Stream** | PMO Cognition discovery session (2026-06-12). PMO discovery concluded the runtime transfers and the largest gap was temporal evidence. A challenge tested whether temporal was merely a PMO context-builder requirement or a missing platform capability. |
+| **Trigger** | Decomposing three PMO answer objects (Commitment Reachability, Capacity Saturation, Trajectory) into evidence atoms revealed a gradient: one is a context problem (Capacity Saturation, answerable statically), one is hybrid (Commitment Reachability splits into static exposure + temporal projection), one is purely temporal (Trajectory, full collapse to AO-006 without time). The gradient proved temporal is a separate axis, not a context variant. A second challenge corrected the framing: temporal is not *only* an evidence dimension — at series depth it generates a new artifact class. |
+| **Problem** | Every hard PMO question transformed into a temporal question ("what is the posture" → "is the posture improving"). The pattern was too consistent to be PMO-specific. LENS itself already has latent temporal blindness: the AO-011 falsification verdict checks whether centers differ *now* but cannot say whether they are *trending toward* convergence. PMO does not create the temporal gap — it makes an existing platform gap unavoidable. |
+| **Discovery** | Temporal Cognition is the third cognition axis. Three-layer model: **Structural** (what is true) → **Investigation** (why it is true) → **Temporal** (how truth is evolving). Temporal operates in three layers itself: EVIDENCE (Comparable Observation Series) → OBJECT (each observation → Answer Object) → SYNTHESIS (AO(t0) Δ AO(t1) → Temporal Verdict). Temporal *begins* as an evidence dimension but at series depth becomes a synthesis source producing a new first-class artifact. |
+| **Temporal Verdict** | A new cognition artifact class, distinct from Answer Objects. AO-011 (Gravity Divergence) is an Answer Object — what is true. TV-001 (Gravity Divergence Trend: widening/stable/converging/oscillating/indeterminate) is a Temporal Verdict — derived from AO-011 across a comparable series, describing evolution. Every measurable Answer Object has a potential Temporal Verdict (AO-003 → TV-003 Execution Blindness Trend, etc.). Persona varies how an answer renders; temporal generates a new answer. |
+| **Primitive** | **Comparable Observation Series** — not "run series." Comparability is the binding constraint: two observations are comparable iff same subject under same measurement model. Cross-specimen (BlueEdge vs StackStorm) is benchmarking, not temporal. Same-specimen across runs/checkpoints is temporal. |
+| **Temporal Qualification Ladder** | TQ-0 (no observation) → TQ-1 (single — current posture only, trend impossible; this IS AO-006) → TQ-2 (dual — direction, weak rate) → TQ-3 (series — direction, rate, qualified projection) → TQ-4 (stable series — predictive cognition begins). AO-006 Temporal Unavailability is the floor of this ladder; graceful degradation already built. |
+| **Falsification Record** | Three challenges survived: (1) "Is temporal just a PMO context builder?" — No. The three-object gradient proves it is a separate axis; you cannot resolve all three with a context builder. (2) "Is temporal purely an evidence dimension like persona?" — No, only at the evidence layer. At series depth it produces Temporal Verdicts, a new synthesized artifact class. Persona never produces new artifacts; temporal does. (3) "Does temporal require PMO to validate?" — No. AO-011 across existing BlueEdge runs proves it with no PMO, Jira, velocity, or delivery metrics. |
+| **Affected Components** | New platform runtime beneath LENS/Guide/THORR. AnswerObjectRuntime (verdict derivation), SynthesisContext (temporal series input), AO-006 (becomes TQ-1), all Answer Objects (gain potential Temporal Verdicts), future PMO module (consumes Temporal Verdicts). |
+| **Intended Vault Destination** | `docs/pios/vault/constitutional/pios/PIOS_TEMPORAL_COGNITION.md` |
+| **Maturity State** | DISCOVERED — three-layer model defined, Temporal Verdict artifact class defined, Comparable Observation Series primitive defined, TQ ladder defined, AO-011→TV-001 proof path identified. Not yet implemented. Substrate partially exists (multiple BlueEdge runs, never compared across time). Doctrine: `docs/pios/PI.TEMPORAL-COGNITION.01/TEMPORAL_COGNITION_DOCTRINE.md`. |
+
+---
+
 ## Registry Metadata
 
 | | |
@@ -172,6 +190,6 @@ Discoveries at LOCKED status have constitutional force even before vault propaga
 | VALIDATED | Taxonomy complete, not yet implemented as separate layer | 2 | PCD-005, PCD-008 |
 | ARCHITECTURAL | Design locked, implementation pending | 1 | PCD-006 |
 | OPERATIONAL | Running in production code, location/naming may evolve | 1 | PCD-007 |
-| DISCOVERED | Hypothesis validated, not yet implemented | 1 | PCD-009 |
+| DISCOVERED | Hypothesis validated, not yet implemented | 2 | PCD-009, PCD-010 |
 
 All discoveries governed under [PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md](PIOS_DISCOVERY_GOVERNANCE_DOCTRINE.md).
