@@ -1,7 +1,7 @@
 # Phase 0 — Factory Certification Result (NetBox Fresh Ingestion)
 
 **Artifact:** PI.RAW-INGESTION-VALIDATION.NETBOX.01
-**Status:** EXECUTED — NEGATIVE RESULT (not masked)
+**Status:** RESOLVED — initial run FAILED, fix applied, re-run GREEN (see §RESOLUTION)
 **Date:** 2026-06-12
 **Test:** Run the orchestrator for NetBox with a fresh run-id; confirm it builds from `netbox-64d3b11.tar` upward WITHOUT reusing prior run artifacts. Resolves the UNVERIFIED row in PI.CLIENT-ONBOARDING-CONTRACT.01.
 
@@ -90,3 +90,33 @@ Stages 3+ (import graph, evidence, signals, semantics, SQO, Answer Objects, Synt
 ## Honest one-line summary
 
 The cognition engine is real and runs on existing artifacts; the **factory that turns a raw client archive into a fresh run does not work yet** — it reuses prior extraction and fails closed. That is the gate. Track A is a fix, not a check.
+
+---
+
+## RESOLUTION — Fix Applied, Re-run GREEN
+
+The defect was fixed at the correct abstraction: **SOURCE_REPO MATERIALIZATION** (tar is just one transport).
+
+### Fix (scripts/pios/source_intake.py)
+1. **Current run owns its source.** `materialize_intake` now materializes the source INTO the current run's `intake/canonical_repo`. Idempotency checks only the *current* run; it no longer treats a prior run's extraction as "existing intake."
+2. **Cross-run resolution forbidden except REPLAY.** `resolve_inventory_source_path` resolves `CLIENT_RUN` only in fresh mode; a prior run's `extracted_path` is consulted only under `--replay`.
+3. **SourceInput kinds defined.** Adapter map: `git_url`→GIT_CLONE (guarded), `archive`→TAR_ARCHIVE, `local_dir`/`pre_extracted`→LOCAL_REPO (new copy adapter). Transport-agnostic; the primitive is materialization, not tar.
+4. **Manifest decoupled.** `intake_manifest` now records `materialized_source_repo` (run-specific) instead of echoing the source manifest's hardcoded prior-run `extracted_path`.
+
+### Re-run proof (orchestrator, fresh run-id `run_netbox_factory_cert_04`)
+| Stage | Result |
+|---|---|
+| Phase 1 Source Boundary | PASS — tar SHA256 verified |
+| Phase 2 Intake | **PASS — `materialization_provenance: LIVE_MATERIALIZED_FROM_RAW_ARCHIVE`; 2540 entries extracted into the CURRENT run; inventory resolution `CLIENT_RUN`; no cross-run reference** |
+| Phase 3 Structural | PASS — 2540 nodes, canonical topology from freshly-materialized source |
+| Phase 3.6 Code-Graph Enrichment | PASS — 16,046 relationships, all validations PASS |
+| Phase 3.7 Centrality | PASS — 6/6 |
+| Artifacts produced | intake, structure, dom, ceu, 41.x, 75.x, binding, vault — full pipeline |
+| Source identity | real NetBox Django repo (`netbox/`, `pyproject.toml`, requirements) — NetBox-native, not BlueEdge |
+
+### Verdict
+**Phase 0 GREEN.** Fresh raw ingestion is executable: a fresh run materializes its own `source_repo` from the raw archive and proceeds through intake into NetBox-native structural cognition, with no reuse of prior run artifacts and no cross-run leakage. The contract's UNVERIFIED row → **VERIFIED**.
+
+Track A (Factory Certification) gate is cleared for the archive transport. Remaining adapters: `git_url`/GIT_CLONE (network) and `local_dir`/`pre_extracted` (LOCAL_REPO implemented, not yet exercised on a real client).
+
+Certification run: `run_netbox_factory_cert_04` (artifacts gitignored; regenerable). Intermediate test runs cert_01 (the original failure), cert_02/03 (fix iterations) retained as evidence.

@@ -27,6 +27,7 @@ RULE: Fail closed on any missing required source_manifest field.
 import argparse
 import hashlib
 import json
+import shutil
 import sys
 import tarfile
 from datetime import datetime, timezone
@@ -52,6 +53,10 @@ def parse_args() -> argparse.Namespace:
                    help="Compute everything but do not write output files")
     p.add_argument("--validate-only", action="store_true",
                    help="Validate source boundary only; do not write any files")
+    p.add_argument("--replay",       action="store_true",
+                   help="REPLAY mode: permit resolving source from a prior run's "
+                        "extracted_path. Default (fresh) mode forbids cross-run "
+                        "source resolution — the current run must own its source.")
     return p.parse_args()
 
 
@@ -109,16 +114,25 @@ def classify_path(path: Path, repo_root: Path) -> dict:
         return {"path": str(path), "path_type": "EXTERNAL_ABSOLUTE", "inside_repo": False}
 
 
-def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict) -> dict:
-    """Hybrid inventory source path resolution — CLIENT_RUN first, EXTRACTED_PATH fallback.
-    PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01"""
+def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict, replay: bool = False) -> dict:
+    """Source path resolution under SOURCE_REPO MATERIALIZATION.
+
+    Fresh mode (default): the current run MUST own its source. Resolution is
+    CLIENT_RUN only. A prior run's extracted_path is never consulted — cross-run
+    source reuse is a contract violation outside REPLAY.
+
+    Replay mode: a prior run's extracted_path may be resolved (EXTRACTED_PATH)
+    when the current run has no source of its own. Used only for explicit replay.
+
+    PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01 (materialization-aligned)
+    """
     client_run_path = (
         REPO_ROOT / "clients" / client_id / "psee" / "runs" / run_id / "intake" / "canonical_repo"
     )
-    manifest_path_str = manifest.get("extracted_path", "")
-    manifest_path = (REPO_ROOT / manifest_path_str) if manifest_path_str else None
-
     candidates = [str(client_run_path.relative_to(REPO_ROOT))]
+
+    manifest_path_str = manifest.get("extracted_path", "")
+    manifest_path = (REPO_ROOT / manifest_path_str) if (replay and manifest_path_str) else None
     if manifest_path:
         candidates.append(str(manifest_path.relative_to(REPO_ROOT)))
 
@@ -131,7 +145,7 @@ def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict) -
         }
     if manifest_path and manifest_path.exists():
         return {
-            "resolution_mode": "EXTRACTED_PATH",
+            "resolution_mode": "EXTRACTED_PATH_REPLAY",
             "resolved_path": str(manifest_path.relative_to(REPO_ROOT)),
             "resolved_path_abs": manifest_path,
             "candidate_paths": candidates,
@@ -150,18 +164,31 @@ def resolve_inventory_source_path(client_id: str, run_id: str, manifest: dict) -
 # Extensible: EXISTING_LOCAL_REPO, EVIDENCE_BUNDLE — NOT_IMPLEMENTED guards.
 
 MATERIALIZATION_PROVENANCE = {
-    "TAR_ARCHIVE": "LIVE_MATERIALIZED_FROM_RAW_ARCHIVE",
-    "LOCAL_REPO":  "LIVE_MATERIALIZED_FROM_LOCAL_REPO",
-    "REUSED":      "REUSED_FROM_PRIOR_RUN_EXPLICIT",
-    "EXISTING":    "EXISTING_INTAKE_PRESENT",
-    "BLOCKED":     "MATERIALIZATION_BLOCKED",
+    "TAR_ARCHIVE":  "LIVE_MATERIALIZED_FROM_RAW_ARCHIVE",
+    "LOCAL_REPO":   "LIVE_MATERIALIZED_FROM_LOCAL_REPO",
+    "CURRENT_RUN":  "CURRENT_RUN_OWNED",        # current run already owns its source_repo
+    "REPLAY":       "REUSED_FROM_PRIOR_RUN_REPLAY",
+    "BLOCKED":      "MATERIALIZATION_BLOCKED",
 }
 
+# SourceInput kinds → materialization adapter. The product primitive is
+# SOURCE_REPO MATERIALIZATION; the kind is just the transport.
+#   git_url       → GIT_CLONE   (clone a repo URL — requires network)
+#   archive       → TAR_ARCHIVE (extract uploaded/registered ZIP/TAR)
+#   local_dir     → LOCAL_REPO  (copy a local source directory)
+#   pre_extracted → LOCAL_REPO  (copy an already-extracted repo folder)
 SOURCE_TYPE_TO_ADAPTER = {
+    # archive transports
     "ARCH-PL": "TAR_ARCHIVE",
     "GITHUB_CLONE": "TAR_ARCHIVE",
     "TAR_ARCHIVE": "TAR_ARCHIVE",
+    "archive": "TAR_ARCHIVE",
+    # local transports
     "EXISTING_LOCAL_REPO": "LOCAL_REPO",
+    "local_dir": "LOCAL_REPO",
+    "pre_extracted": "LOCAL_REPO",
+    # url transport
+    "git_url": "GIT_CLONE",
 }
 
 
@@ -261,22 +288,78 @@ def _materialize_tar_archive(manifest: dict, canonical_repo: Path) -> dict:
     }
 
 
-def materialize_intake(manifest: dict, client_id: str, run_id: str, intake_dir: Path, dry_run: bool) -> dict:
-    """SOURCE_INTAKE_MATERIALIZATION — generic framework.
-    Resolves source_type → adapter, materializes canonical_repo if absent.
-    Returns materialization record with provenance classification."""
+def _materialize_local_repo(manifest: dict, canonical_repo: Path) -> dict:
+    """LOCAL_REPO adapter: copy a local source directory (local_dir / pre_extracted)
+    into the current run's canonical_repo."""
+    src_str = manifest.get("local_source_path") or manifest.get("source_dir") or ""
+    if not src_str:
+        return {
+            "materialization_result": "FAIL",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+            "adapter": "LOCAL_REPO",
+            "reason": "no local_source_path / source_dir in manifest",
+        }
+    src = Path(src_str) if Path(src_str).is_absolute() else (REPO_ROOT / src_str)
+    if not src.exists() or not src.is_dir():
+        return {
+            "materialization_result": "FAIL",
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
+            "adapter": "LOCAL_REPO",
+            "reason": f"local source dir not found: {src_str}",
+        }
+    canonical_repo.mkdir(parents=True, exist_ok=True)
+    for item in src.rglob("*"):
+        if item.is_file():
+            rel = item.relative_to(src)
+            target = canonical_repo / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(item, target)
+    file_count = sum(1 for _ in canonical_repo.rglob("*") if _.is_file())
+    print(f"  [MATERIALIZATION] adapter=LOCAL_REPO")
+    print(f"  [MATERIALIZATION] {file_count} files copied to intake/canonical_repo")
+    return {
+        "materialization_result": "PASS",
+        "materialization_provenance": MATERIALIZATION_PROVENANCE["LOCAL_REPO"],
+        "adapter": "LOCAL_REPO",
+        "copied_from": str(src) if src.is_absolute() else str(src.relative_to(REPO_ROOT)),
+        "extracted_to": str(canonical_repo.relative_to(REPO_ROOT)),
+        "files_on_disk": file_count,
+    }
+
+
+def materialize_intake(manifest: dict, client_id: str, run_id: str, intake_dir: Path,
+                       dry_run: bool, replay: bool = False) -> dict:
+    """SOURCE_REPO MATERIALIZATION — the current run must own its source_repo.
+
+    Idempotency: if the CURRENT run already owns canonical_repo with files, reuse it.
+    Fresh: otherwise materialize the source INTO the current run via the kind's adapter.
+    Cross-run: a prior run's extracted_path is consulted ONLY in --replay mode.
+    """
     canonical_repo = intake_dir / "canonical_repo"
 
-    resolution = resolve_inventory_source_path(client_id, run_id, manifest)
-    if resolution["resolution_mode"] != "MISSING":
-        print(f"  [MATERIALIZATION] canonical_repo present at {resolution['resolved_path']}")
+    # Idempotent: current run already owns its source_repo.
+    if canonical_repo.exists() and any(canonical_repo.rglob("*")):
+        print(f"  [MATERIALIZATION] current run already owns canonical_repo — idempotent")
         return {
             "materialization_result": "PASS",
-            "materialization_provenance": MATERIALIZATION_PROVENANCE["EXISTING"],
+            "materialization_provenance": MATERIALIZATION_PROVENANCE["CURRENT_RUN"],
             "adapter": "NONE",
-            "resolved_path": resolution["resolved_path"],
-            "resolution_mode": resolution["resolution_mode"],
+            "resolved_path": str(canonical_repo.relative_to(REPO_ROOT)),
+            "resolution_mode": "CLIENT_RUN",
         }
+
+    # Replay: explicitly permit resolving a prior run's extracted source.
+    if replay:
+        resolution = resolve_inventory_source_path(client_id, run_id, manifest, replay=True)
+        if resolution["resolution_mode"] == "EXTRACTED_PATH_REPLAY":
+            print(f"  [MATERIALIZATION] REPLAY — resolving prior source at {resolution['resolved_path']}")
+            return {
+                "materialization_result": "PASS",
+                "materialization_provenance": MATERIALIZATION_PROVENANCE["REPLAY"],
+                "adapter": "NONE",
+                "resolved_path": resolution["resolved_path"],
+                "resolution_mode": resolution["resolution_mode"],
+            }
 
     source_type = manifest.get("archive_type", manifest.get("source_type", "UNKNOWN"))
     adapter = SOURCE_TYPE_TO_ADAPTER.get(source_type)
@@ -290,7 +373,7 @@ def materialize_intake(manifest: dict, client_id: str, run_id: str, intake_dir: 
             "source_type": source_type,
         }
 
-    print(f"  [MATERIALIZATION] source_type={source_type} → adapter={adapter}")
+    print(f"  [MATERIALIZATION] source_type={source_type} → adapter={adapter} (fresh, current-run owned)")
 
     if dry_run:
         print(f"  [DRY-RUN] Would materialize canonical_repo via {adapter}")
@@ -303,12 +386,14 @@ def materialize_intake(manifest: dict, client_id: str, run_id: str, intake_dir: 
 
     if adapter == "TAR_ARCHIVE":
         return _materialize_tar_archive(manifest, canonical_repo)
+    if adapter == "LOCAL_REPO":
+        return _materialize_local_repo(manifest, canonical_repo)
 
     return {
         "materialization_result": "FAIL",
         "materialization_provenance": MATERIALIZATION_PROVENANCE["BLOCKED"],
         "adapter": adapter,
-        "reason": f"adapter={adapter} not yet implemented",
+        "reason": f"adapter={adapter} not yet implemented (e.g. GIT_CLONE requires network)",
         "source_type": source_type,
     }
 
@@ -420,14 +505,14 @@ def step_checksum(manifest: dict, boundary: dict) -> dict:
     }
 
 
-def step_inventory(manifest: dict, client_id: str, run_id: str) -> dict:
+def step_inventory(manifest: dict, client_id: str, run_id: str, replay: bool = False) -> dict:
     """
-    Enumerate all files in extracted source deterministically.
-    Hybrid path resolution: CLIENT_RUN first, EXTRACTED_PATH fallback.
+    Enumerate all files in the current run's materialized source deterministically.
+    Fresh mode: CLIENT_RUN only. Replay mode: prior-run EXTRACTED_PATH permitted.
     Returns structured file inventory.
     PI.LENS.SOURCE-INTAKE.INVENTORY-PATH.CONTRACT-CLOSURE.01
     """
-    resolution = resolve_inventory_source_path(client_id, run_id, manifest)
+    resolution = resolve_inventory_source_path(client_id, run_id, manifest, replay=replay)
     mode = resolution["resolution_mode"]
     candidates = resolution["candidate_paths"]
 
@@ -492,12 +577,18 @@ def build_intake_manifest(
     manifest: dict,
     boundary: dict,
     inventory: dict,
+    materialization: dict,
     dry_run: bool,
     validate_only: bool,
 ) -> dict:
     overall = (
         boundary["boundary_result"] == "PASS"
         and inventory["inventory_result"] == "PASS"
+    )
+    # Materialization path is RUN-SPECIFIC (current run owns its source_repo).
+    # Never echo the source_manifest's extracted_path (which may name a prior run).
+    materialized_path = materialization.get("extracted_to") or materialization.get("resolved_path") or (
+        str((REPO_ROOT / "clients" / client_id / "psee" / "runs" / run_id / "intake" / "canonical_repo").relative_to(REPO_ROOT))
     )
     return {
         "contract_id": CONTRACT_ID,
@@ -507,7 +598,7 @@ def build_intake_manifest(
         "client_display_name": client_config.get("display_name", client_id),
         "source_type": manifest.get("archive_type", "UNKNOWN"),
         "archive_path": manifest["archive_path"],
-        "extracted_path": manifest.get("extracted_path", ""),
+        "materialized_source_repo": materialized_path,
         "file_count": inventory["file_count"],
         "boundary_result": boundary["boundary_result"],
         "inventory_result": inventory["inventory_result"],
@@ -526,6 +617,7 @@ def main() -> None:
     run_id = args.run_id
     dry_run = args.dry_run
     validate_only = args.validate_only
+    replay = args.replay
 
     print("=" * 64)
     print(f"source_intake.py — {CONTRACT_ID}")
@@ -579,13 +671,13 @@ def main() -> None:
         }
         print(f"  [MATERIALIZATION] BLOCKED — boundary validation failed")
     else:
-        materialization = materialize_intake(manifest, client_id, run_id, intake_dir, dry_run)
+        materialization = materialize_intake(manifest, client_id, run_id, intake_dir, dry_run, replay)
         if materialization["materialization_result"] == "FAIL":
             fail_closed(f"Intake materialization failed: {materialization.get('reason', 'unknown')}")
 
     # Step C: Source inventory
     print("\n[4] Source inventory ...")
-    inventory = step_inventory(manifest, client_id, run_id)
+    inventory = step_inventory(manifest, client_id, run_id, replay)
     inv_status = inventory["inventory_result"]
     print(f"  source_root exists: {inventory['source_root_exists']}")
     print(f"  files found: {inventory['file_count']}")
@@ -601,7 +693,7 @@ def main() -> None:
     intake_manifest = build_intake_manifest(
         client_id, source_id, run_id,
         client_config, manifest,
-        boundary, inventory,
+        boundary, inventory, materialization,
         dry_run, validate_only,
     )
     intake_manifest["materialization_provenance"] = materialization.get(
