@@ -790,6 +790,8 @@ Each item is one of: **DONE** (with file) · **N/A** (with one-line reason). A G
 
 Scope: applies to G1 commits. G2/G3 commits state `Propagation: N/A (G2/G3)` in the message. When unsure whether a change is G1, treat it as G1 and run the checklist.
 
+**Auto-assessment is Claude's responsibility (operator declaration NOT required).** Claude MUST classify every change as G1/G2/G3 from the nature of the work itself — it does not wait for the operator to label a stream "G1" or to issue a numbered stream contract. The trigger is the change, not the announcement: any change that introduces, modifies, deprecates, or supersedes an architectural concept, or moves a primitive's maturity/status (e.g. DISCOVERED → IMPLEMENTED), is G1 by auto-assessment and binds this checklist. The absence of an explicit classification is never a reason to skip propagation. Failing to auto-assess is itself a §16.5 violation. This is the PI Software Architect posture (§17.2): "did architecture/cognition change, and did it propagate?" — not the Contract Executor posture ("did the build pass, was the commit made?").
+
 This rule is itself constitutional self-hosting (§16.7) and binding. Origin: PI.AMOPS-PROPAGATION-DEBT-AUDIT.01 (operator directive, 2026-06-12) — remediation of a propagation breach where 286 commits closed with one vault touch.
 
 ### 16.5 Fail-Closed Enforcement
@@ -804,6 +806,7 @@ Architecture memory violations trigger fail-closed:
 | Branch unauthorized | CRITICAL — STOP |
 | G1 closing without mutation delta | CRITICAL — STOP |
 | G1 commit without §16.4.2 propagation checklist | CRITICAL — STOP (commit is INCOMPLETE) |
+| Architecture change committed without G1 auto-assessment | CRITICAL — STOP (failure to classify is a violation) |
 | Registry status contradicts code reality | CRITICAL — STOP |
 | Canonical state >90 days stale | HIGH — STOP |
 | Canonical state >30 days stale | MEDIUM — WARN |
